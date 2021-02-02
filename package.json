@@ -1,0 +1,25 @@
+{
+  "private": true,
+  "name": "lightkeepr",
+  "version": "1.0.0",
+  "description": "",
+  "workspaces": [
+    "packages/*",
+    "app"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/julianburr/lightkeepr.git"
+  },
+  "keywords": [],
+  "author": "Julian Burr <hello@julianburr.de>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/julianburr/lightkeepr/issues"
+  },
+  "homepage": "https://github.com/julianburr/lightkeepr#readme",
+  "scripts": {
+    "nuke": "rm -rf node_modules **/node_modules",
+    "reinstall": "yarn nuke && yarn"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "name": "@lightkeepr/cypress",
+  "version": "0.0.0",
+  "description": "",
+  "main": "src/index.js",
+  "keywords": [],
+  "author": "Julian Burr <hello@julianburr.de>",
+  "license": "MIT"
+}

@@ -1,0 +1,33 @@
+name: Deploy App
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: "14.x"
+
+      - name: Create env.ts
+        run: cat .github/configs/main_env.ts > app/src/env.ts
+
+      - name: Build & deploy via vercel
+        run: |-
+          cd app
+
+          yarn
+          yarn build
+
+          mkdir .vercel
+          echo '{ "projectId": "${{ secrets.VERCEL_PROJECT_ID }}", "orgId": "${{ secrets.VERCEL_ORG_ID}}" }' \
+            > .vercel/project.json
+
+          vercel --prod --token=${{ secrets.VERCEL_TOKEN }}
