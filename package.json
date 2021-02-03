@@ -21,5 +21,8 @@
   "scripts": {
     "nuke": "rm -rf node_modules **/node_modules",
     "reinstall": "yarn nuke && yarn"
+  },
+  "dependencies": {
+    "lerna": "^3.22.1"
   }
 }

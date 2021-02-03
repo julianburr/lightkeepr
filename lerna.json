@@ -1,0 +1,9 @@
+{
+  "version": "independent",
+  "useWorkspaces": true,
+  "command": {
+    "publish": {
+      "ignoreChanges": ["app/**"]
+    }
+  }
+}
