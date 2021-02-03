@@ -20,7 +20,9 @@
   "homepage": "https://github.com/julianburr/lightkeepr#readme",
   "scripts": {
     "nuke": "rm -rf node_modules **/node_modules",
-    "reinstall": "yarn nuke && yarn"
+    "reinstall": "yarn nuke && yarn",
+    "release:ci": "lerna publish --conventional-commits --no-private --yes",
+    "release:canary:ci": "lerna publish --canary --conventional-commits --no-private --yes"
   },
   "dependencies": {
     "lerna": "^3.22.1"
