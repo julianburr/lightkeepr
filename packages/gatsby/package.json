@@ -1,9 +1,0 @@
-{
-  "name": "@lightkeepr/gatsby",
-  "version": "0.0.0",
-  "description": "",
-  "main": "src/index.js",
-  "keywords": [],
-  "author": "Julian Burr <hello@julianburr.de>",
-  "license": "MIT"
-}

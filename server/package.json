@@ -1,0 +1,21 @@
+{
+  "name": "@lightkeepr/server",
+  "version": "0.0.0",
+  "private": true,
+  "description": "",
+  "scripts": {
+    "start": "nodemon ./src/index.js",
+    "build": "NODE_ENV=production node index.js"
+  },
+  "keywords": [],
+  "author": "Julian Burr <hello@julianburr.de>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1",
+    "firebase-admin": "^9.4.2",
+    "nodemon": "^2.0.7"
+  },
+  "devDependencies": {
+    "@vercel/node": "^1.9.0"
+  }
+}

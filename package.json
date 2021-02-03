@@ -5,7 +5,8 @@
   "description": "",
   "workspaces": [
     "packages/*",
-    "app"
+    "app",
+    "server"
   ],
   "repository": {
     "type": "git",
