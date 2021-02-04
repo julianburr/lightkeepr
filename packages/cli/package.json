@@ -1,0 +1,21 @@
+{
+  "name": "@lightkeepr/cli",
+  "version": "0.0.0",
+  "description": "",
+  "bin": {
+    "lighkeepr": "src/index.js"
+  },
+  "keywords": [],
+  "author": "Julian Burr <hello@julianburr.de>",
+  "license": "MIT",
+  "dependencies": {
+    "@lightkeepr/node": "^0.0.0",
+    "chalk": "^4.1.0",
+    "cross-spawn": "^7.0.3",
+    "debug": "^4.3.1",
+    "yargs": "^16.2.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

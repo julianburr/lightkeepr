@@ -1,2 +1,5 @@
 .vercel
 node_modules
+node_modules/*
+
+firebase-secret.json

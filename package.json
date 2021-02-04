@@ -20,12 +20,17 @@
   },
   "homepage": "https://github.com/julianburr/lightkeepr#readme",
   "scripts": {
-    "nuke": "rm -rf node_modules **/node_modules",
+    "nuke": "rm -rf node_modules **/node_modules packages/**/node_modules",
     "reinstall": "yarn nuke && yarn",
     "release:ci": "lerna publish --conventional-commits --no-private --yes",
-    "release:canary:ci": "lerna publish --canary --conventional-commits --no-private --yes"
+    "release:ci:canary": "lerna publish --conventional-commits --no-private --no-changelog --no-git-tag-version --no-push --canary --preid pr --yes",
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "lerna": "^3.22.1"
+  },
+  "devDependencies": {
+    "patch-package": "^6.2.2",
+    "postinstall-postinstall": "^2.1.0"
   }
 }
