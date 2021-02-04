@@ -1,4 +1,4 @@
-name: Deploy App
+name: Deploy App & Server and Publish Packages
 
 on:
   push:
@@ -42,8 +42,8 @@ jobs:
         with:
           node-version: "14.x"
 
-      - name: Create env.ts
-        run: cat .github/configs/main_env.ts > app/src/env.ts
+      - name: Create firebase creds file
+        run: echo '${{ secrets.FIREBASE_SERVER_SECRET }}' > server/firebase-secret.json
 
       - name: Deploy via vercel
         run: |-
@@ -55,4 +55,28 @@ jobs:
           echo '{ "projectId": "${{ secrets.SERVER_VERCEL_PROJECT_ID }}", "orgId": "${{ secrets.SERVER_VERCEL_ORG_ID}}" }' \
             > .vercel/project.json
 
-          vercel --prod --token=${{ secrets.VERCEL_TOKEN }}
+          GOOGLE_APPLICATION_CREDENTIALS=./firebase-secret.json vercel --prod --token=${{ secrets.VERCEL_TOKEN }}
+
+  publish_packages:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: "14.x"
+      
+      - name: Publish packages
+        run: |-
+          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
+
+          git config --global user.email "hello@julianburr.de"
+          git config --global user.name "Julian Burr"
+
+          yarn
+          yarn release:ci
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          

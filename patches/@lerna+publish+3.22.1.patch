@@ -1,0 +1,15 @@
+diff --git a/node_modules/@lerna/publish/index.js b/node_modules/@lerna/publish/index.js
+index 0780128..4f7edc4 100644
+--- a/node_modules/@lerna/publish/index.js
++++ b/node_modules/@lerna/publish/index.js
+@@ -362,7 +362,9 @@ class PublishCommand extends Command {
+ 
+       // semver.inc() starts a new prerelease at .0, git describe starts at .1
+       // and build metadata is always ignored when comparing dependency ranges
+-      return `${nextVersion}-${preid}.${Math.max(0, refCount - 1)}+${sha}`;
++      // Patched locally because of this issue with canary versioning, which is broken 
++      // in npm: https://github.com/lerna/lerna/issues/2060#issuecomment-569968758
++      return `${nextVersion}-${preid}.${Math.max(0, refCount - 1)}-${sha}`;
+     };
+ 
+     if (this.project.isIndependent()) {
