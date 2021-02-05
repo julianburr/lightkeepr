@@ -8,14 +8,21 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
+          fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
       
       - name: Use Node.js
         uses: actions/setup-node@v1
         with:
           node-version: "14.x"
+
+      - uses: marceloprado/has-changed-path@v1
+        id: changed
+        with:
+          paths: packages
       
       - name: Publish packages
+        if: steps.changed.outputs.changed == 'true'
         run: |-
           echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
 
