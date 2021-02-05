@@ -16,11 +16,15 @@ jobs:
         with:
           node-version: "14.x"
 
-      - name: Create env.ts
-        run: cat .github/configs/main_env.ts > app/src/env.ts
+      - uses: marceloprado/has-changed-path@v1
+        id: changed
+        with:
+          paths: app
 
       - name: Build & deploy via vercel
+        if: steps.changed.outputs.changed == 'true'
         run: |-
+          cat .github/configs/main_env.ts > app/src/env.ts
           cd app
 
           yarn
@@ -42,11 +46,15 @@ jobs:
         with:
           node-version: "14.x"
 
-      - name: Create firebase creds file
-        run: echo '${{ secrets.FIREBASE_SERVER_SECRET }}' > server/firebase-secret.json
+      - uses: marceloprado/has-changed-path@v1
+        id: changed
+        with:
+          paths: server
 
       - name: Deploy via vercel
+        if: steps.changed.outputs.changed == 'true'
         run: |-
+          echo '${{ secrets.FIREBASE_SERVER_SECRET }}' > server/firebase-secret.json
           cd server
 
           yarn
