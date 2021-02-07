@@ -10,6 +10,7 @@ import { BuildDetailsScreen } from "../features/builds/build-details-screen";
 import { ReportDetailsScreen } from "../features/reports/report-details-screen";
 import { ProjectsListScreen } from "../features/projects/projects-list-screen";
 import { CreateProjectScreen } from "../features/projects/create-project-screen";
+import { ProjectAddCollaboratorsScreen } from "../features/projects/project-add-collaborators-screen";
 
 const Container = styled.div`
   width: 100%;
@@ -48,6 +49,9 @@ export function AppLayout() {
               </Route>
               <Route path="/p/:projectId/b/:buildId">
                 <BuildDetailsScreen />
+              </Route>
+              <Route path="/p/:projectId/settings/add-collaborators">
+                <ProjectAddCollaboratorsScreen />
               </Route>
               <Route path="/p/:projectId/settings">
                 <ProjectSettingsScreen />

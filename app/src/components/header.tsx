@@ -14,6 +14,10 @@ const Container = styled.header`
   align-items: center;
   justify-content: center;
   border-bottom: 0.1rem solid #f4f4f4;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: #fff;
 `;
 
 const Inner = styled.div`

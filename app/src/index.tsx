@@ -8,6 +8,7 @@ import { BrowserRouter } from "react-router-dom";
 import { App } from "./app";
 import { LoadingLayout } from "./layouts/loading";
 import { FirebaseProvider } from "./hooks/@firebase";
+import { SuspenseProvider } from "./hooks/suspense";
 
 const Styles = createGlobalStyle`
   *, *:before, *:after {
@@ -35,7 +36,24 @@ const Styles = createGlobalStyle`
     }
 
     & h1 {
-      font-size: 2.2rem;
+      font-size: 2.4rem;
+      font-weight: 700;
+      padding: 0;
+      margin: 3.2rem 0 1.2rem;
+    }
+
+    & h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      padding: 0;
+      margin: 2rem 0 .6rem;
+    }
+
+    & h3 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      padding: 0;
+      margin: 1.2rem 0 .4rem;
     }
   }
 
@@ -49,10 +67,12 @@ function Root() {
     <StrictMode>
       <Suspense fallback={<LoadingLayout />}>
         <BrowserRouter>
-          <FirebaseProvider>
-            <Styles />
-            <App />
-          </FirebaseProvider>
+          <SuspenseProvider>
+            <FirebaseProvider>
+              <Styles />
+              <App />
+            </FirebaseProvider>
+          </SuspenseProvider>
         </BrowserRouter>
       </Suspense>
     </StrictMode>

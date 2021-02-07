@@ -5,10 +5,12 @@ const spawn = require("cross-spawn");
 const brotli = require("brotli");
 const FormData = require("form-data");
 const { v4: uuid } = require("uuid");
+const pako = require("pako");
 
-async function startBuild({ token, apiUrl }) {
+async function startBuild({ token, apiUrl, branch, commit, repo }) {
   return fetch(`${apiUrl}/builds/start`, {
     method: "POST",
+    body: JSON.stringify({ branch, commit, repo }),
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
@@ -16,8 +18,8 @@ async function startBuild({ token, apiUrl }) {
   }).then((res) => res.json());
 }
 
-async function stopBuild({ token, statusCode, apiUrl }) {
-  return fetch(`${apiUrl}/builds/${build.id}/end`, {
+async function stopBuild({ token, statusCode, apiUrl, buildId }) {
+  const res = await fetch(`${apiUrl}/builds/${buildId}/stop`, {
     method: "POST",
     body: JSON.stringify({ statusCode }),
     headers: {
@@ -25,6 +27,8 @@ async function stopBuild({ token, statusCode, apiUrl }) {
       Authorization: `Bearer ${token}`,
     },
   }).then((res) => res.json());
+  console.log({ res });
+  return res;
 }
 
 async function report({ token, apiUrl, buildId, url }) {
@@ -51,10 +55,12 @@ async function report({ token, apiUrl, buildId, url }) {
   });
 
   const content = JSON.stringify(JSON.parse(report));
-  const compressed = brotli.compress(Buffer.from(content));
+  const compressed = pako.deflate(content);
+  const compressedStr = Buffer.from(compressed).toString("base64");
+  console.log({ compressedStr });
 
   const tmpPath = path.resolve(__dirname, `./tmp${uuid()}.brotli`);
-  fs.writeFileSync(tmpPath, compressed);
+  fs.writeFileSync(tmpPath, compressedStr);
   const stream = fs.createReadStream(tmpPath);
 
   const formData = new FormData();
@@ -72,6 +78,7 @@ async function report({ token, apiUrl, buildId, url }) {
 
   console.log({ response });
   const res = await response.json();
+  console.log({ res });
 
   fs.unlinkSync(tmpPath);
 

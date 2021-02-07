@@ -7,24 +7,25 @@ export async function tokenValidator(req, res, next) {
     return;
   }
 
-  const snapshot = await admin.firestore().collection("projects").get();
+  console.log({ token: req.token });
 
-  let projects = [];
-  snapshot.forEach((token) => {
-    projects.push({ id: token.id, ...token.data() });
+  const snap = await admin
+    .firestore()
+    .collection("projects")
+    .where("token", "==", req.token)
+    .get();
+
+  let items = [];
+  snap.forEach((project) => {
+    items.push({ id: project.id, ...project.data() });
   });
 
-  const project = projects.find((project) =>
-    bcrypt.compareSync(req.token, project.token)
-  );
-
-  console.log({ project, projects, token: req.token });
-  if (!project) {
+  if (!items.length) {
     res.status(400).json({ message: "Invalid token" });
     return;
   }
 
-  req.projectId = project.id;
+  req.projectId = items[0].id;
 
   next();
 }

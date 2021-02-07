@@ -1,16 +1,14 @@
 import { Suspense, useMemo, useState } from "react";
 import firebase from "firebase/app";
 import { useParams } from "react-router";
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
 
 import { useCollection, useDocument } from "../../hooks/@firebase";
+import { formatDateSince } from "../../utils/date";
 import { TitleBar } from "../../components/title-bar";
 import { ButtonBar } from "../../components/button-bar";
 import { Button } from "../../components/button";
 import { List, ListItem } from "../../components/list";
-
-dayjs.extend(relativeTime);
+import { Tag } from "../../components/tag";
 
 function ProjectDetails() {
   const [branch, setBranch] = useState("");
@@ -46,24 +44,12 @@ function ProjectDetails() {
 
   return (
     <>
-      <TitleBar>
-        <h1>{project.name}</h1>
-        <ButtonBar margin={false}>
-          <Button to={`/p/${projectId}/settings#collaborators`}>
-            Add collaborators
-          </Button>
-          <Button to={`/p/${projectId}/settings`}>Project settings</Button>
-        </ButtonBar>
-      </TitleBar>
-
       <p>
         Filter by branch:{" "}
-        <select onChange={(e) => setBranch(e.target.value)}>
+        <select onChange={(e) => setBranch(e.target.value)} value={branch}>
           <option value={""}>no filter</option>
           {branches.map((b) => (
-            <option value={b} selected={branch === b}>
-              {b}
-            </option>
+            <option value={b}>{b}</option>
           ))}
         </select>
       </p>
@@ -71,10 +57,11 @@ function ProjectDetails() {
       <List
         items={filteredItems}
         Item={({ data }) => {
-          const startedAt = dayjs(data.startedAt?.seconds * 1000);
-          const finishedAt = dayjs(data.finishedAt?.seconds * 1000);
-
-          const inProgress = !data.finishedAt;
+          const meta = data.finishedAt
+            ? `Finished ${formatDateSince(data.finishedAt)}`
+            : data.startedAt
+            ? `Started ${formatDateSince(data.startedAt)}`
+            : null;
 
           return (
             <ListItem
@@ -82,14 +69,8 @@ function ProjectDetails() {
               to={`/p/${projectId}/b/${data.id}`}
               title={`#${data.id}`}
               tag={data.branch}
-              meta={
-                data.finishedAt
-                  ? `Finished ${dayjs().to(finishedAt)}`
-                  : data.startedAt
-                  ? `Started ${dayjs().to(startedAt)}`
-                  : null
-              }
-              inProgress={inProgress}
+              meta={meta}
+              preview={data.status ? <Tag>{data.status}</Tag> : null}
             />
           );
         }}
@@ -99,9 +80,21 @@ function ProjectDetails() {
 }
 
 export function ProjectDetailsScreen() {
+  const { projectId } = useParams<{ projectId: string }>();
   return (
-    <Suspense fallback={<p>Loading project...</p>}>
-      <ProjectDetails />
-    </Suspense>
+    <>
+      <TitleBar>
+        <h1>Builds</h1>
+        <ButtonBar margin={false}>
+          <Button to={`/p/${projectId}/settings/add-collaborators`}>
+            Add collaborators
+          </Button>
+          <Button to={`/p/${projectId}/settings`}>Project settings</Button>
+        </ButtonBar>
+      </TitleBar>
+      <Suspense fallback={<p>Loading project...</p>}>
+        <ProjectDetails />
+      </Suspense>
+    </>
   );
 }

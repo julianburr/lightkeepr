@@ -4,14 +4,16 @@ import styled from "styled-components";
 
 type ContainerProps = {
   primary?: boolean;
+  destructive?: boolean;
   to?: LinkProps["to"];
   loading?: boolean;
   disabled?: boolean;
 };
 
 const Container = styled.button<ContainerProps>`
-  background: ${(props) => (props.primary ? "#5eafe7" : "#f4f4f4")};
-  color: ${(props) => (props.primary ? "#fff" : "#222")};
+  background: ${(props) =>
+    props.primary ? "#5eafe7" : props.destructive ? "#e00" : "#f4f4f4"};
+  color: ${(props) => (props.primary || props.destructive ? "#fff" : "#222")};
   padding: 0.6rem 1.2rem;
   border-radius: 0.2rem;
   border: 0 none;
@@ -23,7 +25,8 @@ const Container = styled.button<ContainerProps>`
 
   &:hover {
     box-shadow: 0 0.3rem 0.8rem rgba(0, 0, 0, 0.1);
-    background: ${(props) => (props.primary ? "#4492c8" : "#dfdfdf")};
+    background: ${(props) =>
+      props.primary ? "#4492c8" : props.destructive ? "#c00" : "#dfdfdf"};
   }
 
   &:active {
@@ -43,6 +46,7 @@ const Icon = styled.span`
 type ButtonProps = {
   children: ReactNode;
   primary?: boolean;
+  destructive?: boolean;
   icon?: ReactNode;
   to?: string;
   onClick?: (e: any) => void | Promise<void>;
@@ -54,6 +58,7 @@ type ButtonProps = {
 export function Button({
   children,
   primary,
+  destructive,
   icon,
   onClick,
   to,
@@ -78,6 +83,7 @@ export function Button({
       as={to ? Link : "button"}
       to={to}
       primary={primary}
+      destructive={destructive}
       type={to ? undefined : type}
       loading={loading || stateLoading}
       disabled={disabled || loading || stateLoading}

@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { Link, LinkProps } from "react-router-dom";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -15,23 +15,37 @@ const Container = styled.div`
   }
 `;
 
-type ItemProps = LinkProps & {
+type ItemProps = {
+  to?: string;
   inProgress?: boolean;
 };
 
-const Item = styled(Link)<ItemProps>`
+const Item = styled.div<ItemProps>`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
   color: inherit;
   text-decoration: none;
   padding: 1.8rem;
   box-shadow: 0 0 0 rgba(0, 0, 0, 0);
   transition: box-shadow 0.2s;
-  background: ${(props) => (props.inProgress ? "#fff8df" : "#fafafa")};
+  border: 0.1rem solid #f4f4f4;
+  border-radius: 0.2rem;
 
   &:hover {
     box-shadow: 0 0.3rem 0.8rem rgba(0, 0, 0, 0.1);
   }
+`;
+
+const Left = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const Right = styled.div`
+  display: flex;
+  flex-direction: column;
 `;
 
 const Title = styled.div`
@@ -67,7 +81,7 @@ const Meta = styled.p`
 type ListItemProps = {
   title: string;
   tag?: string;
-  to: string;
+  to?: string;
   meta?: string;
   preview?: ReactNode;
   inProgress?: boolean;
@@ -82,12 +96,16 @@ export function ListItem({
   inProgress,
 }: ListItemProps) {
   return (
-    <Item to={to} inProgress={inProgress}>
-      <Title>
-        <h2>{title}</h2>
-        {tag && <Tag>{tag}</Tag>}
-      </Title>
-      {meta && <Meta>{meta}</Meta>}
+    <Item to={to} inProgress={inProgress} as={to ? Link : "div"}>
+      <Left>
+        <Title>
+          <h2>{title}</h2>
+          {tag && <Tag>{tag}</Tag>}
+        </Title>
+        {meta && <Meta>{meta}</Meta>}
+      </Left>
+
+      {preview && <Right>{preview}</Right>}
     </Item>
   );
 }
