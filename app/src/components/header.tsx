@@ -1,8 +1,6 @@
 import styled from "styled-components";
 
 import { Menu } from "./menu";
-import { Spacer } from "./spacer";
-import { Avatar } from "./avatar";
 
 import { ReactComponent as LogoSvg } from "../assets/logo.svg";
 
@@ -18,6 +16,10 @@ const Container = styled.header`
   top: 0;
   z-index: 10;
   background: #fff;
+
+  @media (max-width: 800px) {
+    height: 6rem;
+  }
 `;
 
 const Inner = styled.div`
@@ -33,26 +35,18 @@ const Inner = styled.div`
 const Logo = styled(LogoSvg)`
   height: 5rem;
   width: auto;
-`;
 
-const Right = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
+  @media (max-width: 800px) {
+    height: 4rem;
+  }
 `;
 
 export function Header() {
   return (
     <Container>
       <Inner>
-        <div>
-          <Logo />
-        </div>
-        <Right>
-          <Menu />
-          <Spacer width="1.2rem" />
-          <Avatar />
-        </Right>
+        <Logo />
+        <Menu />
       </Inner>
     </Container>
   );
