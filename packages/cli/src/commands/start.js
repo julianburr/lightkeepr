@@ -7,6 +7,8 @@ async function runStart(argv) {
   return startBuild({
     apiUrl: env.LIGHTKEEPR_API_URL,
     token: env.LIGHTKEEPR_TOKEN,
+    branch: argv.branch,
+    commit: argv.commit,
   });
 }
 
@@ -19,6 +21,15 @@ module.exports = {
       .option("apiUrl", {
         description: "API url used to send the lighthouse report to",
         default: "https://lightkeepr-server.vercel.app",
+      })
+      .option("branch", {
+        description: "Current branch",
+      })
+      .option("commit", {
+        description: "Current commit",
+      })
+      .option("repo", {
+        description: "Current github repo",
       })
       .option("token", {
         description: "Project API token",

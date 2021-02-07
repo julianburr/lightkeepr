@@ -30,6 +30,7 @@
     "lerna": "^3.22.1"
   },
   "devDependencies": {
+    "pako": "^2.0.3",
     "patch-package": "^6.2.2",
     "postinstall-postinstall": "^2.1.0"
   }
