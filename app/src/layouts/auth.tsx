@@ -1,22 +1,21 @@
-import firebase from "firebase/app";
 import styled from "styled-components";
 
-const provider = new firebase.auth.GoogleAuthProvider();
-
 const Container = styled.div`
-  width: 100%;
-  padding: 5rem;
   display: flex;
+  flex: 1;
+  width: 100%;
+  height: 100%;
   flex-direction: column;
+  align-items: center;
   justify-content: center;
 `;
 
-export function AuthLayout() {
-  return (
-    <Container>
-      <button onClick={() => firebase.auth().signInWithRedirect(provider)}>
-        Login with Google
-      </button>
-    </Container>
-  );
+const Inner = styled.div`
+  width: 100%;
+  max-width: 23rem;
+  padding: 3rem;
+`;
+
+export function AuthLayout({ children }) {
+  return <Container>{children}</Container>;
 }

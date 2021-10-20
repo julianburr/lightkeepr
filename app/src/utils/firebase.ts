@@ -1,4 +1,4 @@
-import firebase from "firebase/app";
+import { initializeApp } from "firebase/app";
 
 import "firebase/analytics";
 import "firebase/auth";
@@ -7,7 +7,4 @@ import "firebase/performance";
 
 import { env } from "../env";
 
-firebase.initializeApp(env.firebase);
-
-firebase.analytics();
-firebase.performance();
+initializeApp(env.firebase);

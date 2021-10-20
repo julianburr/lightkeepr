@@ -1,344 +1,178 @@
-import firebase from "firebase/app";
-import { useState } from "react";
+import { useCallback, useEffect } from "react";
+import Link from "next/link";
+import { useRouter } from "next/router";
 import styled from "styled-components";
-import { NavLink } from "react-router-dom";
 
-import { useAuth } from "../hooks/@firebase";
+import { getFirestore, doc } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 
-import { Spacer } from "./spacer";
-import { ActionMenu } from "./action-menu";
+import { useDocument } from "../@packages/firebase";
+import { OrganisationSelect } from "./organisation-select";
 
-import { ReactComponent as MenuSvg } from "../assets/icons/menu.svg";
-import { ReactComponent as XSvg } from "../assets/icons/x.svg";
+const db = getFirestore();
+const auth = getAuth();
 
-type ContainerProps = {
+type OpenProps = {
   open?: boolean;
 };
 
-const Container = styled.div<ContainerProps>`
-  @media (max-width: 800px) {
-    &:before {
-      content: " ";
-      position: fixed;
-      z-index: 90;
-      background: #222;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      pointer-events: ${(props) => (props.open ? "all" : "none")};
-      transition: opacity 0.2s;
-      opacity: ${(props) => (props.open ? 0.8 : 0)};
-    }
+const Backdrop = styled.div`
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  background: #000;
+  z-index: 100;
+  transition: opacity 0.2s;
+  opacity: ${(props: OpenProps) => (props.open ? 0.1 : 0)};
+  pointer-events: ${(props: OpenProps) => (props.open ? "all" : "none")};
+`;
+
+const Container = styled.menu`
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 95%;
+  max-width: 32rem;
+  background: #fff;
+  padding: 2.4rem;
+  transition: transform 0.3s;
+  transform: ${(props: OpenProps) =>
+    props.open ? `translateX(0)` : `translateX(100%)`};
+  z-index: 101;
+`;
+
+const Ul = styled.ul`
+  margin-top: 2.4rem;
+
+  &:first-child {
+    margin-top: 0;
+  }
+
+  li {
+    padding: 0.6rem 0;
   }
 `;
 
-const Mobile = styled.div`
-  display: none;
-
-  @media (max-width: 800px) {
-    display: flex;
-  }
-`;
-
-const Desktop = styled.div`
-  display: flex;
-
-  @media (max-width: 800px) {
-    display: none;
-  }
-`;
-
-const MenuButton = styled.button`
-  cursor: pointer;
-  border: 0 none;
-  background: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 4rem;
-  width: 4rem;
-
-  & svg {
-    height: 2.8rem;
-    width: auto;
-  }
-`;
-
-const CloseButton = styled(MenuButton)`
+const CloseButton = styled.button`
   position: absolute;
-  top: 0.4rem;
-  right: 0.4rem;
+  top: 1.6rem;
+  right: 1.6rem;
 `;
 
-type InnerContainerProps = {
-  open?: boolean;
+type MenuProps = {
+  open: boolean;
+  setOpen: (value: boolean) => void;
+  menu: any;
 };
 
-const InnerContainer = styled.div<InnerContainerProps>`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-
-  @media (max-width: 800px) {
-    flex-direction: column;
-    align-items: flex-start;
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    width: 90%;
-    max-width: 30rem;
-    z-index: 100;
-    background: #fff;
-    transition: transform 0.2s;
-    transform: ${(props) =>
-      props.open ? `translateX(0)` : `translateX(110%)`};
-    pointer-events: ${(props) => (props.open ? "all" : "none")};
-    width: 100%;
-  }
-`;
-
-const MenuContainer = styled.menu`
-  margin: 0;
-  padding: 0;
-
-  & ul {
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: row;
-
-    & li {
-      list-style: none;
-      padding: 0;
-      margin: 0 0.2rem;
-
-      & a,
-      & button {
-        margin: 0;
-        text-align: inherit;
-        border: 0 none;
-        background: none;
-        padding: 0.8rem;
-        border-radius: 0.2rem;
-        text-decoration: none;
-        font-weight: 600;
-        font-size: 1.2rem;
-        text-transform: uppercase;
-        color: inherit;
-        transition: background 0.2s;
-        cursor: pointer;
-        line-height: 1.4rem;
-        display: inline-block;
-
-        &:hover {
-          background: #fafafa;
-        }
-
-        &.active {
-          &,
-          &:hover {
-            background: #f4f4f4;
-          }
-        }
+export function Menu({ open, setOpen, menu }: MenuProps) {
+  const router = useRouter();
+  useEffect(
+    () => {
+      if (open) {
+        setOpen(false);
       }
-    }
-  }
+    },
+    // eslint-disable-next-line
+    [router.asPath]
+  );
 
-  @media (max-width: 800px) {
-    padding: 2rem;
-    width: 100%;
+  const projectDoc = router.query.projectId
+    ? doc(db, "projects", router.query.projectId)
+    : undefined;
 
-    & ul {
-      flex-direction: column;
-      padding-bottom: 2.4rem;
-
-      & li {
-        margin: 0.4rem 0;
-
-        & a,
-        & button {
-          font-size: 1.6rem;
-        }
-      }
-    }
-  }
-`;
-
-const Avatar = styled.div`
-  width: 3.6rem;
-  height: 3.6rem;
-  background-color: green;
-  border-radius: 50%;
-  border: 0 none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  padding: 0;
-  overflow: hidden;
-
-  & span {
-    font-size: 1.6rem;
-    font-weight: 600;
-  }
-
-  & img {
-    object-fit: fill;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-  }
-
-  @media (max-width: 800px) {
-    width: 4.8rem;
-    height: 4.8rem;
-    border-radius: 0.2rem;
-  }
-`;
-
-const AvatarContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  padding: 0 0 2.4rem;
-  margin: 2.4rem 0 2.4rem;
-  border-bottom: 0.1rem solid #f4f4f4;
-  width: 100%;
-
-  & > * {
-    margin-left: 1.2rem;
-
-    &:first-child {
-      margin-left: 0;
-    }
-  }
-`;
-
-const AvatarMeta = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const AvatarName = styled.div`
-  font-size: 1.6rem;
-  font-weight: 700;
-  text-transform: uppercase;
-`;
-
-const AvatarEmail = styled.div`
-  font-size: 1.2rem;
-  color: #666;
-`;
-
-export function Menu() {
-  const authUser = useAuth();
-  const [open, setOpen] = useState(false);
+  const project = useDocument(projectDoc);
 
   return (
-    <Container open={open} onClick={() => setOpen(false)}>
-      <Mobile>
-        <MenuButton
-          onClick={(e) => {
-            setOpen((state) => !state);
-            e.stopPropagation();
-          }}
-        >
-          <MenuSvg />
-        </MenuButton>
-      </Mobile>
+    <>
+      <Backdrop open={open} onClick={() => setOpen(false)} />
+      <Container open={open}>
+        <CloseButton onClick={() => setOpen(false)}>&times;</CloseButton>
 
-      <InnerContainer open={open} onClick={(e) => e.stopPropagation()}>
-        <MenuContainer>
-          <Mobile>
-            <CloseButton onClick={() => setOpen(false)}>
-              <XSvg />
-            </CloseButton>
+        <Ul>
+          <li>
+            <OrganisationSelect />
+          </li>
+          <li>
+            <Link href={`/${router.query.orgId}/settings/profile`}>
+              Profile Settings
+            </Link>
+          </li>
+        </Ul>
 
-            <AvatarContainer>
-              <Avatar>
-                <span>{authUser.displayName[0]}</span>
-                {authUser.photoURL && (
-                  <img src={authUser.photoURL} alt={authUser.displayName[0]} />
-                )}
-              </Avatar>
-              <AvatarMeta>
-                <AvatarName>{authUser.displayName}</AvatarName>
-                <AvatarEmail>{authUser.email}</AvatarEmail>
-              </AvatarMeta>
-            </AvatarContainer>
-          </Mobile>
-          <ul>
+        {project?.id && (
+          <Ul>
             <li>
-              <NavLink exact to="/" onClick={() => setOpen(false)}>
-                Projects
-              </NavLink>
+              <h3>Project: {project.name}</h3>
             </li>
             <li>
-              <NavLink exact to="/usage" onClick={() => setOpen(false)}>
-                Usage
-              </NavLink>
+              <Link href={`/${router.query.orgId}/projects/${project.id}`}>
+                Runs
+              </Link>
             </li>
             <li>
-              <NavLink exact to="/integrations" onClick={() => setOpen(false)}>
+              <Link
+                href={`/${router.query.orgId}/projects/${project.id}/integrations`}
+              >
                 Integrations
-              </NavLink>
+              </Link>
             </li>
             <li>
-              <NavLink exact to="/plans" onClick={() => setOpen(false)}>
-                Plans &amp; Pricing
-              </NavLink>
+              <Link
+                href={`/${router.query.orgId}/projects/${project.id}/settings`}
+              >
+                Settings
+              </Link>
             </li>
-            <li>
-              <NavLink exact to="/docs" onClick={() => setOpen(false)}>
-                Docs
-              </NavLink>
-            </li>
-          </ul>
-          <Mobile>
-            <ul>
-              <li>
-                <NavLink exact to="/profile" onClick={() => setOpen(false)}>
-                  Profile
-                </NavLink>
-              </li>
-              <li>
-                <button onClick={() => firebase.auth().signOut()}>
-                  Logout
-                </button>
-              </li>
-            </ul>
-          </Mobile>
-        </MenuContainer>
-        <Spacer width="1.2rem" />
-        <Desktop>
-          <ActionMenu
-            items={[
-              {
-                label: "Profile",
-                path: "/profile",
-              },
-              {
-                label: "Logout",
-                onClick: () => firebase.auth().signOut(),
-              },
-            ]}
-            placement="bottom-end"
-          >
-            <Avatar>
-              <span>{authUser.displayName[0]}</span>
-              {authUser.photoURL && (
-                <img src={authUser.photoURL} alt={authUser.displayName[0]} />
-              )}
-            </Avatar>
-          </ActionMenu>
-        </Desktop>
-      </InnerContainer>
-    </Container>
+          </Ul>
+        )}
+
+        <Ul>
+          <li>
+            <Link href={`/${router.query.orgId}`}>Dashboard</Link>
+          </li>
+          <li>
+            <Link href={`/${router.query.orgId}/projects`}>Projects</Link>
+          </li>
+
+          <li>
+            <Link href={`/${router.query.orgId}/settings/organisation`}>
+              Organisation Settings
+            </Link>
+          </li>
+          <li>
+            <Link href={`/${router.query.orgId}/settings/organisation`}>
+              Billing &amp; Usage
+            </Link>
+          </li>
+        </Ul>
+
+        <Ul>
+          <li>
+            <a href="https://google.com" target="_blank" rel="noreferrer">
+              Documentation
+            </a>
+          </li>
+          <li>
+            <a href="https://google.com" target="_blank" rel="noreferrer">
+              Github
+            </a>
+          </li>
+          <li>
+            <button
+              onClick={() => {
+                auth.signOut();
+                setOpen(false);
+              }}
+            >
+              Logout
+            </button>
+          </li>
+        </Ul>
+      </Container>
+    </>
   );
 }

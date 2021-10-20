@@ -1,16 +1,10 @@
-import { Suspense } from "react";
+import { PropsWithChildren, useState } from "react";
 import styled from "styled-components";
-import { Switch, Route } from "react-router-dom";
+import { getAuth } from "firebase/auth";
 
+import { useAuth } from "../@packages/firebase";
 import { Header } from "../components/header";
-
-import { ProjectDetailsScreen } from "../features/projects/project-details-screen";
-import { ProjectSettingsScreen } from "../features/projects/project-settings-screen";
-import { BuildDetailsScreen } from "../features/builds/build-details-screen";
-import { ReportDetailsScreen } from "../features/reports/report-details-screen";
-import { ProjectsListScreen } from "../features/projects/projects-list-screen";
-import { CreateProjectScreen } from "../features/projects/create-project-screen";
-import { ProjectAddCollaboratorsScreen } from "../features/projects/project-add-collaborators-screen";
+import { Menu } from "../components/menu";
 
 const Container = styled.div`
   width: 100%;
@@ -18,57 +12,34 @@ const Container = styled.div`
   flex-direction: column;
 `;
 
-const Main = styled.main`
+const Content = styled.main`
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
 `;
 
-const Content = styled.div`
+const Inner = styled.div`
   width: 100%;
-  max-width: 90rem;
-  display: flex;
-  flex-direction: column;
-  padding: 2.4rem;
+  max-width: 1024rem;
+  padding: 2.6rem;
 `;
 
-export function AppLayout() {
+type AppLayoutProps = PropsWithChildren<{
+  menu?: any;
+}>;
+
+export function AppLayout({ children, menu }: AppLayoutProps) {
+  const [open, setOpen] = useState(false);
+  const authUser = useAuth();
+
   return (
     <Container>
-      <Header />
-      <Main>
-        <Content>
-          <Suspense fallback={<p>Loading...</p>}>
-            <Switch>
-              <Route exact path="/">
-                <ProjectsListScreen />
-              </Route>
-              <Route path="/p/:projectId/b/:buildId/r/:reportId">
-                <ReportDetailsScreen />
-              </Route>
-              <Route path="/p/:projectId/b/:buildId">
-                <BuildDetailsScreen />
-              </Route>
-              <Route path="/p/:projectId/settings/add-collaborators">
-                <ProjectAddCollaboratorsScreen />
-              </Route>
-              <Route path="/p/:projectId/settings">
-                <ProjectSettingsScreen />
-              </Route>
-              <Route path="/p/new">
-                <CreateProjectScreen />
-              </Route>
-              <Route path="/p/:projectId">
-                <ProjectDetailsScreen />
-              </Route>
-              <Route path="/profile">
-                <ProjectDetailsScreen />
-              </Route>
-            </Switch>
-          </Suspense>
-        </Content>
-      </Main>
+      <Menu open={open} setOpen={setOpen} menu={menu} />
+      <Header actions={<button onClick={() => setOpen(true)}>Menu</button>} />
+      <Content>
+        <Inner>{children}</Inner>
+      </Content>
     </Container>
   );
 }

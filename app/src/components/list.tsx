@@ -1,119 +1,143 @@
-import { ReactNode } from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
+import { ComponentType, ReactNode } from "react";
 import styled from "styled-components";
 
-const Container = styled.div`
+const Ul = styled.ul`
+  margin: 0;
+  padding: 0;
   display: flex;
   flex-direction: column;
+  width: 100%;
 
   & > * {
-    margin-top: 0.6rem;
+    margin-bottom: 0.4rem;
 
-    &:first-child {
-      margin-top: 0;
+    &:last-child {
+      margin-bottom: 0;
     }
   }
 `;
 
-type ItemProps = {
-  to?: string;
-  inProgress?: boolean;
-};
+const Li = styled.li`
+  & > * {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 1.2rem;
+    border: 0.1rem solid rgba(0, 0, 0, 0.1);
+    border-radius: 0.2rem;
+    text-decoration: none;
+    font: inherit;
+    color: inherit;
+  }
 
-const Item = styled.div<ItemProps>`
+  & a:hover {
+    border: 0.1rem solid rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0.2rem 0.6rem rgba(0, 0, 0, 0.1);
+  }
+`;
+
+const Item = styled.div``;
+
+const Row = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
-  color: inherit;
-  text-decoration: none;
-  padding: 1.8rem;
-  box-shadow: 0 0 0 rgba(0, 0, 0, 0);
-  transition: box-shadow 0.2s;
-  border: 0.1rem solid #f4f4f4;
-  border-radius: 0.2rem;
-
-  &:hover {
-    box-shadow: 0 0.3rem 0.8rem rgba(0, 0, 0, 0.1);
-  }
+  margin: 0.1rem 0;
 `;
 
-const Left = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const Right = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const Title = styled.div`
-  display: flex;
-  flex-direction: row;
-
-  & h2 {
-    margin: 0;
-    padding: 0;
-    font-size: 1.6rem;
-    font-weight: 400;
-  }
-`;
-
-const Tag = styled.div`
-  display: flex;
-  align-self: center;
-  font-size: 1.2rem;
-  background: #f4f4f4;
-  border-radius: 0.2rem;
-  padding: 0.4rem 0.6rem;
-  margin-left: 1.2rem;
-  color: #999;
-`;
-
-const Meta = styled.p`
+const Title = styled.h2`
+  font-size: 1.4rem;
   margin: 0;
-  padding: 0.4rem 0 0;
-  color: #999;
-  font-size: 1.2rem;s
+
+  a:hover & {
+    text-decoration: underline;
+  }
 `;
 
-type ListItemProps = {
-  title: string;
-  tag?: string;
-  to?: string;
-  meta?: string;
-  preview?: ReactNode;
-  inProgress?: boolean;
+const Status = styled.span``;
+
+const Meta = styled.span`
+  font-size: 1rem;
+`;
+
+type ListProps<T = any> = {
+  items: T[];
+  Item: ComponentType<{ item: T }>;
+  getKey?: (item: T) => string;
+  Empty?: ComponentType<{}>;
+  Loading?: ComponentType<{}>;
+  isLoading?: boolean;
+  showLoadMore?: boolean;
+  onLoadMore?: () => void | Promise<void>;
 };
 
-export function ListItem({
-  title,
-  tag,
-  to,
-  meta,
-  preview,
-  inProgress,
-}: ListItemProps) {
-  return (
-    <Item to={to} inProgress={inProgress} as={to ? Link : "div"}>
-      <Left>
-        <Title>
-          <h2>{title}</h2>
-          {tag && <Tag>{tag}</Tag>}
-        </Title>
-        {meta && <Meta>{meta}</Meta>}
-      </Left>
+export function List({
+  items,
+  Item,
+  getKey,
+  Empty = () => <p>No items found</p>,
+  Loading = () => <p>Loading...</p>,
+  isLoading,
+  showLoadMore,
+  onLoadMore,
+}: ListProps) {
+  if (isLoading) {
+    return <Loading />;
+  }
 
-      {preview && <Right>{preview}</Right>}
-    </Item>
+  if (!items?.length) {
+    return <Empty />;
+  }
+
+  return (
+    <>
+      <Ul>
+        {items.map((item) => (
+          <Item key={getKey?.(item) || item?.id} item={item} />
+        ))}
+      </Ul>
+    </>
   );
 }
 
-export function List({ items, empty = <p>No items.</p>, Item }) {
+type ListItemProps = {
+  href?: string;
+  title?: ReactNode;
+  meta?: ReactNode;
+  status?: ReactNode;
+};
+
+export function ListItem({ href, title, meta, status }: ListItemProps) {
   return (
-    <Container>
-      {items?.length ? items.map((item) => <Item data={item} />) : empty}
-    </Container>
+    <Li>
+      {href ? (
+        <Link href={href} passHref>
+          <a>
+            <Row>
+              <Title>{title}</Title>
+              {status && <Status>{status}</Status>}
+            </Row>
+            {meta && (
+              <Row>
+                <Meta>{meta}</Meta>
+              </Row>
+            )}
+          </a>
+        </Link>
+      ) : (
+        <Item>
+          <Row>
+            <Title>{title}</Title>
+            {status && <Status>{status}</Status>}
+          </Row>
+          {meta && (
+            <Row>
+              <Meta>{meta}</Meta>
+            </Row>
+          )}
+        </Item>
+      )}
+    </Li>
   );
 }
