@@ -21,12 +21,12 @@ jobs:
         run: |-
           yarn
 
+          echo ${{ secrets.APP_ENV_CONTENT }} | base64 -d > .env.local
+          echo ${{ secrets.APP_GOOGLE_SERVICE_ACCOUNT_CONTENT }} | base64 -d > google-service-account.json
+
           mkdir .vercel
           echo '{ "projectId": "${{ secrets.VERCEL_PROJECT_ID }}", "orgId": "${{ secrets.VERCEL_ORG_ID}}" }' \
             > .vercel/project.json
-
-          echo ${{ secrets.APP_ENV_CONTENT }} | base64 -d > .env.local
-          echo ${{ secrets.APP_GOOGLE_SERVICE_ACCOUNT_CONTENT }} | base64 -d > .env.local
 
           vercel --prod --token=${{ secrets.VERCEL_TOKEN }}
 
