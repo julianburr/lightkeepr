@@ -29,6 +29,8 @@ jobs:
             > .vercel/project.json
 
           vercel --prod --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
 
   publish_packages:
     runs-on: ubuntu-latest
