@@ -1,6 +1,6 @@
-const { startBuild } = require("@lightkeepr/node");
+import { startBuild } from "@lightkeepr/node";
 
-const { getEnv } = require("../utils/env");
+import { getEnv } from "../utils/env";
 
 async function runStart(argv) {
   const env = getEnv(argv);
@@ -12,7 +12,7 @@ async function runStart(argv) {
   });
 }
 
-module.exports = {
+export default {
   command: "start",
   desc: "Starts new build",
 

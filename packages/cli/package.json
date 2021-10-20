@@ -3,8 +3,11 @@
   "version": "0.0.3",
   "description": "",
   "bin": {
-    "lighkeepr": "src/index.js"
+    "lighkeepr": "dist/index.js"
   },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "source": "src/index.ts",
   "keywords": [],
   "author": "Julian Burr <hello@julianburr.de>",
   "license": "MIT",
@@ -17,5 +20,8 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "devDependencies": {
+    "@types/node": "^16.11.1"
   }
 }

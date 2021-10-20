@@ -1,6 +1,5 @@
-const { stopBuild } = require("@lightkeepr/node");
-
-const { getEnv } = require("../utils/env");
+import { stopBuild } from "@lightkeepr/node";
+import { getEnv } from "../utils/env";
 
 async function runStop(argv) {
   const env = getEnv(argv);
@@ -11,7 +10,7 @@ async function runStop(argv) {
   });
 }
 
-module.exports = {
+export default {
   command: "stop",
   desc: "Finishes running build",
 

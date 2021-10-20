@@ -1,6 +1,8 @@
-const pkg = require("../../package.json");
+import pkg from "../../package.json";
 
-function getEnv(argv) {
+type EnhancedEnv = { [key: string]: any };
+
+export function getEnv(argv): EnhancedEnv {
   return {
     LIGHTKEEPR: true,
     LIGHTKEEPR_VERSION: pkg.version,
@@ -10,5 +12,3 @@ function getEnv(argv) {
     ...process.env,
   };
 }
-
-module.exports = { getEnv };

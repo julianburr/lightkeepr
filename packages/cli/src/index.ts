@@ -11,3 +11,5 @@ const argv = require("yargs")
   .alias("v", "version").argv;
 
 debug(`argv: ${JSON.stringify(argv)}`);
+
+export {};

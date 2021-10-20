@@ -1,6 +1,6 @@
-const { report } = require("@lightkeepr/node");
+import { report } from "@lightkeepr/node";
 
-const { getEnv } = require("../utils/env");
+import { getEnv } from "../utils/env";
 
 async function runReport(argv) {
   const env = getEnv(argv);
@@ -13,7 +13,7 @@ async function runReport(argv) {
   });
 }
 
-module.exports = {
+export default {
   command: "report",
   desc: "Creates lighthouse report and sends it to server",
 

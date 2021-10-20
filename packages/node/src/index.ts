@@ -1,13 +1,27 @@
-const fs = require("fs");
-const path = require("path");
-const fetch = require("node-fetch");
-const spawn = require("cross-spawn");
-const brotli = require("brotli");
-const FormData = require("form-data");
-const { v4: uuid } = require("uuid");
-const pako = require("pako");
+import * as fs from "fs";
+import * as path from "path";
+import fetch from "node-fetch";
+import spawn from "cross-spawn";
+import brotli from "brotli";
+import FormData from "form-data";
+import { v4 as uuid } from "uuid";
+import pako from "pako";
 
-async function startBuild({ token, apiUrl, branch, commit, repo }) {
+type StartBuildArgs = {
+  token: string;
+  apiUrl: string;
+  branch?: string;
+  commit?: string;
+  repo?: string;
+};
+
+export async function startBuild({
+  token,
+  apiUrl,
+  branch,
+  commit,
+  repo,
+}: StartBuildArgs) {
   return fetch(`${apiUrl}/builds/start`, {
     method: "POST",
     body: JSON.stringify({ branch, commit, repo }),
@@ -18,7 +32,7 @@ async function startBuild({ token, apiUrl, branch, commit, repo }) {
   }).then((res) => res.json());
 }
 
-async function stopBuild({ token, statusCode, apiUrl, buildId }) {
+export async function stopBuild({ token, statusCode, apiUrl, buildId }) {
   const res = await fetch(`${apiUrl}/builds/${buildId}/stop`, {
     method: "POST",
     body: JSON.stringify({ statusCode }),
@@ -31,13 +45,13 @@ async function stopBuild({ token, statusCode, apiUrl, buildId }) {
   return res;
 }
 
-async function report({ token, apiUrl, buildId, url }) {
+export async function report({ token, apiUrl, buildId, url }) {
   const lighthouseBin = path.resolve(
     __dirname,
     "../node_modules/.bin/lighthouse"
   );
 
-  const report = await new Promise((resolve, reject) => {
+  const report = await new Promise<string>((resolve, reject) => {
     let data = "";
     const p = spawn(lighthouseBin, [
       url,
@@ -84,5 +98,3 @@ async function report({ token, apiUrl, buildId, url }) {
 
   return res;
 }
-
-module.exports = { startBuild, stopBuild, report };

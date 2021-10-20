@@ -1,7 +1,7 @@
-const spawn = require("cross-spawn");
-const { startBuild, stopBuild } = require("@lightkeepr/node");
+import spawn from "cross-spawn";
+import { startBuild, stopBuild } from "@lightkeepr/node";
 
-const { getEnv } = require("../utils/env");
+import { getEnv } from "../utils/env";
 
 async function runExec(argv) {
   const [_, command, ...commandArgv] = argv._;
@@ -22,7 +22,7 @@ async function runExec(argv) {
 
   env.LIGHTKEEPR_BUILD_ID = build.id;
 
-  const status = await new Promise((resolve, reject) => {
+  const status = await new Promise<number>((resolve, reject) => {
     spawn(command, commandArgv, { stdio: "inherit", env })
       .on("error", reject)
       .on("close", resolve);
@@ -36,7 +36,7 @@ async function runExec(argv) {
   process.exit(status);
 }
 
-module.exports = {
+export default {
   command: "exec",
   desc: "Will create lightkeepr build and run given command",
 
