@@ -28,14 +28,13 @@ jobs:
           echo '{ "projectId": "${{ secrets.VERCEL_PROJECT_ID }}", "orgId": "${{ secrets.VERCEL_ORG_ID}}" }' \
             > .vercel/project.json
 
-          vercel --prod --token=${{ secrets.VERCEL_TOKEN }}
-        env:
-          SENTRY_URL: '${{ secrets.SENTRY_URL }}'
-          SENTRY_ORG: '${{ secrets.SENTRY_ORG }}'
-          SENTRY_PROJECT: '${{ secrets.APP_SENTRY_PROJECT }}'
-          SENTRY_AUTH_TOKEN: '${{ secrets.SENTRY_AUTH_TOKEN }}'
-          SENTRY_ENVIRONMENT: 'production'
-          SENTRY_LOG_LEVEL: 'DEBUG'
+          SENTRY_URL=${{ secrets.SENTRY_URL }} \
+            SENTRY_ORG=${{ secrets.SENTRY_ORG }} \
+            SENTRY_PROJECT=${{ secrets.APP_SENTRY_PROJECT }} \
+            SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }} \
+            SENTRY_ENVIRONMENT=prduction \
+            SENTRY_LOG_LEVEL=DEBUG \
+            vercel --prod --token=${{ secrets.VERCEL_TOKEN }}
 
   publish_packages:
     runs-on: ubuntu-latest
