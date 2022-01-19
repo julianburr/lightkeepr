@@ -81,20 +81,7 @@ type AppContentProps = {
 
 function AppContent({ Component, pageProps }: AppContentProps) {
   const authUser = useAuthUser();
-
-  if (!authUser?.uid) {
-    return <p>Not logged in</p>;
-  }
-
-  if (!authUser.user?.name || !authUser.organisationUsers?.length) {
-    return <p>Need to set up</p>;
-  }
-
-  return (
-    <Suspense fallback={<p>Loading...</p>}>
-      <Component authUser={authUser} {...pageProps} />
-    </Suspense>
-  );
+  return <Component authUser={authUser} {...pageProps} />;
 }
 
 export default function App(props: any) {

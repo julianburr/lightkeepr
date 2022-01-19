@@ -14,6 +14,13 @@ jobs:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
 
+      - name: Checkout GitHub Actions Repo
+        uses: actions/checkout@v2
+        with:
+          repository: julianburr/github-actions
+          token: ${{ secrets.GITHUB_TOKEN }}
+          path: .github/actions/custom-actions
+
       - name: Use Node.js
         uses: actions/setup-node@v1
         with:

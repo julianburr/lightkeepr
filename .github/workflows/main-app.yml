@@ -32,12 +32,6 @@ jobs:
         run: |-
           yarn
 
-      - name: Linting and typechecks
-        working-directory: ./app
-        run: |-
-          yarn lint --quiet
-          yarn typecheck
-
       - name: Create Google Service Account File
         working-directory: ./app
         run: |-
@@ -62,6 +56,12 @@ jobs:
           envkey_NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID: ${{ secrets.FIREBASE_MEASUREMENT_ID }}
           envkey_STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
           envkey_NEXT_PUBLIC_STRIPE_PUBLIC_KEY: ${{ secrets.STRIPE_PUBLIC_KEY }}
+
+      - name: Linting and typechecks
+        working-directory: ./app
+        run: |-
+          yarn lint --quiet
+          yarn typecheck
 
       - name: Deploy via Vercel
         uses: ./.github/actions/custom-actions/deploy-vercel
