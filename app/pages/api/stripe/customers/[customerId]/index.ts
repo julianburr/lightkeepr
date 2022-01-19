@@ -1,6 +1,11 @@
-import { stripeClient } from "../../../../../src/node/stripe";
+import { NextApiRequest, NextApiResponse } from "next";
 
-export default async function handler(req, res) {
+import { stripeClient } from "src/node/stripe";
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   const customer = await stripeClient.customers.retrieve(req.query.customerId);
   const subscriptions = await stripeClient.subscriptions.list({
     customer: req.query.customerId,
@@ -10,11 +15,9 @@ export default async function handler(req, res) {
     customer: req.query.customerId,
     type: "card",
   });
-  res
-    .status(200)
-    .json({
-      ...customer,
-      subscriptions: subscriptions.data,
-      paymentMethods: paymentMethods.data,
-    });
+  res.status(200).json({
+    ...customer,
+    subscriptions: subscriptions.data,
+    paymentMethods: paymentMethods.data,
+  });
 }

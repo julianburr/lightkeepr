@@ -1,11 +1,14 @@
-import React, { createContext, useState } from "react";
+import { createContext, useState } from "react";
+import { PropsWithChildren } from "react";
 
 export const FirestoreContext = createContext({
   cache: {},
-  setCache: () => {},
+  setCache: (_: any): any => {},
 });
 
-export function FirestoreProvider(props) {
+type FirestoreProviderProps = PropsWithChildren<Record<never, any>>;
+
+export function FirestoreProvider(props: FirestoreProviderProps) {
   const [cache, setCache] = useState({});
   return <FirestoreContext.Provider value={{ cache, setCache }} {...props} />;
 }

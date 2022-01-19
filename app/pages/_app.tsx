@@ -1,18 +1,12 @@
 import "src/utils/firebase";
 
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, ComponentType } from "react";
 import { createGlobalStyle } from "styled-components";
 import { Reset } from "styled-reset";
+import Head from "next/head";
 
 import { FirebaseProvider } from "src/@packages/firebase";
 import { useAuthUser } from "src/hooks/use-auth-user";
-
-import { AppLayout } from "src/layouts/app";
-import { AuthLayout } from "src/layouts/auth";
-import { SetupLayout } from "src/layouts/setup";
-import { LoginScreen } from "src/screens/auth/login";
-import { LoadingLayout } from "src/layouts/loading";
-import Head from "next/head";
 
 const Styles = createGlobalStyle`
   *, *:before, *:after {
@@ -80,31 +74,36 @@ const Styles = createGlobalStyle`
   }
 `;
 
-function AppContent({ Component, pageProps }) {
+type AppContentProps = {
+  Component: ComponentType<any>;
+  pageProps: any;
+};
+
+function AppContent({ Component, pageProps }: AppContentProps) {
   const authUser = useAuthUser();
 
   if (!authUser?.uid) {
-    return (
-      <AuthLayout {...pageProps}>
-        <LoginScreen />
-      </AuthLayout>
-    );
+    return <p>Not logged in</p>;
   }
 
   if (!authUser.user?.name || !authUser.organisationUsers?.length) {
-    return <SetupLayout {...pageProps} />;
+    return <p>Need to set up</p>;
   }
 
   return (
-    <AppLayout>
-      <Suspense fallback={<p>Loading...</p>}>
-        <Component authUser={authUser} {...pageProps} />
-      </Suspense>
-    </AppLayout>
+    <Suspense fallback={<p>Loading...</p>}>
+      <Component authUser={authUser} {...pageProps} />
+    </Suspense>
   );
 }
 
-export default function App(props) {
+export default function App(props: any) {
+  // HACK: Suspense not suported on SSR yet :/
+  // https://nextjs.org/docs/advanced-features/react-18
+  if (typeof window === "undefined") {
+    return null;
+  }
+
   return (
     <>
       <Head>
@@ -112,7 +111,7 @@ export default function App(props) {
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz&display=swap"
           rel="stylesheet"
         />
       </Head>
@@ -121,7 +120,7 @@ export default function App(props) {
       <Styles />
 
       <FirebaseProvider>
-        <Suspense fallback={<LoadingLayout text="Authenticating..." />}>
+        <Suspense fallback={<p>Loading...</p>}>
           <AppContent {...props} />
         </Suspense>
       </FirebaseProvider>

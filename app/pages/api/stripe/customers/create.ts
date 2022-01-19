@@ -1,6 +1,11 @@
-import { stripeClient } from "../../../../src/node/stripe";
+import { NextApiRequest, NextApiResponse } from "next";
 
-export default async function handler(req, res) {
+import { stripeClient } from "src/node/stripe";
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   if (req.method === "POST") {
     const { email, name } = req.body;
     console.log({ req, body: req.body, email, name });

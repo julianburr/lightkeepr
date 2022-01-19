@@ -1,31 +1,23 @@
 import React, {
   createContext,
+  PropsWithChildren,
   useContext,
   useEffect,
   useMemo,
   useState,
 } from "react";
 import { getAuth } from "firebase/auth";
-import {
-  getFirestore,
-  doc,
-  query,
-  where,
-  collection,
-} from "firebase/firestore";
 
-import { useCollection, useDocument } from "..";
-
-const db = getFirestore();
-
-let resolveUserPromise;
+let resolveUserPromise: any;
 let userPromise = new Promise((resolve) => {
   resolveUserPromise = resolve;
 });
 
 export const AuthContext = createContext<any>(undefined);
 
-export function AuthProvider(props) {
+type AuthProviderProps = PropsWithChildren<Record<never, any>>;
+
+export function AuthProvider(props: AuthProviderProps) {
   const [authUser, setAuthUser] = useState<any>(userPromise);
 
   useEffect(() => {
@@ -33,7 +25,7 @@ export function AuthProvider(props) {
     auth?.onAuthStateChanged?.((user) => {
       console.log();
       setAuthUser(user);
-      resolveUserPromise();
+      resolveUserPromise?.();
     });
   }, []);
 

@@ -1,6 +1,11 @@
-import { stripeClient } from "../../../../../../src/node/stripe";
+import { NextApiRequest, NextApiResponse } from "next";
 
-export default async function handler(req, res) {
+import { stripeClient } from "src/node/stripe";
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   const baseUrl = `http://localhost:3000/${req.query.orgId}/settings/subscription`;
   const session = await stripeClient.checkout.sessions.create({
     mode: "subscription",

@@ -19,10 +19,23 @@ jobs:
         with:
           node-version: "14.x"
 
+      - name: Use node modules from cache if available
+        uses: ./.github/actions/custom-actions/cache-node-modules
+
+      - name: Install dependencies
+        run: |-
+          yarn
+
+      - name: Linting and typechecks
+        working-directory: ./packages
+        run: |-
+          yarn lint --quiet
+          yarn typecheck
+
       - name: Publish packages
         run: |-
           echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
-
+          yarn --cwd=./packages build
           yarn release:canary
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}

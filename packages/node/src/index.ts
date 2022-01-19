@@ -32,7 +32,19 @@ export async function startBuild({
   }).then((res) => res.json());
 }
 
-export async function stopBuild({ token, statusCode, apiUrl, buildId }) {
+type StopBuildArgs = {
+  token: string;
+  statusCode?: number;
+  apiUrl: string;
+  buildId: string;
+};
+
+export async function stopBuild({
+  token,
+  statusCode,
+  apiUrl,
+  buildId,
+}: StopBuildArgs) {
   const res = await fetch(`${apiUrl}/builds/${buildId}/stop`, {
     method: "POST",
     body: JSON.stringify({ statusCode }),
@@ -45,7 +57,14 @@ export async function stopBuild({ token, statusCode, apiUrl, buildId }) {
   return res;
 }
 
-export async function report({ token, apiUrl, buildId, url }) {
+type ReportArgs = {
+  token: string;
+  apiUrl: string;
+  buildId: string;
+  url: string;
+};
+
+export async function report({ token, apiUrl, buildId, url }: ReportArgs) {
   const lighthouseBin = path.resolve(
     __dirname,
     "../node_modules/.bin/lighthouse"

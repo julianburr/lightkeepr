@@ -13,6 +13,5 @@
     "resolveJsonModule": true,
     "declaration": true
   },
-  "include": ["packages"],
   "exclude": ["./node_modules", "./**/node_modules"]
 }

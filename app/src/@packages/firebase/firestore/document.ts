@@ -1,8 +1,9 @@
-import { useContext } from "react";
 import invariant from "invariant";
 import { onSnapshot } from "firebase/firestore";
 
-import { FirestoreContext } from "./context";
+type Cache = {
+  [key: string]: any;
+};
 
 type UseDocumentOptions = {
   key?: string;
@@ -10,9 +11,9 @@ type UseDocumentOptions = {
   fetch?: boolean;
 };
 
-let cache = {};
+let cache: Cache = {};
 
-export function useDocument(query, options?: UseDocumentOptions) {
+export function useDocument(query: any, options?: UseDocumentOptions) {
   if (!fetch || !query) {
     return;
   }
@@ -28,7 +29,7 @@ export function useDocument(query, options?: UseDocumentOptions) {
     });
 
     cache[cacheKey] = cacheItem;
-    onSnapshot(query, (snap) => {
+    onSnapshot(query, (snap: any) => {
       const item = { id: snap.id, ...snap.data() };
       cache[cacheKey].data = item;
       cacheItem?.resolve();

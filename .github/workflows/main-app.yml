@@ -38,6 +38,11 @@ jobs:
           yarn lint --quiet
           yarn typecheck
 
+      - name: Create Google Service Account File
+        working-directory: ./app
+        run: |-
+          echo ${{ secrets.APP_GOOGLE_SERVICE_ACCOUNT_CONTENT }} | base64 -d > google-service-account.json
+
       - name: Create .env
         uses: SpicyPizza/create-envfile@v1
         with:
@@ -48,8 +53,17 @@ jobs:
           envkey_SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           envkey_SENTRY_ENVIRONMENT: "production"
           envkey_SENTRY_LOG_LEVEL: "DEBUG"
+          envkey_NEXT_PUBLIC_FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
+          envkey_NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
+          envkey_NEXT_PUBLIC_FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+          envkey_NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: ${{ secrets.FIREBASE_STORAGE_BUCKET }}
+          envkey_NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
+          envkey_NEXT_PUBLIC_FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+          envkey_NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID: ${{ secrets.FIREBASE_MEASUREMENT_ID }}
+          envkey_STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+          envkey_NEXT_PUBLIC_STRIPE_PUBLIC_KEY: ${{ secrets.STRIPE_PUBLIC_KEY }}
 
-     - name: Deploy via Vercel
+      - name: Deploy via Vercel
         uses: ./.github/actions/custom-actions/deploy-vercel
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
