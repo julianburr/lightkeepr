@@ -43,7 +43,7 @@ jobs:
           directory: ./app
           envkey_SENTRY_URL: ${{ secrets.SENTRY_URL }}
           envkey_SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
-          envkey_SENTRY_PROJECT: ${{ secrets.APP_SENTRY_PROJECT }}
+          envkey_SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
           envkey_SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           envkey_SENTRY_ENVIRONMENT: "production"
           envkey_SENTRY_LOG_LEVEL: "DEBUG"
