@@ -2,7 +2,7 @@ import deepmerge from "deepmerge";
 
 function create(baseUrl?: string) {
   let _baseUrl = baseUrl;
-  let _defaultOptions = {
+  const _defaultOptions = {
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
@@ -27,7 +27,8 @@ function create(baseUrl?: string) {
   }
 
   async function post(path: string, args: any = {}, options: any = {}) {
-    const url = path.startsWith("http") ? path : `${_baseUrl}${path}`;
+    const baseUrl = _baseUrl || window?.location?.origin;
+    const url = path.startsWith("http") ? path : `${baseUrl}${path}`;
     const response = await fetch(
       url,
       _getOptions({ method: "POST", body: JSON.stringify(args), ...options })

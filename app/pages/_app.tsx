@@ -1,78 +1,14 @@
 import "src/utils/firebase";
 
 import { Suspense, ComponentType } from "react";
-import { createGlobalStyle } from "styled-components";
 import { Reset } from "styled-reset";
 import Head from "next/head";
 
+import { GlobalStyles } from "src/theme";
 import { FirebaseProvider } from "src/@packages/firebase";
 import { useAuthUser } from "src/hooks/use-auth-user";
 
-const Styles = createGlobalStyle`
-  *, *:before, *:after {
-    box-sizing: border-box;
-  }
-
-  html {
-    font-size: 62.5%;
-  }
-
-  html, body, #__next {
-    width: 100%;
-    height: 100%;
-  }
-
-  body {
-    margin: 0;
-    padding: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-    font-size: 1.4rem;
-    font-weight: 400;
-    line-height: 1.4;
-    color: #444;
-  }
-
-  b {
-    font-weight: 800;
-  }
-
-  h1 {
-    font-size: 2.8rem;
-    margin: 2.4rem 0 1.2rem;
-  }
-
-  h2 {
-    font-size: 2rem;
-    margin: 1.6rem 0 .8rem;
-  }
-
-  h3 {
-    font-size: 1.6rem;
-    margin: 1.6rem 0 .4rem;
-  }
-
-  h4 {
-    font-size: 1.4rem;
-    margin: 1.6rem 0 0;
-  }
-
-  h1, h2, h3, h4 {
-    font-weight: 600;
-    line-height: 1.2;
-
-    &:first-child {
-      margin-top: 0;
-    }
-  }
-
-  p {
-    margin: .8rem 0;
-  }
-
-  input, button, textarea, select {
-    font: inherit;
-  }
-`;
+import favicon from "src/assets/favicon.png";
 
 type AppContentProps = {
   Component: ComponentType<any>;
@@ -94,6 +30,23 @@ export default function App(props: any) {
   return (
     <>
       <Head>
+        <meta charSet="utf-8" />
+        <meta httpEquiv="x-ua-compatible" content="ie=edge" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, shrink-to-fit=no"
+        />
+        <meta name="robots" content="all" />
+
+        {/* Basics */}
+        <title>Lighkeepr</title>
+        <meta
+          name="description"
+          content="Lighthouse performance scores in the cloud"
+        />
+        <meta name="keywords" content="performance, lighthouse, web vitals" />
+        <link rel="icon" href={favicon.src} type="image/png" />
+
         {/* Add Google Font incl DNS prefetch for perf improvements */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
@@ -104,7 +57,7 @@ export default function App(props: any) {
       </Head>
 
       <Reset />
-      <Styles />
+      <GlobalStyles />
 
       <FirebaseProvider>
         <Suspense fallback={<p>Loading...</p>}>

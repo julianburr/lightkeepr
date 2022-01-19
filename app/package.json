@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "typecheck": "tsc -p ."
   },
   "dependencies": {
@@ -24,7 +24,7 @@
   },
   "devDependencies": {
     "@sentry/nextjs": "^6.13.2",
-    "@svgr/webpack": "^5.5.0",
+    "@svgr/webpack": "^6.2.0",
     "@types/invariant": "^2.2.35",
     "@types/node": "^16.9.6",
     "@types/react": "^17.0.24",

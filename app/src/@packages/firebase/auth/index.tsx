@@ -9,7 +9,7 @@ import React, {
 import { getAuth } from "firebase/auth";
 
 let resolveUserPromise: any;
-let userPromise = new Promise((resolve) => {
+const userPromise = new Promise((resolve) => {
   resolveUserPromise = resolve;
 });
 

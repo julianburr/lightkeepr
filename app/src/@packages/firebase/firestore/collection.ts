@@ -1,9 +1,8 @@
+import { useContext } from "react";
 import invariant from "invariant";
 import { onSnapshot } from "firebase/firestore";
 
-type Cache = {
-  [key: string]: any;
-};
+import { FirestoreContext } from "./context";
 
 type UseCollectionOptions = {
   key: string;
@@ -11,15 +10,15 @@ type UseCollectionOptions = {
   fetch?: boolean;
 };
 
-let cache: Cache = {};
-
 export function useCollection(query: any, options: UseCollectionOptions) {
+  const { cache, setCache } = useContext(FirestoreContext);
+
   if (!fetch || !query) {
     return;
   }
 
-  const cacheKey = options?.key;
-  invariant(cacheKey, "You need to define a key for collections.");
+  invariant(options?.key, "You need to define a key for collections.");
+  const cacheKey = `collection/${options.key}`;
 
   let cacheItem = cache[cacheKey];
 
@@ -28,14 +27,14 @@ export function useCollection(query: any, options: UseCollectionOptions) {
     cacheItem.promise = new Promise((resolve) => {
       cacheItem.resolve = resolve;
     });
-    cache[cacheKey] = cacheItem;
+    setCache?.((state) => ({ ...state, [cacheKey]: cacheItem }));
 
     onSnapshot(query, (snap: any) => {
-      let items: any[] = [];
+      const items: any[] = [];
       snap.forEach((doc: any) => {
         items.push({ id: doc.id, ...doc.data() });
       });
-      cache[cacheKey].data = items;
+      setCache?.((state) => ({ ...state, [cacheKey]: { data: items } }));
       cacheItem?.resolve();
     });
   }

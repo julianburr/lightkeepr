@@ -2,10 +2,10 @@ type Cache = {
   [key: string]: any;
 };
 
-let cache: Cache = {};
+const cache: Cache = {};
 
 export function useSuspense(getPromise: () => Promise<any>, key: string) {
-  let fromCache = cache[key];
+  const fromCache = cache[key];
 
   if (typeof fromCache?.then === "function" || fromCache instanceof Error) {
     throw fromCache;

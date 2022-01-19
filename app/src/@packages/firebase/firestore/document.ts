@@ -1,9 +1,7 @@
 import invariant from "invariant";
 import { onSnapshot } from "firebase/firestore";
-
-type Cache = {
-  [key: string]: any;
-};
+import { useContext } from "react";
+import { FirestoreContext } from "./context";
 
 type UseDocumentOptions = {
   key?: string;
@@ -11,27 +9,34 @@ type UseDocumentOptions = {
   fetch?: boolean;
 };
 
-let cache: Cache = {};
-
 export function useDocument(query: any, options?: UseDocumentOptions) {
+  const { cache, setCache } = useContext(FirestoreContext);
+
   if (!fetch || !query) {
     return;
   }
 
-  const cacheKey = options?.key || query?.path;
-  invariant(cacheKey, "You need to define a key for this document query.");
+  invariant(
+    options?.key || query?.path,
+    "You need to define a key for this document query."
+  );
+  const cacheKey = `doc/${options?.key || query?.path}`;
 
-  let cacheItem = cache[cacheKey];
+  let cacheItem = cache?.[cacheKey];
   if (cacheItem === undefined) {
     cacheItem = {};
     cacheItem.promise = new Promise((resolve) => {
       cacheItem.resolve = resolve;
     });
 
-    cache[cacheKey] = cacheItem;
+    setCache?.((state: any) => ({ ...state, [cacheKey]: cacheItem }));
     onSnapshot(query, (snap: any) => {
-      const item = { id: snap.id, ...snap.data() };
-      cache[cacheKey].data = item;
+      setCache?.((state: any) => ({
+        ...state,
+        [cacheKey]: {
+          data: snap.exists() ? { id: snap.id, ...snap.data() } : null,
+        },
+      }));
       cacheItem?.resolve();
     });
   }

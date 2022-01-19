@@ -9,7 +9,7 @@ module.exports = withSentryConfig(
   {
     reactStrictMode: true,
 
-    webpack(config) {
+    webpack: (config) => {
       config.module.rules.push({
         test: /\.svg$/,
         use: [
