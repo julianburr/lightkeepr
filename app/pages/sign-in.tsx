@@ -121,6 +121,7 @@ export default function SignIn({ isSignUp }: SigninProps) {
               />
             )}
             <Button
+              intend="primary"
               size="large"
               fullWidth
               type="submit"

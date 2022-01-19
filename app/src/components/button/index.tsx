@@ -21,11 +21,10 @@ const Container = styled(CoreButton)<{
       ? "4.4rem"
       : "3.6rem"};
   background: ${(props) =>
-    props.intend === "primary" ? "#bbd7e7" : "transparent"};
-  border: ${(props) =>
-    props.intend === "primary" ? "0 none" : ".1rem solid #eee"};
+    props.intend === "primary" ? "#5B93E7" : "transparent"};
+  border: 0.1rem solid rgba(0, 0, 0, 0.1);
   border-radius: 0.3rem;
-  color: #000;
+  color: ${(props) => (props.intend === "primary" ? "#fff" : "#000")};
   padding: ${(props) =>
     props.size === "small"
       ? "0 1.2rem"
@@ -34,7 +33,7 @@ const Container = styled(CoreButton)<{
       : "0 1.8rem"};
   margin: 0;
   width: ${(props) => (props.fullWidth ? "100%" : "auto")};
-  transition: border 0.2s, filter 0.2s, opacity 0.2s;
+  transition: border 0.2s, background 0.2s;
 
   svg {
     height: 1.4em;
@@ -46,8 +45,9 @@ const Container = styled(CoreButton)<{
 
   &:hover,
   &:focus {
-    border: ${(props) =>
-      props.intend === "primary" ? "0 none" : ".1rem solid #ddd"};
+    border: 0.1rem solid rgba(0, 0, 0, 0.2);
+    background: ${(props) =>
+      props.intend === "primary" ? "#4A80D2" : "transparent"};
 
     svg {
       filter: grayscale(0);

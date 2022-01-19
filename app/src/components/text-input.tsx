@@ -5,7 +5,7 @@ import styled from "styled-components";
 
 export const Input = styled.input<{ error?: any }>`
   border: 0.1rem solid;
-  border-color: ${(props) => (props.error ? `#f4737d` : `#eee`)};
+  border-color: ${(props) => (props.error ? `#f4737d` : `rgba(0, 0, 0, 0.1)`)};
   border-radius: 0.3rem;
   height: 3.6rem;
   padding: 0 1.2rem;
@@ -14,7 +14,8 @@ export const Input = styled.input<{ error?: any }>`
 
   &:hover,
   &:focus {
-    border-color: ${(props) => (props.error ? `#f4737d` : `#ddd`)};
+    border-color: ${(props) =>
+      props.error ? `#f4737d` : `rgba(0, 0, 0, 0.2)`};
   }
 `;
 
