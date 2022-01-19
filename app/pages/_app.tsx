@@ -12,6 +12,7 @@ import { AuthLayout } from "src/layouts/auth";
 import { SetupLayout } from "src/layouts/setup";
 import { LoginScreen } from "src/screens/auth/login";
 import { LoadingLayout } from "src/layouts/loading";
+import Head from "next/head";
 
 const Styles = createGlobalStyle`
   *, *:before, *:after {
@@ -104,20 +105,21 @@ function AppContent({ Component, pageProps }) {
 }
 
 export default function App(props) {
-  // HACK: Suspense not suported on SSR yet :/
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) {
-    return null;
-  }
-
   return (
     <>
+      <Head>
+        {/* Add Google Font incl DNS prefetch for perf improvements */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500&display=swap"
+          rel="stylesheet"
+        />
+      </Head>
+
       <Reset />
       <Styles />
+
       <FirebaseProvider>
         <Suspense fallback={<LoadingLayout text="Authenticating..." />}>
           <AppContent {...props} />

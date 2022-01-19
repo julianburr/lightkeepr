@@ -1,16 +1,19 @@
-name: Publish (PR)
+name: Publish Packages Canary (PR)
 
-on: "pull_request"
+on:
+  pull_request:
+    paths:
+      - packages/**
 
 jobs:
-  publish_packages:
+  publish_packages_canary:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
-      
+
       - name: Use Node.js
         uses: actions/setup-node@v1
         with:
@@ -20,11 +23,7 @@ jobs:
         run: |-
           echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
 
-          yarn
           yarn release:canary
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-
-          

@@ -1,0 +1,47 @@
+name: Deploy App Staging (PR)
+
+on:
+  pull_request:
+    paths:
+      - app/**
+
+jobs:
+  deploy_app_staging:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Checkout GitHub Actions Repo
+        uses: actions/checkout@v2
+        with:
+          repository: julianburr/github-actions
+          token: ${{ secrets.GITHUB_TOKEN }}
+          path: .github/actions/custom-actions
+
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: "14.x"
+
+      - name: Use node modules from cache if available
+        uses: ./.github/actions/custom-actions/cache-node-modules
+
+      - name: Install dependencies
+        run: |-
+          yarn
+
+      - name: Linting and typechecks
+        working-directory: ./app
+        run: |-
+          yarn lint --quiet
+          yarn typecheck
+
+      - name: Deploy via Vercel
+        uses: ./.github/actions/custom-actions/deploy-vercel
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID}}
+          vercel-token: ${{ secrets.VERCEL_TOKEN}}
+          is-production: false
+          add-comment: true

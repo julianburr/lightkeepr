@@ -1,0 +1,60 @@
+name: Deploy App
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - app/**
+
+jobs:
+  deploy_app:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Checkout GitHub Actions Repo
+        uses: actions/checkout@v2
+        with:
+          repository: julianburr/github-actions
+          token: ${{ secrets.GITHUB_TOKEN }}
+          path: .github/actions/custom-actions
+
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: "14.x"
+
+      - name: Use node modules from cache if available
+        uses: ./.github/actions/custom-actions/cache-node-modules
+
+      - name: Install dependencies
+        run: |-
+          yarn
+
+      - name: Linting and typechecks
+        working-directory: ./app
+        run: |-
+          yarn lint --quiet
+          yarn typecheck
+
+      - name: Create .env
+        uses: SpicyPizza/create-envfile@v1
+        with:
+          directory: ./app
+          envkey_SENTRY_URL: ${{ secrets.SENTRY_URL }}
+          envkey_SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          envkey_SENTRY_PROJECT: ${{ secrets.APP_SENTRY_PROJECT }}
+          envkey_SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          envkey_SENTRY_ENVIRONMENT: "production"
+          envkey_SENTRY_LOG_LEVEL: "DEBUG"
+
+     - name: Deploy via Vercel
+        uses: ./.github/actions/custom-actions/deploy-vercel
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID}}
+          vercel-token: ${{ secrets.VERCEL_TOKEN}}
+          is-production: true
+          add-comment: false

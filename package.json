@@ -21,11 +21,8 @@
   "scripts": {
     "nuke": "rm -rf node_modules **/node_modules packages/**/node_modules",
     "reinstall": "yarn nuke && yarn",
-    "build": "parcel build packages/*/",
-    "watch": "parcel watch packages/*/",
     "release": "lerna publish from-package --conventional-commits --no-private --yes",
     "release:canary": "lerna publish --conventional-commits --no-private --no-changelog --no-git-tag-version --no-push --canary --preid pr --yes",
-    "typecheck": "tsc --noemit",
     "postinstall": "patch-package"
   },
   "dependencies": {
@@ -33,11 +30,6 @@
     "lerna": "^3.22.1",
     "parcel": "^2.0.0-rc.0",
     "patch-package": "^6.2.2",
-    "postinstall-postinstall": "^2.1.0",
-    "typescript": ">=3.0.0"
-  },
-  "devDependencies": {
-    "@parcel/packager-ts": "^2.0.0",
-    "@types/node": "^16.11.1"
+    "postinstall-postinstall": "^2.1.0"
   }
 }
