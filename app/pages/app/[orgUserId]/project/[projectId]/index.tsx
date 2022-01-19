@@ -1,16 +1,12 @@
-import { getAuth } from "firebase/auth";
-
 import { Auth } from "src/components/auth";
+import { AppLayout } from "src/layouts/app";
 
-const auth = getAuth();
-
-export default function ProjectDashboard() {
+export default function ProjectDetails() {
   return (
     <Auth>
-      <p>Project Details</p>
-      <hr />
-
-      <button onClick={() => auth.signOut()}>Logout</button>
+      <AppLayout>
+        <p>Project Details</p>
+      </AppLayout>
     </Auth>
   );
 }

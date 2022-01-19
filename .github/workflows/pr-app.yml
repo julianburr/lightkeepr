@@ -54,6 +54,11 @@ jobs:
           envkey_STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
           envkey_NEXT_PUBLIC_STRIPE_PUBLIC_KEY: ${{ secrets.STRIPE_PUBLIC_KEY }}
 
+      - name: Debug
+        working-directory: ./app
+        run: |-
+          cat .env
+
       - name: Linting and typechecks
         working-directory: ./app
         run: |-

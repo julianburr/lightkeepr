@@ -1,16 +1,12 @@
-import { getAuth } from "firebase/auth";
-
 import { Auth } from "src/components/auth";
-
-const auth = getAuth();
+import { AppLayout } from "src/layouts/app";
 
 export default function OrganisationSettings() {
   return (
     <Auth>
-      <p>Organisation Settings</p>
-      <hr />
-
-      <button onClick={() => auth.signOut()}>Logout</button>
+      <AppLayout>
+        <p>Organisation Settings</p>
+      </AppLayout>
     </Auth>
   );
 }

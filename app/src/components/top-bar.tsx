@@ -5,6 +5,7 @@ import { getAuth } from "firebase/auth";
 import { Button } from "./button";
 import { useEffect, useRef, useState } from "react";
 import { Ref } from "react";
+import { useAuthUser } from "src/hooks/use-auth-user";
 
 const Container = styled.div<{ scrolled?: boolean }>`
   width: 100%;
@@ -48,6 +49,8 @@ const Logo = styled.div<{ scrolled?: boolean }>`
 const auth = getAuth();
 
 export function TopBar() {
+  const authUser = useAuthUser();
+
   const containerRef = useRef<HTMLDivElement>();
   const [scrolled, setScrolled] = useState(false);
   useEffect(() => {
@@ -72,7 +75,11 @@ export function TopBar() {
         </Logo>
       </Inner>
       <Inner>
-        <Button onClick={() => auth.signOut()}>Logout</Button>
+        {authUser.organisationUsers?.length ? (
+          <Button onClick={() => auth.signOut()}>Hi</Button>
+        ) : (
+          <Button onClick={() => auth.signOut()}>Logout</Button>
+        )}
       </Inner>
     </Container>
   );
