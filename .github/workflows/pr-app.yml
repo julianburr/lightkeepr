@@ -30,6 +30,11 @@ jobs:
         run: |-
           yarn
 
+      - name: Build packages
+        working-directory: ./packages
+        run: |-
+          yarn build
+
       - name: Create Google Service Account File
         working-directory: ./app
         run: |-
