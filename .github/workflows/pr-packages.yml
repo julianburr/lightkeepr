@@ -33,6 +33,11 @@ jobs:
         run: |-
           yarn
 
+      - name: Build packages
+        working-directory: ./packages
+        run: |-
+          yarn build
+
       - name: Linting and typechecks
         working-directory: ./packages
         run: |-
