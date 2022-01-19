@@ -22,44 +22,11 @@ import { EmailInput } from "src/components/text-input";
 import { Spacer } from "src/components/spacer";
 import styled from "styled-components";
 import { Form } from "src/components/form";
+import { Button } from "src/components/button";
 
 const auth = getAuth();
 const googleProvider = new GoogleAuthProvider();
 const githubProvider = new GithubAuthProvider();
-
-const SignInButton = styled.button`
-  border: 0.1rem solid #eee;
-  background: transparent;
-  width: 100%;
-  height: 4.4rem;
-  border-radius: 0.3rem;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  transition: border 0.2s, filter 0.2s, opacity 0.2s;
-
-  svg {
-    height: 1.4em;
-    width: auto;
-    margin: 0 0.8rem 0 0;
-    filter: grayscale(1);
-  }
-
-  &:hover,
-  &:focus {
-    border-color: #ddd;
-
-    svg {
-      filter: grayscale(0);
-    }
-  }
-
-  &:disabled {
-    opacity: 0.5;
-    pointer-events: none;
-  }
-`;
 
 type SigninProps = {
   isSignUp?: boolean;
@@ -101,17 +68,25 @@ export default function SignIn({ isSignUp }: SigninProps) {
 
   return (
     <AuthLayout>
-      <SignInButton onClick={() => signInWithRedirect(auth, googleProvider)}>
-        <GoogleSvg role="presentation" />
-        <span>{isSignUp ? "Sign up with Google" : "Sign in with Google"}</span>
-      </SignInButton>
+      <Button
+        icon={<GoogleSvg role="presentation" />}
+        size="large"
+        fullWidth
+        onClick={() => signInWithRedirect(auth, googleProvider)}
+      >
+        {isSignUp ? "Sign up with Google" : "Sign in with Google"}
+      </Button>
 
       <Spacer h=".6rem" />
 
-      <SignInButton onClick={() => signInWithRedirect(auth, githubProvider)}>
-        <GithubSvg role="presentation" />
-        <span>{isSignUp ? "Sign up with Github" : "Sign in with Github"}</span>
-      </SignInButton>
+      <Button
+        icon={<GithubSvg role="presentation" />}
+        size="large"
+        fullWidth
+        onClick={() => signInWithRedirect(auth, githubProvider)}
+      >
+        {isSignUp ? "Sign up with Github" : "Sign in with Github"}
+      </Button>
 
       <Spacer h=".6rem" />
 
@@ -145,15 +120,20 @@ export default function SignIn({ isSignUp }: SigninProps) {
                 required
               />
             )}
-            <SignInButton type="submit" disabled={use("isSubmitting")}>
+            <Button
+              size="large"
+              fullWidth
+              type="submit"
+              disabled={use("isSubmitting")}
+            >
               {isSignUp ? "Sign up with Email" : "Sign in with Email"}
-            </SignInButton>
+            </Button>
           </Form>
         </>
       ) : (
-        <SignInButton onClick={() => setUseEmail(true)}>
+        <Button size="large" fullWidth onClick={() => setUseEmail(true)}>
           {isSignUp ? "Sign up with Email" : "Sign in with Email"}
-        </SignInButton>
+        </Button>
       )}
 
       {isSignUp ? (

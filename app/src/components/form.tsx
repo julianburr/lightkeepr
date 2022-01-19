@@ -7,7 +7,7 @@ const Container = styled.form<{ columns?: number; gap?: string }>`
     Array.from(new Array(props.columns || 1))
       .fill("1fr")
       .join(" ")};
-  gap: ${(props) => props.gap || "1.2rem"};
+  gap: ${(props) => props.gap || "1.6rem"};
 `;
 
 type FormProps = ComponentProps<typeof Container>;

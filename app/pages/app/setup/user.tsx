@@ -8,6 +8,7 @@ import { Field } from "src/components/field";
 import { TextInput } from "src/components/text-input";
 import { Button } from "src/components/button";
 import { Form } from "src/components/form";
+import { ReadonlyInput } from "src/components/readonly-input";
 
 const db = getFirestore();
 
@@ -15,9 +16,7 @@ export default function UserSetup() {
   const authUser = useAuthUser();
 
   const { form, use } = useForm({
-    defaultValues: {
-      name: authUser.displayName,
-    },
+    defaultValues: { name: authUser.displayName },
     onSubmit: async (values) => {
       await setDoc(doc(db, "users", authUser.email), {
         name: values.name,
@@ -32,8 +31,8 @@ export default function UserSetup() {
 
         <Form ref={form}>
           <Field name="name" label="Name" Input={TextInput} required />
-          <Button primary type="submit" disabled={use("isSubmitting")}>
-            Create Account
+          <Button intend="primary" type="submit" disabled={use("isSubmitting")}>
+            Create account
           </Button>
         </Form>
       </SetupLayout>

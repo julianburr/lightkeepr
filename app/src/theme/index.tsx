@@ -54,7 +54,7 @@ export const GlobalStyles = createGlobalStyle`
 
   h1, h2, h3, h4 {
     font-weight: 600;
-    line-height: 1.1;
+    line-height: 1.05;
     font-family: "Yanone Kaffeesatz";
 
     &:first-child {

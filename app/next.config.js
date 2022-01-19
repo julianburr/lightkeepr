@@ -5,31 +5,32 @@
 
 const { withSentryConfig } = require("@sentry/nextjs");
 
-module.exports = withSentryConfig(
-  {
-    reactStrictMode: true,
+const config = {
+  reactStrictMode: true,
 
-    webpack: (config) => {
-      config.module.rules.push({
-        test: /\.svg$/,
-        use: [
-          {
-            loader: "@svgr/webpack",
-            options: {
-              svgoConfig: {
-                plugins: [
-                  {
-                    name: "removeViewBox",
-                    active: false,
-                  },
-                ],
-              },
+  webpack: (config) => {
+    config.module.rules.push({
+      test: /\.svg$/,
+      use: [
+        {
+          loader: "@svgr/webpack",
+          options: {
+            svgoConfig: {
+              plugins: [
+                {
+                  name: "removeViewBox",
+                  active: false,
+                },
+              ],
             },
           },
-        ],
-      });
-      return config;
-    },
+        },
+      ],
+    });
+    return config;
   },
-  { silent: true }
-);
+};
+
+module.exports = process.env.SENTRY_URL
+  ? withSentryConfig(config, { silent: true })
+  : config;

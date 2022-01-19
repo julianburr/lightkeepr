@@ -1,5 +1,4 @@
-import { Ref } from "react";
-import { ComponentType, ComponentProps, ReactNode } from "react";
+import { Ref, ComponentType, ReactNode } from "react";
 import styled from "styled-components";
 import { Label } from "./label";
 
@@ -10,36 +9,28 @@ const Container = styled.div`
 
 const Description = styled.p``;
 
-const Error = styled.p`
-  color: #f4737d;
+const WrapLabel = styled.div`
+  height: 1.8rem;
+  flex-direction: row;
+  align-items: center;
+  padding: 0 0.3rem;
 `;
 
-export type BoxProps<TProps extends { title: string }> = {
-  as: React.ComponentType<TProps>;
-} & {
-  props: Omit<TProps, "title">;
-};
-
-type PassedThroughProps = {
-  id: string;
+type FieldProps = {
+  id?: string;
   name: string;
   label?: ReactNode;
   description?: ReactNode;
   required?: boolean;
   error?: any;
   ref?: Ref<any>;
+  Input: ComponentType<any>;
+  inputProps?: any;
 };
-
-type FieldProps<TProps> = {
-  Input: React.ComponentType<PassedThroughProps & TProps>;
-} & Omit<PassedThroughProps, "id"> & {
-    id?: string;
-    inputProps?: TProps;
-  };
 
 let uuid = 0;
 
-export function Field<TProps>({
+export function Field({
   id = `field--${++uuid}`,
   name,
   label,
@@ -48,18 +39,18 @@ export function Field<TProps>({
   inputProps,
   required,
   error,
-}: FieldProps<TProps>) {
+}: FieldProps) {
   return (
     <Container>
       {label && (
-        <Label htmlFor={id} required={required}>
-          {label}
-        </Label>
+        <WrapLabel>
+          <Label htmlFor={id} required={required}>
+            {label}
+          </Label>
+        </WrapLabel>
       )}
       {description && <Description>{description}</Description>}
 
-      {/* eslint-disable-next-line */}
-      {/* @ts-ignore */}
       <Input
         id={id}
         name={name}

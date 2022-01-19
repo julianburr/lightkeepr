@@ -1,5 +1,4 @@
 import { useForm } from "react-cool-form";
-import { getAuth } from "firebase/auth";
 import {
   addDoc,
   collection,
@@ -8,17 +7,24 @@ import {
   updateDoc,
 } from "firebase/firestore";
 
-import { useAuthUser } from "src/hooks/use-auth-user";
-import { Auth } from "src/components/auth";
 import { api } from "src/utils/api-client";
+import { useAuthUser } from "src/hooks/use-auth-user";
+import { SetupLayout } from "src/layouts/setup";
+import { Auth } from "src/components/auth";
+import { Field } from "src/components/field";
+import { EmailInput, TextInput } from "src/components/text-input";
+import { Button } from "src/components/button";
+import { Form } from "src/components/form";
 
-const auth = getAuth();
 const db = getFirestore();
 
 export default function OrganisationSetup() {
   const authUser = useAuthUser();
 
+  console.log({ authUser });
+
   const { form, use } = useForm({
+    defaultValues: { name: "", billingEmail: authUser.email },
     onSubmit: async (values) => {
       // Create organisation
       const org = await addDoc(collection(db, "organisations"), {
@@ -48,16 +54,29 @@ export default function OrganisationSetup() {
 
   return (
     <Auth>
-      <h1>{authUser.email}: Organisation setup</h1>
+      <SetupLayout>
+        <h1>
+          Almost done! You'll need to create an organisation to get started.
+        </h1>
 
-      <form ref={form}>
-        <input type="text" name="name" />
-
-        <button type="submit" disabled={use("isSubmitting")}>
-          Create Organisation
-        </button>
-      </form>
-      <button onClick={() => auth.signOut()}>Logout</button>
+        <Form ref={form}>
+          <Field
+            name="name"
+            label="Organisation name"
+            Input={TextInput}
+            required
+          />
+          <Field
+            name="billingEmail"
+            label="Billing email"
+            Input={EmailInput}
+            required
+          />
+          <Button intend="primary" type="submit" disabled={use("isSubmitting")}>
+            Create organisation
+          </Button>
+        </Form>
+      </SetupLayout>
     </Auth>
   );
 }

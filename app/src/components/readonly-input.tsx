@@ -1,10 +1,25 @@
-import { ReactNode } from "react";
+import styled from "styled-components";
 import { Value } from "./value";
 
+const Container = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 3.6rem;
+  border-top: 0.1rem solid #eee;
+`;
+
 type ReadonlyInputProps = {
-  value?: ReactNode;
+  id?: string;
+  name?: string;
+  value?: string | number;
 };
 
-export function ReadonlyInput({ value }: ReadonlyInputProps) {
-  return <Value>{value || "—"}</Value>;
+export function ReadonlyInput({ id, name, value }: ReadonlyInputProps) {
+  return (
+    <Container>
+      <input id={id} type="hidden" name={name} value={value} />
+      <Value>{value || "—"}</Value>
+    </Container>
+  );
 }
