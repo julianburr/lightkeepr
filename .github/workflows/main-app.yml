@@ -38,7 +38,7 @@ jobs:
           echo ${{ secrets.APP_GOOGLE_SERVICE_ACCOUNT_CONTENT }} | base64 -d > google-service-account.json
 
       - name: Create .env
-        uses: SpicyPizza/create-envfile@v1
+        uses: SpicyPizza/create-envfile@v1.2
         with:
           directory: ./app
           envkey_SENTRY_URL: ${{ secrets.SENTRY_URL }}
