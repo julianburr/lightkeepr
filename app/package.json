@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@google-cloud/storage": "^5.18.0",
+    "@popperjs/core": "^2.11.2",
     "deepmerge": "^4.2.2",
     "firebase": "^9.6.3",
     "invariant": "^2.2.4",
@@ -18,6 +19,7 @@
     "react": "17.0.2",
     "react-cool-form": "^0.4.1",
     "react-dom": "17.0.2",
+    "react-popper": "^2.2.5",
     "stripe": "^8.197.0",
     "styled-components": "^5.3.3",
     "styled-reset": "^4.3.4"

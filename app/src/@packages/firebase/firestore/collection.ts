@@ -6,6 +6,7 @@ import { FirestoreContext } from "./context";
 
 type UseCollectionOptions = {
   key: string;
+  mapItem?: (item: any) => any;
   suspense?: boolean;
   fetch?: boolean;
 };
@@ -31,8 +32,12 @@ export function useCollection(query: any, options: UseCollectionOptions) {
 
     onSnapshot(query, (snap: any) => {
       const items: any[] = [];
-      snap.forEach((doc: any) => {
-        items.push({ id: doc.id, ...doc.data() });
+      snap.forEach(async (doc: any) => {
+        items.push(
+          options?.mapItem
+            ? await options.mapItem({ id: doc.id, ...doc.data() })
+            : { id: doc.id, ...doc.data() }
+        );
       });
       setCache?.((state) => ({ ...state, [cacheKey]: { data: items } }));
       cacheItem?.resolve();

@@ -92,9 +92,7 @@ export default function SignIn({ isSignUp }: SigninProps) {
 
       {useEmail ? (
         <>
-          <Spacer h="1.6rem" />
-          <hr />
-          <Spacer h="1.6rem" />
+          <Spacer h="3.2rem" />
 
           <Form ref={form} gap=".6rem" noValidate>
             <Field
