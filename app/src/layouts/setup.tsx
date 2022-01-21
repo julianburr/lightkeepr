@@ -21,7 +21,7 @@ type SetupLayoutProps = PropsWithChildren<Record<never, any>>;
 export function SetupLayout({ children }: SetupLayoutProps) {
   return (
     <Container>
-      <TopBar />
+      <TopBar setup />
       <Content>{children}</Content>
     </Container>
   );

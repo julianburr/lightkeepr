@@ -9,6 +9,7 @@ import { FirebaseProvider } from "src/@packages/firebase";
 import { useAuthUser } from "src/hooks/use-auth-user";
 
 import favicon from "src/assets/favicon.png";
+import { DialogProvider } from "src/hooks/use-dialog";
 
 type AppContentProps = {
   Component: ComponentType<any>;
@@ -61,7 +62,9 @@ export default function App(props: any) {
 
       <FirebaseProvider>
         <Suspense fallback={<p>Loading...</p>}>
-          <AppContent {...props} />
+          <DialogProvider>
+            <AppContent {...props} />
+          </DialogProvider>
         </Suspense>
       </FirebaseProvider>
     </>

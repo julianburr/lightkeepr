@@ -30,7 +30,7 @@ const Ul = styled.ul`
   hr {
     border: 0 none;
     height: 0.1rem;
-    background: rgba(0, 0, 0, 0.1);
+    background: rgba(0, 0, 0, 0.05);
     width: calc(100% - 0.8rem);
     margin: 0.5rem auto;
   }
@@ -47,7 +47,7 @@ const Li = styled.li`
 `;
 
 const Container = styled.div`
-  padding: 0.8rem;
+  padding: 1.2rem;
 `;
 
 type CustomItemObj = {

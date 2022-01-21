@@ -19,6 +19,8 @@ import { TitleBar } from "src/components/title-bar";
 
 import PlusSvg from "src/assets/icons/plus.svg";
 import { Spacer } from "src/components/spacer";
+import { InviteUserDialog } from "dialogs/invite-user";
+import { useDialog } from "src/hooks/use-dialog";
 
 const db = getFirestore();
 
@@ -28,12 +30,8 @@ type UserItemProps = {
 
 function UserItems() {
   const authUser = useAuthUser();
-  const router = useRouter();
 
-  const orgId = authUser.organisationUsers?.find?.(
-    (u: any) => u.id === router.query.orgUserId
-  )?.organisation?.id;
-
+  const orgId = authUser.organisationUser?.organisation?.id;
   const orgRef = doc(db, "organisations", orgId);
   const organisationUsers = useCollection(
     query(
@@ -50,19 +48,25 @@ function UserItem({ data }: UserItemProps) {
   const user = useDocument(doc(db, "users", data.user.id));
   return (
     <ListItem>
-      <P>{user.name}</P>
-      <Small grey>{data.user.id}</Small>
+      <P>{data.user.id}</P>
+      <Small grey>{user?.name || "—"}</Small>
     </ListItem>
   );
 }
 
 export default function Users() {
+  const inviteUserDialog = useDialog(InviteUserDialog);
+  console.log({ inviteUserDialog });
   return (
     <Auth>
       <AppLayout>
         <TitleBar
           title="Users"
-          actions={<Button icon={<PlusSvg />}>Invite new user</Button>}
+          actions={
+            <Button icon={<PlusSvg />} onClick={() => inviteUserDialog.open()}>
+              Invite new user
+            </Button>
+          }
         />
         <Spacer h="1.2rem" />
         <Suspense fallback={null}>

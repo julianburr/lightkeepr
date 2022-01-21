@@ -16,8 +16,9 @@ import { useRouter } from "next/router";
 import { ActionMenu } from "./action-menu";
 import { Bold, P, Small } from "./text";
 import { Spacer } from "./spacer";
+import { AccountActionMenu } from "./popouts/account";
 
-const Container = styled.div<{ scrolled?: boolean }>`
+const Container = styled.header<{ scrolled?: boolean }>`
   width: 100%;
   padding: 0 1.8rem;
   height: 6.8rem;
@@ -33,6 +34,7 @@ const Container = styled.div<{ scrolled?: boolean }>`
   position: sticky;
   top: 0;
   background: #fff;
+  z-index: 100;
 `;
 
 const Inner = styled.div`
@@ -87,7 +89,11 @@ const IconButton = styled.button`
 
 const auth = getAuth();
 
-export function TopBar() {
+type TopBarProps = {
+  setup?: boolean;
+};
+
+export function TopBar({ setup }: TopBarProps) {
   const router = useRouter();
   const authUser = useAuthUser();
 
@@ -119,7 +125,9 @@ export function TopBar() {
         </Logo>
       </Inner>
       <Inner>
-        {authUser.organisationUsers?.length ? (
+        {setup ? (
+          <Button onClick={() => auth.signOut()}>Logout</Button>
+        ) : (
           <>
             <Buttons>
               <Tooltip content="Notifications">
@@ -137,53 +145,8 @@ export function TopBar() {
                 )}
               </Tooltip>
             </Buttons>
-            <ActionMenu
-              placement="bottom-end"
-              items={[
-                {
-                  items: [
-                    {
-                      isCustom: true,
-                      Content: () => (
-                        <>
-                          <P>
-                            You are currently logged in as {authUser.user.name}
-                          </P>
-                          <Spacer h=".3rem" />
-                          <Small grey>{authUser.user.id}</Small>
-                        </>
-                      ),
-                    },
-                  ],
-                },
-                {
-                  label: "Accounts",
-                  items: authUser.organisationUsers.map((u: any) => ({
-                    selectable: true,
-                    selected: u.id === router.query.orgUserId,
-                    label: u.id,
-                    href: `/app/${u.id}`,
-                  })),
-                },
-                {
-                  items: [
-                    {
-                      label: "Account settings",
-                      href: `/app/${router.query.orgUserId}/account/settings`,
-                    },
-                    {
-                      label: "Sign out",
-                      onClick: () => auth.signOut(),
-                    },
-                  ],
-                },
-              ]}
-            >
-              {(props) => <Avatar name={authUser.user.name} {...props} />}
-            </ActionMenu>
+            <AccountActionMenu />
           </>
-        ) : (
-          <Button onClick={() => auth.signOut()}>Logout</Button>
         )}
       </Inner>
     </Container>

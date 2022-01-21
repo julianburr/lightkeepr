@@ -11,7 +11,7 @@ const Container = styled(Button)`
     width: 100%;
     border: 0 none;
     border-radius: 0.3rem;
-    padding: 0.8rem;
+    padding: 1.2rem;
     text-align: left;
     display: flex;
     flex-direction: row;
