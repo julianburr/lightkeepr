@@ -37,10 +37,8 @@ export function useDialog(Dialog: ComponentType<any>) {
   const [instanceUuid] = useState(++uuid);
 
   const { dialogs, setDialogs } = useContext(DialogContext);
-  console.log({ dialogs, setDialogs });
 
   const open = useCallback(() => {
-    console.log("open called", { setDialogs, id: instanceUuid, Dialog, close });
     setDialogs?.((dialogs) =>
       dialogs.concat([{ id: instanceUuid, Dialog, close }])
     );

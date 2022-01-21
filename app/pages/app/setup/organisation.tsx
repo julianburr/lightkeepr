@@ -21,8 +21,6 @@ const db = getFirestore();
 export default function OrganisationSetup() {
   const authUser = useAuthUser();
 
-  console.log({ authUser });
-
   const { form, use } = useForm({
     defaultValues: { name: "", billingEmail: authUser.email },
     onSubmit: async (values) => {

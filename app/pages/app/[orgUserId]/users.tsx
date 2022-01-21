@@ -56,7 +56,6 @@ function UserItem({ data }: UserItemProps) {
 
 export default function Users() {
   const inviteUserDialog = useDialog(InviteUserDialog);
-  console.log({ inviteUserDialog });
   return (
     <Auth>
       <AppLayout>

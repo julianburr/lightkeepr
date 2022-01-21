@@ -23,7 +23,6 @@ export function AuthProvider(props: AuthProviderProps) {
   useEffect(() => {
     const auth = getAuth();
     auth?.onAuthStateChanged?.((user) => {
-      console.log();
       setAuthUser(user);
       resolveUserPromise?.();
     });

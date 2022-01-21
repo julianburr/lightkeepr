@@ -16,7 +16,7 @@ export function InviteUserDialog({ onClose }: DialogPassthroughProps) {
   const authUser = useAuthUser();
 
   const { form, use } = useForm({
-    defaultValues: { email: "", role: "member" },
+    defaultValues: { email: "", role: { value: "member", label: "Member" } },
     onSubmit: async (values) => {
       try {
         const orgId = authUser.organisationUser?.organisation?.id;
@@ -28,7 +28,7 @@ export function InviteUserDialog({ onClose }: DialogPassthroughProps) {
         await addDoc(collection(db, "organisationUsers"), {
           organisation: orgRef,
           user: userRef,
-          role: values.role,
+          role: values.role.value,
           status: "pending",
           created: new Date(),
           createdBy: currentUserRef,
@@ -46,13 +46,19 @@ export function InviteUserDialog({ onClose }: DialogPassthroughProps) {
       actions={
         <ButtonBar
           right={
-            <Button
-              type="submit"
-              form="invite-user"
-              disabled={use("isSubmitting")}
-            >
-              Invite
-            </Button>
+            <>
+              <Button type="button" onClick={onClose}>
+                Cancel
+              </Button>
+              <Button
+                intend="primary"
+                type="submit"
+                form="invite-user"
+                disabled={use("isSubmitting")}
+              >
+                Invite
+              </Button>
+            </>
           }
         />
       }

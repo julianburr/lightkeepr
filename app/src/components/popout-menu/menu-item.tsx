@@ -84,21 +84,21 @@ export type MenuItemObj = {
 type MenuItemProps = {
   item: MenuItemObj;
   setVisible: Dispatch<SetStateAction<boolean>>;
+  element?: HTMLElement;
 };
 
-export function MenuItem({ item, setVisible }: MenuItemProps) {
+export function MenuItem({ item, setVisible, element }: MenuItemProps) {
   const containerProps = item.href
     ? { href: item.href }
     : {
         onClick: async (e: any) => {
           await item?.onClick?.(e);
           if (!e.defaultPrevented) {
+            element?.focus?.();
             setVisible(false);
           }
         },
       };
-
-  console.log({ containerProps });
 
   return (
     <Container tabIndex={-1} data-focusable {...containerProps}>

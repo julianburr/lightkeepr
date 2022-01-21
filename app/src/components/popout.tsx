@@ -13,7 +13,7 @@ import {
 import { createPortal } from "react-dom";
 import { usePopper } from "react-popper";
 import styled from "styled-components";
-import { Placement } from "@popperjs/core";
+import { Placement, VirtualElement } from "@popperjs/core";
 
 const Container = styled.div`
   background: #fff;
@@ -21,6 +21,7 @@ const Container = styled.div`
   position: relative;
   filter: drop-shadow(0 0 1rem rgba(0, 0, 0, 0.25));
   border-radius: 0.3rem;
+  z-index: 1000;
 `;
 
 const Arrow = styled.div`
@@ -76,33 +77,35 @@ type PopoutProps = {
   children: (props: PassthroughProps) => ReactNode;
   placement?: Placement;
   portalTarget?: HTMLElement;
+  showArrow?: boolean;
 };
 
 export function Popout({
   Content,
   children,
-  placement = "top",
+  placement = "bottom",
   portalTarget,
+  showArrow = true,
 }: PopoutProps) {
   const [visible, setVisible] = useState(false);
 
   // Initialise popper
-  const [element, setElement] = useState<HTMLElement | null>(null);
-  const [popper, setPopper] = useState<HTMLElement | null>(null);
-  const [arrow, setArrow] = useState<HTMLElement | null>(null);
+  const [element, setElement] = useState<HTMLElement>();
+  const [popper, setPopper] = useState<HTMLElement>();
+  const [arrow, setArrow] = useState<HTMLElement>();
   const { styles, attributes, update } = usePopper(element, popper, {
     placement,
     modifiers: [
       {
         name: "arrow",
         options: {
-          element: arrow,
+          element: showArrow ? arrow : undefined,
         },
       },
       {
         name: "offset",
         options: {
-          offset: [0, 8],
+          offset: [0, showArrow ? 8 : 3],
         },
       },
     ],
@@ -184,7 +187,7 @@ export function Popout({
   return (
     <>
       {children({
-        ref: setElement,
+        ref: setElement as any as Ref<HTMLElement>,
         onMouseDown: handleMouseDown,
         onClick: handleClick,
         onKeyDown: handleKeyDown,
@@ -207,11 +210,13 @@ export function Popout({
                 popper={popper}
               />
             </div>
-            <Arrow
-              data-popper-arrow
-              ref={setArrow as any}
-              style={styles.arrow}
-            />
+            {showArrow && (
+              <Arrow
+                data-popper-arrow
+                ref={setArrow as any}
+                style={styles.arrow}
+              />
+            )}
           </Container>,
           portalTarget || element?.parentElement || window.document.body
         )}

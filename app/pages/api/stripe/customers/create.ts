@@ -8,7 +8,6 @@ export default async function handler(
 ) {
   if (req.method === "POST") {
     const { email, name } = req.body;
-    console.log({ req, body: req.body, email, name });
 
     if (!email || !name) {
       res.status(402).json({ message: "You need to define email and name!" });

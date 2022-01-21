@@ -34,6 +34,7 @@ const Container = styled.div<{ width?: string }>`
   max-height: 100%;
   overflow: auto;
   position: relative;
+  outline-offset: 0.2rem;
 `;
 
 const TitleBar = styled.div<{ showShadow?: boolean }>`
@@ -124,10 +125,10 @@ export function Dialog({
   const handleClose = onClose || dialogMeta?.close;
 
   // Trap focus within this dialog
-  const dialogRef = useRef<HTMLDivElement>();
+  const backdropRef = useRef<HTMLDivElement>();
   useEffect(() => {
-    if (dialogRef.current) {
-      const trap = createFocusTrap(dialogRef.current);
+    if (backdropRef.current) {
+      const trap = createFocusTrap(backdropRef.current);
       trap.activate();
       return () => {
         trap.deactivate();
@@ -149,6 +150,7 @@ export function Dialog({
 
   // Keep track of scroll position, so we can show shadows based in it on the
   // header and footer of the dialog
+  const dialogRef = useRef<HTMLDivElement>();
   const [scroll, setScroll] = useState<{ current?: number; max?: number }>({});
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -174,7 +176,7 @@ export function Dialog({
   return (
     <>
       {createPortal(
-        <Backdrop>
+        <Backdrop data-tether-target ref={backdropRef as Ref<HTMLDivElement>}>
           <Container
             width={width}
             tabIndex={0}

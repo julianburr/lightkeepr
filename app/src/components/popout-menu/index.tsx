@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { useCallback } from "react";
 import {
   Ref,
@@ -18,8 +19,7 @@ const Ul = styled.ul`
   padding: 0.4rem;
   display: flex;
   flex-direction: column;
-  min-width: 16rem;
-  max-width: 19rem;
+  width: 100%;
   line-height: 1.2;
   word-wrap: break-word;
 
@@ -70,7 +70,7 @@ export type Items = Item[] | ItemGroup[];
 type PopoutMenuProps = {
   items: Items;
   setVisible: Dispatch<SetStateAction<boolean>>;
-  element: HTMLElement | null;
+  element?: HTMLElement;
 };
 
 export function PopoutMenu({ items, setVisible, element }: PopoutMenuProps) {
@@ -119,7 +119,7 @@ export function PopoutMenu({ items, setVisible, element }: PopoutMenuProps) {
     return items.map((item, index) => {
       if ("items" in item) {
         return (
-          <>
+          <Fragment key={item.key || index}>
             {index > 0 && (
               <Li>
                 <hr />
@@ -135,7 +135,7 @@ export function PopoutMenu({ items, setVisible, element }: PopoutMenuProps) {
                 {renderItems(item.items)}
               </ul>
             </Li>
-          </>
+          </Fragment>
         );
       }
 
@@ -151,7 +151,7 @@ export function PopoutMenu({ items, setVisible, element }: PopoutMenuProps) {
 
       return (
         <Li key={item.key || index}>
-          <MenuItem item={item} setVisible={setVisible} />
+          <MenuItem item={item} setVisible={setVisible} element={element} />
         </Li>
       );
     });

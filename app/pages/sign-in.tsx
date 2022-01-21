@@ -47,7 +47,6 @@ export default function SignIn({ isSignUp }: SigninProps) {
             values.email!,
             values.password!
           );
-          console.log({ response });
         } else {
           await signInWithEmailAndPassword(
             auth,
