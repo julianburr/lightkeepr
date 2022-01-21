@@ -1,22 +1,18 @@
+import { useEffect, useRef, useState, Ref } from "react";
 import styled from "styled-components";
-
-import LogoSvg from "src/assets/logo.svg";
-import { getAuth } from "firebase/auth";
-import { Button } from "./button";
-import { useEffect, useRef, useState } from "react";
-import { Ref } from "react";
-import { useAuthUser } from "src/hooks/use-auth-user";
-import { Avatar } from "./avatar";
-
-import BellSvg from "src/assets/icons/bell.svg";
-import GiftSvg from "src/assets/icons/gift.svg";
-import { Tooltip } from "./tooltip";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { ActionMenu } from "./action-menu";
-import { Bold, P, Small } from "./text";
-import { Spacer } from "./spacer";
+import { getAuth } from "firebase/auth";
+
+import { useAuthUser } from "src/hooks/use-auth-user";
+
+import { Button } from "./button";
+import { Tooltip } from "./tooltip";
 import { AccountActionMenu } from "./popouts/account";
+
+import LogoSvg from "src/assets/logo.svg";
+import BellSvg from "src/assets/icons/bell.svg";
+import GiftSvg from "src/assets/icons/gift.svg";
 
 const Container = styled.header<{ scrolled?: boolean }>`
   width: 100%;

@@ -1,3 +1,5 @@
+import "src/utils/firebase";
+
 import { useMemo } from "react";
 import {
   getFirestore,

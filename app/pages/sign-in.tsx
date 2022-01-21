@@ -1,3 +1,5 @@
+import "src/utils/firebase";
+
 import { useState } from "react";
 import { useForm } from "react-cool-form";
 import Link from "next/link";

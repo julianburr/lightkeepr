@@ -1,3 +1,5 @@
+import "src/utils/firebase";
+
 import { useForm } from "react-cool-form";
 import { addDoc, collection, doc, getFirestore } from "firebase/firestore";
 

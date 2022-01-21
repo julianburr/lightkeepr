@@ -1,5 +1,6 @@
+import "src/utils/firebase";
+
 import { Suspense } from "react";
-import { useRouter } from "next/router";
 import {
   collection,
   doc,
