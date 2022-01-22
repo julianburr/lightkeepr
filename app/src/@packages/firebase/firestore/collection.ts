@@ -31,6 +31,9 @@ export function useCollection(query: any, options: UseCollectionOptions) {
     setCache?.((state) => ({ ...state, [cacheKey]: cacheItem }));
 
     onSnapshot(query, (snap: any) => {
+      if (snap.metadata?.fromCache) {
+        return;
+      }
       const items: any[] = [];
       snap.forEach(async (doc: any) => {
         items.push(

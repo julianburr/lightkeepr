@@ -1,28 +1,38 @@
-import { getAuth } from "firebase/auth";
-import { useRouter } from "next/router";
+import "src/utils/firebase";
 
-import { useAuthUser } from "src/hooks/use-auth-user";
+import { getAuth } from "firebase/auth";
+import { collection, getFirestore } from "firebase/firestore";
+import { useRouter } from "next/router";
 import styled from "styled-components";
 
-import { ActionMenu } from "../action-menu";
-import { Avatar } from "../avatar";
-import { Spacer } from "../spacer";
-import { P, Small } from "../text";
+import { useCollection } from "src/@packages/firebase";
+import { useAuthUser } from "src/hooks/use-auth-user";
+import { ActionMenu } from "src/components/action-menu";
+import { Avatar } from "src/components/avatar";
+import { P, Small } from "src/components/text";
+import { useFirestore } from "src/@packages/firebase/firestore/context";
 
 const auth = getAuth();
+const db = getFirestore();
 
 const Email = styled(Small)`
   && {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    margin: 0.4rem 0 0;
+    margin: 0.6rem 0 0;
   }
 `;
 
 export function AccountActionMenu() {
   const authUser = useAuthUser();
   const router = useRouter();
+
+  const { clearCache } = useFirestore();
+
+  const organisations = useCollection(collection(db, "organisations"), {
+    key: "organisations",
+  });
 
   return (
     <ActionMenu
@@ -43,12 +53,17 @@ export function AccountActionMenu() {
         },
         {
           label: "Accounts",
-          items: authUser.organisationUsers.map((u: any) => ({
-            selectable: true,
-            selected: u.id === router.query.orgUserId,
-            label: u.id,
-            href: `/app/${u.id}`,
-          })),
+          items: authUser.organisationUsers.map((u: any) => {
+            const orgName =
+              organisations?.find?.((o: any) => o.id === u.organisation.id)
+                ?.name || "n/a";
+            return {
+              selectable: true,
+              selected: u.id === router.query.orgUserId,
+              label: orgName,
+              href: `/app/${u.id}`,
+            };
+          }),
         },
         {
           items: [
@@ -58,7 +73,10 @@ export function AccountActionMenu() {
             },
             {
               label: "Sign out",
-              onClick: () => auth.signOut(),
+              onClick: async () => {
+                await auth.signOut();
+                clearCache?.();
+              },
             },
           ],
         },

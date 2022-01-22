@@ -1,13 +1,10 @@
 import { Storage } from "@google-cloud/storage";
 
 import credentials from "google-service-account.json";
-import { NextApiRequest, NextApiResponse } from "next";
 
-const storage = new Storage({
-  projectId: credentials.project_id,
-  credentials,
-});
+import { createHandler } from "src/utils/node/api";
 
+const storage = new Storage({ projectId: credentials.project_id, credentials });
 const bucket = storage.bucket("lightkeepr-7a7ee.appspot.com");
 
 async function readJson(stream: any): Promise<string> {
@@ -20,19 +17,15 @@ async function readJson(stream: any): Promise<string> {
   });
 }
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  const { reportId } = req.query;
+export default createHandler({
+  get: async (req, res) => {
+    const { reportId } = req.query;
 
-  const file = bucket.file(`${reportId}.json`);
+    const file = bucket.file(`${reportId}.json`);
 
-  try {
     const [meta, api] = await file.get();
     const data = await readJson(file.createReadStream());
+
     res.status(200).json({ meta, api, report: JSON.parse(data) });
-  } catch (e: any) {
-    res.status(500).json({ message: e.message, stack: e.stack });
-  }
-}
+  },
+});

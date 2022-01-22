@@ -12,10 +12,15 @@
   "dependencies": {
     "@google-cloud/storage": "^5.18.0",
     "@popperjs/core": "^2.11.2",
+    "@sendgrid/mail": "^7.6.0",
     "deepmerge": "^4.2.2",
     "firebase": "^9.6.3",
+    "firebase-admin": "^10.0.2",
     "focus-trap": "^6.7.2",
     "invariant": "^2.2.4",
+    "mime-types": "^2.1.34",
+    "mjml": "^4.11.0",
+    "mjml-react": "^2.0.3",
     "next": "12.0.8",
     "react": "17.0.2",
     "react-cool-form": "^0.4.1",
@@ -23,12 +28,15 @@
     "react-popper": "^2.2.5",
     "stripe": "^8.197.0",
     "styled-components": "^5.3.3",
-    "styled-reset": "^4.3.4"
+    "styled-reset": "^4.3.4",
+    "url-loader": "^4.1.1"
   },
   "devDependencies": {
     "@sentry/nextjs": "^6.13.2",
     "@svgr/webpack": "^6.2.0",
     "@types/invariant": "^2.2.35",
+    "@types/mime-types": "^2.1.1",
+    "@types/mjml-react": "^2.0.3",
     "@types/node": "^16.9.6",
     "@types/react": "^17.0.24",
     "@types/react-dom": "^17.0.11",

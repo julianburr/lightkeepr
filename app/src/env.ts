@@ -12,4 +12,7 @@ export const env = {
     secretKey: process.env.STRIPE_SECRET_KEY,
     publicKey: process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY,
   },
+  sendgrid: {
+    apiKey: process.env.SENDGRID_API_KEY,
+  },
 };

@@ -25,6 +25,7 @@ import { Spacer } from "src/components/spacer";
 import styled from "styled-components";
 import { Form } from "src/components/form";
 import { Button } from "src/components/button";
+import { useErrorDialog } from "src/hooks/use-dialog";
 
 const auth = getAuth();
 const googleProvider = new GoogleAuthProvider();
@@ -38,13 +39,15 @@ export default function SignIn({ isSignUp }: SigninProps) {
   const router = useRouter();
   const authUser = useAuthUser();
 
+  const errorDialog = useErrorDialog();
+
   const [useEmail, setUseEmail] = useState(!!router.query.email);
   const { form, use } = useForm({
     defaultValues: { email: router.query.email, password: "" },
     onSubmit: async (values) => {
       try {
         if (isSignUp) {
-          const response = await createUserWithEmailAndPassword(
+          await createUserWithEmailAndPassword(
             auth,
             values.email!,
             values.password!
@@ -57,7 +60,14 @@ export default function SignIn({ isSignUp }: SigninProps) {
           );
         }
       } catch (e: any) {
-        console.error(e);
+        console.log({ e });
+        if (e.code === "auth/user-not-found") {
+          errorDialog.open({
+            message:
+              `User with the provided credentials not found! Make sure that ` +
+              `your email and password are entered correctly.`,
+          });
+        }
       }
     },
   });

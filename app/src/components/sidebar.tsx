@@ -1,11 +1,28 @@
+import "src/utils/firebase";
+
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { ComponentProps, ReactNode } from "react";
 import styled from "styled-components";
+import {
+  collection,
+  doc,
+  getFirestore,
+  query,
+  where,
+} from "firebase/firestore";
+
+import { useCollection } from "src/@packages/firebase";
+import { useAuthUser } from "src/hooks/use-auth-user";
+
+import { Button } from "./button";
 
 import CreditCardSvg from "src/assets/icons/credit-card.svg";
 import UsersSvg from "src/assets/icons/users.svg";
 import SettingsSvg from "src/assets/icons/settings.svg";
+import PlusSvg from "src/assets/icons/plus.svg";
+
+const db = getFirestore();
 
 const Container = styled.menu`
   width: 28rem;
@@ -76,15 +93,40 @@ function NavItem({ children, icon, ...props }: NavItemProps) {
 }
 
 export function Sidebar() {
-  const router = useRouter();
+  const authUser = useAuthUser();
 
+  const router = useRouter();
   const { orgUserId } = router.query;
+
+  const orgId = authUser.organisationUser?.organisation?.id;
+  const projects = useCollection(
+    orgId
+      ? query(
+          collection(db, "projects"),
+          where("organisation", "==", doc(db, "organisations", orgId))
+        )
+      : undefined,
+    { key: `${orgUserId}/projects` }
+  );
 
   return (
     <Container>
       <ul>
         <Heading>Projects</Heading>
-        <NavItem href={`/app/${orgUserId}/project/xx`}>Example Project</NavItem>
+        {projects?.length ? (
+          projects.map((project: any) => (
+            <NavItem
+              key={project.id}
+              href={`/app/${orgUserId}/projects/${project.id}`}
+            >
+              {project.name}
+            </NavItem>
+          ))
+        ) : (
+          <Button icon={<PlusSvg />} href={`/app/${orgUserId}/projects/new`}>
+            Create Project
+          </Button>
+        )}
 
         <Heading>Organisation</Heading>
         <NavItem icon={<UsersSvg />} href={`/app/${orgUserId}/users`}>

@@ -1,7 +1,15 @@
+import {
+  ReactNode,
+  ComponentProps,
+  ComponentType,
+  PropsWithChildren,
+} from "react";
 import Link from "next/link";
-import { ComponentType } from "react";
-import { PropsWithChildren } from "react";
 import styled from "styled-components";
+
+import { ActionMenu } from "./action-menu";
+import { P, Small } from "./text";
+import { Button } from "./button";
 
 const Ul = styled.ul<{ columns?: number; gap?: string }>`
   margin: 0;
@@ -16,14 +24,15 @@ const Ul = styled.ul<{ columns?: number; gap?: string }>`
 
 const Li = styled.li`
   display: flex;
-  flex-direction: column;
   margin: 0;
   list-style: none;
 
   & > div,
   & > a {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
     padding: 1.2rem 1.8rem;
     border: 0.1rem solid rgba(0, 0, 0, 0.1);
     border-radius: 0.6rem;
@@ -37,6 +46,20 @@ const Li = styled.li`
       margin: 0;
     }
   }
+`;
+
+const Content = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 0 0.8rem 0 0;
+`;
+
+const WrapTags = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0 2.4rem 0 0;
 `;
 
 type ListProps = {
@@ -69,22 +92,41 @@ export function List({
 
 type ListItemProps = PropsWithChildren<{
   href?: string;
+  title: ReactNode;
+  meta?: ReactNode;
+  tags?: ReactNode;
+  actions?: ComponentProps<typeof ActionMenu>["items"];
+  disabled?: boolean;
 }>;
 
-export function ListItem({ href, children }: ListItemProps) {
+export function ListItem({ href, title, meta, tags, actions }: ListItemProps) {
+  const content = (
+    <>
+      <Content>
+        <P>{title}</P>
+        {meta && <Small grey>{meta}</Small>}
+      </Content>
+
+      <WrapTags>{tags}</WrapTags>
+      {!!actions?.length && (
+        <ActionMenu items={actions} placement="bottom-end">
+          {(props) => <Button {...props}>Actions</Button>}
+        </ActionMenu>
+      )}
+    </>
+  );
+
   if (href) {
     return (
       <Li>
-        <Link href={href}>
-          <a>{children}</a>
-        </Link>
+        <Link href={href}>{content}</Link>
       </Li>
     );
   }
 
   return (
     <Li>
-      <div>{children}</div>
+      <div>{content}</div>
     </Li>
   );
 }

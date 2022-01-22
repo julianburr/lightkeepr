@@ -56,6 +56,7 @@ const CoreButton = forwardRef(function CoreButton(
   return (
     <button
       ref={ref}
+      type="button"
       {...(props as ButtonTagProps)}
       onClick={handleClick}
       disabled={loading || props.disabled}

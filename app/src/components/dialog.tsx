@@ -13,6 +13,9 @@ import { createPortal } from "react-dom";
 import { Ref } from "react";
 import { DialogMetaContext } from "src/hooks/use-dialog";
 import { useState } from "react";
+import { P } from "./text";
+import { Button } from "./button";
+import { ButtonBar } from "./button-bar";
 
 const Backdrop = styled.div`
   position: fixed;
@@ -37,7 +40,7 @@ const Container = styled.div<{ width?: string }>`
   outline-offset: 0.2rem;
 `;
 
-const TitleBar = styled.div<{ showShadow?: boolean }>`
+const TitleBar = styled.div<{ showShadow?: boolean; indicatorColor?: string }>`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -50,6 +53,17 @@ const TitleBar = styled.div<{ showShadow?: boolean }>`
     props.showShadow
       ? "0 0.6rem 1.2rem rgba(0, 0, 0, 0.05)"
       : "0 0 0 rgba(0,0,0,0)"};
+
+  &:before {
+    content: " ";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1rem;
+    background: ${(props) => props.indicatorColor};
+    display: ${(props) => (props.indicatorColor ? "block" : "none")};
+  }
 `;
 
 const Title = styled.h1`
@@ -111,6 +125,7 @@ type DialogProps = PropsWithChildren<{
   actions?: ReactNode;
   width?: string;
   onClose?: () => void;
+  indicatorColor?: string;
 }>;
 
 export function Dialog({
@@ -119,6 +134,7 @@ export function Dialog({
   children,
   width,
   onClose,
+  indicatorColor,
 }: DialogProps) {
   const dialogMeta = useContext(DialogMetaContext);
 
@@ -183,6 +199,7 @@ export function Dialog({
             ref={dialogRef as Ref<HTMLDivElement>}
           >
             <TitleBar
+              indicatorColor={indicatorColor}
               showShadow={
                 scroll?.current !== undefined ? scroll.current > 0 : undefined
               }
@@ -211,5 +228,30 @@ export function Dialog({
         window.document.body
       )}
     </>
+  );
+}
+
+type ErrorDialogProps = {
+  title?: ReactNode;
+  message: ReactNode;
+  stack?: any;
+  onClose?: () => void;
+};
+
+export function ErrorDialog({
+  title,
+  message,
+  stack,
+  onClose,
+}: ErrorDialogProps) {
+  return (
+    <Dialog
+      indicatorColor="#f5737f"
+      title={title || "Something went wrong"}
+      width="35rem"
+      actions={<ButtonBar right={<Button onClick={onClose}>Got it</Button>} />}
+    >
+      <P>{message}</P>
+    </Dialog>
   );
 }

@@ -6,7 +6,7 @@ import { Items, PopoutMenu } from "./popout-menu";
 
 const Container = styled.div`
   min-width: 16rem;
-  max-width: 19rem;
+  max-width: 21rem;
 `;
 
 type ActionMenuProps = Omit<ComponentProps<typeof Popout>, "Content"> & {

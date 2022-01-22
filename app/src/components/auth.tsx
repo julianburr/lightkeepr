@@ -49,6 +49,14 @@ export function Auth({ children }: AuthProps) {
     return <>{children}</>;
   }
 
+  if (authUser.pendingOrganisationUsers?.length) {
+    if (router.asPath !== "/app/setup/pending-invites") {
+      router.replace("/app/setup/pending-invites");
+      return null;
+    }
+    return <>{children}</>;
+  }
+
   if (
     router.asPath.startsWith("/app/setup/") ||
     ["/", "/app"].includes(router.asPath)

@@ -3,6 +3,7 @@ import { PropsWithChildren } from "react";
 import { SetStateAction } from "react";
 import { useContext } from "react";
 import { createContext, useEffect, useState } from "react";
+import { ErrorDialog } from "src/components/dialog";
 
 export const DialogMetaContext = createContext<{
   id?: string;
@@ -20,10 +21,10 @@ export function DialogProvider(props: PropsWithChildren<Record<never, any>>) {
   return (
     <>
       <DialogContext.Provider value={{ dialogs, setDialogs }} {...props} />
-      {dialogs.map(({ id, close, Dialog }: any) => {
+      {dialogs.map(({ id, close, Dialog, props: dialogProps }: any) => {
         return (
           <DialogMetaContext.Provider key={id} value={{ id, close }}>
-            <Dialog id={id} onClose={close} />
+            <Dialog {...dialogProps} id={id} onClose={close} />
           </DialogMetaContext.Provider>
         );
       })}
@@ -38,9 +39,9 @@ export function useDialog(Dialog: ComponentType<any>) {
 
   const { dialogs, setDialogs } = useContext(DialogContext);
 
-  const open = useCallback(() => {
+  const open = useCallback((props?: any) => {
     setDialogs?.((dialogs) =>
-      dialogs.concat([{ id: instanceUuid, Dialog, close }])
+      dialogs.concat([{ id: instanceUuid, Dialog, close, props }])
     );
   }, []);
 
@@ -53,4 +54,17 @@ export function useDialog(Dialog: ComponentType<any>) {
   );
 
   return { open, close, isOpen: dialogs.find((d) => d.id === instanceUuid) };
+}
+
+export function useErrorDialog() {
+  const dialog = useDialog(ErrorDialog);
+
+  const open = useCallback((e: Error | { message: string }) => {
+    return dialog.open({
+      message: e.message,
+      stack: "stack" in e ? e.stack : undefined,
+    });
+  }, []);
+
+  return { ...dialog, open };
 }

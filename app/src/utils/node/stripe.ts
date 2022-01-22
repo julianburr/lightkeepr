@@ -1,6 +1,6 @@
 import stripe from "stripe";
 
-import { env } from "../env";
+import { env } from "src/env";
 
 // eslint-disable-next-line
 // @ts-ignore

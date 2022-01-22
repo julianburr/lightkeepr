@@ -1,16 +1,12 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { createHandler } from "src/utils/node/api";
+import { stripeClient } from "src/utils/node/stripe";
 
-import { stripeClient } from "src/node/stripe";
-
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  if (req.method === "POST") {
+export default createHandler({
+  post: async (req, res) => {
     const { email, name } = req.body;
 
     if (!email || !name) {
-      res.status(402).json({ message: "You need to define email and name!" });
+      res.status(400).json({ message: "You need to define email and name!" });
       return;
     }
 
@@ -19,7 +15,5 @@ export default async function handler(
       description: name,
     });
     return res.status(200).json(customer);
-  }
-
-  res.status(404);
-}
+  },
+});

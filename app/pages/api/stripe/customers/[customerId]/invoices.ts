@@ -1,14 +1,12 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { createHandler } from "src/utils/node/api";
+import { stripeClient } from "src/utils/node/stripe";
 
-import { stripeClient } from "src/node/stripe";
-
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  const invoices = await stripeClient.invoices.list({
-    customer: req.query.customerId,
-    limit: 20,
-  });
-  res.status(200).json(invoices);
-}
+export default createHandler({
+  get: async (req, res) => {
+    const invoices = await stripeClient.invoices.list({
+      customer: req.query.customerId,
+      limit: 20,
+    });
+    res.status(200).json(invoices);
+  },
+});

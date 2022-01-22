@@ -5,10 +5,10 @@ import { useRouter } from "next/router";
 import { getAuth } from "firebase/auth";
 
 import { useAuthUser } from "src/hooks/use-auth-user";
+import { AccountActionMenu } from "src/action-menus/account";
 
 import { Button } from "./button";
 import { Tooltip } from "./tooltip";
-import { AccountActionMenu } from "./popouts/account";
 
 import LogoSvg from "src/assets/logo.svg";
 import BellSvg from "src/assets/icons/bell.svg";

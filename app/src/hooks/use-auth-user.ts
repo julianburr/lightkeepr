@@ -27,15 +27,26 @@ export function useAuthUser() {
     userRef
       ? query(collection(db, "organisationUsers"), where("user", "==", userRef))
       : undefined,
-    { key: "organisationUsers" }
-  );
-
-  const organisationUser = organisationUsers?.find?.(
-    (u: any) => u.id === router.query.orgUserId
+    { key: `${authUser.email}/organisationUsers` }
   );
 
   return useMemo(
-    () => ({ ...authUser, user, organisationUser, organisationUsers }),
-    [authUser, user, organisationUser, organisationUsers]
+    () => ({
+      ...authUser,
+      user,
+      organisationUser: organisationUsers?.find?.(
+        (u: any) => u.id === router.query.orgUserId
+      ),
+      organisationUsers: organisationUsers?.filter?.(
+        (u: any) => !["rejected", "blocked"].includes(u.status)
+      ),
+      activeOrganisationUsers: organisationUsers?.filter?.(
+        (u: any) => u.status === "active"
+      ),
+      pendingOrganisationUsers: organisationUsers?.filter?.(
+        (u: any) => u.status === "pending"
+      ),
+    }),
+    [authUser, user, organisationUsers]
   );
 }

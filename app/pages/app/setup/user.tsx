@@ -10,7 +10,6 @@ import { Field } from "src/components/field";
 import { TextInput } from "src/components/text-input";
 import { Button } from "src/components/button";
 import { Form } from "src/components/form";
-import { ReadonlyInput } from "src/components/readonly-input";
 
 const db = getFirestore();
 
