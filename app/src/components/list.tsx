@@ -1,25 +1,31 @@
-import {
-  ReactNode,
-  ComponentProps,
-  ComponentType,
-  PropsWithChildren,
-} from "react";
+import { ComponentType, PropsWithChildren } from "react";
 import Link from "next/link";
 import styled from "styled-components";
 
-import { ActionMenu } from "./action-menu";
-import { P, Small } from "./text";
-import { Button } from "./button";
+function getColumns(columns?: number, maxColumns?: number) {
+  return Array.from(
+    new Array(
+      columns ? (maxColumns ? Math.min(columns, maxColumns) : columns) : 1
+    )
+  )
+    .fill("1fr")
+    .join(" ");
+}
 
 const Ul = styled.ul<{ columns?: number; gap?: string }>`
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: ${(props) =>
-    Array.from(new Array(props.columns || 1))
-      .fill("1fr")
-      .join(" ")};
+  grid-template-columns: 1fr;
   gap: ${(props) => props.gap || ".3rem"};
+
+  @media (min-width: 600px) {
+    grid-template-columns: ${(props) => getColumns(props.columns, 2)};
+  }
+
+  @media (min-width: 1000px) {
+    grid-template-columns: ${(props) => getColumns(props.columns)};
+  }
 `;
 
 const Li = styled.li`
@@ -39,6 +45,8 @@ const Li = styled.li`
     border-radius: 0.3rem;
     background: #f9f9f7;
     transition: background 0.2s;
+    color: inherit;
+    text-decoration: none;
 
     p {
       margin: 0;
@@ -51,7 +59,8 @@ const Li = styled.li`
 
     &:hover,
     &:focus {
-      background: #f9f9f788;
+      background: #f5f4f1;
+      text-decoration: none;
     }
   }
 `;
@@ -101,54 +110,31 @@ export function List({
 type ListItemProps = PropsWithChildren<{
   href?: string;
   onClick?: (e: any) => void | Promise<void>;
-  title: ReactNode;
-  meta?: ReactNode;
-  tags?: ReactNode;
-  actions?: ComponentProps<typeof ActionMenu>["items"];
   disabled?: boolean;
 }>;
 
-export function ListItem({
-  href,
-  onClick,
-  title,
-  meta,
-  tags,
-  actions,
-}: ListItemProps) {
-  const content = (
-    <>
-      <Content>
-        <P>{title}</P>
-        {meta && <Small grey>{meta}</Small>}
-      </Content>
-
-      <WrapTags>{tags}</WrapTags>
-      {!!actions?.length && (
-        <ActionMenu items={actions} placement="bottom-end" />
-      )}
-    </>
-  );
-
+export function ListItem({ href, onClick, children, ...props }: ListItemProps) {
   if (href) {
     return (
-      <Li>
-        <Link href={href}>{content}</Link>
+      <Li {...props}>
+        <Link href={href}>
+          <a>{children}</a>
+        </Link>
       </Li>
     );
   }
 
   if (onClick) {
     return (
-      <Li>
-        <button onClick={onClick}>{content}</button>
+      <Li {...props}>
+        <button onClick={onClick}>{children}</button>
       </Li>
     );
   }
 
   return (
-    <Li>
-      <div>{content}</div>
+    <Li {...props}>
+      <div>{children}</div>
     </Li>
   );
 }

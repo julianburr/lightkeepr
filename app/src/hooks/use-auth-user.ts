@@ -87,8 +87,8 @@ export function useAuthUser(): UseAuthUserResponse {
       user,
 
       teamUsers: activeTeamUsers,
-      teams: teams.filter((team: any) =>
-        activeTeamUsers.find((user: any) => user.team.id === team.id)
+      teams: teams?.filter?.((team: any) =>
+        activeTeamUsers?.find?.((user: any) => user.team.id === team.id)
       ),
 
       teamUser: activeTeamUsers?.find?.(
@@ -98,5 +98,5 @@ export function useAuthUser(): UseAuthUserResponse {
 
       pendingInvites: teamUsers?.filter?.((u: any) => u.status === "pending"),
     };
-  }, [authUser, user, teamUsers, teams]);
+  }, [authUser, user, teamUsers, teams, router.query.teamId]);
 }

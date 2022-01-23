@@ -23,19 +23,21 @@ const WrapMenu = styled.div<{ width?: string }>`
   min-width: 16rem;
 `;
 
-const Button = styled.button`
+const Button = styled.button<{ error?: any }>`
   width: 100%;
   height: 3.6rem;
-  border: 0.1rem solid rgba(0, 0, 0, 0.1);
+  border: 0.1rem solid;
+  border-color: ${(props) => (props.error ? `#f4737d` : `#dad9d088`)};
   border-radius: 0.3rem;
   background: #fff;
   padding: 0 0.8rem;
   text-align: left;
   position: relative;
+  transition: border 0.2s;
 
   &:focus,
   &:hover {
-    border: 0.1rem solid rgba(0, 0, 0, 0.2);
+    border-color: ${(props) => (props.error ? `#f4737d` : `#dad9d0`)};
   }
 
   & > svg {

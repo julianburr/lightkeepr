@@ -14,7 +14,7 @@ const Container = styled.form<{ columns?: number; gap?: string }>`
     Array.from(new Array(props.columns || 1))
       .fill("1fr")
       .join(" ")};
-  gap: ${(props) => props.gap || "1.6rem"};
+  gap: ${(props) => props.gap || "1.4rem"};
 `;
 
 type FormProps = ComponentProps<typeof Container>;
@@ -24,7 +24,7 @@ export const Form = forwardRef(function Form(props: FormProps, ref: Ref<any>) {
   const value = useMemo(() => ({ formMethods }), [formMethods]);
   return (
     <FormContext.Provider value={value}>
-      <Container ref={ref} {...props} />
+      <Container ref={ref} noValidate {...props} />
     </FormContext.Provider>
   );
 });

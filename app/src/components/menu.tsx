@@ -1,5 +1,10 @@
 import { useRouter } from "next/router";
-import { PropsWithChildren, ReactNode, useCallback } from "react";
+import {
+  ComponentProps,
+  PropsWithChildren,
+  ReactNode,
+  useCallback,
+} from "react";
 import styled from "styled-components";
 import { CoreButton } from "./button";
 
@@ -61,6 +66,8 @@ const CoreMenuItem = styled(({ active, ...props }) => (
 
   &:focus,
   &:hover {
+    color: inherit;
+    text-decoration: none;
     background: ${(props) => (props.active ? "#f5f4f1" : "#f9f9f7")};
   }
 
@@ -78,9 +85,10 @@ const CoreMenuItem = styled(({ active, ...props }) => (
 type MenuItemProps = PropsWithChildren<{
   onClick?: (e: any) => void;
   href?: string;
+  active?: boolean;
 }>;
 
-function MenuItem({ onClick, href, children }: MenuItemProps) {
+function MenuItem({ onClick, href, active, children }: MenuItemProps) {
   const router = useRouter();
 
   if (onClick) {
@@ -88,21 +96,29 @@ function MenuItem({ onClick, href, children }: MenuItemProps) {
   }
 
   return (
-    <CoreMenuItem href={href} active={href && href === router.asPath}>
+    <CoreMenuItem
+      href={href}
+      active={
+        active !== undefined ? active : href ? href === router.asPath : false
+      }
+    >
       {children}
     </CoreMenuItem>
   );
 }
 
 type Item = {
+  key?: string;
   label: ReactNode;
   icon?: ReactNode;
   onClick?: (e: any) => void | Promise<void>;
   href?: string;
   mobile?: boolean;
+  active?: boolean;
 };
 
 type ItemGroup = {
+  key?: string;
   label: ReactNode;
   icon?: ReactNode;
   items: Item[] | ItemGroup[];
@@ -133,7 +149,11 @@ export function Menu({ items }: MenuProps) {
           }
           return (
             <Li data-mobile={item.mobile} key={index}>
-              <MenuItem onClick={item.onClick} href={item.href}>
+              <MenuItem
+                onClick={item.onClick}
+                href={item.href}
+                active={item.active}
+              >
                 {item.icon}
                 <span>{item.label}</span>
               </MenuItem>

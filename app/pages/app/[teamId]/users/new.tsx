@@ -40,7 +40,7 @@ export default function NewUser() {
           createdBy: currentUserRef,
         });
 
-        router.push(`/${teamId}/users`);
+        router.push(`/app/${teamId}/users`);
       } catch (e: any) {
         console.error(e);
       }

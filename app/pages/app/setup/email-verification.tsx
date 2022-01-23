@@ -7,6 +7,7 @@ import { Auth } from "src/components/auth";
 import { Spacer } from "src/components/spacer";
 import { P } from "src/components/text";
 import { Button } from "src/components/button";
+import { ButtonBar } from "src/components/button-bar";
 
 export default function EmailVerificationSetup() {
   const router = useRouter();
@@ -47,17 +48,21 @@ export default function EmailVerificationSetup() {
 
         <Spacer h="1.2rem" />
 
-        <Button
-          intend="primary"
-          onClick={() =>
-            api.post("/api/account/verify-email/send", {
-              email: authUser.email,
-              userUid: authUser.uid,
-            })
+        <ButtonBar
+          left={
+            <Button
+              intend="primary"
+              onClick={() =>
+                api.post("/api/account/verify-email/send", {
+                  email: authUser.email,
+                  userUid: authUser.uid,
+                })
+              }
+            >
+              Re-send confirmation email
+            </Button>
           }
-        >
-          Re-send confirmation email
-        </Button>
+        />
       </SetupLayout>
     </Auth>
   );

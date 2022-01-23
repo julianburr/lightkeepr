@@ -20,7 +20,7 @@ const Ul = styled.ul`
   display: flex;
   flex-direction: column;
   width: 100%;
-  line-height: 1.2;
+  line-height: 1.3;
   word-wrap: break-word;
 
   ul {

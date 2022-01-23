@@ -52,7 +52,7 @@ export default function App(props: any) {
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz&family=Playfair+Display:wght@400;900&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz&family=Playfair+Display:wght@400;700&display=swap"
           rel="stylesheet"
         />
       </Head>

@@ -82,6 +82,7 @@ const Inner = styled.div`
       transform: translateX(0);
       box-shadow: none;
       width: 100%;
+      transition: none;
     }
   }
 `;
@@ -219,10 +220,6 @@ export function Sidebar() {
 
   const project = projects?.find?.((p: any) => p.id === router.query.projectId);
 
-  const visibleProjects = projects.filter(
-    (p: any) => p.id !== router.query.projectId
-  );
-
   const items = useMemo(() => {
     return [
       {
@@ -244,15 +241,23 @@ export function Sidebar() {
         href: `/app/${router.query.teamId}/account/support`,
       },
 
+      ...(projects?.length
+        ? [
+            {
+              label: "Projects",
+              items: projects.map((p: any) => ({
+                label: p.name,
+                href: `/app/${router.query.teamId}/projects/${p.id}`,
+              })),
+            },
+          ]
+        : []),
+
       ...(project?.id
         ? [
             {
               label: project.name,
               items: [
-                {
-                  label: "Overview",
-                  href: `/app/${router.query.teamId}/projects/${project.id}`,
-                },
                 {
                   label: "Integrations",
                   href: `/app/${router.query.teamId}/projects/${project.id}/integrations`,
@@ -262,18 +267,6 @@ export function Sidebar() {
                   href: `/app/${router.query.teamId}/projects/${project.id}/settings`,
                 },
               ],
-            },
-          ]
-        : []),
-
-      ...(visibleProjects?.length
-        ? [
-            {
-              label: "Projects",
-              items: visibleProjects.map((p: any) => ({
-                label: p.name,
-                href: `/app/${router.query.teamId}/projects/${p.id}`,
-              })),
             },
           ]
         : []),
@@ -319,15 +312,18 @@ export function Sidebar() {
         ],
       },
     ];
-  }, [authUser, projects]);
+  }, [authUser, projects, project]);
 
   // Form for the team switcher
   const teamValue = { value: authUser.team?.id, label: authUser.team?.name };
-  const handleTeamChange = useCallback((team) => {
-    if (team && router.query.teamId !== team.value) {
-      router.push(`/app/${team.value}`);
-    }
-  }, []);
+  const handleTeamChange = useCallback(
+    (team) => {
+      if (team && router.query.teamId !== team.value) {
+        router.push(`/app/${team.value}`);
+      }
+    },
+    [router.query.teamId]
+  );
 
   return (
     <Container data-active={active} onClick={handleBackgroundClick}>

@@ -22,11 +22,17 @@ export const GlobalStyles = createGlobalStyle`
     margin: 0;
     padding: 0;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-    font-size: 1.4rem;
     font-weight: 400;
+    font-size: 1.4rem;
     line-height: 1.4;
     background: #fff;
-    color: #222;
+    color: #000;
+  }
+
+  @media (min-width: 800px) {
+    body {
+      font-size: 1.5rem;
+    }
   }
 
   b {
@@ -35,22 +41,15 @@ export const GlobalStyles = createGlobalStyle`
 
   h1 {
     font-size: 2.2em;
+    font-weight: 900;
   }
 
   h2 {
-    font-size: 1.8em;
-  }
-
-  h3 {
-    font-size: 1.4em;
-  }
-
-  h4 {
-    font-size: 1em;
+    font-size: 1.6em;
+    font-weight: 400;
   }
 
   h1, h2, h3, h4 {
-    font-weight: 600;
     line-height: 1.05;
     margin: 0;
     font-family: "Playfair Display";
@@ -66,5 +65,16 @@ export const GlobalStyles = createGlobalStyle`
 
   button {
     cursor: pointer;
+  }
+
+  a {
+    color: #2eb5bd;
+    text-decoration: none;
+
+    &:focus,
+    &:hover {
+      color: #2eb5bd;
+      text-decoration: underline;
+    }
   }
 `;

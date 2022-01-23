@@ -25,6 +25,8 @@ export function Auth({ children }: AuthProps) {
       if (!isValid) {
         setLastTeamId(authUser.teams[0].id);
         router.replace(`/app/${authUser.teams[0].id}`);
+      } else {
+        setLastTeamId(router.query.teamId);
       }
     }
   }, [router.query.teamId]);
