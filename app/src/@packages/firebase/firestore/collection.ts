@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useLayoutEffect } from "react";
 import invariant from "invariant";
 import { onSnapshot } from "firebase/firestore";
 
@@ -22,15 +22,24 @@ export function useCollection(query: any, options: UseCollectionOptions) {
   const cacheKey = `collection/${options.key}`;
 
   let cacheItem = cache[cacheKey];
-
   if (cacheItem === undefined) {
     cacheItem = {};
     cacheItem.promise = new Promise((resolve) => {
       cacheItem.resolve = resolve;
     });
-    setCache?.((state) => ({ ...state, [cacheKey]: cacheItem }));
 
-    onSnapshot(query, (snap: any) => {
+    // HACK: react complains about setting state in the main component function body,
+    // so we delay the state setting to the next tick here :/
+    setTimeout(
+      () => setCache?.((state) => ({ ...state, [cacheKey]: cacheItem })),
+      0
+    );
+
+    onSnapshot(query, { includeMetadataChanges: true }, (snap: any) => {
+      // HACK: firestore has the annoying habit to return incomplete lists from the cache
+      // if you've loaded any items from the list before, which leads to flashing lists,
+      // so we don't actually listen to any value from the cache here ... which is also
+      // annoying because often the cache would be fine and a lot faster :/
       if (snap.metadata?.fromCache) {
         return;
       }

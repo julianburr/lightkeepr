@@ -11,42 +11,92 @@ import {
 
 import { useAuth, useCollection, useDocument } from "../@packages/firebase";
 import { useRouter } from "next/router";
+import { api } from "src/utils/api-client";
+import { useErrorDialog } from "./use-dialog";
+import { Dispatch } from "react";
+import { SetStateAction } from "react";
 
 const db = getFirestore();
 
-export function useAuthUser() {
+type User = {
+  id: string;
+  name: string;
+};
+
+type Team = {
+  id: string;
+  name: string;
+};
+
+type TeamUser = {
+  id: string;
+  team: { id: string };
+  user: { id: string };
+  status: string;
+};
+
+type ProviderData = {
+  providerId: string;
+};
+
+type FirebaseUser = {
+  uid?: string;
+  email?: string;
+  emailVerified?: boolean;
+  displayName?: string;
+  providerData?: ProviderData[];
+};
+
+type UseAuthUserResponse = FirebaseUser & {
+  user?: User;
+  teams?: Team[];
+  teamUsers?: TeamUser[];
+  team?: Team;
+  teamUser?: TeamUser;
+  pendingInvites?: TeamUser[];
+  setAuthUser: Dispatch<SetStateAction<FirebaseUser>>;
+};
+
+export function useAuthUser(): UseAuthUserResponse {
   const authUser = useAuth();
   const router = useRouter();
 
   const userRef = authUser?.email
     ? doc(db, "users", authUser.email)
     : undefined;
-
   const user = useDocument(userRef);
-  const organisationUsers = useCollection(
+
+  const teams = useCollection(collection(db, "teams"), {
+    key: `${authUser?.email}/teams`,
+  });
+
+  const teamUsers = useCollection(
     userRef
-      ? query(collection(db, "organisationUsers"), where("user", "==", userRef))
+      ? query(collection(db, "teamUsers"), where("user", "==", userRef))
       : undefined,
-    { key: `${authUser.email}/organisationUsers` }
+    { key: `${authUser?.email}/teamUsers` }
   );
 
-  return useMemo(
-    () => ({
+  return useMemo(() => {
+    const activeTeamUsers = teamUsers?.filter?.(
+      (u: any) => u.status === "active"
+    );
+
+    return {
       ...authUser,
       user,
-      organisationUser: organisationUsers?.find?.(
-        (u: any) => u.id === router.query.orgUserId
+
+      teamUsers: activeTeamUsers,
+      teams: teams.filter((team: any) =>
+        activeTeamUsers.find((user: any) => user.team.id === team.id)
       ),
-      organisationUsers: organisationUsers?.filter?.(
-        (u: any) => !["rejected", "blocked"].includes(u.status)
+
+      teamUser: activeTeamUsers?.find?.(
+        (user: any) => user.team.id === router.query.teamId
       ),
-      activeOrganisationUsers: organisationUsers?.filter?.(
-        (u: any) => u.status === "active"
-      ),
-      pendingOrganisationUsers: organisationUsers?.filter?.(
-        (u: any) => u.status === "pending"
-      ),
-    }),
-    [authUser, user, organisationUsers]
-  );
+      team: teams?.find?.((team: any) => team.id === router.query.teamId),
+
+      pendingInvites: teamUsers?.filter?.((u: any) => u.status === "pending"),
+    };
+  }, [authUser, user, teamUsers, teams]);
 }

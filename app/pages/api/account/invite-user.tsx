@@ -7,6 +7,7 @@ import sgMail from "@sendgrid/mail";
 
 import { env } from "src/env";
 import { createHandler } from "src/utils/node/api";
+
 import { InviteUserEmail } from "emails/invite-user";
 
 const db = getFirestore();
@@ -59,6 +60,7 @@ export default createHandler({
           title={title}
           organisationUser={organisationUser as any}
           organisation={organisation as any}
+          acceptUrl={`${req.headers.origin}/app/setup/pending-invites`}
         />,
         { validationLevel: "soft" }
       );

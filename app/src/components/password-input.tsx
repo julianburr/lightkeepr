@@ -49,6 +49,7 @@ export const PasswordInput = forwardRef(function PasswordInput(
         type="button"
         onClick={() => setVisible((state) => !state)}
         aria-label={visible ? "Hide password" : "Show password"}
+        tabIndex={-1}
       >
         {visible ? <EyeOffSvg /> : <EyeSvg />}
       </Button>

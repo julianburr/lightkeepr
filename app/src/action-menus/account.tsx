@@ -1,19 +1,15 @@
 import "src/utils/firebase";
 
 import { getAuth } from "firebase/auth";
-import { collection, getFirestore } from "firebase/firestore";
 import { useRouter } from "next/router";
 import styled from "styled-components";
 
-import { useCollection } from "src/@packages/firebase";
 import { useAuthUser } from "src/hooks/use-auth-user";
 import { ActionMenu } from "src/components/action-menu";
-import { Avatar } from "src/components/avatar";
 import { P, Small } from "src/components/text";
-import { useFirestore } from "src/@packages/firebase/firestore/context";
+import { ComponentProps } from "react";
 
 const auth = getAuth();
-const db = getFirestore();
 
 const Email = styled(Small)`
   && {
@@ -24,19 +20,16 @@ const Email = styled(Small)`
   }
 `;
 
-export function AccountActionMenu() {
+type AccountActionMenuProps = Omit<ComponentProps<typeof ActionMenu>, "items">;
+
+export function AccountActionMenu(props: AccountActionMenuProps) {
   const authUser = useAuthUser();
   const router = useRouter();
-
-  const { clearCache } = useFirestore();
-
-  const organisations = useCollection(collection(db, "organisations"), {
-    key: "organisations",
-  });
 
   return (
     <ActionMenu
       placement="bottom-end"
+      {...props}
       items={[
         {
           items: [
@@ -44,45 +37,42 @@ export function AccountActionMenu() {
               isCustom: true,
               Content: () => (
                 <>
-                  <P>You are currently logged in as {authUser.user.name}</P>
-                  <Email grey>{authUser.user.id}</Email>
+                  <P>You are currently logged in as {authUser?.user?.name}</P>
+                  <Email grey>{authUser?.user?.id}</Email>
                 </>
               ),
             },
           ],
         },
         {
-          label: "Accounts",
-          items: authUser.organisationUsers.map((u: any) => {
-            const orgName =
-              organisations?.find?.((o: any) => o.id === u.organisation.id)
-                ?.name || "n/a";
-            return {
-              selectable: true,
-              selected: u.id === router.query.orgUserId,
-              label: orgName,
-              href: `/app/${u.id}`,
-            };
-          }),
+          label: "Teams",
+          items:
+            authUser?.teams?.map?.((team: any) => {
+              return {
+                selectable: true,
+                selected: team.id === router.query.teamId,
+                label: team.name || "n/a",
+                href: `/app/${team.id}`,
+              };
+            }) || [],
         },
         {
           items: [
             {
-              label: "Account settings",
-              href: `/app/${router.query.orgUserId}/account/settings`,
+              label: "Create new team",
+              href: `/app/${router.query.teamId}/account/teams/new`,
+            },
+            {
+              label: "Profile settings",
+              href: `/app/${router.query.teamId}/account/settings`,
             },
             {
               label: "Sign out",
-              onClick: async () => {
-                await auth.signOut();
-                clearCache?.();
-              },
+              onClick: () => auth.signOut(),
             },
           ],
         },
       ]}
-    >
-      {(props) => <Avatar name={authUser.user.name} {...props} />}
-    </ActionMenu>
+    />
   );
 }

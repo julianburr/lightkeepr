@@ -2,11 +2,11 @@ import { SetStateAction, ReactNode, Dispatch } from "react";
 import styled from "styled-components";
 
 import { P, Small } from "../text";
-import { Button } from "../button";
+import { CoreButton } from "../button";
 
 import CheckSvg from "src/assets/icons/check.svg";
 
-const Container = styled(Button)`
+const Container = styled(CoreButton)`
   && {
     width: 100%;
     border: 0 none;
@@ -23,6 +23,8 @@ const Container = styled(Button)`
     align-self: inherit;
     justify-self: inherit;
     height: auto;
+    color: inherit;
+    text-decoration: none;
 
     &:focus,
     &:hover {
@@ -101,17 +103,21 @@ export function MenuItem({ item, setVisible, element }: MenuItemProps) {
       };
 
   return (
-    <Container tabIndex={-1} data-focusable {...containerProps}>
-      <Inner>
-        {item.icon && <WrapIcon>{item.icon}</WrapIcon>}
-        {item.selectable && (
-          <WrapSelectable>{item.selected && <CheckSvg />}</WrapSelectable>
-        )}
-        <WrapText>
-          <P>{item.label}</P>
-          {item.description && <Small grey>{item.description}</Small>}
-        </WrapText>
-      </Inner>
-    </Container>
+    <>
+      {/* eslint-disable-next-line */}
+      {/* @ts-ignore */}
+      <Container tabIndex={-1} data-focusable {...containerProps}>
+        <Inner>
+          {item.icon && <WrapIcon>{item.icon}</WrapIcon>}
+          {item.selectable && (
+            <WrapSelectable>{item.selected && <CheckSvg />}</WrapSelectable>
+          )}
+          <WrapText>
+            <P>{item.label}</P>
+            {item.description && <Small grey>{item.description}</Small>}
+          </WrapText>
+        </Inner>
+      </Container>
+    </>
   );
 }

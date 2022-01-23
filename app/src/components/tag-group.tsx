@@ -5,11 +5,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  margin: -0.1rem;
-
-  & > * {
-    margin: 0.1rem;
-  }
+  gap: 0.3rem;
 `;
 
 type TagGroupProps = PropsWithChildren<{

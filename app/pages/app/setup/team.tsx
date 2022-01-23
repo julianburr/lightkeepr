@@ -17,26 +17,27 @@ import { Field } from "src/components/field";
 import { EmailInput, TextInput } from "src/components/text-input";
 import { Button } from "src/components/button";
 import { Form } from "src/components/form";
+import { Spacer } from "src/components/spacer";
 
 const db = getFirestore();
 
-export default function OrganisationSetup() {
+export default function TeamSetup() {
   const authUser = useAuthUser();
 
   const { form, use } = useForm({
     defaultValues: { name: "", billingEmail: authUser.email },
     onSubmit: async (values) => {
-      // Create organisation
-      const org = await addDoc(collection(db, "organisations"), {
+      // Create team
+      const team = await addDoc(collection(db, "teams"), {
         name: values.name,
         billingEmail: authUser.email,
         plan: "free",
       });
 
       // Create organisation user
-      await addDoc(collection(db, "organisationUsers"), {
-        user: doc(db, "users", authUser.email),
-        organisation: doc(db, "organisations", org.id),
+      await addDoc(collection(db, "teamUsers"), {
+        user: doc(db, "users", authUser.email!),
+        team: doc(db, "teams", team.id),
         role: "owner",
         status: "active",
       });
@@ -46,7 +47,7 @@ export default function OrganisationSetup() {
         email: authUser.email,
         name: values.name,
       });
-      await updateDoc(doc(db, "organisations", org.id), {
+      await updateDoc(doc(db, "teams", team.id), {
         stripeCustomerId: stripeCustomer.data?.id,
       });
     },
@@ -55,17 +56,11 @@ export default function OrganisationSetup() {
   return (
     <Auth>
       <SetupLayout>
-        <h1>
-          Almost done! You'll need to create an organisation to get started.
-        </h1>
+        <h1>Almost done! You'll need to create a team to get started.</h1>
+        <Spacer height="1.6rem" />
 
         <Form ref={form}>
-          <Field
-            name="name"
-            label="Organisation name"
-            Input={TextInput}
-            required
-          />
+          <Field name="name" label="Team name" Input={TextInput} required />
           <Field
             name="billingEmail"
             label="Billing email"
@@ -73,7 +68,7 @@ export default function OrganisationSetup() {
             required
           />
           <Button intend="primary" type="submit" disabled={use("isSubmitting")}>
-            Create organisation
+            Create team
           </Button>
         </Form>
       </SetupLayout>

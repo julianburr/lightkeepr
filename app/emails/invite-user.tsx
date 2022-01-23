@@ -15,23 +15,22 @@ type InviteUserEmailProps = {
     id: string;
     name: string;
   };
+  acceptUrl: string;
 };
 
 export function InviteUserEmail({
   title,
   organisationUser,
   organisation,
+  acceptUrl,
 }: InviteUserEmailProps) {
-  const acceptUrl =
-    `https://lightkeepr.vercel.app/app/${organisationUser.id}` +
-    `/setup/invitation`;
   return (
     <EmailLayout title={title}>
       <Heading>You've been invited to Lightkeepr</Heading>
       <P>
-        You've been invited by <b>{organisationUser.createdBy.id}</b> to join
-        their organisation <b>{organisation.name}</b> in Lightkeepr. Click the
-        button below to accept the invite and set up your user account.
+        You've been invited by {organisationUser.createdBy.id} to join their
+        organisation "{organisation.name}" in Lightkeepr. Click the button below
+        to accept the invite and set up your user account.
       </P>
 
       <Spacer height={12} />

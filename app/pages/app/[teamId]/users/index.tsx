@@ -1,6 +1,7 @@
 import "src/utils/firebase";
 
 import { Suspense } from "react";
+import { useRouter } from "next/router";
 import {
   collection,
   doc,
@@ -12,20 +13,17 @@ import {
 } from "firebase/firestore";
 
 import { useCollection, useDocument } from "src/@packages/firebase";
-import { useAuthUser } from "src/hooks/use-auth-user";
 import { AppLayout } from "src/layouts/app";
+import { useErrorDialog } from "src/hooks/use-dialog";
 import { Auth } from "src/components/auth";
 import { Button } from "src/components/button";
 import { List, ListItem } from "src/components/list";
 import { TitleBar } from "src/components/title-bar";
-
 import { Spacer } from "src/components/spacer";
-import { useErrorDialog } from "src/hooks/use-dialog";
 import { Tag } from "src/components/tag";
 import { TagGroup } from "src/components/tag-group";
 
 import PlusSvg from "src/assets/icons/plus.svg";
-import { useRouter } from "next/router";
 
 const db = getFirestore();
 
@@ -48,7 +46,7 @@ function UserListItem({ data }: UserItemProps) {
           {
             label: "Re-invite to organisation",
             onClick: async () => {
-              await updateDoc(doc(db, "organisationUsers", data.id), {
+              await updateDoc(doc(db, "teamUsers", data.id), {
                 status: "pending",
               });
             },
@@ -85,20 +83,18 @@ function UserListItem({ data }: UserItemProps) {
 
 function UsersList() {
   const router = useRouter();
-  const authUser = useAuthUser();
 
-  const orgId = authUser.organisationUser?.organisation?.id;
-  const orgRef = doc(db, "organisations", orgId);
-  const organisationUsers = useCollection(
+  const teamRef = doc(db, "teams", router.query.teamId!);
+  const teamUsers = useCollection(
     query(
-      collection(db, "organisationUsers"),
-      where("organisation", "==", orgRef),
+      collection(db, "teamUsers"),
+      where("team", "==", teamRef),
       orderBy("user", "asc")
     ),
-    { key: `${router.query.orgUserId}/orgUsers` }
+    { key: `${router.query.teamId}/orgUsers` }
   );
 
-  return <List items={organisationUsers} Item={UserListItem} />;
+  return <List items={teamUsers} Item={UserListItem} />;
 }
 
 export default function Users() {
@@ -112,7 +108,7 @@ export default function Users() {
           actions={
             <Button
               icon={<PlusSvg />}
-              href={`/app/${router.query.orgUserId}/users/new`}
+              href={`/app/${router.query.teamId}/users/new`}
             >
               Invite new user
             </Button>

@@ -1,9 +1,9 @@
 import "src/utils/firebase";
 
-import Link from "next/link";
+import { useCallback, useEffect, useMemo, useRef, useState, Ref } from "react";
 import { useRouter } from "next/router";
-import { ComponentProps, ReactNode } from "react";
 import styled from "styled-components";
+import { getAuth } from "firebase/auth";
 import {
   collection,
   doc,
@@ -15,82 +15,124 @@ import {
 import { useCollection } from "src/@packages/firebase";
 import { useAuthUser } from "src/hooks/use-auth-user";
 
-import { Button } from "./button";
+import { Menu } from "./menu";
 
-import CreditCardSvg from "src/assets/icons/credit-card.svg";
-import UsersSvg from "src/assets/icons/users.svg";
-import SettingsSvg from "src/assets/icons/settings.svg";
-import PlusSvg from "src/assets/icons/plus.svg";
+import BellSvg from "src/assets/icons/bell.svg";
+import GridSvg from "src/assets/icons/grid.svg";
+import LifeBuoySvg from "src/assets/icons/life-buoy.svg";
+import { P, Small } from "./text";
+import { Spacer } from "./spacer";
+import { Form } from "./form";
+import { Field } from "./field";
+import { TeamSelectInput } from "src/selects/team";
+import { useForm } from "react-cool-form";
 
+const auth = getAuth();
 const db = getFirestore();
 
 const Container = styled.menu`
-  width: 28rem;
+  height: 100%;
   flex-shrink: 0;
-  margin: 0 2.4rem 0 0;
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  background: rgba(0, 0, 0, 0);
+  pointer-events: none;
+  transition: background 0.2s, backdrop-filter 0.2s;
 
-  ul {
-    display: flex;
-    flex-direction: column;
-    margin: 0;
-    padding: 0;
+  &[data-active="true"] {
+    opacity: 1;
+    pointer-events: all;
+    background: rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(0.2rem);
+  }
 
-    li {
-      margin: 0;
-      padding: 0;
-      list-style: none;
-      display: flex;
+  @media (min-width: 800px) {
+    &,
+    &[data-active="true"] {
+      position: relative;
+      width: 24rem;
+      background: transparent;
+      pointer-events: all;
+      backdrop-filter: none;
     }
   }
 `;
 
-const Heading = styled.b`
-  font-weight: 700;
-  margin: 3.2rem 0 0.6rem;
+const Inner = styled.div`
+  height: 100%;
+  width: calc(100% - 2.4rem);
+  max-width: 28rem;
+  background: #fff;
+  transform: translateX(100%);
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  transition: transform 0.2s, box-shadow 0.2s;
+  overflow: auto;
+
+  [data-active="true"] > & {
+    box-shadow: 0 0 1.8rem rgba(0, 0, 0, 0.1);
+    transform: translateX(0);
+  }
+
+  @media (min-width: 800px) {
+    && {
+      transform: translateX(0);
+      box-shadow: none;
+      width: 100%;
+    }
+  }
 `;
 
-const A = styled.a<{ active?: boolean }>`
+const WrapProfile = styled.div`
   display: flex;
   flex-direction: row;
-  align-items: center;
-  padding: 0.4rem;
-  margin: 0.2rem -0.4rem;
-  color: inherit;
-  align-self: flex-start;
-  justify-self: flex-start;
-  text-decoration: ${(props) => (props.active ? "underline" : "none")};
+  align-items: flex-start;
+  padding: 2.4rem;
+  background: #f5f4f1;
+  position: sticky;
+  top: 0;
+  z-index: 20;
 
-  & svg {
-    height: 1.2em;
-    width: auto;
-    margin: 0 0.6rem 0 0;
-    transition: opacity 0.2s;
-    stroke-width: 0.24rem;
-  }
-
-  &:focus,
-  &:hover {
-    text-decoration: underline;
+  @media (min-width: 800px) {
+    display: none;
   }
 `;
 
-type NavItemProps = ComponentProps<typeof Link> & {
-  icon?: ReactNode;
-};
+const WrapInner = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 
-function NavItem({ children, icon, ...props }: NavItemProps) {
-  const router = useRouter();
-  return (
-    <li>
-      <Link {...props} passHref>
-        <A active={router.asPath === props?.href}>
-          {icon}
-          {children}
-        </A>
-      </Link>
-    </li>
-  );
-}
+  p {
+    margin: 0;
+    line-height: 1.2;
+  }
+`;
+
+const Avatar = styled.div`
+  height: 4.4rem;
+  width: 4.4rem;
+  border-radius: 0.3rem;
+  background: #3dc5ce;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 1.2rem 0 0;
+  font-family: "Playfair Display";
+`;
+
+const WrapTeamSelect = styled.div`
+  width: 100%;
+  padding: 2.4rem 2.4rem 0;
+
+  @media (min-width: 800px) {
+    display: none;
+  }
+`;
 
 export function Sidebar() {
   const authUser = useAuthUser();
@@ -98,47 +140,227 @@ export function Sidebar() {
   const router = useRouter();
   const { orgUserId } = router.query;
 
-  const orgId = authUser.organisationUser?.organisation?.id;
+  // Mobile sidebar behaviours
+  const [active, setActive] = useState(false);
+  useEffect(() => {
+    function handleToggle() {
+      setActive((state) => !state);
+    }
+    window.document.body.addEventListener("toggleMobileMenu", handleToggle);
+    return () =>
+      window.document.body.removeEventListener(
+        "toggleMobileMenu",
+        handleToggle
+      );
+  }, []);
+
+  const innerRef = useRef<HTMLDivElement>();
+  const handleBackgroundClick = useCallback((e: any) => {
+    if (innerRef.current && !innerRef.current.contains(e.target)) {
+      setActive(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!active || !innerRef.current) {
+      return;
+    }
+
+    let touchstartX = 0;
+
+    function handleTouchStart(e: any) {
+      touchstartX = e.changedTouches[0].screenX;
+    }
+
+    function handleTouchMove(e: any) {
+      if (!innerRef.current) {
+        return;
+      }
+
+      const moved = e.changedTouches[0].screenX - touchstartX;
+      if (moved > 15) {
+        e.preventDefault();
+        e.stopPropagation();
+        innerRef.current.style.transform = `translateX(calc(${moved}px)`;
+      }
+    }
+
+    function handleTouchEnd(e: any) {
+      if (!innerRef.current) {
+        return;
+      }
+      const moved = e.changedTouches[0].screenX - touchstartX;
+      innerRef.current.style.transform = "";
+      if (moved > 80) {
+        setActive(false);
+      }
+    }
+
+    const el = innerRef.current;
+    el.addEventListener("touchstart", handleTouchStart);
+    el.addEventListener("touchend", handleTouchEnd);
+    el.addEventListener("touchmove", handleTouchMove);
+    return () => {
+      el.removeEventListener("touchstart", handleTouchStart);
+      el.removeEventListener("touchend", handleTouchEnd);
+      el.removeEventListener("touchmove", handleTouchMove);
+    };
+  }, [active]);
+
+  // Put together menu items
+  const teamId = router.query.teamId as string;
   const projects = useCollection(
-    orgId
-      ? query(
-          collection(db, "projects"),
-          where("organisation", "==", doc(db, "organisations", orgId))
-        )
-      : undefined,
+    query(
+      collection(db, "projects"),
+      where("team", "==", doc(db, "teams", teamId))
+    ),
     { key: `${orgUserId}/projects` }
   );
 
-  return (
-    <Container>
-      <ul>
-        <Heading>Projects</Heading>
-        {projects?.length ? (
-          projects.map((project: any) => (
-            <NavItem
-              key={project.id}
-              href={`/app/${orgUserId}/projects/${project.id}`}
-            >
-              {project.name}
-            </NavItem>
-          ))
-        ) : (
-          <Button icon={<PlusSvg />} href={`/app/${orgUserId}/projects/new`}>
-            Create Project
-          </Button>
-        )}
+  const project = projects?.find?.((p: any) => p.id === router.query.projectId);
 
-        <Heading>Organisation</Heading>
-        <NavItem icon={<UsersSvg />} href={`/app/${orgUserId}/users`}>
-          Users
-        </NavItem>
-        <NavItem icon={<CreditCardSvg />} href={`/app/${orgUserId}/billing`}>
-          Billing &amp; usage
-        </NavItem>
-        <NavItem icon={<SettingsSvg />} href={`/app/${orgUserId}/settings`}>
-          Organisation settings
-        </NavItem>
-      </ul>
+  const visibleProjects = projects.filter(
+    (p: any) => p.id !== router.query.projectId
+  );
+
+  const items = useMemo(() => {
+    return [
+      {
+        mobile: true,
+        label: "App switcher",
+        icon: <GridSvg />,
+        onClick: () => alert("Hi!"),
+      },
+      {
+        mobile: true,
+        label: "Notifications",
+        icon: <BellSvg />,
+        href: `/app/${router.query.teamId}/account/notifications`,
+      },
+      {
+        mobile: true,
+        label: "Support",
+        icon: <LifeBuoySvg />,
+        href: `/app/${router.query.teamId}/account/support`,
+      },
+
+      ...(project?.id
+        ? [
+            {
+              label: project.name,
+              items: [
+                {
+                  label: "Overview",
+                  href: `/app/${router.query.teamId}/projects/${project.id}`,
+                },
+                {
+                  label: "Integrations",
+                  href: `/app/${router.query.teamId}/projects/${project.id}/integrations`,
+                },
+                {
+                  label: "Settings",
+                  href: `/app/${router.query.teamId}/projects/${project.id}/settings`,
+                },
+              ],
+            },
+          ]
+        : []),
+
+      ...(visibleProjects?.length
+        ? [
+            {
+              label: "Projects",
+              items: visibleProjects.map((p: any) => ({
+                label: p.name,
+                href: `/app/${router.query.teamId}/projects/${p.id}`,
+              })),
+            },
+          ]
+        : []),
+
+      {
+        label: "Team",
+        items: [
+          {
+            label: "Overview",
+            href: `/app/${router.query.teamId}`,
+          },
+          {
+            label: "Users",
+            href: `/app/${router.query.teamId}/users`,
+          },
+          {
+            label: "Billing & usage",
+            href: `/app/${router.query.teamId}/billing`,
+          },
+          {
+            label: "Settings",
+            href: `/app/${router.query.teamId}/settings`,
+          },
+        ],
+      },
+
+      {
+        mobile: true,
+        label: "Account",
+        items: [
+          {
+            label: "Create new team",
+            href: `/app/${router.query.teamId}/account/teams/new`,
+          },
+          {
+            label: "Profile settings",
+            href: `/app/${router.query.teamId}/account/settings`,
+          },
+          {
+            label: "Sign out",
+            onClick: () => auth.signOut(),
+          },
+        ],
+      },
+    ];
+  }, [authUser, projects]);
+
+  // Form for the team switcher
+  const teamValue = { value: authUser.team?.id, label: authUser.team?.name };
+  const handleTeamChange = useCallback((team) => {
+    if (team && router.query.teamId !== team.value) {
+      router.push(`/app/${team.value}`);
+    }
+  }, []);
+
+  return (
+    <Container data-active={active} onClick={handleBackgroundClick}>
+      <Inner ref={innerRef as Ref<HTMLDivElement>}>
+        <WrapProfile>
+          <Avatar>
+            {(authUser?.user?.name as string)
+              .split(" ")
+              .filter(Boolean)
+              .reduce((all, w, index, names) => {
+                if (index === 0 || index === names.length - 1) {
+                  all += w[0];
+                }
+                return all;
+              }, "")}
+          </Avatar>
+          <WrapInner>
+            <P>You are currently logged in as {authUser?.user?.name}</P>
+            <Spacer h=".3rem" />
+            <Small grey>{authUser?.user?.id}</Small>
+          </WrapInner>
+        </WrapProfile>
+
+        <WrapTeamSelect>
+          <TeamSelectInput
+            name="team"
+            value={teamValue}
+            onChange={handleTeamChange}
+          />
+        </WrapTeamSelect>
+
+        <Menu items={items} />
+      </Inner>
     </Container>
   );
 }

@@ -9,14 +9,18 @@ import { AccountActionMenu } from "src/action-menus/account";
 
 import { Button } from "./button";
 import { Tooltip } from "./tooltip";
+import { Spacer } from "./spacer";
 
 import LogoSvg from "src/assets/logo.svg";
 import BellSvg from "src/assets/icons/bell.svg";
-import GiftSvg from "src/assets/icons/gift.svg";
+import SearchSvg from "src/assets/icons/search.svg";
+import LifeBuoySvg from "src/assets/icons/life-buoy.svg";
+import GridSvg from "src/assets/icons/grid.svg";
+import MenuSvg from "src/assets/icons/menu.svg";
 
 const Container = styled.header<{ scrolled?: boolean }>`
   width: 100%;
-  padding: 0 1.8rem;
+  padding: 0 2.4rem;
   height: 6.8rem;
   display: flex;
   flex-direction: row;
@@ -34,23 +38,41 @@ const Container = styled.header<{ scrolled?: boolean }>`
 `;
 
 const Inner = styled.div`
-  display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+
+  &[data-mobile] {
+    display: flex;
+
+    @media (min-width: 800px) {
+      display: none;
+    }
+  }
+
+  &[data-tablet] {
+    display: none;
+
+    @media (min-width: 800px) {
+      display: flex;
+    }
+  }
 `;
 
 const Logo = styled.div<{ scrolled?: boolean }>`
   height: 6.8rem;
   display: flex;
+  flex: 1;
   flex-direction: row;
   align-items: flex-end;
   overflow: ${(props) => (props.scrolled ? "hidden" : "visible")};
+  margin: 0 0 0 -0.6rem;
+  position: relative;
+  z-index: 2;
 
   svg {
-    height: 5.8rem;
+    height: 5.4rem;
     width: auto;
-    margin: 0 0 -0.2rem;
   }
 `;
 
@@ -58,28 +80,15 @@ const Buttons = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  margin: 0 2.4rem 0 0;
   transition: opacity 0.2s;
+  gap: 0.6rem;
 
-  &:hover,
-  &:focus {
-    opacity: 0.7;
-  }
-`;
+  & > * {
+    margin: 0;
 
-const IconButton = styled.button`
-  border: 0 none;
-  background: transparent;
-  padding: 0.8rem;
-  display: flex;
-  margin: 0 0.6rem 0 0;
-  border-radius: 50%;
-
-  svg {
-    height: 1.6rem;
-    width: auto;
-    display: flex;
-    stroke-width: 0.25rem;
+    &:last-child {
+      margin: 0;
+    }
   }
 `;
 
@@ -111,39 +120,82 @@ export function TopBar({ setup }: TopBarProps) {
 
   return (
     <Container scrolled={scrolled} ref={containerRef as Ref<HTMLDivElement>}>
-      <Inner>
-        <Logo scrolled={scrolled}>
-          <Link href={`/app/${router.query.orgUserId}`}>
-            <a>
-              <LogoSvg />
-            </a>
-          </Link>
-        </Logo>
-      </Inner>
-      <Inner>
+      <Logo scrolled={scrolled}>
+        <Link href={`/app/${router.query.teamId}`}>
+          <a>
+            <LogoSvg />
+          </a>
+        </Link>
+      </Logo>
+
+      <Inner data-tablet>
         {setup ? (
           <Button onClick={() => auth.signOut()}>Logout</Button>
         ) : (
           <>
             <Buttons>
+              <Tooltip content="Search (cmd+k)">
+                {(props) => <Button {...props} icon={<SearchSvg />} />}
+              </Tooltip>
               <Tooltip content="Notifications">
-                {(props) => (
-                  <IconButton {...props}>
-                    <BellSvg />
-                  </IconButton>
-                )}
+                {(props) => <Button {...props} icon={<BellSvg />} />}
               </Tooltip>
-              <Tooltip content="Feature release notes">
-                {(props) => (
-                  <IconButton {...props}>
-                    <GiftSvg />
-                  </IconButton>
-                )}
+              <Tooltip content="Support">
+                {(props) => <Button {...props} icon={<LifeBuoySvg />} />}
               </Tooltip>
+
+              <Spacer w="1.2rem" />
+
+              <Tooltip content="App switcher">
+                {(props) => <Button {...props} icon={<GridSvg />} />}
+              </Tooltip>
+
+              <Spacer w="1.2rem" />
+
+              <AccountActionMenu>
+                {(props) => (
+                  <Button
+                    {...props}
+                    intend="primary"
+                    icon={
+                      <>
+                        {authUser?.user?.name
+                          ?.split?.(" ")
+                          .filter(Boolean)
+                          .reduce((all, w, index, names) => {
+                            if (index === 0 || index === names.length - 1) {
+                              all += w[0];
+                            }
+                            return all;
+                          }, "")}
+                      </>
+                    }
+                  />
+                )}
+              </AccountActionMenu>
             </Buttons>
-            <AccountActionMenu />
           </>
         )}
+      </Inner>
+
+      <Inner data-mobile>
+        <Button
+          icon={<SearchSvg />}
+          size="large"
+          weight="ghost"
+          onClick={() => {
+            alert("search");
+          }}
+        />
+        <Button
+          icon={<MenuSvg />}
+          size="large"
+          weight="ghost"
+          onClick={() => {
+            const event = new CustomEvent("toggleMobileMenu");
+            window.document.body.dispatchEvent(event);
+          }}
+        />
       </Inner>
     </Container>
   );

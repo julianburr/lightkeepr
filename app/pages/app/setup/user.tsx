@@ -10,6 +10,7 @@ import { Field } from "src/components/field";
 import { TextInput } from "src/components/text-input";
 import { Button } from "src/components/button";
 import { Form } from "src/components/form";
+import { Spacer } from "src/components/spacer";
 
 const db = getFirestore();
 
@@ -19,7 +20,7 @@ export default function UserSetup() {
   const { form, use } = useForm({
     defaultValues: { name: authUser.displayName },
     onSubmit: async (values) => {
-      await setDoc(doc(db, "users", authUser.email), {
+      await setDoc(doc(db, "users", authUser.email!), {
         name: values.name,
       });
     },
@@ -29,6 +30,7 @@ export default function UserSetup() {
     <Auth>
       <SetupLayout>
         <h1>Please complete the set up of your user account</h1>
+        <Spacer height="2.4rem" />
 
         <Form ref={form}>
           <Field name="name" label="Name" Input={TextInput} required />

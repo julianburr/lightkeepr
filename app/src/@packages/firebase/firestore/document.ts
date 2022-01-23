@@ -1,6 +1,7 @@
+import { useContext, useLayoutEffect } from "react";
 import invariant from "invariant";
 import { onSnapshot } from "firebase/firestore";
-import { useContext } from "react";
+
 import { FirestoreContext } from "./context";
 
 type UseDocumentOptions = {
@@ -29,7 +30,12 @@ export function useDocument(query: any, options?: UseDocumentOptions) {
       cacheItem.resolve = resolve;
     });
 
-    setCache?.((state: any) => ({ ...state, [cacheKey]: cacheItem }));
+    // HACK: react complains about setting state in the main component function body,
+    // so we delay the state setting to the next tick here :/
+    setTimeout(
+      () => setCache?.((state: any) => ({ ...state, [cacheKey]: cacheItem })),
+      0
+    );
     onSnapshot(query, (snap: any) => {
       setCache?.((state: any) => ({
         ...state,

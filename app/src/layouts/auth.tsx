@@ -15,19 +15,20 @@ const Logo = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 0 0 1.8rem;
+  margin: 0 0 3.2rem;
 
   svg {
     height: 8rem;
     width: auto;
-    margin: 0 0 0.8rem;
+    margin: 0 0 0.6rem;
   }
 `;
 
 const Title = styled.h1`
   margin: 0;
   padding: 0;
-  font-size: 2.8em;
+  font-size: 1.8em;
+  font-weight: 900;
 `;
 
 const Content = styled.main`

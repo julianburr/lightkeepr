@@ -21,13 +21,14 @@ type ButtonTagProps = DetailedHTMLProps<
 
 type CoreButtonProps = AnchorTagProps | ButtonTagProps;
 
-const CoreButton = forwardRef(function CoreButton(
+export const CoreButton = forwardRef(function CoreButton(
   props: CoreButtonProps,
   ref: Ref<any>
 ) {
   // "Smart" loading state handler, whenever an aysnc function is passed into
   // the `onClick` prop
   const [loading, setLoading] = useState(false);
+
   const onClick = "onClick" in props ? props.onClick : undefined;
   const handleClick = useCallback(
     async (e) => {
@@ -64,58 +65,123 @@ const CoreButton = forwardRef(function CoreButton(
   );
 });
 
-const Container = styled(CoreButton)<{
+type ContainerProps = {
   intend?: "primary" | "secondary";
+  weight?: "default" | "outline" | "ghost";
   size?: "small" | "medium" | "large";
+  icon?: boolean;
   fullWidth?: boolean;
-}>`
+};
+
+function getFontSize(props: ContainerProps) {
+  return props.size === "small" ? ".9em" : "1em";
+}
+
+function getIconSize(props: ContainerProps) {
+  return props.size === "large" ? "1.4em" : "1.2em";
+}
+
+function getHeight(props: ContainerProps) {
+  return props.size === "small"
+    ? "2.8rem"
+    : props.size === "large"
+    ? "4.4rem"
+    : "3.6rem";
+}
+
+function getWidth(props: ContainerProps) {
+  return props.icon ? getHeight(props) : props.fullWidth ? "100%" : "auto";
+}
+
+function getPadding(props: ContainerProps) {
+  return props.icon
+    ? "0"
+    : props.size === "small"
+    ? "0 1.2rem"
+    : props.size === "large"
+    ? "0 2.4rem"
+    : "0 1.8rem";
+}
+
+function getBackground(props: ContainerProps) {
+  return props.weight === "default"
+    ? props.intend === "primary"
+      ? "#3dc5ce"
+      : "#e0dfd8"
+    : "transparent";
+}
+
+function getBackgroundHover(props: ContainerProps) {
+  return props.weight === "default"
+    ? props.intend === "primary"
+      ? "#2eb5bd"
+      : "#dad9d0"
+    : props.weight === "ghost"
+    ? "#dad9d044"
+    : "transparent";
+}
+
+function getBorder(props: ContainerProps) {
+  return props.weight === "outline" ? ".1rem solid #dad9d088" : "0 none";
+}
+
+function getBorderHover(props: ContainerProps) {
+  return props.weight === "outline" ? ".1rem solid #dad9d0" : "0 none";
+}
+
+function getColor(props: ContainerProps) {
+  return props.weight === "default" && props.intend === "primary"
+    ? "#fff"
+    : "#222";
+}
+
+// HACK: this is just to clean up the props we use to determine certain styles
+// so they don't end up in `CoreButton` :/
+const _CoreButton = forwardRef(function _CoreButton(
+  { weight, intend, icon, fullWidth, ...props }: ContainerProps,
+  ref
+) {
+  return <CoreButton ref={ref} {...props} />;
+});
+
+const Container = styled(_CoreButton)<ContainerProps>`
   align-self: flex-start;
   justify-self: flex-start;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  height: ${(props) =>
-    props.size === "small"
-      ? "2.8rem"
-      : props.size === "large"
-      ? "4.4rem"
-      : "3.6rem"};
-  background: ${(props) =>
-    props.intend === "primary" ? "#5B93E7" : "transparent"};
-  border: 0.1rem solid rgba(0, 0, 0, 0.1);
+  font-size: ${getFontSize};
+  height: ${getHeight};
+  background: ${getBackground};
+  border: ${getBorder};
   border-radius: 0.3rem;
-  color: ${(props) => (props.intend === "primary" ? "#fff" : "#000")};
+  color: ${getColor};
   text-decoration: none;
-  padding: ${(props) =>
-    props.size === "small"
-      ? "0 1.2rem"
-      : props.size === "large"
-      ? "0 2.4rem"
-      : "0 1.8rem"};
   margin: 0;
-  width: ${(props) => (props.fullWidth ? "100%" : "auto")};
-  transition: border 0.2s, background 0.2s;
+  padding: ${getPadding};
+  width: ${getWidth};
+  transition: border 0.2s, background 0.2s, color 0.2s;
+  font-family: "Playfair Display";
 
   svg {
-    height: 1.2em;
+    height: ${getIconSize};
     width: auto;
-
+    margin: 0 -0.6rem;
     filter: grayscale(1);
     transition: filter 0.2s;
 
     & + span {
-      margin: 0 0 0 0.8rem;
+      margin: 0 0 0 1.2rem;
     }
   }
 
   &:hover,
   &:focus {
-    color: ${(props) => (props.intend === "primary" ? "#fff" : "#000")};
+    color: ${getColor};
     text-decoration: none;
-    border-color: rgba(0, 0, 0, 0.2);
-    background: ${(props) =>
-      props.intend === "primary" ? "#4A80D2" : "transparent"};
+    border: ${getBorderHover};
+    background: ${getBackgroundHover};
 
     svg {
       filter: grayscale(0);
@@ -133,11 +199,23 @@ type ButtonProps = ComponentProps<typeof Container> & {
 };
 
 export const Button = forwardRef(function Button(
-  { children, icon, ...props }: ButtonProps,
+  {
+    children,
+    icon,
+    weight = "default",
+    intend = "secondary",
+    ...props
+  }: ButtonProps,
   ref: Ref<any>
 ) {
   return (
-    <Container ref={ref} {...props}>
+    <Container
+      ref={ref}
+      icon={icon && !children}
+      weight={weight}
+      intend={intend}
+      {...props}
+    >
       {icon}
       {children && <span>{children}</span>}
     </Container>

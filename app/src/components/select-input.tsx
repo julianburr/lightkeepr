@@ -4,14 +4,13 @@ import {
   useCallback,
   useRef,
   useMemo,
-  useState,
-  useEffect,
+  useContext,
 } from "react";
-import { useFormMethods } from "react-cool-form";
 import styled from "styled-components";
 
 import { Popout } from "./popout";
 import { PopoutMenu } from "./popout-menu";
+import { FormContext } from "./form";
 
 import ChevronDownSvg from "src/assets/icons/chevron-down.svg";
 
@@ -30,7 +29,7 @@ const Button = styled.button`
   border: 0.1rem solid rgba(0, 0, 0, 0.1);
   border-radius: 0.3rem;
   background: #fff;
-  padding: 0 1.2rem;
+  padding: 0 0.8rem;
   text-align: left;
   position: relative;
 
@@ -76,24 +75,32 @@ type SelectInputProps = {
   suggestions?: Items; // | SeachableItems;
   searchable?: boolean;
   minChars?: number;
+  value?: Item;
+  onChange?: (item: Item) => void | Promise<void>;
 };
 
-export function SelectInput({
+function FormSelectInput(props: SelectInputProps) {
+  const { formMethods } = useContext(FormContext);
+  return (
+    <ControlledSelectInput
+      {...props}
+      value={formMethods?.use?.("values")[props.name]}
+      onChange={(item) => formMethods?.setValue?.(props.name, item)}
+    />
+  );
+}
+
+function ControlledSelectInput({
   id,
   name,
   items,
   suggestions,
   searchable,
   minChars,
-  ...props
+  value,
+  onChange,
 }: SelectInputProps) {
   const containerRef = useRef<HTMLDivElement>();
-
-  const form = useFormMethods();
-  const [value, setValue] = useState<any>();
-  useEffect(() => {
-    setValue(form?.use?.("values")?.[name]);
-  }, []);
 
   const enhanceItems = useCallback(
     (items: Items): any => {
@@ -106,13 +113,12 @@ export function SelectInput({
           selectable: true,
           selected: value?.value === item.value,
           onClick: () => {
-            setValue(item);
-            form?.setValue?.(name, item);
+            onChange?.(item);
           },
         };
       });
     },
-    [name, value]
+    [value]
   );
 
   const enhancedItems = useMemo(() => enhanceItems(items), [items]);
@@ -149,4 +155,15 @@ export function SelectInput({
       </Popout>
     </Container>
   );
+}
+
+// HACK: within a form we want to use the `react-cool-form` methods to control
+// the input value, otherwise we want to control it manually
+export function SelectInput(props: SelectInputProps) {
+  // eslint-disable-next-line
+  // @ts-ignore
+  if (FormContext.Consumer._currentValue?.formMethods !== undefined) {
+    return <FormSelectInput {...props} />;
+  }
+  return <ControlledSelectInput {...props} />;
 }

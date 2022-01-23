@@ -8,11 +8,13 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  height: 100%;
+  width: 100%;
 `;
 
 const Content = styled.main`
-  padding: 2.4rem;
   width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: row;
 `;
@@ -23,6 +25,7 @@ const Main = styled.main`
   flex: 1;
   max-width: 90rem;
   margin: 0 auto;
+  padding: 3.2rem 2.4rem 2.4rem;
 `;
 
 type AppLayoutProps = PropsWithChildren<Record<never, any>>;
@@ -32,11 +35,9 @@ export function AppLayout({ children }: AppLayoutProps) {
     <Container>
       <TopBar />
       <Content>
+        <Sidebar />
         <Suspense fallback={null}>
-          <Sidebar />
-          <Suspense fallback={null}>
-            <Main>{children}</Main>
-          </Suspense>
+          <Main>{children}</Main>
         </Suspense>
       </Content>
     </Container>

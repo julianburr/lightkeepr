@@ -8,7 +8,7 @@ export const Input = styled.input<{ error?: any }>`
   border-color: ${(props) => (props.error ? `#f4737d` : `rgba(0, 0, 0, 0.1)`)};
   border-radius: 0.3rem;
   height: 3.6rem;
-  padding: 0 1.2rem;
+  padding: 0 0.8rem;
   width: 100%;
   transition: border 0.2s;
 

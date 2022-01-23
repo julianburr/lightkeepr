@@ -1,19 +1,34 @@
 import { ComponentProps, useCallback } from "react";
 import styled from "styled-components";
 
+import { Button } from "./button";
 import { Popout } from "./popout";
 import { Items, PopoutMenu } from "./popout-menu";
+
+import MoreSvg from "src/assets/icons/more-vertical.svg";
 
 const Container = styled.div`
   min-width: 16rem;
   max-width: 21rem;
 `;
 
-type ActionMenuProps = Omit<ComponentProps<typeof Popout>, "Content"> & {
+function DefaultButton(props: ComponentProps<typeof Button>) {
+  return <Button weight="ghost" icon={<MoreSvg />} {...props} />;
+}
+
+type ActionMenuProps = Omit<
+  ComponentProps<typeof Popout>,
+  "Content" | "children"
+> & {
   items: Items;
+  children?: ComponentProps<typeof Popout>["children"];
 };
 
-export function ActionMenu({ items, ...props }: ActionMenuProps) {
+export function ActionMenu({
+  items,
+  children = DefaultButton,
+  ...props
+}: ActionMenuProps) {
   const Content = useCallback(
     ({ setVisible, element }) => (
       <Container>
@@ -22,5 +37,9 @@ export function ActionMenu({ items, ...props }: ActionMenuProps) {
     ),
     [items]
   );
-  return <Popout Content={Content} {...props} />;
+  return (
+    <Popout Content={Content} {...props}>
+      {children}
+    </Popout>
+  );
 }

@@ -25,7 +25,8 @@ export const GlobalStyles = createGlobalStyle`
     font-size: 1.4rem;
     font-weight: 400;
     line-height: 1.4;
-    color: #000;
+    background: #fff;
+    color: #222;
   }
 
   b {
@@ -33,11 +34,11 @@ export const GlobalStyles = createGlobalStyle`
   }
 
   h1 {
-    font-size: 2.8em;
+    font-size: 2.2em;
   }
 
   h2 {
-    font-size: 2.2em;
+    font-size: 1.8em;
   }
 
   h3 {
@@ -51,8 +52,8 @@ export const GlobalStyles = createGlobalStyle`
   h1, h2, h3, h4 {
     font-weight: 600;
     line-height: 1.05;
-    font-family: "Yanone Kaffeesatz";
     margin: 0;
+    font-family: "Playfair Display";
   }
 
   p {

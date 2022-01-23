@@ -6,23 +6,26 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import { getAuth } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+
+const auth = getAuth();
 
 let resolveUserPromise: any;
 const userPromise = new Promise((resolve) => {
   resolveUserPromise = resolve;
 });
 
-export const AuthContext = createContext<any>(undefined);
+export const AuthContext = createContext<any>({});
 
 type AuthProviderProps = PropsWithChildren<Record<never, any>>;
 
 export function AuthProvider(props: AuthProviderProps) {
-  const [authUser, setAuthUser] = useState<any>(userPromise);
+  const [authUser, setAuthUser] = useState<any>(
+    auth.currentUser || userPromise
+  );
 
   useEffect(() => {
-    const auth = getAuth();
-    auth?.onAuthStateChanged?.((user) => {
+    onAuthStateChanged(auth, (user) => {
       setAuthUser(user);
       resolveUserPromise?.();
     });
@@ -38,7 +41,7 @@ type UseAuthOptions = {
 };
 
 export function useAuth(options?: UseAuthOptions) {
-  const { authUser } = useContext(AuthContext);
+  const { authUser, setAuthUser } = useContext(AuthContext);
 
   if (options?.suspense === false) {
     return {
@@ -51,5 +54,5 @@ export function useAuth(options?: UseAuthOptions) {
     throw authUser;
   }
 
-  return authUser;
+  return useMemo(() => ({ ...(authUser || {}), setAuthUser }), [authUser]);
 }

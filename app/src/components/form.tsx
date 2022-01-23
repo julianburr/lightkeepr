@@ -1,5 +1,12 @@
-import { Ref, ComponentProps, forwardRef } from "react";
+import { Ref, ComponentProps, forwardRef, createContext, useMemo } from "react";
+import { useFormMethods } from "react-cool-form";
 import styled from "styled-components";
+
+type FormContextValue = {
+  formMethods?: any;
+};
+
+export const FormContext = createContext<FormContextValue>({});
 
 const Container = styled.form<{ columns?: number; gap?: string }>`
   display: grid;
@@ -13,5 +20,11 @@ const Container = styled.form<{ columns?: number; gap?: string }>`
 type FormProps = ComponentProps<typeof Container>;
 
 export const Form = forwardRef(function Form(props: FormProps, ref: Ref<any>) {
-  return <Container ref={ref} {...props} />;
+  const formMethods = useFormMethods();
+  const value = useMemo(() => ({ formMethods }), [formMethods]);
+  return (
+    <FormContext.Provider value={value}>
+      <Container ref={ref} {...props} />
+    </FormContext.Provider>
+  );
 });

@@ -58,13 +58,15 @@ const Arrow = styled.div`
   }
 `;
 
-type PassthroughProps = {
+type ChildrenProps = {
   ref: Ref<HTMLElement>;
   onMouseDown: (e: any) => void;
   onClick: (e: any) => void;
   onKeyDown: (e: any) => void;
-  visible: boolean;
-  setVisible: Dispatch<SetStateAction<boolean>>;
+  _: {
+    visible: boolean;
+    setVisible: Dispatch<SetStateAction<boolean>>;
+  };
 };
 
 type PopoutProps = {
@@ -74,7 +76,7 @@ type PopoutProps = {
     element?: HTMLElement | null;
     popper?: HTMLElement | null;
   }>;
-  children: (props: PassthroughProps) => ReactNode;
+  children: (props: ChildrenProps) => ReactNode;
   placement?: Placement;
   portalTarget?: HTMLElement;
   showArrow?: boolean;
@@ -191,8 +193,10 @@ export function Popout({
         onMouseDown: handleMouseDown,
         onClick: handleClick,
         onKeyDown: handleKeyDown,
-        visible,
-        setVisible,
+        _: {
+          visible,
+          setVisible,
+        },
       })}
 
       {visible &&

@@ -23,6 +23,7 @@ export default createHandler({
           title="You've been invited to Lightkeepr"
           organisationUser={organisationUser}
           organisation={organisation}
+          acceptUrl="https://google.com"
         />,
         { validationLevel: "soft" }
       );

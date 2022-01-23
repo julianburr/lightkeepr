@@ -1,6 +1,7 @@
-import { PropsWithChildren } from "react";
-import { TopBar } from "src/components/top-bar";
+import { Suspense, PropsWithChildren } from "react";
 import styled from "styled-components";
+
+import { TopBar } from "src/components/top-bar";
 
 const Container = styled.div`
   display: flex;
@@ -22,7 +23,9 @@ export function SetupLayout({ children }: SetupLayoutProps) {
   return (
     <Container>
       <TopBar setup />
-      <Content>{children}</Content>
+      <Suspense fallback={null}>
+        <Content>{children}</Content>
+      </Suspense>
     </Container>
   );
 }

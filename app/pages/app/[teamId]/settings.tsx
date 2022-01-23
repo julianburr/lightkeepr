@@ -1,11 +1,11 @@
 import { Auth } from "src/components/auth";
 import { AppLayout } from "src/layouts/app";
 
-export default function OrganisationSettings() {
+export default function TeamSettings() {
   return (
     <Auth>
       <AppLayout>
-        <p>Organisation Settings</p>
+        <p>Team Settings</p>
       </AppLayout>
     </Auth>
   );

@@ -4,7 +4,8 @@ import styled from "styled-components";
 
 const Container = styled.label`
   font-size: 1.2rem;
-  font-weight: 600;
+  font-weight: 400;
+  font-family: "Playfair Display";
 `;
 
 const Required = styled.span`

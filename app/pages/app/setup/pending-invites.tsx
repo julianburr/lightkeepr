@@ -9,41 +9,38 @@ import { Auth } from "src/components/auth";
 import { List, ListItem } from "src/components/list";
 import { useDocument } from "src/@packages/firebase";
 import { Spacer } from "src/components/spacer";
+import { useCallback } from "react";
 
 const db = getFirestore();
 
 function InviteListItem({ data }: any) {
-  const organisation = useDocument(
-    doc(db, "organisations", data.organisation.id)
+  const team = useDocument(doc(db, "teams", data.team.id));
+
+  const updateStatus = useCallback(
+    (status) => {
+      return updateDoc(doc(db, "teamUsers", data.id), {
+        status,
+      });
+    },
+    [data.id]
   );
+
   return (
     <ListItem
-      title={organisation.name}
+      title={team.name}
       meta={`Invited by ${data.createdBy.id}`}
       actions={[
         {
           label: "Accept invite",
-          onClick: async () => {
-            await updateDoc(doc(db, "organisationUsers", data.id), {
-              status: "active",
-            });
-          },
+          onClick: () => updateStatus("active"),
         },
         {
           label: "Reject invite",
-          onClick: async () => {
-            await updateDoc(doc(db, "organisationUsers", data.id), {
-              status: "rejected",
-            });
-          },
+          onClick: () => updateStatus("rejected"),
         },
         {
           label: "Reject & block",
-          onClick: async () => {
-            await updateDoc(doc(db, "organisationUsers", data.id), {
-              status: "blocked",
-            });
-          },
+          onClick: () => updateStatus("blocked"),
         },
       ]}
     />
@@ -59,7 +56,7 @@ export default function PendingInvitesSetup() {
         <h1>You have some pending invites</h1>
         <Spacer h="1.8rem" />
 
-        <List items={authUser.pendingOrganisationUsers} Item={InviteListItem} />
+        <List items={authUser.pendingInvites || []} Item={InviteListItem} />
       </SetupLayout>
     </Auth>
   );

@@ -8,6 +8,8 @@ const { withSentryConfig } = require("@sentry/nextjs");
 const config = {
   reactStrictMode: true,
 
+  generateEtags: false,
+
   webpack: (config) => {
     config.module.rules = config.module.rules.concat([
       // Add SVGR loader to import SVGs as react components

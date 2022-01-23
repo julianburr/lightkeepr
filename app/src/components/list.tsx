@@ -19,7 +19,7 @@ const Ul = styled.ul<{ columns?: number; gap?: string }>`
     Array.from(new Array(props.columns || 1))
       .fill("1fr")
       .join(" ")};
-  gap: ${(props) => props.gap};
+  gap: ${(props) => props.gap || ".3rem"};
 `;
 
 const Li = styled.li`
@@ -28,22 +28,30 @@ const Li = styled.li`
   list-style: none;
 
   & > div,
+  & > button,
   & > a {
     display: flex;
     flex-direction: row;
     align-items: center;
     width: 100%;
-    padding: 1.2rem 1.8rem;
-    border: 0.1rem solid rgba(0, 0, 0, 0.1);
-    border-radius: 0.6rem;
-
-    &:hover,
-    &:focus {
-      border: 0.1rem solid rgba(0, 0, 0, 0.2);
-    }
+    padding: 1.2rem;
+    border: 0 none;
+    border-radius: 0.3rem;
+    background: #f9f9f7;
+    transition: background 0.2s;
 
     p {
       margin: 0;
+    }
+  }
+
+  & > button,
+  & > a {
+    cursor: pointer;
+
+    &:hover,
+    &:focus {
+      background: #f9f9f788;
     }
   }
 `;
@@ -75,7 +83,7 @@ export function List({
   Item,
   getKey = (data) => data.id,
   columns = 1,
-  gap = ".8rem",
+  gap,
 }: ListProps) {
   if (!items?.length) {
     return <p>No items</p>;
@@ -92,6 +100,7 @@ export function List({
 
 type ListItemProps = PropsWithChildren<{
   href?: string;
+  onClick?: (e: any) => void | Promise<void>;
   title: ReactNode;
   meta?: ReactNode;
   tags?: ReactNode;
@@ -99,7 +108,14 @@ type ListItemProps = PropsWithChildren<{
   disabled?: boolean;
 }>;
 
-export function ListItem({ href, title, meta, tags, actions }: ListItemProps) {
+export function ListItem({
+  href,
+  onClick,
+  title,
+  meta,
+  tags,
+  actions,
+}: ListItemProps) {
   const content = (
     <>
       <Content>
@@ -109,9 +125,7 @@ export function ListItem({ href, title, meta, tags, actions }: ListItemProps) {
 
       <WrapTags>{tags}</WrapTags>
       {!!actions?.length && (
-        <ActionMenu items={actions} placement="bottom-end">
-          {(props) => <Button {...props}>Actions</Button>}
-        </ActionMenu>
+        <ActionMenu items={actions} placement="bottom-end" />
       )}
     </>
   );
@@ -120,6 +134,14 @@ export function ListItem({ href, title, meta, tags, actions }: ListItemProps) {
     return (
       <Li>
         <Link href={href}>{content}</Link>
+      </Li>
+    );
+  }
+
+  if (onClick) {
+    return (
+      <Li>
+        <button onClick={onClick}>{content}</button>
       </Li>
     );
   }

@@ -26,6 +26,7 @@ import styled from "styled-components";
 import { Form } from "src/components/form";
 import { Button } from "src/components/button";
 import { useErrorDialog } from "src/hooks/use-dialog";
+import { api } from "src/utils/api-client";
 
 const auth = getAuth();
 const googleProvider = new GoogleAuthProvider();
@@ -47,11 +48,15 @@ export default function SignIn({ isSignUp }: SigninProps) {
     onSubmit: async (values) => {
       try {
         if (isSignUp) {
-          await createUserWithEmailAndPassword(
+          const response = await createUserWithEmailAndPassword(
             auth,
             values.email!,
             values.password!
           );
+          await api.post("/api/account/verify-email/send", {
+            userUid: response.user.uid,
+            email: values.email,
+          });
         } else {
           await signInWithEmailAndPassword(
             auth,
@@ -60,13 +65,16 @@ export default function SignIn({ isSignUp }: SigninProps) {
           );
         }
       } catch (e: any) {
-        console.log({ e });
-        if (e.code === "auth/user-not-found") {
-          errorDialog.open({
-            message:
-              `User with the provided credentials not found! Make sure that ` +
-              `your email and password are entered correctly.`,
-          });
+        switch (e.code) {
+          case "auth/user-not-found":
+            errorDialog.open({
+              message:
+                `User with the provided credentials not found! Make sure that ` +
+                `your email and password are entered correctly.`,
+            });
+            break;
+          default:
+            errorDialog.open(e);
         }
       }
     },
@@ -82,6 +90,7 @@ export default function SignIn({ isSignUp }: SigninProps) {
       <Button
         icon={<GoogleSvg role="presentation" />}
         size="large"
+        weight="outline"
         fullWidth
         onClick={() => signInWithRedirect(auth, googleProvider)}
       >
@@ -93,6 +102,7 @@ export default function SignIn({ isSignUp }: SigninProps) {
       <Button
         icon={<GithubSvg role="presentation" />}
         size="large"
+        weight="outline"
         fullWidth
         onClick={() => signInWithRedirect(auth, githubProvider)}
       >
@@ -136,13 +146,18 @@ export default function SignIn({ isSignUp }: SigninProps) {
               type="submit"
               disabled={use("isSubmitting")}
             >
-              {isSignUp ? "Sign up with Email" : "Sign in with Email"}
+              {isSignUp ? "Sign up with email" : "Sign in with email"}
             </Button>
           </Form>
         </>
       ) : (
-        <Button size="large" fullWidth onClick={() => setUseEmail(true)}>
-          {isSignUp ? "Sign up with Email" : "Sign in with Email"}
+        <Button
+          size="large"
+          weight="outline"
+          fullWidth
+          onClick={() => setUseEmail(true)}
+        >
+          {isSignUp ? "Sign up with email" : "Sign in with email"}
         </Button>
       )}
 
@@ -157,7 +172,11 @@ export default function SignIn({ isSignUp }: SigninProps) {
       ) : (
         <p>
           Don't have an account yet? No problem, click here to{" "}
-          <Link href={`/sign-up?email=${use("values")?.email}`}>
+          <Link
+            href={`/sign-up${
+              use("values")?.email ? `?email=${use("values")?.email}` : ""
+            }`}
+          >
             <a>sign up</a>
           </Link>
           .

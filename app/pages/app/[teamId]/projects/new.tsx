@@ -20,10 +20,10 @@ export default function NewProject() {
 
   const { form, use } = useForm({
     onSubmit: async (values) => {
-      const orgId = authUser.organisationUser.organisation.id;
-      const orgRef = doc(db, "organisations", orgId);
+      const teamId = router.query.teamId;
+      const orgRef = doc(db, "organisations", teamId!);
 
-      const userRef = doc(db, "users", authUser.user.id);
+      const userRef = doc(db, "users", authUser.user!.id);
 
       const project = await addDoc(collection(db, "projects"), {
         organisation: orgRef,
@@ -31,7 +31,7 @@ export default function NewProject() {
         createdAt: new Date(),
         createdBy: userRef,
       });
-      router.push(`/app/${router.query.orgUserId}/projects/${project.id}`);
+      router.push(`/app/${router.query.teamId}/projects/${project.id}`);
     },
   });
 

@@ -23,26 +23,21 @@ function ProjectListItem({ data }: any) {
 }
 
 function ProjectsList() {
-  const authUser = useAuthUser();
-
   const router = useRouter();
-  const { orgUserId } = router.query;
 
-  const orgId = authUser.organisationUser?.organisation?.id;
+  const teamId = router.query.teamId;
   const projects = useCollection(
-    orgId
-      ? query(
-          collection(db, "projects"),
-          where("organisation", "==", doc(db, "organisations", orgId))
-        )
-      : undefined,
-    { key: `${orgUserId}/projects` }
+    query(
+      collection(db, "projects"),
+      where("team", "==", doc(db, "teams", teamId!))
+    ),
+    { key: `${teamId}/projects` }
   );
 
   return <List items={projects} Item={ProjectListItem} />;
 }
 
-export default function OrganisationDashboard() {
+export default function TeamDashboard() {
   return (
     <Auth>
       <AppLayout>
