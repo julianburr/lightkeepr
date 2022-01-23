@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 import { TopBar } from "src/components/top-bar";
 import { Sidebar } from "src/components/sidebar";
+import { Loader } from "src/components/loader";
 
 const Container = styled.div`
   display: flex;
@@ -36,7 +37,7 @@ export function AppLayout({ children }: AppLayoutProps) {
       <TopBar />
       <Content>
         <Sidebar />
-        <Suspense fallback={null}>
+        <Suspense fallback={<Loader message="Load content..." />}>
           <Main>{children}</Main>
         </Suspense>
       </Content>

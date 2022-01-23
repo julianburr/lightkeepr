@@ -18,46 +18,48 @@ import { List } from "src/components/list";
 import { Spacer } from "src/components/spacer";
 import { Heading, P } from "src/components/text";
 
-import { RunListItem } from "src/list-items/run";
+import { ReportListItem } from "src/list-items/report";
+import { BackLink } from "src/components/back-link";
 
 const db = getFirestore();
 
-function RunsList() {
+function ReportsList() {
   const router = useRouter();
 
-  const projectRef = doc(db, "projects", router.query.projectId!);
+  const runRef = doc(db, "runs", router.query.runId!);
   const runs = useCollection(
     query(
-      collection(db, "runs"),
-      where("project", "==", projectRef),
-      orderBy("createdAt", "desc")
+      collection(db, "reports"),
+      where("run", "==", runRef),
+      orderBy("name", "asc")
     ),
-    { key: `${router.query.projectId}/runs` }
+    { key: `${router.query.runId}/reports` }
   );
 
-  return <List items={runs} Item={RunListItem} />;
+  return <List items={runs} Item={ReportListItem} />;
 }
 
-export default function ProjectDetails() {
+export default function RunDetails() {
   const router = useRouter();
 
-  const project = useDocument(doc(db, "projects", router.query.projectId!));
+  const { teamId, projectId, runId } = router.query;
+  const run = useDocument(doc(db, "runs", runId!));
 
   return (
     <Auth>
       <AppLayout>
-        <Heading level={1}>{project.name}</Heading>
+        <BackLink href={`/app/${teamId}/projects/${projectId}`}>
+          Back to project overview
+        </BackLink>
+        <Heading level={1}>
+          Run: {run.commitMessage || run.commitHash || "n/a"}
+        </Heading>
         <Spacer h="1.8rem" />
 
-        <Heading level={2}>Suggested improvements</Heading>
-        <Spacer h=".6rem" />
-        <P>Suggestions are not implemented yet.</P>
-        <Spacer h="1.8rem" />
-
-        <Heading level={2}>Runs</Heading>
+        <Heading level={2}>Reports</Heading>
         <Spacer h="1.2rem" />
         <Suspense fallback={null}>
-          <RunsList />
+          <ReportsList />
         </Suspense>
       </AppLayout>
     </Auth>

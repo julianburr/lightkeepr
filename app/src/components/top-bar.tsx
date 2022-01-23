@@ -128,11 +128,15 @@ export function TopBar({ setup }: TopBarProps) {
         </Link>
       </Logo>
 
-      <Inner data-tablet>
-        {setup ? (
-          <Button onClick={() => auth.signOut()}>Logout</Button>
-        ) : (
-          <>
+      {setup ? (
+        <>
+          <Inner>
+            <Button onClick={() => auth.signOut()}>Logout</Button>
+          </Inner>
+        </>
+      ) : (
+        <>
+          <Inner data-tablet>
             <Buttons>
               <Tooltip content="Search (cmd+k)">
                 {(props) => <Button {...props} icon={<SearchSvg />} />}
@@ -174,29 +178,29 @@ export function TopBar({ setup }: TopBarProps) {
                 )}
               </AccountActionMenu>
             </Buttons>
-          </>
-        )}
-      </Inner>
+          </Inner>
 
-      <Inner data-mobile>
-        <Button
-          icon={<SearchSvg />}
-          size="large"
-          weight="ghost"
-          onClick={() => {
-            alert("search");
-          }}
-        />
-        <Button
-          icon={<MenuSvg />}
-          size="large"
-          weight="ghost"
-          onClick={() => {
-            const event = new CustomEvent("toggleMobileMenu");
-            window.document.body.dispatchEvent(event);
-          }}
-        />
-      </Inner>
+          <Inner data-mobile>
+            <Button
+              icon={<SearchSvg />}
+              size="large"
+              weight="ghost"
+              onClick={() => {
+                alert("search");
+              }}
+            />
+            <Button
+              icon={<MenuSvg />}
+              size="large"
+              weight="ghost"
+              onClick={() => {
+                const event = new CustomEvent("toggleMobileMenu");
+                window.document.body.dispatchEvent(event);
+              }}
+            />
+          </Inner>
+        </>
+      )}
     </Container>
   );
 }

@@ -18,6 +18,7 @@ import { EmailInput, TextInput } from "src/components/text-input";
 import { Button } from "src/components/button";
 import { Form } from "src/components/form";
 import { Spacer } from "src/components/spacer";
+import { ButtonBar } from "src/components/button-bar";
 
 const db = getFirestore();
 
@@ -67,9 +68,17 @@ export default function TeamSetup() {
             Input={EmailInput}
             required
           />
-          <Button intend="primary" type="submit" disabled={use("isSubmitting")}>
-            Create team
-          </Button>
+          <ButtonBar
+            left={
+              <Button
+                intend="primary"
+                type="submit"
+                disabled={use("isSubmitting")}
+              >
+                Create team
+              </Button>
+            }
+          />
         </Form>
       </SetupLayout>
     </Auth>

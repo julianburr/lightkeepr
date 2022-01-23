@@ -26,6 +26,7 @@ import { Form } from "./form";
 import { Field } from "./field";
 import { TeamSelectInput } from "src/selects/team";
 import { useForm } from "react-cool-form";
+import { Avatar } from "./avatar";
 
 const auth = getAuth();
 const db = getFirestore();
@@ -82,6 +83,7 @@ const Inner = styled.div`
       transform: translateX(0);
       box-shadow: none;
       width: 100%;
+      transition: none;
     }
   }
 `;
@@ -112,19 +114,6 @@ const WrapInner = styled.div`
   }
 `;
 
-const Avatar = styled.div`
-  height: 4.4rem;
-  width: 4.4rem;
-  border-radius: 0.3rem;
-  background: #3dc5ce;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 1.2rem 0 0;
-  font-family: "Playfair Display";
-`;
-
 const WrapTeamSelect = styled.div`
   width: 100%;
   padding: 2.4rem 2.4rem 0;
@@ -138,7 +127,6 @@ export function Sidebar() {
   const authUser = useAuthUser();
 
   const router = useRouter();
-  const { orgUserId } = router.query;
 
   // Mobile sidebar behaviours
   const [active, setActive] = useState(false);
@@ -214,14 +202,10 @@ export function Sidebar() {
       collection(db, "projects"),
       where("team", "==", doc(db, "teams", teamId))
     ),
-    { key: `${orgUserId}/projects` }
+    { key: `${teamId}/projects` }
   );
 
   const project = projects?.find?.((p: any) => p.id === router.query.projectId);
-
-  const visibleProjects = projects.filter(
-    (p: any) => p.id !== router.query.projectId
-  );
 
   const items = useMemo(() => {
     return [
@@ -244,15 +228,23 @@ export function Sidebar() {
         href: `/app/${router.query.teamId}/account/support`,
       },
 
+      ...(projects?.length
+        ? [
+            {
+              label: "Projects",
+              items: projects.map((p: any) => ({
+                label: p.name,
+                href: `/app/${router.query.teamId}/projects/${p.id}`,
+              })),
+            },
+          ]
+        : []),
+
       ...(project?.id
         ? [
             {
               label: project.name,
               items: [
-                {
-                  label: "Overview",
-                  href: `/app/${router.query.teamId}/projects/${project.id}`,
-                },
                 {
                   label: "Integrations",
                   href: `/app/${router.query.teamId}/projects/${project.id}/integrations`,
@@ -262,18 +254,6 @@ export function Sidebar() {
                   href: `/app/${router.query.teamId}/projects/${project.id}/settings`,
                 },
               ],
-            },
-          ]
-        : []),
-
-      ...(visibleProjects?.length
-        ? [
-            {
-              label: "Projects",
-              items: visibleProjects.map((p: any) => ({
-                label: p.name,
-                href: `/app/${router.query.teamId}/projects/${p.id}`,
-              })),
             },
           ]
         : []),
@@ -319,31 +299,29 @@ export function Sidebar() {
         ],
       },
     ];
-  }, [authUser, projects]);
+  }, [authUser, projects, project]);
 
   // Form for the team switcher
   const teamValue = { value: authUser.team?.id, label: authUser.team?.name };
-  const handleTeamChange = useCallback((team) => {
-    if (team && router.query.teamId !== team.value) {
-      router.push(`/app/${team.value}`);
-    }
-  }, []);
+  const handleTeamChange = useCallback(
+    (team) => {
+      if (team && teamId !== team.value) {
+        router.push(`/app/${team.value}`);
+      }
+    },
+    [teamId]
+  );
 
   return (
     <Container data-active={active} onClick={handleBackgroundClick}>
       <Inner ref={innerRef as Ref<HTMLDivElement>}>
         <WrapProfile>
-          <Avatar>
-            {(authUser?.user?.name as string)
-              .split(" ")
-              .filter(Boolean)
-              .reduce((all, w, index, names) => {
-                if (index === 0 || index === names.length - 1) {
-                  all += w[0];
-                }
-                return all;
-              }, "")}
-          </Avatar>
+          <Avatar
+            background="#3dc5ce"
+            color="#fff"
+            name={authUser?.user?.name}
+          />
+          <Spacer w="1.2rem" />
           <WrapInner>
             <P>You are currently logged in as {authUser?.user?.name}</P>
             <Spacer h=".3rem" />

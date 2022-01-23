@@ -1,19 +1,39 @@
 import { Ref, ComponentType, ReactNode } from "react";
+import { useFormMethods } from "react-cool-form";
 import styled from "styled-components";
 import { Label } from "./label";
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
+
+  p {
+    margin: 0;
+  }
 `;
 
-const Description = styled.p``;
+const Description = styled.p`
+  && {
+    font-size: 1.2rem;
+    line-height: 1.2;
+    color: rgba(0, 0, 0, 0.4);
+    margin: 0.2rem 0.1rem;
+  }
+`;
 
 const WrapLabel = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 0 0.1rem 0.1rem;
+  margin: 0 0.1rem 0.1rem;
+`;
+
+const Error = styled.p`
+  && {
+    color: #f4737d;
+    font-size: 1.2rem;
+    margin: 0.1rem;
+  }
 `;
 
 type FieldProps = {
@@ -40,6 +60,9 @@ export function Field({
   required,
   error,
 }: FieldProps) {
+  const { use } = useFormMethods();
+  const errors = use("errors");
+
   return (
     <Container>
       {label && (
@@ -57,9 +80,11 @@ export function Field({
         label={label}
         description={description}
         required={required}
-        error={error}
+        error={errors[name]}
         {...inputProps}
       />
+
+      {errors[name] && <Error>{errors[name]}</Error>}
     </Container>
   );
 }

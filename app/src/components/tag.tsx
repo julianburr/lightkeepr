@@ -6,8 +6,10 @@ const Container = styled.div`
   flex-direction: row;
   align-items: center;
   padding: 0.4rem 0.8rem;
-  background: #f5f4f1;
+  background: #dad9d044;
   border-radius: 0.3rem;
+  font-size: 1.2rem;
+  color: rgba(0, 0, 0, 0.6);
 `;
 
 type TagProps = {

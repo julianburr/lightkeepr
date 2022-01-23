@@ -3,31 +3,41 @@ import "src/utils/firebase";
 import { useForm } from "react-cool-form";
 import { useRouter } from "next/router";
 import { addDoc, collection, doc, getFirestore } from "firebase/firestore";
+import styled from "styled-components";
 
+import { useAuthUser } from "src/hooks/use-auth-user";
+import { AppLayout } from "src/layouts/app";
 import { Auth } from "src/components/auth";
 import { Button } from "src/components/button";
 import { Field } from "src/components/field";
 import { Form } from "src/components/form";
 import { TextInput } from "src/components/text-input";
-import { AppLayout } from "src/layouts/app";
-import { useAuthUser } from "src/hooks/use-auth-user";
+import { Spacer } from "src/components/spacer";
+import { ButtonBar } from "src/components/button-bar";
 
 const db = getFirestore();
+
+const Container = styled.div`
+  width: 100%;
+  max-width: 45rem;
+`;
 
 export default function NewProject() {
   const router = useRouter();
   const authUser = useAuthUser();
 
   const { form, use } = useForm({
+    defaultValues: { name: "", gitMain: "main" },
     onSubmit: async (values) => {
       const teamId = router.query.teamId;
-      const orgRef = doc(db, "organisations", teamId!);
 
+      const teamRef = doc(db, "teams", teamId!);
       const userRef = doc(db, "users", authUser.user!.id);
 
       const project = await addDoc(collection(db, "projects"), {
-        organisation: orgRef,
+        team: teamRef,
         name: values.name,
+        gitMain: values.gitMain,
         createdAt: new Date(),
         createdBy: userRef,
       });
@@ -38,14 +48,36 @@ export default function NewProject() {
   return (
     <Auth>
       <AppLayout>
-        <h1>Create new project</h1>
+        <Container>
+          <h1>Create new project</h1>
+          <Spacer h="1.6rem" />
 
-        <Form ref={form}>
-          <Field name="name" label="Project name" Input={TextInput} required />
-          <Button type="submit" intend="primary" disabled={use("isSubmitting")}>
-            Create project
-          </Button>
-        </Form>
+          <Form ref={form}>
+            <Field
+              name="name"
+              label="Project name"
+              Input={TextInput}
+              required
+            />
+            <Field
+              name="gitMain"
+              label="Git base branch name"
+              description="This information is used to be able to compare a given report to the latest report on your base branch"
+              Input={TextInput}
+            />
+            <ButtonBar
+              left={
+                <Button
+                  type="submit"
+                  intend="primary"
+                  disabled={use("isSubmitting")}
+                >
+                  Create project
+                </Button>
+              }
+            />
+          </Form>
+        </Container>
       </AppLayout>
     </Auth>
   );

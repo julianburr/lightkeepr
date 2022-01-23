@@ -14,18 +14,21 @@ import { Button } from "src/components/button";
 import { Auth } from "src/components/auth";
 import { Heading } from "src/components/text";
 import { Spacer } from "src/components/spacer";
+import { ButtonBar } from "src/components/button-bar";
+import { BackLink } from "src/components/back-link";
 
 const db = getFirestore();
 
 export default function NewUser() {
   const router = useRouter();
+  const { teamId } = router.query;
+
   const authUser = useAuthUser();
 
   const { form, use } = useForm({
     defaultValues: { email: "", role: { value: "member", label: "Member" } },
     onSubmit: async (values) => {
       try {
-        const teamId = router.query.teamId;
         const teamRef = doc(db, "teams", teamId!);
 
         const userRef = doc(db, "users", values.email);
@@ -40,7 +43,7 @@ export default function NewUser() {
           createdBy: currentUserRef,
         });
 
-        router.push(`/${teamId}/users`);
+        router.push(`/app/${teamId}/users`);
       } catch (e: any) {
         console.error(e);
       }
@@ -50,6 +53,7 @@ export default function NewUser() {
   return (
     <Auth>
       <AppLayout>
+        <BackLink href={`/app/${teamId}/users`}>Back to user list</BackLink>
         <Heading level={1}>Invite new user</Heading>
         <Spacer h="1.2rem" />
 
@@ -68,14 +72,18 @@ export default function NewUser() {
             }}
             required
           />
-          <Button
-            type="submit"
-            intend="primary"
-            form="invite-user"
-            disabled={use("isSubmitting")}
-          >
-            Invite
-          </Button>
+          <ButtonBar
+            left={
+              <Button
+                type="submit"
+                intend="primary"
+                form="invite-user"
+                disabled={use("isSubmitting")}
+              >
+                Invite
+              </Button>
+            }
+          />
         </Form>
       </AppLayout>
     </Auth>

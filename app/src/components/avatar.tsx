@@ -2,34 +2,52 @@ import { Ref } from "react";
 import { ComponentProps, forwardRef } from "react";
 import styled from "styled-components";
 
-import { Button } from "./button";
+export function initials(name?: string) {
+  return name
+    ? name
+        ?.split(" ")
+        .filter(Boolean)
+        .reduce((all, w, index, names) => {
+          if (index === 0 || index === names.length - 1) {
+            all += w[0];
+          }
+          return all;
+        }, "")
+    : "?";
+}
 
-const Container = styled(Button)`
-  && {
-    border-radius: 50%;
-    width: 4.4rem;
-    height: 4.4rem;
-    margin: 0;
-    padding: 0;
+const Container = styled(({ as: As = "div", color, background, ...props }) => (
+  <As {...props} />
+))`
+  width: 4.4rem;
+  height: 4.4rem;
+  border-radius: 0.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Playfair Display";
+  background: ${(props) => props.background};
+  color: ${(props) => props.color || "#000"};
+
+  svg {
+    height: 1.8rem;
+    width: auto;
   }
 `;
 
 type AvatarProps = ComponentProps<typeof Container> & {
-  name: string;
+  background: string;
+  color: string;
+  name?: string;
 };
 
 export const Avatar = forwardRef(function Avatar(
-  { name, ...props }: AvatarProps,
+  { children, name, ...props }: AvatarProps,
   ref: Ref<any>
 ) {
-  const [first, ...rest] = name.trim().split(" ").filter(Boolean);
   return (
     <Container ref={ref} {...props}>
-      {rest?.length
-        ? `${first[0]}${rest[rest.length - 1][0]}`
-        : first.length > 1
-        ? `${first[0]}${first[1]}`
-        : first[0] || "?"}
+      {name ? initials(name) : children}
     </Container>
   );
 });

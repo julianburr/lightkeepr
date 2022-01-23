@@ -145,8 +145,6 @@ const _CoreButton = forwardRef(function _CoreButton(
 });
 
 const Container = styled(_CoreButton)<ContainerProps>`
-  align-self: flex-start;
-  justify-self: flex-start;
   display: flex;
   flex-direction: row;
   align-items: center;

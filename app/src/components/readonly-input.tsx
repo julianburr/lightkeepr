@@ -6,7 +6,9 @@ const Container = styled.div`
   flex-direction: row;
   align-items: center;
   height: 3.6rem;
-  border-top: 0.1rem solid #eee;
+  background: #f5f4f1;
+  border-radius: 0.3rem;
+  padding: 0 0.8rem;
 `;
 
 type ReadonlyInputProps = {

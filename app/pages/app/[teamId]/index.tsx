@@ -1,6 +1,6 @@
 import "src/utils/firebase";
 
-import { Suspense } from "react";
+import { Suspense, useMemo } from "react";
 import { useRouter } from "next/router";
 import {
   collection,
@@ -11,16 +11,13 @@ import {
 } from "firebase/firestore";
 
 import { useCollection } from "src/@packages/firebase";
-import { useAuthUser } from "src/hooks/use-auth-user";
 import { AppLayout } from "src/layouts/app";
 import { Auth } from "src/components/auth";
-import { List, ListItem } from "src/components/list";
+import { List } from "src/components/list";
+
+import { ProjectListItem } from "src/list-items/project";
 
 const db = getFirestore();
-
-function ProjectListItem({ data }: any) {
-  return <ListItem title={data.name} />;
-}
 
 function ProjectsList() {
   const router = useRouter();
@@ -34,7 +31,8 @@ function ProjectsList() {
     { key: `${teamId}/projects` }
   );
 
-  return <List items={projects} Item={ProjectListItem} />;
+  const items = useMemo(() => [...projects, { id: "new" }], [projects]);
+  return <List columns={3} items={items} Item={ProjectListItem} />;
 }
 
 export default function TeamDashboard() {
