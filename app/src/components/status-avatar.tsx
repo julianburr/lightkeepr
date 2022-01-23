@@ -10,7 +10,7 @@ function getBackground(status: Status) {
   return status === "error"
     ? "#f5737f"
     : status === "warning"
-    ? "#ecce3f"
+    ? "#ffcb7c"
     : status === "success"
     ? "#b7de86"
     : "#dad9d044";

@@ -8,6 +8,7 @@ const A = styled.a`
   display: flex;
   flex-direction: row;
   align-items: center;
+  align-self: flex-start;
   font-size: 1.2rem;
   font-family: "Playfair Display";
 
@@ -18,6 +19,7 @@ const A = styled.a`
     transition: transform 0.2s;
   }
 
+  &:focus,
   &:hover {
     & svg {
       transform: translateX(-0.2rem);

@@ -10,6 +10,8 @@ import { useAuthUser } from "src/hooks/use-auth-user";
 
 import favicon from "src/assets/favicon.png";
 import { DialogProvider } from "src/hooks/use-dialog";
+import { ToastProvider } from "src/hooks/use-toast";
+import { Loader } from "src/components/loader";
 
 type AppContentProps = {
   Component: ComponentType<any>;
@@ -61,9 +63,11 @@ export default function App(props: any) {
       <GlobalStyles />
 
       <FirebaseProvider>
-        <Suspense fallback={<p>Loading...</p>}>
+        <Suspense fallback={<Loader message="Loading..." />}>
           <DialogProvider>
-            <AppContent {...props} />
+            <ToastProvider>
+              <AppContent {...props} />
+            </ToastProvider>
           </DialogProvider>
         </Suspense>
       </FirebaseProvider>

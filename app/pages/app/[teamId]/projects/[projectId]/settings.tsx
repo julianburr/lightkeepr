@@ -5,15 +5,18 @@ import { useRouter } from "next/router";
 import { doc, getFirestore, updateDoc } from "firebase/firestore";
 import styled from "styled-components";
 
+import { useDocument } from "src/@packages/firebase";
+import { AppLayout } from "src/layouts/app";
 import { Auth } from "src/components/auth";
 import { Button } from "src/components/button";
 import { Field } from "src/components/field";
 import { Form } from "src/components/form";
 import { TextInput } from "src/components/text-input";
-import { AppLayout } from "src/layouts/app";
 import { Spacer } from "src/components/spacer";
-import { useDocument } from "src/@packages/firebase";
 import { ButtonBar } from "src/components/button-bar";
+import { BackLink } from "src/components/back-link";
+import { useToast } from "src/hooks/use-toast";
+import { ReadonlyInput } from "src/components/readonly-input";
 
 const db = getFirestore();
 
@@ -24,9 +27,12 @@ const Container = styled.div`
 
 export default function ProjectSettings() {
   const router = useRouter();
+  const { teamId, projectId } = router.query;
 
-  const projectRef = doc(db, "projects", router.query.projectId!);
+  const projectRef = doc(db, "projects", projectId!);
   const project = useDocument(projectRef);
+
+  const toast = useToast();
 
   const { form, use } = useForm({
     defaultValues: { name: project.name, gitMain: project.gitMain },
@@ -35,6 +41,7 @@ export default function ProjectSettings() {
         name: values.name,
         gitMain: values.gitMain,
       });
+      toast.show({ message: "Project settings have been updated" });
     },
   });
 
@@ -42,10 +49,19 @@ export default function ProjectSettings() {
     <Auth>
       <AppLayout>
         <Container>
+          <BackLink href={`/app/${teamId}/projects/${projectId}`}>
+            Back to project overview
+          </BackLink>
           <h1>Project settings</h1>
           <Spacer h="1.6rem" />
 
           <Form ref={form}>
+            <Field
+              name="id"
+              label="Project ID"
+              Input={ReadonlyInput}
+              inputProps={{ value: project.id }}
+            />
             <Field
               name="name"
               label="Project name"

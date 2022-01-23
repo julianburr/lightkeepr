@@ -60,6 +60,7 @@ const Li = styled.li`
     &:hover,
     &:focus {
       background: #f5f4f1;
+      color: inherit;
       text-decoration: none;
     }
   }

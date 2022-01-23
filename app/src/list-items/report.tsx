@@ -61,7 +61,7 @@ export function ReportListItem({ data }: ReportListItemProps) {
   const { teamId, projectId } = router.query;
   return (
     <ListItem
-      href={`/app/${teamId}/projects/${projectId}/run/${data.run.id}/report/${data.id}`}
+      href={`/app/${teamId}/projects/${projectId}/run/${data.run.id}/reports/${data.id}`}
     >
       <Content>
         <Title>

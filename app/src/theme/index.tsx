@@ -70,6 +70,7 @@ export const GlobalStyles = createGlobalStyle`
   a {
     color: #2eb5bd;
     text-decoration: none;
+    transition: color .2s;
 
     &:focus,
     &:hover {
