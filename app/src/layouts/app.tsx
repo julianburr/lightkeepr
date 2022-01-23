@@ -1,44 +1,44 @@
-import { PropsWithChildren, useState } from "react";
+import { PropsWithChildren, Suspense } from "react";
 import styled from "styled-components";
-import { getAuth } from "firebase/auth";
 
-import { useAuth } from "../@packages/firebase";
-import { Header } from "../components/header";
-import { Menu } from "../components/menu";
+import { TopBar } from "src/components/top-bar";
+import { Sidebar } from "src/components/sidebar";
 
 const Container = styled.div`
-  width: 100%;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  height: 100%;
+  width: 100%;
 `;
 
 const Content = styled.main`
   width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+`;
+
+const Main = styled.main`
   display: flex;
   flex-direction: column;
-  align-items: center;
+  flex: 1;
+  max-width: 90rem;
+  margin: 0 auto;
+  padding: 3.2rem 2.4rem 2.4rem;
 `;
 
-const Inner = styled.div`
-  width: 100%;
-  max-width: 1024rem;
-  padding: 2.6rem;
-`;
+type AppLayoutProps = PropsWithChildren<Record<never, any>>;
 
-type AppLayoutProps = PropsWithChildren<{
-  menu?: any;
-}>;
-
-export function AppLayout({ children, menu }: AppLayoutProps) {
-  const [open, setOpen] = useState(false);
-  const authUser = useAuth();
-
+export function AppLayout({ children }: AppLayoutProps) {
   return (
     <Container>
-      <Menu open={open} setOpen={setOpen} menu={menu} />
-      <Header actions={<button onClick={() => setOpen(true)}>Menu</button>} />
+      <TopBar />
       <Content>
-        <Inner>{children}</Inner>
+        <Sidebar />
+        <Suspense fallback={null}>
+          <Main>{children}</Main>
+        </Suspense>
       </Content>
     </Container>
   );

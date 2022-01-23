@@ -1,0 +1,5 @@
+{
+  "packages/**/*.{js,ts,tsx}": "yarn --cwd ./packages lint --fix --quiet",
+  "app/**/*.{js,ts,tsx}": "yarn --cwd ./app lint --fix --quiet",
+  "**/*.{md,json,yml}": "prettier --write"
+}

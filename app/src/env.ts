@@ -1,4 +1,5 @@
 export const env = {
+  salt: process.env.SALT,
   firebase: {
     apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
     authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
@@ -11,5 +12,8 @@ export const env = {
   stripe: {
     secretKey: process.env.STRIPE_SECRET_KEY,
     publicKey: process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY,
+  },
+  sendgrid: {
+    apiKey: process.env.SENDGRID_API_KEY,
   },
 };

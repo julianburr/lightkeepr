@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useLayoutEffect } from "react";
 import invariant from "invariant";
 import { onSnapshot } from "firebase/firestore";
 
@@ -10,27 +10,39 @@ type UseDocumentOptions = {
   fetch?: boolean;
 };
 
-let cache = {};
+export function useDocument(query: any, options?: UseDocumentOptions) {
+  const { cache, setCache } = useContext(FirestoreContext);
 
-export function useDocument(query, options?: UseDocumentOptions) {
   if (!fetch || !query) {
     return;
   }
 
-  const cacheKey = options?.key || query?.path;
-  invariant(cacheKey, "You need to define a key for this document query.");
+  invariant(
+    options?.key || query?.path,
+    "You need to define a key for this document query."
+  );
+  const cacheKey = `doc/${options?.key || query?.path}`;
 
-  let cacheItem = cache[cacheKey];
+  let cacheItem = cache?.[cacheKey];
   if (cacheItem === undefined) {
     cacheItem = {};
     cacheItem.promise = new Promise((resolve) => {
       cacheItem.resolve = resolve;
     });
 
-    cache[cacheKey] = cacheItem;
-    onSnapshot(query, (snap) => {
-      const item = { id: snap.id, ...snap.data() };
-      cache[cacheKey].data = item;
+    // HACK: react complains about setting state in the main component function body,
+    // so we delay the state setting to the next tick here :/
+    setTimeout(
+      () => setCache?.((state: any) => ({ ...state, [cacheKey]: cacheItem })),
+      0
+    );
+    onSnapshot(query, (snap: any) => {
+      setCache?.((state: any) => ({
+        ...state,
+        [cacheKey]: {
+          data: snap.exists() ? { id: snap.id, ...snap.data() } : null,
+        },
+      }));
       cacheItem?.resolve();
     });
   }

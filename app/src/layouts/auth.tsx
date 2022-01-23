@@ -1,21 +1,71 @@
+import { PropsWithChildren } from "react";
 import styled from "styled-components";
 
+import LogoSvg from "src/assets/logo.svg";
+
 const Container = styled.div`
-  display: flex;
-  flex: 1;
   width: 100%;
-  height: 100%;
+  display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  padding: 2rem;
 `;
 
-const Inner = styled.div`
+const Logo = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 0 3.2rem;
+
+  svg {
+    height: 8rem;
+    width: auto;
+    margin: 0 0 0.6rem;
+  }
+`;
+
+const Title = styled.h1`
+  margin: 0;
+  padding: 0;
+  font-size: 1.8em;
+  font-weight: 900;
+`;
+
+const Content = styled.main`
+  padding: 4rem;
   width: 100%;
-  max-width: 23rem;
-  padding: 3rem;
+  max-width: 36rem;
+  background: #fff;
+  box-shadow: 0 0.2rem 2.4rem rgba(0, 0, 0, 0.1);
+  border-radius: 0.8rem;
+  text-align: center;
+
+  p {
+    margin: 2.4rem 0 0;
+  }
+
+  hr {
+    width: 30%;
+    margin: 0 auto;
+    padding: 0;
+    border: 0 none;
+    height: 0.1rem;
+    background: #eee;
+    display: flex;
+  }
 `;
 
-export function AuthLayout({ children }) {
-  return <Container>{children}</Container>;
+type AuthLayoutProps = PropsWithChildren<Record<never, any>>;
+
+export function AuthLayout({ children }: AuthLayoutProps) {
+  return (
+    <Container>
+      <Logo>
+        <LogoSvg />
+        <Title>lightkeepr</Title>
+      </Logo>
+
+      <Content>{children}</Content>
+    </Container>
+  );
 }

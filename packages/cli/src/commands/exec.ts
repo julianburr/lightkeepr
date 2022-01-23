@@ -6,7 +6,7 @@ import { getEnv } from "../utils/env";
 async function runExec(argv) {
   const [_, command, ...commandArgv] = argv._;
 
-  let env = getEnv(argv);
+  const env = getEnv(argv);
   if (!env.LIGHTKEEPR_TOKEN) {
     throw new Error("No token defined");
   }

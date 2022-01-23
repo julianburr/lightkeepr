@@ -4,8 +4,11 @@ import { AuthProvider, useAuth } from "./auth";
 import { FirestoreProvider } from "./firestore/context";
 import { useDocument } from "./firestore/document";
 import { useCollection } from "./firestore/collection";
+import { PropsWithChildren } from "react";
 
-export function FirebaseProvider({ children }) {
+type FirebaseProviderProps = PropsWithChildren<Record<never, any>>;
+
+export function FirebaseProvider({ children }: FirebaseProviderProps) {
   return (
     <AuthProvider>
       <FirestoreProvider>{children}</FirestoreProvider>

@@ -1,8 +1,11 @@
 #! /usr/bin/env node
 
-const debug = require("debug")("LIGHTKEEPR");
+import d from "debug";
+import yargs from "yargs";
 
-const argv = require("yargs")
+const debug = d("LIGHTKEEPR");
+
+const argv = yargs
   .commandDir("commands")
   .demandCommand()
   .help("h")

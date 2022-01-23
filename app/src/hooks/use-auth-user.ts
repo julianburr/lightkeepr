@@ -1,3 +1,5 @@
+import "src/utils/firebase";
+
 import { useMemo } from "react";
 import {
   getFirestore,
@@ -8,26 +10,93 @@ import {
 } from "firebase/firestore";
 
 import { useAuth, useCollection, useDocument } from "../@packages/firebase";
+import { useRouter } from "next/router";
+import { api } from "src/utils/api-client";
+import { useErrorDialog } from "./use-dialog";
+import { Dispatch } from "react";
+import { SetStateAction } from "react";
 
 const db = getFirestore();
 
-export function useAuthUser() {
+type User = {
+  id: string;
+  name: string;
+};
+
+type Team = {
+  id: string;
+  name: string;
+};
+
+type TeamUser = {
+  id: string;
+  team: { id: string };
+  user: { id: string };
+  status: string;
+};
+
+type ProviderData = {
+  providerId: string;
+};
+
+type FirebaseUser = {
+  uid?: string;
+  email?: string;
+  emailVerified?: boolean;
+  displayName?: string;
+  providerData?: ProviderData[];
+};
+
+type UseAuthUserResponse = FirebaseUser & {
+  user?: User;
+  teams?: Team[];
+  teamUsers?: TeamUser[];
+  team?: Team;
+  teamUser?: TeamUser;
+  pendingInvites?: TeamUser[];
+  setAuthUser: Dispatch<SetStateAction<FirebaseUser>>;
+};
+
+export function useAuthUser(): UseAuthUserResponse {
   const authUser = useAuth();
+  const router = useRouter();
 
   const userRef = authUser?.email
     ? doc(db, "users", authUser.email)
     : undefined;
-
   const user = useDocument(userRef);
-  const organisationUsers = useCollection(
+
+  const teams = useCollection(collection(db, "teams"), {
+    key: `${authUser?.email}/teams`,
+  });
+
+  const teamUsers = useCollection(
     userRef
-      ? query(collection(db, "organisationUsers"), where("user", "==", userRef))
+      ? query(collection(db, "teamUsers"), where("user", "==", userRef))
       : undefined,
-    { key: "organisationUsers" }
+    { key: `${authUser?.email}/teamUsers` }
   );
 
-  return useMemo(
-    () => ({ ...authUser, user, organisationUsers }),
-    [authUser, user, organisationUsers]
-  );
+  return useMemo(() => {
+    const activeTeamUsers = teamUsers?.filter?.(
+      (u: any) => u.status === "active"
+    );
+
+    return {
+      ...authUser,
+      user,
+
+      teamUsers: activeTeamUsers,
+      teams: teams.filter((team: any) =>
+        activeTeamUsers.find((user: any) => user.team.id === team.id)
+      ),
+
+      teamUser: activeTeamUsers?.find?.(
+        (user: any) => user.team.id === router.query.teamId
+      ),
+      team: teams?.find?.((team: any) => team.id === router.query.teamId),
+
+      pendingInvites: teamUsers?.filter?.((u: any) => u.status === "pending"),
+    };
+  }, [authUser, user, teamUsers, teams]);
 }

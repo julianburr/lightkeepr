@@ -2,22 +2,22 @@ import deepmerge from "deepmerge";
 
 function create(baseUrl?: string) {
   let _baseUrl = baseUrl;
-  let _defaultOptions = {
+  const _defaultOptions = {
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
     },
   };
 
-  function _getOptions(options) {
+  function _getOptions(options: any) {
     return deepmerge(_defaultOptions, options);
   }
 
-  function setBaseUrl(baseUrl) {
+  function setBaseUrl(baseUrl: string) {
     _baseUrl = baseUrl;
   }
 
-  async function get(path, args = {}, options = {}) {
+  async function get(path: string, args: any = {}, options: any = {}) {
     const baseUrl = _baseUrl || window?.location?.origin;
     const url = new URL(path.startsWith("http") ? path : `${baseUrl}${path}`);
     url.search = new URLSearchParams(args).toString();
@@ -26,8 +26,9 @@ function create(baseUrl?: string) {
     return { response, data };
   }
 
-  async function post(path, args, options = {}) {
-    const url = path.startsWith("http") ? path : `${_baseUrl}${path}`;
+  async function post(path: string, args: any = {}, options: any = {}) {
+    const baseUrl = _baseUrl || window?.location?.origin;
+    const url = path.startsWith("http") ? path : `${baseUrl}${path}`;
     const response = await fetch(
       url,
       _getOptions({ method: "POST", body: JSON.stringify(args), ...options })
@@ -36,11 +37,11 @@ function create(baseUrl?: string) {
     return { response, data };
   }
 
-  async function patch(path, args, options = {}) {
+  async function patch(path: string, args: any = {}, options: any = {}) {
     return post(path, args, { method: "PATCH", ...options });
   }
 
-  async function _delete(path, args, options = {}) {
+  async function _delete(path: string, args: any = {}, options: any = {}) {
     return post(path, args, { method: "DELETE", ...options });
   }
 

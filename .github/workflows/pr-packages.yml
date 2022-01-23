@@ -1,0 +1,54 @@
+name: Publish Packages Canary (PR)
+
+on:
+  pull_request:
+    paths:
+      - packages/**
+
+jobs:
+  publish_packages_canary:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Checkout GitHub Actions Repo
+        uses: actions/checkout@v2
+        with:
+          repository: julianburr/github-actions
+          token: ${{ secrets.GITHUB_TOKEN }}
+          path: .github/actions/custom-actions
+
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: "16.x"
+
+      - name: Use node modules from cache if available
+        uses: ./.github/actions/custom-actions/cache-node-modules
+
+      - name: Install dependencies
+        run: |-
+          yarn
+
+      - name: Build packages
+        working-directory: ./packages
+        run: |-
+          yarn build
+
+      - name: Linting and typechecks
+        working-directory: ./packages
+        run: |-
+          yarn lint --quiet
+          yarn typecheck
+
+      - name: Publish packages
+        run: |-
+          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
+          yarn --cwd=./packages build
+          yarn release:canary
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

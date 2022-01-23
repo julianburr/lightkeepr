@@ -1,178 +1,148 @@
-import { useCallback, useEffect } from "react";
-import Link from "next/link";
 import { useRouter } from "next/router";
+import { PropsWithChildren, ReactNode, useCallback } from "react";
 import styled from "styled-components";
-
-import { getFirestore, doc } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
-
-import { useDocument } from "../@packages/firebase";
-import { OrganisationSelect } from "./organisation-select";
-
-const db = getFirestore();
-const auth = getAuth();
-
-type OpenProps = {
-  open?: boolean;
-};
-
-const Backdrop = styled.div`
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  left: 0;
-  background: #000;
-  z-index: 100;
-  transition: opacity 0.2s;
-  opacity: ${(props: OpenProps) => (props.open ? 0.1 : 0)};
-  pointer-events: ${(props: OpenProps) => (props.open ? "all" : "none")};
-`;
+import { CoreButton } from "./button";
 
 const Container = styled.menu`
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  width: 95%;
-  max-width: 32rem;
-  background: #fff;
-  padding: 2.4rem;
-  transition: transform 0.3s;
-  transform: ${(props: OpenProps) =>
-    props.open ? `translateX(0)` : `translateX(100%)`};
-  z-index: 101;
-`;
+  width: 100%;
+  margin: 0;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
 
-const Ul = styled.ul`
-  margin-top: 2.4rem;
-
-  &:first-child {
-    margin-top: 0;
+  ul {
+    padding: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
   }
 
-  li {
-    padding: 0.6rem 0;
+  @media (min-width: 800px) {
+    [data-mobile="true"] {
+      display: none;
+    }
   }
 `;
 
-const CloseButton = styled.button`
-  position: absolute;
-  top: 1.6rem;
-  right: 1.6rem;
+const Li = styled.li`
+  padding: 0;
+  margin: 0;
+  width: 100%;
 `;
 
-type MenuProps = {
-  open: boolean;
-  setOpen: (value: boolean) => void;
-  menu: any;
-};
+const Heading = styled.h3`
+  font-size: 1rem;
+  font-weight: 400;
+  text-transform: uppercase;
+  color: rgba(0, 0, 0, 0.6);
+  padding: 0.2rem 0.8rem;
+  margin: 2.4rem 0 0;
 
-export function Menu({ open, setOpen, menu }: MenuProps) {
+  @media (min-width: 800px) {
+    padding: 0.2rem 0.6rem;
+  }
+`;
+
+const CoreMenuItem = styled(({ active, ...props }) => (
+  <CoreButton {...props} />
+))`
+  margin: 0.1rem 0 0;
+  padding: 0.8rem;
+  border: 0 none;
+  border-radius: 0.3rem;
+  width: 100%;
+  color: inherit;
+  text-decoration: none;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background: ${(props) => (props.active ? "#f5f4f1" : "transparent")};
+  transition: background 0.2s;
+
+  &:focus,
+  &:hover {
+    background: ${(props) => (props.active ? "#f5f4f1" : "#f9f9f7")};
+  }
+
+  & svg {
+    height: 1.1em;
+    width: auto;
+    margin: 0 0.6rem 0 0;
+  }
+
+  @media (min-width: 800px) {
+    padding: 0.6rem;
+  }
+`;
+
+type MenuItemProps = PropsWithChildren<{
+  onClick?: (e: any) => void;
+  href?: string;
+}>;
+
+function MenuItem({ onClick, href, children }: MenuItemProps) {
   const router = useRouter();
-  useEffect(
-    () => {
-      if (open) {
-        setOpen(false);
-      }
-    },
-    // eslint-disable-next-line
-    [router.asPath]
-  );
 
-  const projectDoc = router.query.projectId
-    ? doc(db, "projects", router.query.projectId)
-    : undefined;
-
-  const project = useDocument(projectDoc);
+  if (onClick) {
+    return <CoreMenuItem onClick={onClick}>{children}</CoreMenuItem>;
+  }
 
   return (
-    <>
-      <Backdrop open={open} onClick={() => setOpen(false)} />
-      <Container open={open}>
-        <CloseButton onClick={() => setOpen(false)}>&times;</CloseButton>
-
-        <Ul>
-          <li>
-            <OrganisationSelect />
-          </li>
-          <li>
-            <Link href={`/${router.query.orgId}/settings/profile`}>
-              Profile Settings
-            </Link>
-          </li>
-        </Ul>
-
-        {project?.id && (
-          <Ul>
-            <li>
-              <h3>Project: {project.name}</h3>
-            </li>
-            <li>
-              <Link href={`/${router.query.orgId}/projects/${project.id}`}>
-                Runs
-              </Link>
-            </li>
-            <li>
-              <Link
-                href={`/${router.query.orgId}/projects/${project.id}/integrations`}
-              >
-                Integrations
-              </Link>
-            </li>
-            <li>
-              <Link
-                href={`/${router.query.orgId}/projects/${project.id}/settings`}
-              >
-                Settings
-              </Link>
-            </li>
-          </Ul>
-        )}
-
-        <Ul>
-          <li>
-            <Link href={`/${router.query.orgId}`}>Dashboard</Link>
-          </li>
-          <li>
-            <Link href={`/${router.query.orgId}/projects`}>Projects</Link>
-          </li>
-
-          <li>
-            <Link href={`/${router.query.orgId}/settings/organisation`}>
-              Organisation Settings
-            </Link>
-          </li>
-          <li>
-            <Link href={`/${router.query.orgId}/settings/organisation`}>
-              Billing &amp; Usage
-            </Link>
-          </li>
-        </Ul>
-
-        <Ul>
-          <li>
-            <a href="https://google.com" target="_blank" rel="noreferrer">
-              Documentation
-            </a>
-          </li>
-          <li>
-            <a href="https://google.com" target="_blank" rel="noreferrer">
-              Github
-            </a>
-          </li>
-          <li>
-            <button
-              onClick={() => {
-                auth.signOut();
-                setOpen(false);
-              }}
-            >
-              Logout
-            </button>
-          </li>
-        </Ul>
-      </Container>
-    </>
+    <CoreMenuItem href={href} active={href && href === router.asPath}>
+      {children}
+    </CoreMenuItem>
   );
+}
+
+type Item = {
+  label: ReactNode;
+  icon?: ReactNode;
+  onClick?: (e: any) => void | Promise<void>;
+  href?: string;
+  mobile?: boolean;
+};
+
+type ItemGroup = {
+  label: ReactNode;
+  icon?: ReactNode;
+  items: Item[] | ItemGroup[];
+  mobile?: boolean;
+};
+
+type Items = Item[] | ItemGroup[];
+
+type MenuProps = {
+  items: Items;
+};
+
+export function Menu({ items }: MenuProps) {
+  const renderItems = useCallback((items: Items) => {
+    return (
+      <ul>
+        {items.map((item, index) => {
+          if ("items" in item) {
+            return (
+              <Li data-mobile={item.mobile} key={index}>
+                <Heading>
+                  {item.icon}
+                  <span>{item.label}</span>
+                </Heading>
+                {renderItems(item.items)}
+              </Li>
+            );
+          }
+          return (
+            <Li data-mobile={item.mobile} key={index}>
+              <MenuItem onClick={item.onClick} href={item.href}>
+                {item.icon}
+                <span>{item.label}</span>
+              </MenuItem>
+            </Li>
+          );
+        })}
+      </ul>
+    );
+  }, []);
+
+  return <Container>{renderItems(items)}</Container>;
 }

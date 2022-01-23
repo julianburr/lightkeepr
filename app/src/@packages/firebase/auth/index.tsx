@@ -1,39 +1,33 @@
 import React, {
   createContext,
+  PropsWithChildren,
   useContext,
   useEffect,
   useMemo,
   useState,
 } from "react";
-import { getAuth } from "firebase/auth";
-import {
-  getFirestore,
-  doc,
-  query,
-  where,
-  collection,
-} from "firebase/firestore";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
-import { useCollection, useDocument } from "..";
+const auth = getAuth();
 
-const db = getFirestore();
-
-let resolveUserPromise;
-let userPromise = new Promise((resolve) => {
+let resolveUserPromise: any;
+const userPromise = new Promise((resolve) => {
   resolveUserPromise = resolve;
 });
 
-export const AuthContext = createContext<any>(undefined);
+export const AuthContext = createContext<any>({});
 
-export function AuthProvider(props) {
-  const [authUser, setAuthUser] = useState<any>(userPromise);
+type AuthProviderProps = PropsWithChildren<Record<never, any>>;
+
+export function AuthProvider(props: AuthProviderProps) {
+  const [authUser, setAuthUser] = useState<any>(
+    auth.currentUser || userPromise
+  );
 
   useEffect(() => {
-    const auth = getAuth();
-    auth?.onAuthStateChanged?.((user) => {
-      console.log();
+    onAuthStateChanged(auth, (user) => {
       setAuthUser(user);
-      resolveUserPromise();
+      resolveUserPromise?.();
     });
   }, []);
 
@@ -47,7 +41,7 @@ type UseAuthOptions = {
 };
 
 export function useAuth(options?: UseAuthOptions) {
-  const { authUser } = useContext(AuthContext);
+  const { authUser, setAuthUser } = useContext(AuthContext);
 
   if (options?.suspense === false) {
     return {
@@ -60,5 +54,5 @@ export function useAuth(options?: UseAuthOptions) {
     throw authUser;
   }
 
-  return authUser;
+  return useMemo(() => ({ ...(authUser || {}), setAuthUser }), [authUser]);
 }

@@ -1,143 +1,154 @@
+import {
+  ReactNode,
+  ComponentProps,
+  ComponentType,
+  PropsWithChildren,
+} from "react";
 import Link from "next/link";
-import { ComponentType, ReactNode } from "react";
 import styled from "styled-components";
 
-const Ul = styled.ul`
+import { ActionMenu } from "./action-menu";
+import { P, Small } from "./text";
+import { Button } from "./button";
+
+const Ul = styled.ul<{ columns?: number; gap?: string }>`
   margin: 0;
   padding: 0;
+  display: grid;
+  grid-template-columns: ${(props) =>
+    Array.from(new Array(props.columns || 1))
+      .fill("1fr")
+      .join(" ")};
+  gap: ${(props) => props.gap || ".3rem"};
+`;
+
+const Li = styled.li`
   display: flex;
-  flex-direction: column;
-  width: 100%;
+  margin: 0;
+  list-style: none;
 
-  & > * {
-    margin-bottom: 0.4rem;
+  & > div,
+  & > button,
+  & > a {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    padding: 1.2rem;
+    border: 0 none;
+    border-radius: 0.3rem;
+    background: #f9f9f7;
+    transition: background 0.2s;
 
-    &:last-child {
-      margin-bottom: 0;
+    p {
+      margin: 0;
+    }
+  }
+
+  & > button,
+  & > a {
+    cursor: pointer;
+
+    &:hover,
+    &:focus {
+      background: #f9f9f788;
     }
   }
 `;
 
-const Li = styled.li`
-  & > * {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    padding: 1.2rem;
-    border: 0.1rem solid rgba(0, 0, 0, 0.1);
-    border-radius: 0.2rem;
-    text-decoration: none;
-    font: inherit;
-    color: inherit;
-  }
-
-  & a:hover {
-    border: 0.1rem solid rgba(0, 0, 0, 0.2);
-    box-shadow: 0 0.2rem 0.6rem rgba(0, 0, 0, 0.1);
-  }
+const Content = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 0 0.8rem 0 0;
 `;
 
-const Item = styled.div``;
-
-const Row = styled.div`
+const WrapTags = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  margin: 0.1rem 0;
+  padding: 0 2.4rem 0 0;
 `;
 
-const Title = styled.h2`
-  font-size: 1.4rem;
-  margin: 0;
-
-  a:hover & {
-    text-decoration: underline;
-  }
-`;
-
-const Status = styled.span``;
-
-const Meta = styled.span`
-  font-size: 1rem;
-`;
-
-type ListProps<T = any> = {
-  items: T[];
-  Item: ComponentType<{ item: T }>;
-  getKey?: (item: T) => string;
-  Empty?: ComponentType<{}>;
-  Loading?: ComponentType<{}>;
-  isLoading?: boolean;
-  showLoadMore?: boolean;
-  onLoadMore?: () => void | Promise<void>;
+type ListProps = {
+  items: any[];
+  Item: ComponentType<{ data: any }>;
+  getKey?: (data: any) => string | number;
+  columns?: 1 | 2 | 3;
+  gap?: string;
 };
 
 export function List({
   items,
   Item,
-  getKey,
-  Empty = () => <p>No items found</p>,
-  Loading = () => <p>Loading...</p>,
-  isLoading,
-  showLoadMore,
-  onLoadMore,
+  getKey = (data) => data.id,
+  columns = 1,
+  gap,
 }: ListProps) {
-  if (isLoading) {
-    return <Loading />;
-  }
-
   if (!items?.length) {
-    return <Empty />;
+    return <p>No items</p>;
   }
 
   return (
-    <>
-      <Ul>
-        {items.map((item) => (
-          <Item key={getKey?.(item) || item?.id} item={item} />
-        ))}
-      </Ul>
-    </>
+    <Ul columns={columns} gap={gap}>
+      {items.map((data: any) => (
+        <Item key={getKey(data)} data={data} />
+      ))}
+    </Ul>
   );
 }
 
-type ListItemProps = {
+type ListItemProps = PropsWithChildren<{
   href?: string;
-  title?: ReactNode;
+  onClick?: (e: any) => void | Promise<void>;
+  title: ReactNode;
   meta?: ReactNode;
-  status?: ReactNode;
-};
+  tags?: ReactNode;
+  actions?: ComponentProps<typeof ActionMenu>["items"];
+  disabled?: boolean;
+}>;
 
-export function ListItem({ href, title, meta, status }: ListItemProps) {
+export function ListItem({
+  href,
+  onClick,
+  title,
+  meta,
+  tags,
+  actions,
+}: ListItemProps) {
+  const content = (
+    <>
+      <Content>
+        <P>{title}</P>
+        {meta && <Small grey>{meta}</Small>}
+      </Content>
+
+      <WrapTags>{tags}</WrapTags>
+      {!!actions?.length && (
+        <ActionMenu items={actions} placement="bottom-end" />
+      )}
+    </>
+  );
+
+  if (href) {
+    return (
+      <Li>
+        <Link href={href}>{content}</Link>
+      </Li>
+    );
+  }
+
+  if (onClick) {
+    return (
+      <Li>
+        <button onClick={onClick}>{content}</button>
+      </Li>
+    );
+  }
+
   return (
     <Li>
-      {href ? (
-        <Link href={href} passHref>
-          <a>
-            <Row>
-              <Title>{title}</Title>
-              {status && <Status>{status}</Status>}
-            </Row>
-            {meta && (
-              <Row>
-                <Meta>{meta}</Meta>
-              </Row>
-            )}
-          </a>
-        </Link>
-      ) : (
-        <Item>
-          <Row>
-            <Title>{title}</Title>
-            {status && <Status>{status}</Status>}
-          </Row>
-          {meta && (
-            <Row>
-              <Meta>{meta}</Meta>
-            </Row>
-          )}
-        </Item>
-      )}
+      <div>{content}</div>
     </Li>
   );
 }

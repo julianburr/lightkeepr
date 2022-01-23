@@ -9,7 +9,6 @@ async function runReport(argv) {
     token: env.LIGHTKEEPR_TOKEN,
     buildId: env.LIGHTKEEPR_BUILD_ID,
     url: argv.url,
-    dir: argv.dir,
   });
 }
 

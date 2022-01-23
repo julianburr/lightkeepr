@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useLayoutEffect } from "react";
 import invariant from "invariant";
 import { onSnapshot } from "firebase/firestore";
 
@@ -6,35 +6,52 @@ import { FirestoreContext } from "./context";
 
 type UseCollectionOptions = {
   key: string;
+  mapItem?: (item: any) => any;
   suspense?: boolean;
   fetch?: boolean;
 };
 
-let cache = {};
+export function useCollection(query: any, options: UseCollectionOptions) {
+  const { cache, setCache } = useContext(FirestoreContext);
 
-export function useCollection(query, options: UseCollectionOptions) {
   if (!fetch || !query) {
     return;
   }
 
-  const cacheKey = options?.key;
-  invariant(cacheKey, "You need to define a key for collections.");
+  invariant(options?.key, "You need to define a key for collections.");
+  const cacheKey = `collection/${options.key}`;
 
   let cacheItem = cache[cacheKey];
-
   if (cacheItem === undefined) {
     cacheItem = {};
     cacheItem.promise = new Promise((resolve) => {
       cacheItem.resolve = resolve;
     });
-    cache[cacheKey] = cacheItem;
 
-    onSnapshot(query, (snap) => {
-      let items = [];
-      snap.forEach((doc) => {
-        items.push({ id: doc.id, ...doc.data() });
+    // HACK: react complains about setting state in the main component function body,
+    // so we delay the state setting to the next tick here :/
+    setTimeout(
+      () => setCache?.((state) => ({ ...state, [cacheKey]: cacheItem })),
+      0
+    );
+
+    onSnapshot(query, { includeMetadataChanges: true }, (snap: any) => {
+      // HACK: firestore has the annoying habit to return incomplete lists from the cache
+      // if you've loaded any items from the list before, which leads to flashing lists,
+      // so we don't actually listen to any value from the cache here ... which is also
+      // annoying because often the cache would be fine and a lot faster :/
+      if (snap.metadata?.fromCache) {
+        return;
+      }
+      const items: any[] = [];
+      snap.forEach(async (doc: any) => {
+        items.push(
+          options?.mapItem
+            ? await options.mapItem({ id: doc.id, ...doc.data() })
+            : { id: doc.id, ...doc.data() }
+        );
       });
-      cache[cacheKey].data = items;
+      setCache?.((state) => ({ ...state, [cacheKey]: { data: items } }));
       cacheItem?.resolve();
     });
   }
