@@ -82,7 +82,7 @@ const WrapTags = styled.div`
 
 type ListProps = {
   items: any[];
-  Item: ComponentType<{ data: any }>;
+  Item: ComponentType<{ data: any; index: number; items: any[] }>;
   getKey?: (data: any) => string | number;
   columns?: 1 | 2 | 3;
   gap?: string;
@@ -101,8 +101,8 @@ export function List({
 
   return (
     <Ul columns={columns} gap={gap}>
-      {items.map((data: any) => (
-        <Item key={getKey(data)} data={data} />
+      {items.map((data: any, index) => (
+        <Item key={getKey(data)} data={data} index={index} items={items} />
       ))}
     </Ul>
   );

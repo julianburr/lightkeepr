@@ -36,7 +36,7 @@ const Container = styled.menu`
   flex-shrink: 0;
   position: fixed;
   inset: 0;
-  z-index: 500;
+  z-index: 100;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -54,6 +54,7 @@ const Container = styled.menu`
   @media (min-width: 800px) {
     &,
     &[data-active="true"] {
+      z-index: 2;
       position: relative;
       width: 24rem;
       background: transparent;

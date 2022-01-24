@@ -9,7 +9,7 @@ export function initials(name?: string) {
         .filter(Boolean)
         .reduce((all, w, index, names) => {
           if (index === 0 || index === names.length - 1) {
-            all += w[0];
+            all += w[0]?.toUpperCase?.();
           }
           return all;
         }, "")

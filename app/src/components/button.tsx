@@ -144,7 +144,7 @@ const _CoreButton = forwardRef(function _CoreButton(
   return <CoreButton ref={ref} {...props} />;
 });
 
-const Container = styled(_CoreButton)<ContainerProps>`
+const Container = styled(_CoreButton)`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -192,9 +192,10 @@ const Container = styled(_CoreButton)<ContainerProps>`
   }
 `;
 
-type ButtonProps = ComponentProps<typeof Container> & {
-  icon?: ReactNode;
-};
+type ButtonProps = ComponentProps<typeof CoreButton> &
+  Omit<ContainerProps, "icon"> & {
+    icon?: ReactNode;
+  };
 
 export const Button = forwardRef(function Button(
   {
@@ -207,15 +208,19 @@ export const Button = forwardRef(function Button(
   ref: Ref<any>
 ) {
   return (
-    <Container
-      ref={ref}
-      icon={icon && !children}
-      weight={weight}
-      intend={intend}
-      {...props}
-    >
-      {icon}
-      {children && <span>{children}</span>}
-    </Container>
+    <>
+      {/* eslint-disable-next-line */}
+      {/* @ts-ignore */}
+      <Container
+        ref={ref}
+        icon={icon && !children}
+        weight={weight}
+        intend={intend}
+        {...props}
+      >
+        {icon}
+        {children && <span>{children}</span>}
+      </Container>
+    </>
   );
 });

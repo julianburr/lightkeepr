@@ -30,6 +30,7 @@ export function AccountActionMenu(props: AccountActionMenuProps) {
     <ActionMenu
       placement="bottom-end"
       {...props}
+      maxWidth="22rem"
       items={[
         {
           items: [

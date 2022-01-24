@@ -5,12 +5,12 @@ import { InviteUserEmail } from "emails/invite-user";
 
 export default createHandler({
   get: async (_, res) => {
-    const organisation = {
+    const team = {
       id: "orgId",
       name: "Tesla",
     };
 
-    const organisationUser = {
+    const teamUser = {
       id: "orgUserId",
       createdBy: {
         id: "test@test.com",
@@ -21,8 +21,8 @@ export default createHandler({
       const { html } = render(
         <InviteUserEmail
           title="You've been invited to Lightkeepr"
-          organisationUser={organisationUser}
-          organisation={organisation}
+          teamUser={teamUser}
+          team={team}
           acceptUrl="https://google.com"
         />,
         { validationLevel: "soft" }

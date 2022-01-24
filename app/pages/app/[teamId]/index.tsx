@@ -14,6 +14,7 @@ import { useCollection } from "src/@packages/firebase";
 import { AppLayout } from "src/layouts/app";
 import { Auth } from "src/components/auth";
 import { List } from "src/components/list";
+import { Loader } from "src/components/loader";
 
 import { ProjectListItem } from "src/list-items/project";
 
@@ -39,7 +40,7 @@ export default function TeamDashboard() {
   return (
     <Auth>
       <AppLayout>
-        <Suspense fallback={null}>
+        <Suspense fallback={<Loader />}>
           <ProjectsList />
         </Suspense>
       </AppLayout>

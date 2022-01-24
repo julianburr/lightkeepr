@@ -12,6 +12,8 @@ import favicon from "src/assets/favicon.png";
 import { DialogProvider } from "src/hooks/use-dialog";
 import { ToastProvider } from "src/hooks/use-toast";
 import { Loader } from "src/components/loader";
+import { tokens } from "src/theme/tokens";
+import { SuspenseProvider } from "src/@packages/suspense";
 
 type AppContentProps = {
   Component: ComponentType<any>;
@@ -62,15 +64,45 @@ export default function App(props: any) {
       <Reset />
       <GlobalStyles />
 
-      <FirebaseProvider>
-        <Suspense fallback={<Loader message="Loading..." />}>
-          <DialogProvider>
-            <ToastProvider>
-              <AppContent {...props} />
-            </ToastProvider>
-          </DialogProvider>
-        </Suspense>
-      </FirebaseProvider>
+      <SuspenseProvider>
+        <FirebaseProvider>
+          <Suspense fallback={<Loader message="Loading..." />}>
+            <DialogProvider>
+              <ToastProvider>
+                <AppContent {...props} />
+
+                {/* {Object.keys(tokens.palette).map((key) => {
+                  return (
+                    <div style={{ display: "flex" }}>
+                      {Object.keys(
+                        tokens.palette[key as keyof typeof tokens.palette]
+                      ).map((shade) => {
+                        return (
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              width: 50,
+                              height: 50,
+                              background:
+                                tokens.palette[
+                                  key as keyof typeof tokens.palette
+                                ][shade],
+                            }}
+                          >
+                            <span>{shade}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  );
+                })} */}
+              </ToastProvider>
+            </DialogProvider>
+          </Suspense>
+        </FirebaseProvider>
+      </SuspenseProvider>
     </>
   );
 }

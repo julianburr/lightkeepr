@@ -3,7 +3,7 @@ import { PropsWithChildren } from "react";
 import { SetStateAction } from "react";
 import { useContext } from "react";
 import { createContext, useEffect, useState } from "react";
-import { ErrorDialog } from "src/components/dialog";
+import { ConfirmationDialog, ErrorDialog } from "src/components/dialog";
 
 export const DialogMetaContext = createContext<{
   id?: string;
@@ -67,4 +67,8 @@ export function useErrorDialog() {
   }, []);
 
   return { ...dialog, open };
+}
+
+export function useConfirmationDialog() {
+  return useDialog(ConfirmationDialog);
 }
