@@ -17,6 +17,8 @@ import { List } from "src/components/list";
 import { Loader } from "src/components/loader";
 
 import { ProjectListItem } from "src/list-items/project";
+import { Heading } from "src/components/text";
+import { Spacer } from "src/components/spacer";
 
 const db = getFirestore();
 
@@ -40,6 +42,9 @@ export default function TeamDashboard() {
   return (
     <Auth>
       <AppLayout>
+        <Heading level={1}>Projects</Heading>
+        <Spacer h="1.2rem" />
+
         <Suspense fallback={<Loader />}>
           <ProjectsList />
         </Suspense>

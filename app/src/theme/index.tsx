@@ -1,12 +1,23 @@
 import { createGlobalStyle } from "styled-components";
 
+import { tokensToVars } from "src/@packages/sol/tokens";
+
+import { tokens } from "./tokens";
+
+const vars = tokensToVars(tokens);
+console.log({ vars });
+
 export const GlobalStyles = createGlobalStyle`
+  :root {
+    ${vars}
+  }
+
   *, *:before, *:after {
     box-sizing: border-box;
   }
 
   ::placeholder {
-    color: #bbb;
+    color: var(--sol--palette-grey-200);
   }
 
   html {
@@ -25,8 +36,8 @@ export const GlobalStyles = createGlobalStyle`
     font-weight: 400;
     font-size: 1.4rem;
     line-height: 1.4;
-    background: #fff;
-    color: #000;
+    background: var(--sol--color-white);
+    color: var(--sol--typography-color-default);
   }
 
   @media (min-width: 800px) {
@@ -68,13 +79,18 @@ export const GlobalStyles = createGlobalStyle`
   }
 
   a {
-    color: #2eb5bd;
+    color: var(--sol--typography-color-link-default);
     text-decoration: none;
     transition: color .2s;
 
     &:focus,
     &:hover {
-      color: #2eb5bd;
+      color: var(--sol--typography-color-link-hover);
+      text-decoration: underline;
+    }
+
+    &:active {
+      color: var(--sol--typography-color-link-active);
       text-decoration: underline;
     }
   }

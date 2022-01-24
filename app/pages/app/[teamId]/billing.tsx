@@ -231,7 +231,7 @@ export default function Billing() {
             query: { teamId: router.query.teamId },
           });
           toast.show({
-            intend: "error",
+            intent: "error",
             message: "Something went wrong during the subscription process",
           });
           break;

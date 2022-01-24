@@ -51,7 +51,7 @@ export function RunListItem({ data }: RunListItemProps) {
         <StatusAvatar status={data.status} />
         <Title>
           <P>
-            <span>{data.commitMessage || data.commitHash || "n/a"}</span>
+            <span>{data.commitMessage || data.commitHash || data.id}</span>
           </P>
           <Small grey>
             {data.finishedAt || data.startedAt ? (

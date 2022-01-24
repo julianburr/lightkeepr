@@ -127,7 +127,7 @@ export default function NewUser() {
               left={
                 <Button
                   type="submit"
-                  intend="primary"
+                  intent="primary"
                   form="invite-user"
                   disabled={use("isSubmitting")}
                 >

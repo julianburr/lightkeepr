@@ -51,7 +51,7 @@ export default function EmailVerificationSetup() {
         <ButtonBar
           left={
             <Button
-              intend="primary"
+              intent="primary"
               onClick={() =>
                 api.post("/api/account/verify-email/send", {
                   email: authUser.email,

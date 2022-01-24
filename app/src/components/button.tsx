@@ -11,6 +11,7 @@ import {
 } from "react";
 import Link, { LinkProps } from "next/link";
 import styled from "styled-components";
+import { interactive } from "src/@packages/sol/tokens";
 
 type AnchorTagProps = PropsWithChildren<LinkProps>;
 
@@ -66,120 +67,70 @@ export const CoreButton = forwardRef(function CoreButton(
 });
 
 type ContainerProps = {
-  intend?: "primary" | "secondary";
-  weight?: "default" | "outline" | "ghost";
+  intent?: "primary" | "secondary" | "outline" | "ghost";
   size?: "small" | "medium" | "large";
   icon?: boolean;
   fullWidth?: boolean;
 };
 
-function getFontSize(props: ContainerProps) {
-  return props.size === "small" ? ".9em" : "1em";
-}
-
-function getIconSize(props: ContainerProps) {
-  return props.size === "large" ? "1.4em" : "1.2em";
-}
-
-function getHeight(props: ContainerProps) {
-  return props.size === "small"
-    ? "2.8rem"
-    : props.size === "large"
-    ? "4.4rem"
-    : "3.6rem";
-}
-
-function getWidth(props: ContainerProps) {
-  return props.icon ? getHeight(props) : props.fullWidth ? "100%" : "auto";
-}
-
-function getPadding(props: ContainerProps) {
-  return props.icon
-    ? "0"
-    : props.size === "small"
-    ? "0 1.2rem"
-    : props.size === "large"
-    ? "0 2.4rem"
-    : "0 1.8rem";
-}
-
-function getBackground(props: ContainerProps) {
-  return props.weight === "default"
-    ? props.intend === "primary"
-      ? "#3dc5ce"
-      : "#e0dfd8"
-    : "transparent";
-}
-
-function getBackgroundHover(props: ContainerProps) {
-  return props.weight === "default"
-    ? props.intend === "primary"
-      ? "#2eb5bd"
-      : "#dad9d0"
-    : props.weight === "ghost"
-    ? "#dad9d044"
-    : "transparent";
-}
-
-function getBorder(props: ContainerProps) {
-  return props.weight === "outline" ? ".1rem solid #dad9d088" : "0 none";
-}
-
-function getBorderHover(props: ContainerProps) {
-  return props.weight === "outline" ? ".1rem solid #dad9d0" : "0 none";
-}
-
-function getColor(props: ContainerProps) {
-  return props.weight === "default" && props.intend === "primary"
-    ? "#fff"
-    : "#222";
-}
-
 // HACK: this is just to clean up the props we use to determine certain styles
 // so they don't end up in `CoreButton` :/
 const _CoreButton = forwardRef(function _CoreButton(
-  { weight, intend, icon, fullWidth, ...props }: ContainerProps,
+  { intent, icon, fullWidth, ...props }: ContainerProps,
   ref
 ) {
   return <CoreButton ref={ref} {...props} />;
 });
 
 const Container = styled(_CoreButton)`
+  --sol--button-size: ${({ size }) =>
+    size === "small"
+      ? "var(--sol--input-height-s)"
+      : size === "large"
+      ? "var(--sol--input-height-l)"
+      : "var(--sol--input-height-m)"};
+
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  font-size: ${getFontSize};
-  height: ${getHeight};
-  background: ${getBackground};
-  border: ${getBorder};
-  border-radius: 0.3rem;
-  color: ${getColor};
   text-decoration: none;
   margin: 0;
-  padding: ${getPadding};
-  width: ${getWidth};
   transition: border 0.2s, background 0.2s, color 0.2s;
   font-family: "Playfair Display";
+  font-size: 1em;
+  border-radius: var(--sol--border-radius-s);
+
+  padding: ${({ icon, size }) =>
+    icon
+      ? "0"
+      : size === "small"
+      ? "0 var(--sol--spacing-m)"
+      : size === "large"
+      ? "0 var(--sol--spacing-xl)"
+      : "0 var(--sol--spacing-l)"};
+
+  height: var(--sol--button-size);
+  width: ${({ icon, fullWidth }) =>
+    icon ? "var(--sol--button-size)" : fullWidth ? "100%" : "auto"};
+
+  ${({ intent }) => interactive(intent!)}
 
   svg {
-    height: ${getIconSize};
+    height: ${({ size }) => (size === "large" ? "1.4em" : "1.2em")};
     width: auto;
     margin: 0 -0.6rem;
     filter: grayscale(1);
     transition: filter 0.2s;
 
     & + span {
-      margin: 0 0 0 1.2rem;
+      margin: 0 0 0 var(--sol--spacing-m);
     }
   }
 
   &:hover,
   &:focus {
-    color: ${getColor};
     text-decoration: none;
-    border: ${getBorderHover};
-    background: ${getBackgroundHover};
 
     svg {
       filter: grayscale(0);
@@ -198,13 +149,7 @@ type ButtonProps = ComponentProps<typeof CoreButton> &
   };
 
 export const Button = forwardRef(function Button(
-  {
-    children,
-    icon,
-    weight = "default",
-    intend = "secondary",
-    ...props
-  }: ButtonProps,
+  { children, icon, intent = "secondary", ...props }: ButtonProps,
   ref: Ref<any>
 ) {
   return (
@@ -213,9 +158,8 @@ export const Button = forwardRef(function Button(
       {/* @ts-ignore */}
       <Container
         ref={ref}
-        icon={icon && !children}
-        weight={weight}
-        intend={intend}
+        icon={!!icon && !children}
+        intent={intent}
         {...props}
       >
         {icon}

@@ -26,7 +26,7 @@ const Backdrop = styled.div`
   padding: 2.4rem;
 `;
 
-const Container = styled.div<{ width?: string; indicatorColor?: string }>`
+const Container = styled.div<{ width?: string; intent?: "error" | "warning" }>`
   background: #fff;
   width: 100%;
   max-width: ${(props) => props.width || "60rem"};
@@ -46,7 +46,8 @@ const Container = styled.div<{ width?: string; indicatorColor?: string }>`
     left: 0;
     bottom: 0;
     width: 1.2rem;
-    background: ${(props) => props.indicatorColor};
+    background: ${(props) =>
+      `var(--sol--container-${props.intent}-background)`};
     z-index: 20;
   }
 `;
@@ -137,7 +138,7 @@ type DialogProps = PropsWithChildren<{
   actions?: ReactNode;
   width?: string;
   onClose?: () => void;
-  indicatorColor?: string;
+  intent?: "error" | "warning";
 }>;
 
 export function Dialog({
@@ -146,7 +147,7 @@ export function Dialog({
   children,
   width,
   onClose,
-  indicatorColor,
+  intent,
 }: DialogProps) {
   const dialogMeta = useContext(DialogMetaContext);
 
@@ -206,7 +207,7 @@ export function Dialog({
       {createPortal(
         <Backdrop data-tether-target ref={backdropRef as Ref<HTMLDivElement>}>
           <Container
-            indicatorColor={indicatorColor}
+            intent={intent}
             width={width}
             tabIndex={0}
             ref={dialogRef as Ref<HTMLDivElement>}
@@ -256,12 +257,12 @@ type ErrorDialogProps = {
 export function ErrorDialog({ message, stack, onClose }: ErrorDialogProps) {
   return (
     <Dialog
-      indicatorColor="#f5737f"
+      intent="error"
       width="35rem"
       actions={
         <ButtonBar
           right={
-            <Button weight="ghost" onClick={onClose}>
+            <Button intent="ghost" onClick={onClose}>
               Got it
             </Button>
           }
@@ -298,7 +299,7 @@ export function ConfirmationDialog({
           right={
             <>
               <Button
-                weight="ghost"
+                intent="ghost"
                 onClick={async () => {
                   await onResponse?.(false);
                   await onClose?.();
@@ -307,7 +308,7 @@ export function ConfirmationDialog({
                 {cancelLabel}
               </Button>
               <Button
-                intend="primary"
+                intent="primary"
                 autoFocus
                 onClick={async () => {
                   await onResponse?.(true);

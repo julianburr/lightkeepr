@@ -4,10 +4,10 @@ import { DetailedHTMLProps } from "react";
 import { ReactNode } from "react";
 import styled from "styled-components";
 
-const Container = styled.div<{ intend: Intend }>`
+const Container = styled.div<{ intent: Intent }>`
   display: flex;
   padding: 0.8rem;
-  background: ${(props) => (props.intend === "error" ? "#f5737f" : "#000")};
+  background: ${(props) => (props.intent === "error" ? "#f5737f" : "#000")};
   border-radius: 0.3rem;
   color: #fff;
   font-size: 1.2rem;
@@ -16,7 +16,7 @@ const Container = styled.div<{ intend: Intend }>`
   pointer-events: all;
 `;
 
-type Intend = "primary" | "error" | "default";
+type Intent = "primary" | "error" | "default";
 
 type ToastProps = Omit<
   DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>,
@@ -24,17 +24,17 @@ type ToastProps = Omit<
 > & {
   message: ReactNode;
   icon?: ReactNode;
-  intend?: Intend;
+  intent?: Intent;
 };
 
 export function Toast({
   message,
   icon,
-  intend = "default",
+  intent = "default",
   ...props
 }: ToastProps) {
   return (
-    <Container intend={intend} tabIndex={0} {...props}>
+    <Container intent={intent} tabIndex={0} {...props}>
       {icon}
       {message}
     </Container>

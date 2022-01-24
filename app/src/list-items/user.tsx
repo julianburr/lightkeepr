@@ -51,13 +51,9 @@ export function UserListItem({ data, items }: UserItemProps) {
   const user = useDocument(doc(db, "users", data.user.id));
 
   const actions = useMemo(() => {
-    console.log({ items });
-
     const isOnlyOwner =
       data.role === "owner" &&
       !items.find((item: any) => item.role === "owner" && item.id !== data.id);
-
-    console.log({ isOnlyOwner, email: data.user.id });
 
     const ACTIONS = {
       RESEND_INVITE: {
@@ -152,7 +148,7 @@ export function UserListItem({ data, items }: UserItemProps) {
   return (
     <ListItem>
       <Content>
-        <Avatar background="#dad9d044" name={user?.name || data.user?.id} />
+        <Avatar name={user?.name || data.user?.id} />
         <Title>
           <Email>{data.user.id}</Email>
           <Small grey>

@@ -42,10 +42,10 @@ type FieldProps = {
   label?: ReactNode;
   description?: ReactNode;
   required?: boolean;
-  error?: any;
   ref?: Ref<any>;
   Input: ComponentType<any>;
   inputProps?: any;
+  showError?: boolean;
 };
 
 let uuid = 0;
@@ -58,7 +58,7 @@ export function Field({
   Input,
   inputProps,
   required,
-  error,
+  showError = true,
 }: FieldProps) {
   const { use } = useFormMethods();
   const errors = use("errors");
@@ -84,7 +84,7 @@ export function Field({
         {...inputProps}
       />
 
-      {errors[name] && <Error>{errors[name]}</Error>}
+      {errors[name] && showError && <Error>{errors[name]}</Error>}
     </Container>
   );
 }

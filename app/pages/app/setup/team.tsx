@@ -72,7 +72,7 @@ export default function TeamSetup() {
           <ButtonBar
             left={
               <Button
-                intend="primary"
+                intent="primary"
                 type="submit"
                 disabled={use("isSubmitting")}
               >

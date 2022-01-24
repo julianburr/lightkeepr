@@ -45,7 +45,7 @@ type ToastItem = {
   uuid: string;
   message: ReactNode;
   icon?: ReactNode;
-  intend?: "primary" | "error" | "default";
+  intent?: "primary" | "error" | "default";
   timer: {
     start: () => void;
     pause: () => void;
@@ -109,7 +109,7 @@ let uuid = 0;
 export function useToast() {
   const { setToasts } = useContext(ToastContext);
 
-  const show = useCallback(({ message, icon, intend = "default" }) => {
+  const show = useCallback(({ message, icon, intent = "default" }) => {
     const instanceUuid = `toast--${++uuid}`;
 
     // Create timer to remove toast after specific amount of time
@@ -118,7 +118,7 @@ export function useToast() {
     }, 6000);
 
     // Add toast
-    const toast = { uuid: instanceUuid, message, icon, intend, timer };
+    const toast = { uuid: instanceUuid, message, icon, intent, timer };
     setToasts?.((toasts) => toasts.concat(toast));
     timer.start();
 
