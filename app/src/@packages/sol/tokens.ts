@@ -45,7 +45,7 @@ export function createPalette({ baseColor }: CreatePaletteArgs): Palette {
   }, {}) as Palette;
 }
 
-let prefix = "--ds-";
+let prefix = "--sol-";
 export function setPrefix(p: string) {
   prefix = p;
 }
