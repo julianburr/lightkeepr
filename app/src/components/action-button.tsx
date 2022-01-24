@@ -40,7 +40,7 @@ export function ActionButton({
           <Button
             {...p}
             intend={props.intend}
-            weigth={props.weight}
+            weight={props.weight}
             icon={<MoreSvg />}
           />
         )}

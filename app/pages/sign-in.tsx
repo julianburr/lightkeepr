@@ -13,20 +13,19 @@ import {
   signInWithRedirect,
 } from "firebase/auth";
 
+import { api } from "src/utils/api-client";
 import { useAuthUser } from "src/hooks/use-auth-user";
+import { useErrorDialog } from "src/hooks/use-dialog";
 import { AuthLayout } from "src/layouts/auth";
-
-import GoogleSvg from "src/assets/auth/google.svg";
-import GithubSvg from "src/assets/auth/github.svg";
 import { Field } from "src/components/field";
 import { PasswordInput } from "src/components/password-input";
 import { EmailInput } from "src/components/text-input";
 import { Spacer } from "src/components/spacer";
-import styled from "styled-components";
 import { Form } from "src/components/form";
 import { Button } from "src/components/button";
-import { useErrorDialog } from "src/hooks/use-dialog";
-import { api } from "src/utils/api-client";
+
+import GoogleSvg from "src/assets/auth/google.svg";
+import GithubSvg from "src/assets/auth/github.svg";
 
 const auth = getAuth();
 const googleProvider = new GoogleAuthProvider();
@@ -71,6 +70,21 @@ export default function SignIn({ isSignUp }: SigninProps) {
               message:
                 `User with the provided credentials not found! Make sure that ` +
                 `your email and password are entered correctly.`,
+            });
+            break;
+          case "auth/email-already-in-use":
+            errorDialog.open({
+              message:
+                `A user with this email address already exists in the system. ` +
+                `If you've logged in using a third party provider before, please ` +
+                `log in with the same provider again.`,
+            });
+            break;
+          case "auth/weak-password":
+            errorDialog.open({
+              message:
+                `The password you've chosen is too weak. Please choose a password ` +
+                `with at least 6 characters.`,
             });
             break;
           default:

@@ -5,13 +5,13 @@ import { Spacer } from "src/components/mjml/spacer";
 
 type InviteUserEmailProps = {
   title: string;
-  organisationUser: {
+  teamUser: {
     id: string;
     createdBy: {
       id: string;
     };
   };
-  organisation: {
+  team: {
     id: string;
     name: string;
   };
@@ -20,17 +20,17 @@ type InviteUserEmailProps = {
 
 export function InviteUserEmail({
   title,
-  organisationUser,
-  organisation,
+  teamUser,
+  team,
   acceptUrl,
 }: InviteUserEmailProps) {
   return (
     <EmailLayout title={title}>
       <Heading>You've been invited to Lightkeepr</Heading>
       <P>
-        You've been invited by {organisationUser.createdBy.id} to join their
-        organisation "{organisation.name}" in Lightkeepr. Click the button below
-        to accept the invite and set up your user account.
+        You've been invited by {teamUser.createdBy.id} to join their team "
+        {team.name}" in Lightkeepr. Click the button below to accept the invite
+        and set up your user account.
       </P>
 
       <Spacer height={12} />

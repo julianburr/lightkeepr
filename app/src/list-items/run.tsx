@@ -5,10 +5,10 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import { ListItem } from "src/components/list";
 import { P, Small } from "src/components/text";
 import { StatusAvatar } from "src/components/status-avatar";
-
-import BranchSvg from "src/assets/icons/git-branch.svg";
 import { Tooltip } from "src/components/tooltip";
 import { useRouter } from "next/router";
+
+import BranchSvg from "src/assets/icons/git-branch.svg";
 
 dayjs.extend(relativeTime);
 
@@ -58,7 +58,7 @@ export function RunListItem({ data }: RunListItemProps) {
               <Tooltip
                 content={dayjs(
                   (data.finishedAt || data.startedAt)?.seconds * 1000
-                ).format("D MMM YYYY H:mma")}
+                ).format("D MMM YYYY h:mma")}
               >
                 {(props) => (
                   <span {...props}>

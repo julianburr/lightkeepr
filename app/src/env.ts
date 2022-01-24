@@ -12,6 +12,12 @@ export const env = {
   stripe: {
     secretKey: process.env.STRIPE_SECRET_KEY,
     publicKey: process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY,
+    priceId: {
+      premium: {
+        monthly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PREMIUM_MONTHLY,
+        yearly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PREMIUM_YEARLY,
+      },
+    },
   },
   sendgrid: {
     apiKey: process.env.SENDGRID_API_KEY,

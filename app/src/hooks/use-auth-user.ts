@@ -26,6 +26,8 @@ type User = {
 type Team = {
   id: string;
   name: string;
+  billingEmail?: string;
+  stripeCustomerId?: string;
 };
 
 type TeamUser = {
@@ -33,6 +35,7 @@ type TeamUser = {
   team: { id: string };
   user: { id: string };
   status: string;
+  role: string;
 };
 
 type ProviderData = {

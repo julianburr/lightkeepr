@@ -31,7 +31,7 @@ export default function TeamSetup() {
       // Create team
       const team = await addDoc(collection(db, "teams"), {
         name: values.name,
-        billingEmail: authUser.email,
+        billingEmail: values.billingEmail,
         plan: "free",
       });
 
@@ -45,8 +45,9 @@ export default function TeamSetup() {
 
       // Create stripe customer
       const stripeCustomer = await api.post("/api/stripe/customers/create", {
-        email: authUser.email,
+        email: values.billingEmail,
         name: values.name,
+        teamId: team.id,
       });
       await updateDoc(doc(db, "teams", team.id), {
         stripeCustomerId: stripeCustomer.data?.id,

@@ -26,7 +26,7 @@ const Backdrop = styled.div`
   padding: 2.4rem;
 `;
 
-const Container = styled.div<{ width?: string }>`
+const Container = styled.div<{ width?: string; indicatorColor?: string }>`
   background: #fff;
   width: 100%;
   max-width: ${(props) => props.width || "60rem"};
@@ -38,9 +38,20 @@ const Container = styled.div<{ width?: string }>`
   overflow: auto;
   position: relative;
   outline-offset: 0.2rem;
+
+  &:before {
+    content: " ";
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 1.2rem;
+    background: ${(props) => props.indicatorColor};
+    z-index: 20;
+  }
 `;
 
-const TitleBar = styled.div<{ showShadow?: boolean; indicatorColor?: string }>`
+const TitleBar = styled.div<{ showShadow?: boolean }>`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -53,17 +64,6 @@ const TitleBar = styled.div<{ showShadow?: boolean; indicatorColor?: string }>`
     props.showShadow
       ? "0 0.6rem 1.2rem rgba(0, 0, 0, 0.05)"
       : "0 0 0 rgba(0,0,0,0)"};
-
-  &:before {
-    content: " ";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1rem;
-    background: ${(props) => props.indicatorColor};
-    display: ${(props) => (props.indicatorColor ? "block" : "none")};
-  }
 `;
 
 const Title = styled.h1`
@@ -91,12 +91,24 @@ const CloseButton = styled.button`
   }
 `;
 
-const Content = styled.div<{ paddingBottom?: boolean }>`
+const Content = styled.div<{ paddingBottom?: boolean; paddingTop?: boolean }>`
   display: flex;
   flex-direction: column;
-  padding: ${(props) =>
-    props.paddingBottom ? ".4rem 3.2rem 1.8rem" : ".4rem 3.2rem"};
+  padding-left: 3.2rem;
+  padding-right: 3.2rem;
+  padding-top: ${(props) => (props.paddingTop ? "2.8rem" : ".4rem")};
+  padding-bottom: ${(props) => (props.paddingBottom ? "2.8rem" : ".4rem")};
   margin: -0.4rem 0 0;
+
+  p {
+    &:first-child {
+      margin-top: 0;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
 `;
 
 const Footer = styled.div<{ showShadow?: boolean }>`
@@ -194,23 +206,27 @@ export function Dialog({
       {createPortal(
         <Backdrop data-tether-target ref={backdropRef as Ref<HTMLDivElement>}>
           <Container
+            indicatorColor={indicatorColor}
             width={width}
             tabIndex={0}
             ref={dialogRef as Ref<HTMLDivElement>}
           >
-            <TitleBar
-              indicatorColor={indicatorColor}
-              showShadow={
-                scroll?.current !== undefined ? scroll.current > 0 : undefined
-              }
-            >
-              <Title>{title}</Title>
-              <CloseButton onClick={handleClose}>
-                <CrossSvg />
-              </CloseButton>
-            </TitleBar>
+            {title && (
+              <TitleBar
+                showShadow={
+                  scroll?.current !== undefined ? scroll.current > 0 : undefined
+                }
+              >
+                <Title>{title}</Title>
+                <CloseButton onClick={handleClose}>
+                  <CrossSvg />
+                </CloseButton>
+              </TitleBar>
+            )}
 
-            <Content paddingBottom={!actions}>{children}</Content>
+            <Content paddingTop={!title} paddingBottom={!actions}>
+              {children}
+            </Content>
 
             {actions && (
               <Footer
@@ -232,24 +248,79 @@ export function Dialog({
 }
 
 type ErrorDialogProps = {
-  title?: ReactNode;
   message: ReactNode;
   stack?: any;
   onClose?: () => void;
 };
 
-export function ErrorDialog({
-  title,
-  message,
-  stack,
-  onClose,
-}: ErrorDialogProps) {
+export function ErrorDialog({ message, stack, onClose }: ErrorDialogProps) {
   return (
     <Dialog
       indicatorColor="#f5737f"
-      title={title || "Something went wrong"}
       width="35rem"
-      actions={<ButtonBar right={<Button onClick={onClose}>Got it</Button>} />}
+      actions={
+        <ButtonBar
+          right={
+            <Button weight="ghost" onClick={onClose}>
+              Got it
+            </Button>
+          }
+        />
+      }
+    >
+      <P>{message}</P>
+    </Dialog>
+  );
+}
+
+type ConfirmationDialogProps = {
+  message: ReactNode;
+  cancelLabel?: ReactNode;
+  confirmLabel?: ReactNode;
+  onConfirm?: () => any;
+  onResponse?: (response: boolean) => any;
+  onClose?: () => void;
+};
+
+export function ConfirmationDialog({
+  message,
+  cancelLabel = "Cancel",
+  confirmLabel = "Confirm",
+  onConfirm,
+  onResponse,
+  onClose,
+}: ConfirmationDialogProps) {
+  return (
+    <Dialog
+      width="35rem"
+      actions={
+        <ButtonBar
+          right={
+            <>
+              <Button
+                weight="ghost"
+                onClick={async () => {
+                  await onResponse?.(false);
+                  await onClose?.();
+                }}
+              >
+                {cancelLabel}
+              </Button>
+              <Button
+                intend="primary"
+                autoFocus
+                onClick={async () => {
+                  await onResponse?.(true);
+                  await onConfirm?.();
+                  await onClose?.();
+                }}
+              >
+                {confirmLabel}
+              </Button>
+            </>
+          }
+        />
+      }
     >
       <P>{message}</P>
     </Dialog>

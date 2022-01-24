@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Value } from "./value";
+import { P } from "./text";
 
 const Container = styled.div`
   display: flex;
@@ -21,7 +21,7 @@ export function ReadonlyInput({ id, name, value }: ReadonlyInputProps) {
   return (
     <Container>
       <input id={id} type="hidden" name={name} value={value} />
-      <Value>{value || "—"}</Value>
+      <P>{value || "—"}</P>
     </Container>
   );
 }

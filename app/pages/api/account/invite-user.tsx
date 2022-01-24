@@ -20,36 +20,31 @@ export default createHandler({
         return res.status(500).json({ message: "Sendgrid not set up" });
       }
 
-      // Get organisation and organisation user data from firestore
-      if (!req.body.organisationUserId) {
-        return res
-          .status(400)
-          .json({ message: "No organisation user specified" });
+      // Get team and team user data from firestore
+      if (!req.body.teamUserId) {
+        return res.status(400).json({ message: "No team user specified" });
       }
 
-      const organisationUserSnapshot = await db
-        .doc(`organisationUsers/${req.body.organisationUserId}`)
+      const teamUserSnapshot = await db
+        .doc(`teamUsers/${req.body.teamUserId}`)
         .get();
 
-      const organisationUser = organisationUserSnapshot.data();
-      if (!organisationUser) {
-        return res.status(404).json({ message: "Organisation user not found" });
+      const teamUser = teamUserSnapshot.data();
+      if (!teamUser) {
+        return res.status(404).json({ message: "Team user not found" });
       }
 
-      if (organisationUser.status !== "pending") {
+      if (teamUser.status !== "pending") {
         return res.status(400).json({
-          message:
-            "Organisation user has invalid status to send invitation email",
+          message: "Team user has invalid status to send invitation email",
         });
       }
 
-      const organisationSnapshot = await db
-        .doc(`organisations/${organisationUser.organisation.id}`)
-        .get();
+      const teamSnapshot = await db.doc(`teams/${teamUser.team.id}`).get();
 
-      const organisation = organisationSnapshot.data();
-      if (!organisation) {
-        return res.status(404).json({ message: "Organisation not found" });
+      const team = teamSnapshot.data();
+      if (!team) {
+        return res.status(404).json({ message: "Team not found" });
       }
 
       // Put together email html
@@ -58,8 +53,8 @@ export default createHandler({
       const { html } = render(
         <InviteUserEmail
           title={title}
-          organisationUser={organisationUser as any}
-          organisation={organisation as any}
+          teamUser={teamUser as any}
+          team={team as any}
           acceptUrl={`${req.headers.origin}/app/setup/pending-invites`}
         />,
         { validationLevel: "soft" }
@@ -68,8 +63,8 @@ export default createHandler({
       // Send via sendgrid
       sgMail.setApiKey(env.sendgrid.apiKey);
       const response = await sgMail.send({
-        to: organisationUser.user.id,
-        from: "Lightkeepr <hello@julianburr.de>",
+        to: teamUser.user.id,
+        from: "Lightkeepr <lightkeepr@julianburr.de>",
         subject: title,
         html,
       });

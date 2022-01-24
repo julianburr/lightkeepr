@@ -71,7 +71,7 @@ export function ReportListItem({ data }: ReportListItemProps) {
           <Small grey>
             <Tooltip
               content={dayjs(data.createdAt?.seconds * 1000).format(
-                "D MMM YYYY H:mma"
+                "D MMM YYYY h:mma"
               )}
             >
               {(props) => (

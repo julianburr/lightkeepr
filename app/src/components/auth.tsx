@@ -55,17 +55,17 @@ export function Auth({ children }: AuthProps) {
     return <>{children}</>;
   }
 
-  if (!authUser.teams?.length) {
-    if (router.route !== "/app/setup/team") {
-      router.replace("/app/setup/team");
+  if (authUser.pendingInvites?.length) {
+    if (router.route !== "/app/setup/pending-invites") {
+      router.replace("/app/setup/pending-invites");
       return null;
     }
     return <>{children}</>;
   }
 
-  if (authUser.pendingInvites?.length) {
-    if (router.route !== "/app/setup/pending-invites") {
-      router.replace("/app/setup/pending-invites");
+  if (!authUser.teams?.length) {
+    if (router.route !== "/app/setup/team") {
+      router.replace("/app/setup/team");
       return null;
     }
     return <>{children}</>;

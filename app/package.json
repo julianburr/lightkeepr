@@ -13,6 +13,8 @@
     "@google-cloud/storage": "^5.18.0",
     "@popperjs/core": "^2.11.2",
     "@sendgrid/mail": "^7.6.0",
+    "@stripe/stripe-js": "^1.22.0",
+    "color": "^4.2.0",
     "dayjs": "^1.10.7",
     "deepmerge": "^4.2.2",
     "firebase": "^9.6.3",
@@ -35,6 +37,7 @@
   "devDependencies": {
     "@sentry/nextjs": "^6.13.2",
     "@svgr/webpack": "^6.2.0",
+    "@types/color": "^3.0.2",
     "@types/invariant": "^2.2.35",
     "@types/mime-types": "^2.1.1",
     "@types/mjml-react": "^2.0.3",
