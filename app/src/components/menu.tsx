@@ -56,7 +56,7 @@ const CoreMenuItem = styled((props) => <CoreButton {...props} />)`
   padding: var(--sol--spacing-s);
   border-radius: var(--sol--border-radius-s);
 
-  ${interactive("ghost")}
+  ${interactive("lighter")}
 
   &:focus,
   &:hover {

@@ -74,7 +74,6 @@ const container = {
     background: color.brand[500],
     foreground: typography.color.contrast,
     border: border.width.none,
-    borderColor: "transparent",
 
     hover: {
       background: color.brand[600],
@@ -86,17 +85,16 @@ const container = {
   },
 
   secondary: {
-    background: palette.sand[500],
+    background: palette.sand[400],
     foreground: typography.color.default,
     border: border.width.none,
-    borderColor: "transparent",
 
     hover: {
-      background: palette.sand[600],
+      background: palette.sand[500],
     },
 
     active: {
-      background: palette.sand[700],
+      background: palette.sand[600],
     },
   },
 
@@ -104,7 +102,6 @@ const container = {
     background: color.error[500],
     foreground: typography.color.contrast,
     border: border.width.none,
-    borderColor: "none",
 
     hover: {
       background: color.error[600],
@@ -119,14 +116,13 @@ const container = {
     background: "transparent",
     foreground: typography.color.default,
     border: border.width.none,
-    borderColor: "none",
 
     hover: {
-      background: opacify(-0.85, palette.sand[500]),
+      background: opacify(-0.8, palette.sand[600]),
     },
 
     active: {
-      background: opacify(-0.7, palette.sand[500]),
+      background: opacify(-0.7, palette.sand[600]),
     },
   },
 
@@ -137,13 +133,39 @@ const container = {
     borderColor: opacify(-0.8, palette.grey[500]),
 
     hover: {
-      background: opacify(-0.9, palette.sand[500]),
       borderColor: opacify(-0.7, palette.grey[500]),
     },
 
     active: {
-      background: opacify(-0.9, palette.sand[500]),
       borderColor: opacify(-0.6, palette.grey[500]),
+    },
+  },
+
+  light: {
+    background: palette.sand[50],
+    foreground: typography.color.default,
+    border: border.width.none,
+
+    hover: {
+      background: palette.sand[100],
+    },
+
+    active: {
+      background: palette.sand[100],
+    },
+  },
+
+  lighter: {
+    background: "transparent",
+    foreground: typography.color.default,
+    border: border.width.none,
+
+    hover: {
+      background: palette.sand[50],
+    },
+
+    active: {
+      background: palette.sand[100],
     },
   },
 };

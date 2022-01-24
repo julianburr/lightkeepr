@@ -1,14 +1,14 @@
 import styled from "styled-components";
+import { useRouter } from "next/router";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
 import { ListItem } from "src/components/list";
 import { P, Small } from "src/components/text";
-import { StatusAvatar } from "src/components/status-avatar";
-
 import { Tooltip } from "src/components/tooltip";
-import { useRouter } from "next/router";
 import { Avatar } from "src/components/avatar";
+
+import LayersSvg from "src/assets/icons/layers.svg";
 
 dayjs.extend(relativeTime);
 
@@ -64,6 +64,11 @@ export function ReportListItem({ data }: ReportListItemProps) {
       href={`/app/${teamId}/projects/${projectId}/run/${data.run.id}/reports/${data.id}`}
     >
       <Content>
+        {data.type === "user-flow" && (
+          <Avatar background="#dad9d044">
+            <LayersSvg />
+          </Avatar>
+        )}
         <Title>
           <P>
             <span>{data.name || data.url || "n/a"}</span>
@@ -89,12 +94,24 @@ export function ReportListItem({ data }: ReportListItemProps) {
             { label: "Best P.", key: "best-practices" },
             { label: "SEO", key: "seo" },
             { label: "PWA", key: "pwa" },
-          ].map((score) => (
-            <Avatar key={score.key} background="#dad9d044">
-              <Label>{score.label}</Label>
+          ].map((category) => (
+            <Avatar key={category.key} background="#dad9d044">
+              <Label>{category.label}</Label>
               <Score>
-                {data.summary?.[score.key]
-                  ? Math.ceil(data.summary?.[score.key] * 100)
+                {data.type === "user-flow"
+                  ? Math.ceil(
+                      (data.summary.reduce(
+                        (all: any, score: any) =>
+                          all + score[category.key] || 0,
+                        0
+                      ) /
+                        data.summary.filter(
+                          (score: any) => score[category.key] !== null
+                        ).length) *
+                        100
+                    )
+                  : data.summary?.[category.key]
+                  ? Math.ceil(data.summary?.[category.key] * 100)
                   : null}
               </Score>
             </Avatar>

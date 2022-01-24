@@ -12,6 +12,7 @@ import {
 import { PropsWithChildren } from "react";
 
 import { getBase64Url } from "src/utils/node/files";
+import { tokens } from "src/theme/tokens";
 
 type EmailLayoutProps = PropsWithChildren<{
   title: string;
@@ -25,7 +26,7 @@ export function EmailLayout({ title, children }: EmailLayoutProps) {
         <MjmlStyle>
           {`
             a {
-              color: #5B93E7
+              color: ${tokens.color.brand[600]};
             }
           `}
         </MjmlStyle>

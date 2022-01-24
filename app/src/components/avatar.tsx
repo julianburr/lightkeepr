@@ -26,8 +26,10 @@ const Container = styled(({ as: As = "div", color, background, ...props }) => (
   align-items: center;
   justify-content: center;
   font-family: "Playfair Display";
-  background: ${(props) => props.background};
-  color: ${(props) => props.color || "#000"};
+  background: ${(props) =>
+    props.background || "var(--sol--container-ghost-hover-background)"};
+  color: ${(props) =>
+    props.color || "var(--sol--container-ghost-hover-foreground)"};
 
   svg {
     height: 1.8rem;

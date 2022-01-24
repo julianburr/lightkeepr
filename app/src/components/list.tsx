@@ -43,7 +43,7 @@ const Li = styled.li`
     padding: 1.2rem;
     border: 0 none;
     border-radius: 0.3rem;
-    background: #f9f9f7;
+    background: var(--sol--container-light-background);
     transition: background 0.2s;
     color: inherit;
     text-decoration: none;
@@ -59,25 +59,11 @@ const Li = styled.li`
 
     &:hover,
     &:focus {
-      background: #f5f4f1;
       color: inherit;
       text-decoration: none;
+      background: var(--sol--container-light-hover-background);
     }
   }
-`;
-
-const Content = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  padding: 0 0.8rem 0 0;
-`;
-
-const WrapTags = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  padding: 0 2.4rem 0 0;
 `;
 
 type ListProps = {

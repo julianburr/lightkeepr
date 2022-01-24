@@ -148,7 +148,7 @@ export function UserListItem({ data, items }: UserItemProps) {
   return (
     <ListItem>
       <Content>
-        <Avatar background="#dad9d044" name={user?.name || data.user?.id} />
+        <Avatar name={user?.name || data.user?.id} />
         <Title>
           <Email>{data.user.id}</Email>
           <Small grey>
