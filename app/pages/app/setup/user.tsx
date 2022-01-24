@@ -38,7 +38,7 @@ export default function UserSetup() {
           <ButtonBar
             left={
               <Button
-                intend="primary"
+                intent="primary"
                 type="submit"
                 disabled={use("isSubmitting")}
               >

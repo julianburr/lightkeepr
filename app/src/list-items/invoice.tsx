@@ -52,7 +52,7 @@ export function InvoiceListItem({ data }: InvoiceListItemProps) {
         {(props) => (
           <Button
             {...props}
-            weight="ghost"
+            intent="ghost"
             icon={<PaperclipSvg />}
             href={data.hosted_invoice_url}
             // eslint-disable-next-line

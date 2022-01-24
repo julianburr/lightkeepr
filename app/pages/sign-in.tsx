@@ -104,7 +104,7 @@ export default function SignIn({ isSignUp }: SigninProps) {
       <Button
         icon={<GoogleSvg role="presentation" />}
         size="large"
-        weight="outline"
+        intent="outline"
         fullWidth
         onClick={() => signInWithRedirect(auth, googleProvider)}
       >
@@ -116,7 +116,7 @@ export default function SignIn({ isSignUp }: SigninProps) {
       <Button
         icon={<GithubSvg role="presentation" />}
         size="large"
-        weight="outline"
+        intent="outline"
         fullWidth
         onClick={() => signInWithRedirect(auth, githubProvider)}
       >
@@ -134,14 +134,14 @@ export default function SignIn({ isSignUp }: SigninProps) {
               name="email"
               Input={EmailInput}
               inputProps={{ placeholder: "your@email.com" }}
-              error={use("errors")?.email}
+              showError={false}
               required
             />
             <Field
               name="password"
               Input={PasswordInput}
               inputProps={{ placeholder: "Enter your password" }}
-              error={use("errors")?.password}
+              showError={false}
               required
             />
             {isSignUp && (
@@ -149,12 +149,12 @@ export default function SignIn({ isSignUp }: SigninProps) {
                 name="repeatPassword"
                 Input={PasswordInput}
                 inputProps={{ placeholder: "Repeat your password" }}
-                error={use("errors")?.password}
+                showError={false}
                 required
               />
             )}
             <Button
-              intend="primary"
+              intent="primary"
               size="large"
               fullWidth
               type="submit"
@@ -167,7 +167,7 @@ export default function SignIn({ isSignUp }: SigninProps) {
       ) : (
         <Button
           size="large"
-          weight="outline"
+          intent="outline"
           fullWidth
           onClick={() => setUseEmail(true)}
         >

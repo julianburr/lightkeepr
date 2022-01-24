@@ -69,7 +69,7 @@ export default function NewProject() {
               left={
                 <Button
                   type="submit"
-                  intend="primary"
+                  intent="primary"
                   disabled={use("isSubmitting")}
                 >
                   Create project

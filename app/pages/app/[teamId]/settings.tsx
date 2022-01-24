@@ -39,7 +39,6 @@ export default function TeamSettings() {
       billingEmail: authUser.team?.billingEmail,
     },
     onSubmit: async (values) => {
-      console.log("hi");
       await updateDoc(doc(db, "teams", teamId!), {
         name: values.name,
         billingEmail: values.billingEmail,
@@ -109,7 +108,7 @@ export default function TeamSettings() {
               left={
                 <Button
                   type="submit"
-                  intend="primary"
+                  intent="primary"
                   disabled={use("isSubmitting")}
                 >
                   Update settings

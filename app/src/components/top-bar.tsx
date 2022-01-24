@@ -160,7 +160,7 @@ export function TopBar({ setup }: TopBarProps) {
                 {(props) => (
                   <Button
                     {...props}
-                    intend="primary"
+                    intent="primary"
                     icon={
                       <>
                         {authUser?.user?.name
@@ -184,7 +184,7 @@ export function TopBar({ setup }: TopBarProps) {
             <Button
               icon={<SearchSvg />}
               size="large"
-              weight="ghost"
+              intent="ghost"
               onClick={() => {
                 alert("search");
               }}
@@ -192,7 +192,7 @@ export function TopBar({ setup }: TopBarProps) {
             <Button
               icon={<MenuSvg />}
               size="large"
-              weight="ghost"
+              intent="ghost"
               onClick={() => {
                 const event = new CustomEvent("toggleMobileMenu");
                 window.document.body.dispatchEvent(event);

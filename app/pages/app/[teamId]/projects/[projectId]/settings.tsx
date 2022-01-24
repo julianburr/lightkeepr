@@ -78,7 +78,7 @@ export default function ProjectSettings() {
               left={
                 <Button
                   type="submit"
-                  intend="primary"
+                  intent="primary"
                   disabled={use("isSubmitting")}
                 >
                   Update settings

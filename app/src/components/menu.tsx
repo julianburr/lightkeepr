@@ -1,17 +1,16 @@
 import { useRouter } from "next/router";
-import {
-  ComponentProps,
-  PropsWithChildren,
-  ReactNode,
-  useCallback,
-} from "react";
+import { PropsWithChildren, ReactNode, useCallback } from "react";
+import classnames from "classnames";
 import styled from "styled-components";
+
+import { interactive } from "src/@packages/sol/tokens";
+
 import { CoreButton } from "./button";
 
 const Container = styled.menu`
   width: 100%;
   margin: 0;
-  padding: 2rem;
+  padding: calc(var(--sol--spacing-xl) - 0.4rem);
   display: flex;
   flex-direction: column;
 
@@ -40,35 +39,28 @@ const Heading = styled.h3`
   font-weight: 400;
   text-transform: uppercase;
   color: rgba(0, 0, 0, 0.6);
-  padding: 0.2rem 0.8rem;
-  margin: 2.4rem 0 0;
-
-  @media (min-width: 800px) {
-    padding: 0.2rem 0.6rem;
-  }
+  padding: var(--sol--spacing-xxs) var(--sol--spacing-s);
+  margin: var(--sol--spacing-xl) 0 0;
 `;
 
-const CoreMenuItem = styled(({ active, ...props }) => (
-  <CoreButton {...props} />
-))`
+const CoreMenuItem = styled((props) => <CoreButton {...props} />)`
   margin: 0.1rem 0 0;
-  padding: 0.8rem;
   border: 0 none;
-  border-radius: 0.3rem;
   width: 100%;
   color: inherit;
   text-decoration: none;
   display: flex;
   flex-direction: row;
   align-items: center;
-  background: ${(props) => (props.active ? "#f5f4f1" : "transparent")};
   transition: background 0.2s;
+  padding: var(--sol--spacing-s);
+  border-radius: var(--sol--border-radius-s);
+
+  ${interactive("ghost")}
 
   &:focus,
   &:hover {
-    color: inherit;
     text-decoration: none;
-    background: ${(props) => (props.active ? "#f5f4f1" : "#f9f9f7")};
   }
 
   & svg {
@@ -92,15 +84,20 @@ function MenuItem({ onClick, href, active, children }: MenuItemProps) {
   const router = useRouter();
 
   if (onClick) {
-    return <CoreMenuItem onClick={onClick}>{children}</CoreMenuItem>;
+    return (
+      <CoreMenuItem onClick={onClick} className={classnames({ active })}>
+        {children}
+      </CoreMenuItem>
+    );
   }
 
   return (
     <CoreMenuItem
       href={href}
-      active={
-        active !== undefined ? active : href ? href === router.asPath : false
-      }
+      className={classnames({
+        active:
+          active !== undefined ? active : href ? href === router.asPath : false,
+      })}
     >
       {children}
     </CoreMenuItem>

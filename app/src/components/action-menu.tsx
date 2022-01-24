@@ -13,7 +13,7 @@ const Container = styled.div<{ maxWidth?: string }>`
 `;
 
 function DefaultButton(props: ComponentProps<typeof Button>) {
-  return <Button weight="ghost" icon={<MoreSvg />} {...props} />;
+  return <Button intent="ghost" icon={<MoreSvg />} {...props} />;
 }
 
 type ActionMenuProps = Omit<
