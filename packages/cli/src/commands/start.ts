@@ -3,8 +3,8 @@ import { startRun } from "@lightkeepr/node";
 async function runStart(argv) {
   try {
     const run = await startRun({
-      apiUrl: argv.apiUrl || process.env.LIGHTKEEPR_API_URL,
-      token: argv.token || process.env.LIGHTKEEPR_TOKEN,
+      apiUrl: argv.apiUrl,
+      token: argv.token,
       branch: argv.branch,
       commitMessage: argv.commitMessage,
       repo: argv.repo,

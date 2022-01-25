@@ -2,9 +2,9 @@ import { report } from "@lightkeepr/node";
 
 async function runReport(argv) {
   return report({
-    apiUrl: argv.apiUrl || process.env.LIGHTKEEPR_API_URL,
-    token: argv.token || process.env.LIGHTKEEPR_TOKEN,
-    runId: argv.runId || process.env.LIGHTKEEPR_BUILD_ID,
+    apiUrl: argv.apiUrl,
+    token: argv.token,
+    runId: argv.runId,
     url: argv.url,
   });
 }

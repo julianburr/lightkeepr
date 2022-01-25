@@ -76,10 +76,12 @@ export function RunListItem({ data }: RunListItemProps) {
               <span>Not started yet</span>
             )}
 
-            <Branch>
-              <BranchSvg />
-              <span>{data.branch}</span>
-            </Branch>
+            {data.branch && (
+              <Branch>
+                <BranchSvg />
+                <span>{data.branch}</span>
+              </Branch>
+            )}
           </Small>
         </Title>
       </Content>

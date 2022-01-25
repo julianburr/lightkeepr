@@ -3,14 +3,16 @@ import fetch from "node-fetch";
 import { API_URL } from "./utils/constants";
 
 type StopRunArgs = {
-  runId: string;
+  token?: string;
+  runId?: string;
   statusCode?: number;
   error?: any;
   apiUrl?: string;
 };
 
 export async function stopRun({
-  runId,
+  token = process.env.LIGHTKEEPR_TOKEN,
+  runId = process.env.LIGHTKEEPR_RUN_ID,
   statusCode = 0,
   error,
   apiUrl = API_URL,
@@ -20,13 +22,13 @@ export async function stopRun({
     body: JSON.stringify({ statusCode, error }),
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${global.process.env.LIGHTKEEPR_TOKEN}`,
+      Authorization: `Bearer ${token}`,
     },
   });
 
   const data = await res.json();
   if (res.status >= 400) {
-    throw new Error(res.message);
+    throw new Error(data.message);
   }
 
   return data;

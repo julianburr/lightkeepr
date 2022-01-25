@@ -8,6 +8,7 @@ import { v4 as uuid } from "uuid";
 const { compress } = createCompress();
 
 type CreateReportArgs = {
+  token: string;
   apiUrl: string;
   runId: string;
   name: string;
@@ -16,18 +17,18 @@ type CreateReportArgs = {
 };
 
 export async function createReport({
+  token,
   apiUrl,
   runId,
   name,
   type,
   reportData,
 }: CreateReportArgs) {
-  const content = JSON.stringify(reportData);
+  const content = JSON.stringify(reportData, null, 2);
   const compressedStr = await compress(content);
 
-  const tmpPath = path.resolve(global.process.cwd(), `./tmp--${uuid()}.brotli`);
+  const tmpPath = path.resolve(process.cwd(), `./tmp--${uuid()}.brotli`);
   fs.writeFileSync(tmpPath, compressedStr);
-  const stream = fs.createReadStream(tmpPath);
 
   const formData = new FormData();
 
@@ -37,13 +38,14 @@ export async function createReport({
   if (type) formData.append("type", type);
 
   // Compressed report json file
+  const stream = fs.createReadStream(tmpPath);
   formData.append("file", stream);
 
   const res = await fetch(`${apiUrl}/runs/${runId}/report`, {
     method: "POST",
     body: formData,
     headers: {
-      Authorization: `Bearer ${global.process.env.LIGHTKEEPR_TOKEN}`,
+      Authorization: `Bearer ${token}`,
     },
   });
 
@@ -51,7 +53,7 @@ export async function createReport({
 
   const data = await res.json();
   if (res.status >= 400) {
-    throw new Error(res.message);
+    throw new Error(data.message);
   }
 
   return data;

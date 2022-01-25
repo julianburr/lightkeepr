@@ -16,7 +16,7 @@ const storage = new Storage({
 const bucket = storage.bucket(env.firebase.storageBucket!);
 
 export default createHandler({
-  post: async (req, res) => {
+  get: async (req, res) => {
     const { reportId } = req.query;
 
     const file = bucket.file(`${reportId}.brotli`);

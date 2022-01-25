@@ -20,7 +20,7 @@ export default createHandler({
 
     const projectsSnap = await db
       .collection("projects")
-      .where("token", "==", token)
+      .where("apiToken", "==", token)
       .limit(1)
       .get();
 

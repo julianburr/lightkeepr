@@ -79,10 +79,12 @@ function RunsList() {
     query(
       collection(db, "runs"),
       where("project", "==", projectRef),
-      orderBy("createdAt", "desc")
+      orderBy("startedAt", "desc")
     ),
     { key: `${router.query.projectId}/runs` }
   );
+
+  console.log({ project });
 
   if (!runs?.length) {
     return (

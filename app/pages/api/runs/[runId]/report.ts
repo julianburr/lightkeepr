@@ -74,6 +74,7 @@ export const config = {
 export default createHandler({
   post: async (req, res) => {
     const [, token] = req.headers?.authorization?.match?.(/Bearer (.+)/) || [];
+    console.log({ token });
 
     if (!req.query.runId) {
       return res.status(400).json({ message: "No run ID provided" });
@@ -85,7 +86,7 @@ export default createHandler({
 
     const projectsSnap = await db
       .collection("projects")
-      .where("token", "==", token)
+      .where("apiToken", "==", token)
       .limit(1)
       .get();
 

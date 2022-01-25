@@ -5,12 +5,21 @@ import { createReport } from "./utils/create-report";
 import { API_URL } from "./utils/constants";
 import { cleanReportData } from "./utils/clean-report-data";
 
+type UserFlowArgs = {
+  token?: string;
+  runId?: string;
+  name: string;
+  apiUrl?: string;
+  options?: any;
+};
+
 export async function userFlow({
-  runId,
+  token = process.env.LIGHTKEEPR_TOKEN,
+  runId = process.env.LIGHTKEEPR_RUN_ID,
   name,
   apiUrl = API_URL,
   options = {},
-}) {
+}: UserFlowArgs) {
   const browser = await puppeteer.launch(options);
   const page = await browser.newPage();
 
@@ -26,9 +35,9 @@ export async function userFlow({
         lhr: cleanReportData(step.lhr),
       })),
     };
-    console.log({ reportData });
 
     const response = await createReport({
+      token,
       apiUrl,
       runId,
       type: "user-flow",

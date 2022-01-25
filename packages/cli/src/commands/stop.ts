@@ -1,10 +1,10 @@
-import { stopBuild } from "@lightkeepr/node";
+import { stopRun } from "@lightkeepr/node";
 
 function runStop(argv) {
-  return stopBuild({
-    apiUrl: argv.apiUrl || process.env.LIGHTKEEPR_API_URL,
-    token: argv.token || process.env.LIGHTKEEPR_TOKEN,
-    runId: argv.runId || process.env.LIGHTKEEPR_RUN_ID,
+  return stopRun({
+    apiUrl: argv.apiUrl,
+    token: argv.token,
+    runId: argv.runId,
   });
 }
 

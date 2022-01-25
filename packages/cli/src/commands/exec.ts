@@ -4,19 +4,10 @@ import { startRun, stopRun } from "@lightkeepr/node";
 async function runExec(argv) {
   const [_, command, ...commandArgv] = argv._;
 
-  const token = argv.token || process.env.LIGHTKEEPR_TOKEN;
-  if (!token) {
-    throw new Error("No token defined");
-  }
-
-  const apiUrl = argv.apiUrl || process.env.LIGHTKEEPR_API_URL;
-  const build = await startRun({ apiUrl, token });
-
-  if (!build.id) {
+  const run = await startRun({ apiUrl: argv.apiUrl, token: argv.token });
+  if (!run.id) {
     throw new Error("Build creation failed");
   }
-
-  const runId = argv.runId || process.env.LIGHTKEEPR_RUN_ID;
 
   const status = await new Promise<number>((resolve, reject) => {
     spawn(command, commandArgv, { stdio: "inherit" })
@@ -24,7 +15,7 @@ async function runExec(argv) {
       .on("close", resolve);
   });
 
-  await stopRun({ apiUrl, token, runId });
+  await stopRun({ apiUrl: argv.apiUrl, token: argv.token, runId: run.id });
   process.exit(status);
 }
 
