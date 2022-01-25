@@ -286,7 +286,7 @@ export function Sidebar() {
         label: "Account",
         items: [
           {
-            label: "Create new team",
+            label: "Create a new team",
             href: `/app/${router.query.teamId}/account/teams/new`,
           },
           {

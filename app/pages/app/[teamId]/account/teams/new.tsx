@@ -2,7 +2,13 @@ import "src/utils/firebase";
 
 import { useForm } from "react-cool-form";
 import { useRouter } from "next/router";
-import { addDoc, collection, doc, getFirestore } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  getFirestore,
+  updateDoc,
+} from "firebase/firestore";
 import styled from "styled-components";
 
 import { useAuthUser } from "src/hooks/use-auth-user";
@@ -11,9 +17,10 @@ import { Auth } from "src/components/auth";
 import { Button } from "src/components/button";
 import { Field } from "src/components/field";
 import { Form } from "src/components/form";
-import { TextInput } from "src/components/text-input";
+import { EmailInput, TextInput } from "src/components/text-input";
 import { Spacer } from "src/components/spacer";
 import { ButtonBar } from "src/components/button-bar";
+import { api } from "src/utils/api-client";
 
 const db = getFirestore();
 
@@ -22,26 +29,42 @@ const Container = styled.div`
   max-width: 45rem;
 `;
 
-export default function NewProject() {
+export default function NewTeam() {
   const router = useRouter();
   const authUser = useAuthUser();
 
   const { form, use } = useForm({
-    defaultValues: { name: "", gitMain: "main" },
+    defaultValues: { name: "", billingEmail: authUser.user?.id },
     onSubmit: async (values) => {
-      const teamId = router.query.teamId;
-
-      const teamRef = doc(db, "teams", teamId!);
       const userRef = doc(db, "users", authUser.user!.id);
-
-      const project = await addDoc(collection(db, "projects"), {
-        team: teamRef,
+      const team = await addDoc(collection(db, "teams"), {
         name: values.name,
-        gitMain: values.gitMain,
+        billingEmail: values.billingEmail,
+        plan: "free",
         createdAt: new Date(),
         createdBy: userRef,
       });
-      router.push(`/app/${router.query.teamId}/projects/${project.id}`);
+
+      const teamRef = doc(db, "teams", team.id!);
+      await addDoc(collection(db, "teamUsers"), {
+        team: teamRef,
+        user: userRef,
+        role: "owner",
+        status: "active",
+        createdAt: new Date(),
+        createdBy: userRef,
+      });
+
+      const stripeCustomer = await api.post("/api/stripe/customers/create", {
+        email: values.billingEmail,
+        name: values.name,
+        teamId: team.id,
+      });
+      await updateDoc(doc(db, "teams", team.id), {
+        stripeCustomerId: stripeCustomer.data?.id,
+      });
+
+      router.push(`/app/${team.id}`);
     },
   });
 
@@ -49,21 +72,16 @@ export default function NewProject() {
     <Auth>
       <AppLayout>
         <Container>
-          <h1>Create a new project</h1>
+          <h1>Create a new team</h1>
           <Spacer h="1.6rem" />
 
           <Form ref={form}>
+            <Field name="name" label="Team name" Input={TextInput} required />
             <Field
-              name="name"
-              label="Project name"
-              Input={TextInput}
+              name="billingEmail"
+              label="Billing email"
+              Input={EmailInput}
               required
-            />
-            <Field
-              name="gitMain"
-              label="Git base branch name"
-              description="This information is used to be able to compare a given report to the latest report on your base branch"
-              Input={TextInput}
             />
             <ButtonBar
               left={
@@ -72,7 +90,7 @@ export default function NewProject() {
                   intent="primary"
                   disabled={use("isSubmitting")}
                 >
-                  Create project
+                  Create team
                 </Button>
               }
             />

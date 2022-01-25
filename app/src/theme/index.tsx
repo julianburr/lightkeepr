@@ -4,12 +4,9 @@ import { tokensToVars } from "src/@packages/sol/tokens";
 
 import { tokens } from "./tokens";
 
-const vars = tokensToVars(tokens);
-console.log({ vars });
-
 export const GlobalStyles = createGlobalStyle`
   :root {
-    ${vars}
+    ${tokensToVars(tokens)}
   }
 
   *, *:before, *:after {
