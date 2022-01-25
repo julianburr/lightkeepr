@@ -29,6 +29,7 @@
     "mjml-react": "^2.0.3",
     "next": "12.0.8",
     "polished": "^4.1.4",
+    "prismjs": "^1.26.0",
     "react": "17.0.2",
     "react-cool-form": "^0.4.1",
     "react-dom": "17.0.2",
@@ -36,7 +37,8 @@
     "stripe": "^8.197.0",
     "styled-components": "^5.3.3",
     "styled-reset": "^4.3.4",
-    "url-loader": "^4.1.1"
+    "url-loader": "^4.1.1",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@sentry/nextjs": "^6.13.2",
@@ -46,10 +48,12 @@
     "@types/mime-types": "^2.1.1",
     "@types/mjml-react": "^2.0.3",
     "@types/node": "^16.9.6",
+    "@types/prismjs": "^1.16.8",
     "@types/react": "^17.0.24",
     "@types/react-dom": "^17.0.11",
     "@types/stripe": "^8.0.417",
     "@types/styled-components": "^5.1.14",
+    "@types/uuid": "^8.3.4",
     "@typescript-eslint/eslint-plugin": "^5.10.0",
     "eslint": "^8.7.0",
     "eslint-config-next": "11.1.2",

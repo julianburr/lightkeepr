@@ -24,7 +24,9 @@ const Main = styled.main`
   display: flex;
   flex-direction: column;
   flex: 1;
+  width: 100%;
   max-width: 90rem;
+  overflow: hidden;
   margin: 0 auto;
   padding: 3.2rem 2.4rem 2.4rem;
 `;

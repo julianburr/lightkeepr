@@ -5,9 +5,14 @@ import { useToast } from "src/hooks/use-toast";
 import { Button } from "src/components/button";
 
 import ClipboardSvg from "src/assets/icons/clipboard.svg";
+import { Tooltip } from "./tooltip";
 
-const Input = styled.input`
-  display: none;
+const TextArea = styled.textarea`
+  position: fixed;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  pointer-events: none;
 `;
 
 type CopyButtonProps = Partial<
@@ -19,8 +24,8 @@ type CopyButtonProps = Partial<
 export function CopyButton({ text, ...props }: CopyButtonProps) {
   const toast = useToast();
 
-  const inputRef = useRef<HTMLInputElement>();
-  const handleClick = useCallback((e) => {
+  const inputRef = useRef<HTMLTextAreaElement>();
+  const handleClick = useCallback(() => {
     if (inputRef.current) {
       inputRef.current.value = text;
       inputRef.current.select();
@@ -31,8 +36,21 @@ export function CopyButton({ text, ...props }: CopyButtonProps) {
 
   return (
     <>
-      <Input ref={inputRef as Ref<HTMLInputElement>} type="text" />
-      <Button icon={<ClipboardSvg />} {...props} onClick={handleClick} />
+      <TextArea
+        ref={inputRef as Ref<HTMLTextAreaElement>}
+        tabIndex={-1}
+        data-rcf-exclude
+      />
+      <Tooltip content="Copy to clipboard">
+        {(tooltipProps) => (
+          <Button
+            icon={<ClipboardSvg />}
+            {...tooltipProps}
+            {...props}
+            onClick={handleClick}
+          />
+        )}
+      </Tooltip>
     </>
   );
 }

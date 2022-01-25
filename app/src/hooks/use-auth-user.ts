@@ -26,6 +26,7 @@ type Team = {
   name: string;
   billingEmail?: string;
   stripeCustomerId?: string;
+  apiKey?: string;
 };
 
 type TeamUser = {

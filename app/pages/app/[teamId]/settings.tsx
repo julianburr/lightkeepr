@@ -9,6 +9,7 @@ import { api } from "src/utils/api-client";
 import { AppLayout } from "src/layouts/app";
 import { useAuthUser } from "src/hooks/use-auth-user";
 import { useToast } from "src/hooks/use-toast";
+import { useConfirmationDialog } from "src/hooks/use-dialog";
 import { Auth } from "src/components/auth";
 import { Heading, P } from "src/components/text";
 import { Spacer } from "src/components/spacer";
@@ -18,6 +19,11 @@ import { EmailInput, TextInput } from "src/components/text-input";
 import { Button } from "src/components/button";
 import { ButtonBar } from "src/components/button-bar";
 import { ReadonlyInput } from "src/components/readonly-input";
+import { CopyButton } from "src/components/copy-button";
+import { Tooltip } from "src/components/tooltip";
+
+import RefreshSvg from "src/assets/icons/refresh-cw.svg";
+import { generateApiKey } from "src/utils/api-key";
 
 const db = getFirestore();
 
@@ -27,15 +33,17 @@ const Container = styled.div`
 `;
 
 export default function TeamSettings() {
-  const toast = useToast();
   const authUser = useAuthUser();
-
   const router = useRouter();
+
   const { teamId } = router.query;
+
+  const toast = useToast();
+  const confirmationDialog = useConfirmationDialog();
 
   const { form, use } = useForm({
     defaultValues: {
-      name: authUser.team?.name,
+      name: authUser.team?.name || "",
       billingEmail: authUser.team?.billingEmail,
     },
     onSubmit: async (values) => {
@@ -69,6 +77,21 @@ export default function TeamSettings() {
                 Input={ReadonlyInput}
                 inputProps={{ value: authUser.team?.id }}
               />
+              <Field
+                name="apiKey"
+                label="API key"
+                Input={ReadonlyInput}
+                inputProps={{
+                  value: authUser.team?.apiKey,
+                  suffix: (
+                    <CopyButton
+                      size="small"
+                      intent="ghost"
+                      text={authUser.team?.apiKey || ""}
+                    />
+                  ),
+                }}
+              />
               <Field name="name" label="Name" Input={ReadonlyInput} />
             </Form>
 
@@ -97,6 +120,46 @@ export default function TeamSettings() {
               label="Team ID"
               Input={ReadonlyInput}
               inputProps={{ value: authUser.team?.id }}
+            />
+            <Field
+              name="apiKey"
+              label="API key"
+              Input={ReadonlyInput}
+              inputProps={{
+                value: authUser.team?.apiKey,
+                suffix: (
+                  <>
+                    <CopyButton
+                      size="small"
+                      intent="ghost"
+                      text={authUser.team?.apiKey || ""}
+                    />
+                    <Tooltip content="Refresh API key">
+                      {(props) => (
+                        <Button
+                          size="small"
+                          intent="ghost"
+                          icon={<RefreshSvg />}
+                          onClick={() =>
+                            confirmationDialog.open({
+                              message:
+                                "Are you sure you want to refresh the API key? The current key " +
+                                "will become invalid and cannot be used after this.",
+                              onConfirm: async () => {
+                                await updateDoc(
+                                  doc(db, "teams", router.query.teamId!),
+                                  { apiKey: generateApiKey() }
+                                );
+                              },
+                            })
+                          }
+                          {...props}
+                        />
+                      )}
+                    </Tooltip>
+                  </>
+                ),
+              }}
             />
             <Field name="name" label="Name" Input={TextInput} required />
             <Field
