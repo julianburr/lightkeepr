@@ -11,8 +11,6 @@ import {
 
 import { useAuth, useCollection, useDocument } from "../@packages/firebase";
 import { useRouter } from "next/router";
-import { api } from "src/utils/api-client";
-import { useErrorDialog } from "./use-dialog";
 import { Dispatch } from "react";
 import { SetStateAction } from "react";
 

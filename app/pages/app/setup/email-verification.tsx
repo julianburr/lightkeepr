@@ -1,3 +1,5 @@
+import "src/utils/firebase";
+
 import { useRouter } from "next/router";
 
 import { useAuthUser } from "src/hooks/use-auth-user";

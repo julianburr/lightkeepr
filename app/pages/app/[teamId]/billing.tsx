@@ -1,3 +1,5 @@
+import "src/utils/firebase";
+
 import { Suspense, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import styled from "styled-components";
@@ -16,10 +18,10 @@ import { List } from "src/components/list";
 import { Spacer } from "src/components/spacer";
 import { Heading, P, Small } from "src/components/text";
 import { Value } from "src/components/value";
+import { Loader } from "src/components/loader";
 
 import { InvoiceListItem } from "src/list-items/invoice";
 import { PaymentMethodListItem } from "src/list-items/payment-method";
-import { Loader } from "src/components/loader";
 
 const Container = styled.div`
   width: 100%;

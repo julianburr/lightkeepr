@@ -1,3 +1,5 @@
+import "src/utils/firebase";
+
 import { PropsWithChildren, useEffect } from "react";
 import { useRouter } from "next/router";
 

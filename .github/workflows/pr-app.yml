@@ -53,6 +53,9 @@ jobs:
           envkey_NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID: ${{ secrets.FIREBASE_MEASUREMENT_ID }}
           envkey_STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
           envkey_NEXT_PUBLIC_STRIPE_PUBLIC_KEY: ${{ secrets.STRIPE_PUBLIC_KEY }}
+          NEXT_PUBLIC_STRIPE_PRICE_ID_PREMIUM_MONTHLY: ${{ secrets.STRIPE_PRICE_ID_PREMIUM_MONTHLY }}
+          NEXT_PUBLIC_STRIPE_PRICE_ID_PREMIUM_YEARLY: ${{ secrets.STRIPE_PRICE_ID_PREMIUM_YEARLY }}
+          SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
 
       - name: Debug
         working-directory: ./app
