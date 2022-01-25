@@ -46,7 +46,7 @@ export function RunListItem({ data }: RunListItemProps) {
   const router = useRouter();
   const { teamId, projectId } = router.query;
   return (
-    <ListItem href={`/app/${teamId}/projects/${projectId}/run/${data.id}`}>
+    <ListItem href={`/app/${teamId}/projects/${projectId}/runs/${data.id}`}>
       <Content>
         <StatusAvatar status={data.status} />
         <Title>
