@@ -21,7 +21,6 @@ import { EmailInput, TextInput } from "src/components/text-input";
 import { Spacer } from "src/components/spacer";
 import { ButtonBar } from "src/components/button-bar";
 import { api } from "src/utils/api-client";
-import { generateApiKey } from "src/utils/api-key";
 
 const db = getFirestore();
 
@@ -42,7 +41,6 @@ export default function NewTeam() {
         name: values.name,
         billingEmail: values.billingEmail,
         plan: "free",
-        apiKey: generateApiKey(),
         createdAt: new Date(),
         createdBy: userRef,
       });

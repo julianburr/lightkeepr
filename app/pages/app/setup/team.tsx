@@ -10,7 +10,6 @@ import {
 } from "firebase/firestore";
 
 import { api } from "src/utils/api-client";
-import { generateApiKey } from "src/utils/api-key";
 import { useAuthUser } from "src/hooks/use-auth-user";
 import { SetupLayout } from "src/layouts/setup";
 import { Auth } from "src/components/auth";
@@ -35,7 +34,6 @@ export default function TeamSetup() {
         name: values.name,
         billingEmail: values.billingEmail,
         plan: "free",
-        apiKey: generateApiKey(),
         createdAt: new Date(),
         createdBy: doc(db, "users", userId!),
       });

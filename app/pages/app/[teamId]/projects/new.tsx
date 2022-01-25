@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import { addDoc, collection, doc, getFirestore } from "firebase/firestore";
 import styled from "styled-components";
 
+import { generateApiToken } from "src/utils/api-token";
 import { useAuthUser } from "src/hooks/use-auth-user";
 import { AppLayout } from "src/layouts/app";
 import { Auth } from "src/components/auth";
@@ -38,6 +39,7 @@ export default function NewProject() {
         team: teamRef,
         name: values.name,
         gitMain: values.gitMain,
+        apiToken: generateApiToken(),
         createdAt: new Date(),
         createdBy: userRef,
       });

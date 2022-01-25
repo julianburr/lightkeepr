@@ -45,7 +45,7 @@ const NODE_CODE = (token: string) => `
 const lightkeepr = require('@lightkeepr/node');
 
 // Start run with API token
-const run = await lightkeepr.start({ token: ${token} });
+const run = await lightkeepr.start({ token: '${token}' });
 
 // Run lighthouse reports
 await lightkeepr.report({ url: 'https://www.julianburr.de/til', runId: run.id });
@@ -70,10 +70,11 @@ LIGHTKEEPR_TOKEN=${token} npx lightkeepr exec -- cypress run
 `;
 
 function RunsList() {
-  const authUser = useAuthUser();
   const router = useRouter();
 
   const projectRef = doc(db, "projects", router.query.projectId!);
+  const project = useDocument(projectRef);
+
   const runs = useCollection(
     query(
       collection(db, "runs"),
@@ -104,12 +105,12 @@ function RunsList() {
             {
               title: "CLI",
               language: "bash",
-              code: CLI_CODE(authUser.team!.apiKey!),
+              code: CLI_CODE(project.apiToken),
             },
             {
               title: "Node",
               language: "javascript",
-              code: NODE_CODE(authUser.team!.apiKey!),
+              code: NODE_CODE(project.apiToken),
               showLineNumbers: true,
             },
             {
@@ -127,7 +128,7 @@ function RunsList() {
                 },
                 {
                   language: "bash",
-                  code: CYPRESS_CODE_RUN(authUser.team!.apiKey!),
+                  code: CYPRESS_CODE_RUN(project.apiToken),
                 },
               ],
             },

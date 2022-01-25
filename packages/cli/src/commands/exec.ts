@@ -1,38 +1,30 @@
 import spawn from "cross-spawn";
-import { startBuild, stopBuild } from "@lightkeepr/node";
-
-import { getEnv } from "../utils/env";
+import { startRun, stopRun } from "@lightkeepr/node";
 
 async function runExec(argv) {
   const [_, command, ...commandArgv] = argv._;
 
-  const env = getEnv(argv);
-  if (!env.LIGHTKEEPR_TOKEN) {
+  const token = argv.token || process.env.LIGHTKEEPR_TOKEN;
+  if (!token) {
     throw new Error("No token defined");
   }
 
-  const build = await startBuild({
-    apiUrl: env.LIGHTKEEPR_API_URL,
-    token: env.LIGHTKEEPR_TOKEN,
-  });
+  const apiUrl = argv.apiUrl || process.env.LIGHTKEEPR_API_URL;
+  const build = await startRun({ apiUrl, token });
 
   if (!build.id) {
     throw new Error("Build creation failed");
   }
 
-  env.LIGHTKEEPR_BUILD_ID = build.id;
+  const runId = argv.runId || process.env.LIGHTKEEPR_RUN_ID;
 
   const status = await new Promise<number>((resolve, reject) => {
-    spawn(command, commandArgv, { stdio: "inherit", env })
+    spawn(command, commandArgv, { stdio: "inherit" })
       .on("error", reject)
       .on("close", resolve);
   });
 
-  await stopBuild({
-    apiUrl: env.LIGHTKEEPR_API_URL,
-    token: env.LIGHTKEEPR_TOKEN,
-    buildId: env.LIGHTKEEPR_BUILD_ID,
-  });
+  await stopRun({ apiUrl, token, runId });
   process.exit(status);
 }
 
@@ -44,7 +36,7 @@ export default {
     yargs
       .option("apiUrl", {
         description: "API url used to send the lighthouse report to",
-        default: "https://lightkeepr-server.vercel.app",
+        default: "https://lightkeepr.vercel.app/api",
       })
       .option("token", {
         description: "Project API token",

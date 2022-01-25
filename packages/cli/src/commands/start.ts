@@ -1,15 +1,22 @@
-import { startBuild } from "@lightkeepr/node";
-
-import { getEnv } from "../utils/env";
+import { startRun } from "@lightkeepr/node";
 
 async function runStart(argv) {
-  const env = getEnv(argv);
-  return startBuild({
-    apiUrl: env.LIGHTKEEPR_API_URL,
-    token: env.LIGHTKEEPR_TOKEN,
-    branch: argv.branch,
-    commit: argv.commit,
-  });
+  try {
+    const run = await startRun({
+      apiUrl: argv.apiUrl || process.env.LIGHTKEEPR_API_URL,
+      token: argv.token || process.env.LIGHTKEEPR_TOKEN,
+      branch: argv.branch,
+      commitMessage: argv.commitMessage,
+      repo: argv.repo,
+    });
+    if (!run?.id) {
+      process.exit(1);
+    }
+    console.log(run.id);
+  } catch (e) {
+    console.error(e);
+    process.exit(1);
+  }
 }
 
 export default {
@@ -20,13 +27,13 @@ export default {
     yargs
       .option("apiUrl", {
         description: "API url used to send the lighthouse report to",
-        default: "https://lightkeepr-server.vercel.app",
+        default: "https://lightkeepr.vercel.app/api",
       })
       .option("branch", {
         description: "Current branch",
       })
-      .option("commit", {
-        description: "Current commit",
+      .option("commitMessage", {
+        description: "Commit message of the current commit",
       })
       .option("repo", {
         description: "Current github repo",

@@ -11,8 +11,13 @@ const Container = styled.div`
   border-radius: var(--sol--border-radius-s);
   position: relative;
   overflow: hidden;
+  margin: 0 -0.8rem;
 
   @media (min-width: 800px) {
+    padding: var(--sol--spacing-xl);
+
+    h1,
+    h2,
     p {
       width: 80%;
     }

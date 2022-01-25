@@ -1,5 +1,4 @@
-import { useLayoutEffect, useState } from "react";
-
+import { useLayoutEffect, useState, Fragment } from "react";
 import styled from "styled-components";
 import classnames from "classnames";
 
@@ -280,6 +279,7 @@ export function CodePreview({ code }: CodePreview) {
             {code.map((c, index) =>
               c.title ? (
                 <Tab
+                  key={index}
                   className={classnames({ active: index === tab })}
                   onClick={() => setTab(index)}
                 >
@@ -314,6 +314,7 @@ export function CodePreview({ code }: CodePreview) {
           {code.map((c, index) =>
             c.title ? (
               <Tab
+                key={index}
                 className={classnames({ active: index === tab })}
                 onClick={() => setTab(index)}
               >
@@ -324,8 +325,8 @@ export function CodePreview({ code }: CodePreview) {
         </Tabs>
       </Title>
 
-      {tabContent.files.map((file) => (
-        <>
+      {tabContent.files.map((file, index) => (
+        <Fragment key={index}>
           <FileTitle>
             <FileName>
               {file.language === "bash" ? <TerminalSvg /> : <FileSvg />}
@@ -341,7 +342,7 @@ export function CodePreview({ code }: CodePreview) {
           >
             <code>{file.code.trim()}</code>
           </Pre>
-        </>
+        </Fragment>
       ))}
     </Container>
   );
