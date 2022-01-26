@@ -13,26 +13,13 @@ type StartRunArgs = {
   repo?: string;
 };
 
-console.log("#0", {
-  LIGHTKEEPR_TOKEN: process.env.LIGHTKEEPR_TOKEN,
-});
-
 export async function startRun({
-  token: _token,
-  apiUrl: _apiUrl,
+  token = global.process.env.LIGHTKEEPR_TOKEN,
+  apiUrl = global.process.env.LIGHTKEEPR_API_URL || API_URL,
   branch,
   commitMessage,
   repo,
 }: StartRunArgs = {}): Promise<any> {
-  const token = _token || process.env.LIGHTKEEPR_TOKEN;
-  const apiUrl = _apiUrl || process.env.LIGHTKEEPR_API_URL || API_URL;
-
-  console.log("#1", {
-    token,
-    _token,
-    LIGHTKEEPR_TOKEN: process.env.LIGHTKEEPR_TOKEN,
-  });
-
   const res = await fetch(`${apiUrl}/runs/start`, {
     method: "POST",
     body: JSON.stringify({ branch, commitMessage, repo }),

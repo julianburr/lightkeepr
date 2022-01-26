@@ -14,16 +14,12 @@ export type UserFlowArgs = {
 };
 
 export async function userFlow({
-  token: _token,
-  apiUrl: _apiUrl,
-  runId: _runId,
+  token = global.process.env.LIGHTKEEPR_TOKEN,
+  apiUrl = global.process.env.LIGHTKEEPR_API_URL || API_URL,
+  runId = global.process.env.LIGHTKEEPR_RUN_ID,
   name,
   options = {},
 }: UserFlowArgs) {
-  const token = _token || process.env.LIGHTKEEPR_TOKEN;
-  const apiUrl = _apiUrl || process.env.LIGHTKEEPR_API_URL || API_URL;
-  const runId = _runId || process.env.LIGHTKEEPR_RUN_ID;
-
   const browser = await puppeteer.launch(options);
   const page = await browser.newPage();
 
