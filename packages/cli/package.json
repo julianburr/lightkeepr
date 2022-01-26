@@ -15,7 +15,7 @@
   "author": "Julian Burr <hello@julianburr.de>",
   "license": "MIT",
   "dependencies": {
-    "@lightkeepr/node": "^0.0.3",
+    "@lightkeepr/node": "^0.0.4",
     "chalk": "^5.0.0",
     "cross-spawn": "^7.0.3",
     "debug": "^4.3.3",
