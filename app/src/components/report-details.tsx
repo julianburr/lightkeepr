@@ -1,6 +1,5 @@
 import { Fragment } from "react";
 import { useRouter } from "next/router";
-import Markdown from "react-markdown";
 
 import { useSuspense } from "src/@packages/suspense";
 import { api } from "src/utils/api-client";
@@ -8,6 +7,7 @@ import { List } from "src/components/list";
 import { Heading, P } from "src/components/text";
 import { Spacer } from "src/components/spacer";
 import { Accordion } from "src/components/accordion";
+import { Markdown } from "src/components/markdown";
 
 import { ReportAuditListItem } from "src/list-items/report-audit";
 
@@ -38,20 +38,47 @@ export function ReportDetails() {
   const groups: GroupedAudits = category.auditRefs.reduce(
     (all: GroupedAudits, ref: any) => {
       const audit = data.report.audits[ref.id];
-      if (audit.scoreDisplayMode === "manual") {
-        all.manual.push({ audit, ref, type: "manual" });
+      if (ref.group === "hidden") {
+        return all;
+      } else if (audit.scoreDisplayMode === "manual") {
+        all.manual.push({
+          audit,
+          ref,
+          type: "manual",
+          report: data.report,
+        });
       } else if (audit.scoreDisplayMode === "notApplicable") {
-        all.notApplicable.push({ audit, ref, type: "notApplicable" });
+        all.notApplicable.push({
+          audit,
+          ref,
+          type: "notApplicable",
+          report: data.report,
+        });
       } else if (audit.scoreDisplayMode === "informative") {
-        all.informative.push({ audit, ref, type: "informative" });
+        all.informative.push({
+          audit,
+          ref,
+          type: "informative",
+          report: data.report,
+        });
       } else if (audit.score >= 0.9) {
-        all.passed.push({ audit, ref, type: "passed" });
+        all.passed.push({
+          audit,
+          ref,
+          type: "passed",
+          report: data.report,
+        });
       } else {
         const groupKey = ref.group || "__";
         if (!all.others[groupKey]) {
           all.others[groupKey] = [];
         }
-        all.others[groupKey].push({ audit, ref, type: "improvement" });
+        all.others[groupKey].push({
+          audit,
+          ref,
+          type: "improvement",
+          report: data.report,
+        });
       }
       return all;
     },
@@ -75,9 +102,12 @@ export function ReportDetails() {
           groups.others[groupKey]?.length > 0 && (
             <>
               {data.report.categoryGroups[groupKey]?.title && (
-                <Heading level={3}>
-                  {data.report.categoryGroups[groupKey].title}
-                </Heading>
+                <>
+                  <Heading level={3}>
+                    {data.report.categoryGroups[groupKey].title}
+                  </Heading>
+                  <Spacer h=".2rem" />
+                </>
               )}
               {data.report.categoryGroups[groupKey]?.description && (
                 <Markdown>
@@ -96,6 +126,7 @@ export function ReportDetails() {
       {groups.manual?.length > 0 && (
         <>
           <Heading level={3}>Manual</Heading>
+          <Spacer h=".2rem" />
           {category.manualDescription && (
             <Markdown>{category.manualDescription}</Markdown>
           )}

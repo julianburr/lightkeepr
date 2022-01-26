@@ -3,17 +3,11 @@
   "name": "lightkeepr",
   "version": "0.0.0",
   "description": "Lighthouse reporting as a service",
-  "workspaces": {
-    "packages": [
-      "packages",
-      "packages/*",
-      "app"
-    ],
-    "nohoist": [
-      "**/lighthouse",
-      "**/lighthouse/**"
-    ]
-  },
+  "workspaces": [
+    "packages",
+    "packages/*",
+    "app"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/julianburr/lightkeepr.git"

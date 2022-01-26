@@ -72,6 +72,13 @@ export const GlobalStyles = createGlobalStyle`
     margin: .8rem 0;
   }
 
+  p code {
+    font-family: "Source Code Pro", Consolas, Monaco, "Andale Mono", "Ubuntu Mono";
+    display: inline-block;
+    vertical-align: center;
+    font-size: 0.9em;
+  }
+
   input, button, textarea, select {
     font: inherit;
   }

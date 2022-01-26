@@ -1,16 +1,17 @@
 import styled from "styled-components";
-import Markdown from "react-markdown";
 
+import { useDialog } from "src/hooks/use-dialog";
 import { ListItem } from "src/components/list";
+import { Markdown } from "src/components/markdown";
+import { P } from "src/components/text";
+
+import { ReportAuditDialog } from "dialogs/report-audit";
 
 import AlertSvg from "src/assets/icons/alert-circle.svg";
 import CrossSvg from "src/assets/icons/x.svg";
 import CheckSvg from "src/assets/icons/check.svg";
 import InfoSvg from "src/assets/icons/info.svg";
 import EyeSvg from "src/assets/icons/eye.svg";
-import { P } from "src/components/text";
-import { useDialog } from "src/hooks/use-dialog";
-import { ReportAuditDialog } from "dialogs/report-audit";
 
 const Container = styled.div`
   display: flex;
@@ -20,14 +21,6 @@ const Container = styled.div`
   line-height: 1.1;
   gap: 0.6rem;
   text-align: left;
-
-  code {
-    font-family: "Source Code Pro", Consolas, Monaco, "Andale Mono",
-      "Ubuntu Mono";
-    display: inline-block;
-    vertical-align: center;
-    font-size: 0.9em;
-  }
 `;
 
 const Status = styled.div<{ type: string }>`

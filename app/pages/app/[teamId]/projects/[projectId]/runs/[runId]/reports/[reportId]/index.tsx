@@ -96,12 +96,12 @@ const SummaryItem = styled.div<{ value: number }>`
         : props.value < 90
         ? `var(--sol--palette-yellow-500)`
         : `var(--sol--palette-green-500)`};
-    border-width: 0.6rem;
+    border-width: 0.4rem;
     border-style: none;
     pointer-events: none;
 
     @media (min-width: 800px) {
-      border-width: 0.8rem;
+      border-width: 0.6rem;
     }
   }
 
@@ -222,7 +222,7 @@ export default function Report() {
             </Link>
           ))}
         </WrapSummary>
-        <Spacer h="3.2rem" />
+        <Spacer h="1.6rem" />
 
         <Suspense fallback={<Loader />}>
           <ReportDetails />

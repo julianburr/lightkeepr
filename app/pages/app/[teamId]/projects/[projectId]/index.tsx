@@ -84,8 +84,6 @@ function RunsList() {
     { key: `${router.query.projectId}/runs` }
   );
 
-  console.log({ project });
-
   if (!runs?.length) {
     return (
       <HelpBox>

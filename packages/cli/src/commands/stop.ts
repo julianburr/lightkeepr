@@ -16,7 +16,6 @@ export default {
     yargs
       .option("apiUrl", {
         description: "API url used to send the lighthouse report to",
-        default: "https://lightkeepr.vercel.app/api",
       })
       .option("token", {
         description: "Project API token",

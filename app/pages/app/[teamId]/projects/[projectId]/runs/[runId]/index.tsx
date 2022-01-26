@@ -47,8 +47,6 @@ export default function RunDetails() {
   const { teamId, projectId, runId } = router.query;
   const run = useDocument(doc(db, "runs", runId!));
 
-  console.log({ run });
-
   return (
     <Auth>
       <AppLayout>

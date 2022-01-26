@@ -40,6 +40,7 @@ const Container = styled.div<{ width?: string; intent?: "error" | "warning" }>`
   box-shadow: 0 0.2rem 2rem rgba(0, 0, 0, 0.1);
   max-height: 100%;
   overflow: auto;
+  overflow-x: hidden;
   position: relative;
   outline-offset: 0.2rem;
 
@@ -63,6 +64,7 @@ const TitleBar = styled.div<{ showShadow?: boolean }>`
   padding: 1.8rem 3.2rem 1.4rem;
   background: #fff;
   position: sticky;
+  z-index: 10;
   top: 0;
   transition: box-shadow 0.2s;
   box-shadow: ${(props) =>

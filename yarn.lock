@@ -8096,6 +8096,11 @@ ip@^1.1.5:
   resolved "https://registry.yarnpkg.com/ip/-/ip-1.1.5.tgz#bdded70114290828c0a039e72ef25f5aaec4354a"
   integrity sha1-vd7XARQpCCjAoDnnLvJfWq7ENUo=
 
+is-absolute-url@^4.0.0:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/is-absolute-url/-/is-absolute-url-4.0.1.tgz#16e4d487d4fded05cfe0685e53ec86804a5e94dc"
+  integrity sha512-/51/TKE88Lmm7Gc4/8btclNXWS+g50wXhYJq8HWIBAGUBnoAdRu1aXeh364t/O7wXDAcTJDP8PNuNKWUDWie+A==
+
 is-arguments@^1.0.4:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/is-arguments/-/is-arguments-1.1.1.tgz#15b3f88fda01f2a97fec84ca761a560f123efa9b"
@@ -12161,6 +12166,18 @@ regjsparser@^0.6.4:
   integrity sha512-ib77G0uxsA2ovgiYbCVGx4Pv3PSttAx2vIwidqQzbL2U5S4Q+j00HdSAneSBuyVcMvEnTXMjiGgB+DlXozVhpQ==
   dependencies:
     jsesc "~0.5.0"
+
+rehype-external-links@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/rehype-external-links/-/rehype-external-links-1.0.1.tgz#9e5d21c606b04d8098012e2d3c811919762d0ba2"
+  integrity sha512-SrMMtIO2tPLWDfvibhECAn9cuEMW6Fi40ZVK2UQSPTnDEv3LraLzGVyKGb/vrDlUy4RCYTcmm0rq/ss9nPqrsw==
+  dependencies:
+    "@types/hast" "^2.0.0"
+    extend "^3.0.0"
+    is-absolute-url "^4.0.0"
+    space-separated-tokens "^2.0.0"
+    unified "^10.0.0"
+    unist-util-visit "^4.0.0"
 
 relateurl@^0.2.7:
   version "0.2.7"

@@ -1,4 +1,6 @@
-import { startRun } from "@lightkeepr/node";
+import * as lightkeepr from "@lightkeepr/node";
+
+const startRun = lightkeepr.startRun;
 
 async function runStart(argv) {
   try {
@@ -27,7 +29,6 @@ export default {
     yargs
       .option("apiUrl", {
         description: "API url used to send the lighthouse report to",
-        default: "https://lightkeepr.vercel.app/api",
       })
       .option("branch", {
         description: "Current branch",
