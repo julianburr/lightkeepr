@@ -9,13 +9,13 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 100%;
+  min-height: 100%;
   width: 100%;
 `;
 
-const Content = styled.main`
+const Content = styled.div`
   width: 100%;
-  height: 100%;
+  min-height: 100%;
   display: flex;
   flex-direction: row;
 `;
@@ -26,7 +26,6 @@ const Main = styled.main`
   flex: 1;
   width: 100%;
   max-width: 90rem;
-  overflow: hidden;
   margin: 0 auto;
   padding: 3.2rem 2.4rem 2.4rem;
 `;

@@ -48,12 +48,17 @@ export const GlobalStyles = createGlobalStyle`
   }
 
   h1 {
-    font-size: 2.2em;
+    font-size: 2.3em;
     font-weight: 900;
   }
 
   h2 {
-    font-size: 1.6em;
+    font-size: 2em;
+    font-weight: 400;
+  }
+
+  h3 {
+    font-size: 1.3em;
     font-weight: 400;
   }
 

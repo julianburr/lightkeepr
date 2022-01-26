@@ -2,7 +2,7 @@ import fetch from "node-fetch";
 
 import { API_URL } from "./utils/constants";
 
-type StopRunArgs = {
+export type StopRunArgs = {
   token?: string;
   runId?: string;
   statusCode?: number;
@@ -16,7 +16,7 @@ export async function stopRun({
   statusCode = 0,
   error,
   apiUrl = API_URL,
-}: StopRunArgs): Promise<any> {
+}: StopRunArgs = {}): Promise<any> {
   const res = await fetch(`${apiUrl}/runs/${runId}/stop`, {
     method: "POST",
     body: JSON.stringify({ statusCode, error }),
@@ -26,7 +26,7 @@ export async function stopRun({
     },
   });
 
-  const data = await res.json();
+  const data: any = await res.json();
   if (res.status >= 400) {
     throw new Error(data.message);
   }

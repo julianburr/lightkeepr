@@ -1,6 +1,9 @@
 import fetch from "node-fetch";
 
 import { API_URL } from "./utils/constants";
+import { report, ReportArgs } from "./report";
+import { stopRun, StopRunArgs } from "./stop-run";
+import { userFlow, UserFlowArgs } from "./user-flow";
 
 type StartRunArgs = {
   token?: string;
@@ -16,7 +19,7 @@ export async function startRun({
   commitMessage,
   repo,
   apiUrl = API_URL,
-}: StartRunArgs): Promise<any> {
+}: StartRunArgs = {}): Promise<any> {
   const res = await fetch(`${apiUrl}/runs/start`, {
     method: "POST",
     body: JSON.stringify({ branch, commitMessage, repo }),
@@ -26,10 +29,20 @@ export async function startRun({
     },
   });
 
-  const data = await res.json();
+  const data: any = await res.json();
   if (res.status >= 400) {
     throw new Error(data.message);
   }
 
-  return data;
+  return {
+    ...data,
+
+    // Add basic methods pre-filling some of the args
+    report: (args: ReportArgs) =>
+      report({ ...args, runId: data.id, token, apiUrl }),
+    userFlow: (args: UserFlowArgs) =>
+      userFlow({ ...args, runId: data.id, token, apiUrl }),
+    stopRun: (args: StopRunArgs) =>
+      stopRun({ ...args, runId: data.id, token, apiUrl }),
+  };
 }

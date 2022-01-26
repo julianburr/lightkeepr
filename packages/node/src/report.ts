@@ -5,11 +5,11 @@ import { createReport } from "./utils/create-report";
 import { cleanReportData } from "./utils/clean-report-data";
 import { API_URL } from "./utils/constants";
 
-type ReportArgs = {
+export type ReportArgs = {
   token?: string;
+  apiUrl?: string;
   runId?: string;
   url: string;
-  apiUrl?: string;
 };
 
 export async function report({

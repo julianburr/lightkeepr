@@ -55,7 +55,7 @@ const Container = styled.div<{ width?: string; intent?: "error" | "warning" }>`
 const TitleBar = styled.div<{ showShadow?: boolean }>`
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: flex-start;
   padding: 1.8rem 3.2rem 1.4rem;
   background: #fff;
   position: sticky;
@@ -72,19 +72,21 @@ const Title = styled.h1`
   flex-direction: row;
   align-items: center;
   flex: 1;
-  font-family: inherit;
-  font-size: 2rem;
+  font-size: 2.2rem;
+  line-height: 1.2;
+  font-family: "Playfair Display";
 `;
 
 const CloseButton = styled.button`
   border: 0 none;
   background: transparent;
-  width: 3.2rem;
-  height: 3.2rem;
+  width: 3.6rem;
+  height: 3.6rem;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  margin: 0.4rem -0.8rem 0 1.6rem;
 
   svg {
     height: 1.8rem;
@@ -163,6 +165,14 @@ export function Dialog({
         trap.deactivate();
       };
     }
+  }, []);
+
+  // Disable body scroll
+  useEffect(() => {
+    window.document.body.style.overflow = "hidden";
+    return () => {
+      window.document.body.style.overflow = "auto";
+    };
   }, []);
 
   // Dialog should close when user presses `esc`

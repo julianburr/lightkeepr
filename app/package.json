@@ -34,6 +34,7 @@
     "react": "17.0.2",
     "react-cool-form": "^0.4.1",
     "react-dom": "17.0.2",
+    "react-markdown": "^8.0.0",
     "react-popper": "^2.2.5",
     "stripe": "^8.197.0",
     "styled-components": "^5.3.3",

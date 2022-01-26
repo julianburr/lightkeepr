@@ -4,16 +4,17 @@ import { Suspense } from "react";
 import { useRouter } from "next/router";
 import { doc, getFirestore } from "firebase/firestore";
 import styled from "styled-components";
+import Link from "next/link";
+import classNames from "classnames";
 
 import { useDocument } from "src/@packages/firebase";
-import { useSuspense } from "src/@packages/suspense";
-import { api } from "src/utils/api-client";
 import { AppLayout } from "src/layouts/app";
 import { Auth } from "src/components/auth";
 import { Heading } from "src/components/text";
 import { Spacer } from "src/components/spacer";
 import { Loader } from "src/components/loader";
 import { BackLink } from "src/components/back-link";
+import { ReportDetails } from "src/components/report-details";
 
 const db = getFirestore();
 
@@ -25,7 +26,7 @@ const WrapSummary = styled.div`
   gap: 1.2rem;
 `;
 
-const SummaryItem = styled.button<{ value: number }>`
+const SummaryItem = styled.a<{ value: number }>`
   width: 12rem;
   height: 12rem;
   border: 0 none;
@@ -39,12 +40,8 @@ const SummaryItem = styled.button<{ value: number }>`
   font-family: "Playfair Display";
   position: relative;
   line-height: 1;
-  background: ${(props) =>
-    props.value < 50
-      ? `var(--sol--palette-red-50)`
-      : props.value < 90
-      ? `var(--sol--palette-yellow-50)`
-      : `var(--sol--palette-green-50)`};
+  color: inherit;
+  background: transparent;
 
   @media (min-width: 800px) {
     width: 13rem;
@@ -60,6 +57,19 @@ const SummaryItem = styled.button<{ value: number }>`
 
   &:hover,
   &:focus {
+    color: inherit;
+    text-decoration: none;
+    background: ${(props) =>
+      props.value < 50
+        ? `var(--sol--palette-red-50)`
+        : props.value < 90
+        ? `var(--sol--palette-yellow-50)`
+        : `var(--sol--palette-green-50)`};
+  }
+
+  &.active,
+  &.active:hover,
+  &.active:focus {
     background: ${(props) =>
       props.value < 50
         ? `var(--sol--palette-red-100)`
@@ -95,45 +105,53 @@ const SummaryItem = styled.button<{ value: number }>`
     right: ${(props) => `${50 - (Math.min(props.value, 12.5) / 12.5) * 50}%;`};
     bottom: ${(props) =>
       `${(Math.min(Math.max(props.value - 12.5, 0), 12.5) / 12.5) * 50}%`};
-    border-top-style: solid;
-    border-right-style: solid;
+    border-top-style: ${(props) => (props.value <= 0 ? "none" : "solid")};
+    border-right-style: ${(props) => (props.value <= 12.5 ? "none" : "solid")};
     border-top-right-radius: var(--sol--border-radius-s);
+    display: ${(props) =>
+      props.value <= 12.5 ? "0" : "var(--sol--border-radius-s)"};
   }
 
   &:after {
     top: 50%;
     right: 0;
     bottom: ${(props) =>
-      `${50 - (Math.min(Math.max(props.value - 25), 12.5) / 12.5) * 50}%;`};
-    left: ${(props) =>
-      `${100 - (Math.min(Math.max(props.value - 37.5), 12.5) / 12.5) * 50}%`};
-    border-right-style: solid;
-    border-bottom-style: solid;
-    border-bottom-right-radius: var(--sol--border-radius-s);
+      `${50 - (Math.min(Math.max(props.value - 25, 0), 12.5) / 12.5) * 50}%;`};
+    left: auto;
+    width: ${(props) =>
+      `${(Math.min(Math.max(props.value - 37.5, 0), 12.5) / 12.5) * 50}%`};
+    border-right-style: ${(props) => (props.value <= 25 ? "none" : "solid")};
+    border-bottom-style: ${(props) => (props.value <= 37.5 ? "none" : "solid")};
+    border-bottom-right-radius: ${(props) =>
+      props.value <= 37.5 ? "0" : "var(--sol--border-radius-s)"};
   }
 
   & label:before {
     bottom: 0;
     right: 50%;
     left: ${(props) =>
-      `${50 - (Math.min(Math.max(props.value - 50), 12.5) / 12.5) * 50}%;`};
-    top: ${(props) =>
-      `${100 - (Math.min(Math.max(props.value - 62.5), 12.5) / 12.5) * 50}%`};
-    border-bottom-style: solid;
-    border-left-style: solid;
-    border-bottom-left-radius: var(--sol--border-radius-s);
+      `${50 - (Math.min(Math.max(props.value - 50, 0), 12.5) / 12.5) * 50}%;`};
+    top: auto;
+    height: ${(props) =>
+      `${(Math.min(Math.max(props.value - 62.5, 0), 12.5) / 12.5) * 50}%`};
+    border-bottom-style: ${(props) => (props.value <= 50 ? "none" : "solid")};
+    border-left-style: ${(props) => (props.value <= 62.5 ? "none" : "solid")};
+    border-bottom-left-radius: ${(props) =>
+      props.value <= 62.5 ? "0" : "var(--sol--border-radius-s)"};
   }
 
   & label:after {
     bottom: 50%;
     left: 0;
     top: ${(props) =>
-      `${50 - (Math.min(Math.max(props.value - 75), 12.5) / 12.5) * 50}%;`};
-    right: ${(props) =>
-      `${100 - (Math.min(Math.max(props.value - 87.5), 12.5) / 12.5) * 50}%`};
-    border-left-style: solid;
-    border-top-style: solid;
-    border-top-left-radius: var(--sol--border-radius-s);
+      `${50 - (Math.min(Math.max(props.value - 75, 0), 12.5) / 12.5) * 50}%;`};
+    right: auto;
+    width: ${(props) =>
+      `${(Math.min(Math.max(props.value - 87.5, 0), 12.5) / 12.5) * 50}%`};
+    border-left-style: ${(props) => (props.value <= 75 ? "none" : "solid")};
+    border-top-style: ${(props) => (props.value <= 87.5 ? "none" : "solid")};
+    border-top-left-radius: ${(props) =>
+      props.value <= 87.5 ? "0" : "var(--sol--border-radius-s)"};
   }
 `;
 
@@ -153,18 +171,7 @@ const Score = styled.span`
   }
 `;
 
-function ReportData() {
-  const router = useRouter();
-
-  const data = useSuspense(
-    () => api.get(`/api/reports/${router.query.reportId}`),
-    { key: `report/${router.query.reportId}` }
-  );
-
-  return <pre>{JSON.stringify(data, null, 2)}</pre>;
-}
-
-export default function ReportDetails() {
+export default function Report() {
   const router = useRouter();
 
   const reportRef = doc(db, "reports", router.query.reportId!);
@@ -178,32 +185,42 @@ export default function ReportDetails() {
         <Spacer h="1.6rem" />
 
         <WrapSummary>
-          <SummaryItem value={report.summary?.performance * 100}>
-            <Label>Performance</Label>
-            <Score>{report.summary?.performance * 100}</Score>
-          </SummaryItem>
-          <SummaryItem value={report.summary?.accessibility * 100}>
-            <Label>Accessibility</Label>
-            <Score>{report.summary?.accessibility * 100}</Score>
-          </SummaryItem>
-          <SummaryItem value={report.summary?.["best-practices"] * 100}>
-            <Label>Best practices</Label>
-            <Score>{report.summary?.["best-practices"] * 100}</Score>
-          </SummaryItem>
-          <SummaryItem value={report.summary?.seo * 100}>
-            <Label>SEO</Label>
-            <Score>{report.summary?.seo * 100}</Score>
-          </SummaryItem>
-          <SummaryItem value={report.summary?.pwa * 100}>
-            <Label>PWA</Label>
-            <Score>{report.summary?.pwa * 100}</Score>
-          </SummaryItem>
+          {[
+            { label: "Performance", key: "performance" },
+            { label: "Accessbility", key: "accessibility" },
+            { label: "Best practices", key: "best-practices" },
+            { label: "SEO", key: "seo" },
+            { label: "PWA", key: "pwa" },
+          ].map((item) => (
+            <Link
+              key={item.key}
+              passHref
+              href={{
+                query: {
+                  ...router.query,
+                  category:
+                    router.query.category === item.key ? undefined : item.key,
+                },
+              }}
+            >
+              <SummaryItem
+                value={report.summary?.[item.key] * 100}
+                className={classNames({
+                  active: router.query.category === item.key,
+                })}
+              >
+                <Label>{item.label}</Label>
+                <Score>{report.summary?.[item.key] * 100}</Score>
+              </SummaryItem>
+            </Link>
+          ))}
         </WrapSummary>
-      </AppLayout>
+        <Spacer h="3.2rem" />
 
-      <Suspense fallback={<Loader />}>
-        <ReportData />
-      </Suspense>
+        <Suspense fallback={<Loader />}>
+          <ReportDetails />
+        </Suspense>
+      </AppLayout>
     </Auth>
   );
 }

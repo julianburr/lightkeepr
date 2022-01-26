@@ -5,7 +5,7 @@ import { createReport } from "./utils/create-report";
 import { API_URL } from "./utils/constants";
 import { cleanReportData } from "./utils/clean-report-data";
 
-type UserFlowArgs = {
+export type UserFlowArgs = {
   token?: string;
   runId?: string;
   name: string;
