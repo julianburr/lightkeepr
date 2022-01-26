@@ -8,8 +8,6 @@ import React, {
 } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
-const auth = getAuth();
-
 let resolveUserPromise: any;
 const userPromise = new Promise((resolve) => {
   resolveUserPromise = resolve;
@@ -20,6 +18,8 @@ export const AuthContext = createContext<any>({});
 type AuthProviderProps = PropsWithChildren<Record<never, any>>;
 
 export function AuthProvider(props: AuthProviderProps) {
+  const auth = getAuth();
+
   const [authUser, setAuthUser] = useState<any>(
     auth.currentUser || userPromise
   );

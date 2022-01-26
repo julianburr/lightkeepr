@@ -19,7 +19,8 @@ const Container = styled.div`
   position: relative;
   filter: drop-shadow(0 0 1rem rgba(0, 0, 0, 0.25));
   border-radius: 0.3rem;
-  z-index: 200;
+  z-index: 500;
+  max-width: 32rem;
 
   & svg {
     display: inline-block;

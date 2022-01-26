@@ -1,13 +1,10 @@
 import { report } from "@lightkeepr/node";
 
-import { getEnv } from "../utils/env";
-
 async function runReport(argv) {
-  const env = getEnv(argv);
   return report({
-    apiUrl: env.LIGHTKEEPR_API_URL,
-    token: env.LIGHTKEEPR_TOKEN,
-    buildId: env.LIGHTKEEPR_BUILD_ID,
+    apiUrl: argv.apiUrl,
+    token: argv.token,
+    runId: argv.runId,
     url: argv.url,
   });
 }
@@ -26,13 +23,12 @@ export default {
       })
       .option("apiUrl", {
         description: "API url used to send the lighthouse report to",
-        default: "https://lightkeepr-server.vercel.app",
       })
       .option("token", {
         description: "Project API token",
       })
-      .option("buildId", {
-        description: "Build ID for the report",
+      .option("runId", {
+        description: "Run ID for the report",
       }),
 
   handler: (argv) => {

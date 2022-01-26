@@ -1,3 +1,5 @@
+import "src/utils/firebase";
+
 import { Suspense, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import styled from "styled-components";
@@ -16,10 +18,10 @@ import { List } from "src/components/list";
 import { Spacer } from "src/components/spacer";
 import { Heading, P, Small } from "src/components/text";
 import { Value } from "src/components/value";
+import { Loader } from "src/components/loader";
 
 import { InvoiceListItem } from "src/list-items/invoice";
 import { PaymentMethodListItem } from "src/list-items/payment-method";
-import { Loader } from "src/components/loader";
 
 const Container = styled.div`
   width: 100%;
@@ -51,29 +53,31 @@ function PlanDetails({ uuid, refresh }: SectionProps) {
   );
 
   if (!details?.subscriptions?.length) {
-    <>
-      <P>Free — $0 / month</P>
-      {["owner", "billing"].includes(authUser.teamUser?.role || "") && (
-        <Button
-          onClick={async () => {
-            const session: any = await api
-              .post(
-                `/api/stripe/customers/${customerId}/subscriptions/session`,
-                {
-                  teamId: authUser?.team?.id,
-                  priceId: env.stripe.priceId.premium.monthly,
-                }
-              )
-              .then(({ data }) => data);
+    return (
+      <>
+        <P>Free — $0 / month</P>
+        {["owner", "billing"].includes(authUser.teamUser?.role || "") && (
+          <Button
+            onClick={async () => {
+              const session: any = await api
+                .post(
+                  `/api/stripe/customers/${customerId}/subscriptions/session`,
+                  {
+                    teamId: authUser?.team?.id,
+                    priceId: env.stripe.priceId.premium.monthly,
+                  }
+                )
+                .then(({ data }) => data);
 
-            const stripe = await stripeClient();
-            await stripe.redirectToCheckout({ sessionId: session?.id });
-          }}
-        >
-          Upgrade to premium plan
-        </Button>
-      )}
-    </>;
+              const stripe = await stripeClient();
+              await stripe.redirectToCheckout({ sessionId: session?.id });
+            }}
+          >
+            Upgrade to premium plan
+          </Button>
+        )}
+      </>
+    );
   }
 
   const subscription = details.subscriptions[0];

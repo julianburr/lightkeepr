@@ -61,7 +61,7 @@ export function ReportListItem({ data }: ReportListItemProps) {
   const { teamId, projectId } = router.query;
   return (
     <ListItem
-      href={`/app/${teamId}/projects/${projectId}/run/${data.run.id}/reports/${data.id}`}
+      href={`/app/${teamId}/projects/${projectId}/runs/${data.run.id}/reports/${data.id}`}
     >
       <Content>
         {data.type === "user-flow" && (
@@ -110,9 +110,7 @@ export function ReportListItem({ data }: ReportListItemProps) {
                         ).length) *
                         100
                     )
-                  : data.summary?.[category.key]
-                  ? Math.ceil(data.summary?.[category.key] * 100)
-                  : null}
+                  : Math.ceil((data.summary?.[category.key] || 0) * 100)}
               </Score>
             </Avatar>
           ))}

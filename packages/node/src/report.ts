@@ -1,0 +1,34 @@
+import lighthouse from "lighthouse";
+import * as chromeLauncher from "chrome-launcher";
+
+import { createReport } from "./utils/create-report";
+import { cleanReportData } from "./utils/clean-report-data";
+import { API_URL } from "./utils/constants";
+
+export type ReportArgs = {
+  token?: string;
+  apiUrl?: string;
+  runId?: string;
+  url: string;
+};
+
+export async function report({
+  token = global.process.env.LIGHTKEEPR_TOKEN,
+  apiUrl = global.process.env.LIGHTKEEPR_API_URL || API_URL,
+  runId = global.process.env.LIGHTKEEPR_RUN_ID,
+  url,
+}: ReportArgs) {
+  const chrome = await chromeLauncher.launch({ chromeFlags: ["--headless"] });
+  const result = await lighthouse(url, { output: "json", port: chrome.port });
+  const reportData = cleanReportData(JSON.parse(result.report));
+  await chrome.kill();
+
+  const response = await createReport({
+    token,
+    runId,
+    apiUrl,
+    name: url,
+    reportData,
+  });
+  return response;
+}

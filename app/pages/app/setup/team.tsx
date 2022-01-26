@@ -24,6 +24,7 @@ const db = getFirestore();
 
 export default function TeamSetup() {
   const authUser = useAuthUser();
+  const userId = authUser.user?.id;
 
   const { form, use } = useForm({
     defaultValues: { name: "", billingEmail: authUser.email },
@@ -33,6 +34,8 @@ export default function TeamSetup() {
         name: values.name,
         billingEmail: values.billingEmail,
         plan: "free",
+        createdAt: new Date(),
+        createdBy: doc(db, "users", userId!),
       });
 
       // Create organisation user

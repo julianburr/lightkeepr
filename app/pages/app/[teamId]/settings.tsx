@@ -9,6 +9,7 @@ import { api } from "src/utils/api-client";
 import { AppLayout } from "src/layouts/app";
 import { useAuthUser } from "src/hooks/use-auth-user";
 import { useToast } from "src/hooks/use-toast";
+import { useConfirmationDialog } from "src/hooks/use-dialog";
 import { Auth } from "src/components/auth";
 import { Heading, P } from "src/components/text";
 import { Spacer } from "src/components/spacer";
@@ -27,15 +28,17 @@ const Container = styled.div`
 `;
 
 export default function TeamSettings() {
-  const toast = useToast();
   const authUser = useAuthUser();
-
   const router = useRouter();
+
   const { teamId } = router.query;
+
+  const toast = useToast();
+  const confirmationDialog = useConfirmationDialog();
 
   const { form, use } = useForm({
     defaultValues: {
-      name: authUser.team?.name,
+      name: authUser.team?.name || "",
       billingEmail: authUser.team?.billingEmail,
     },
     onSubmit: async (values) => {

@@ -12,7 +12,6 @@ import favicon from "src/assets/favicon.png";
 import { DialogProvider } from "src/hooks/use-dialog";
 import { ToastProvider } from "src/hooks/use-toast";
 import { Loader } from "src/components/loader";
-import { tokens } from "src/theme/tokens";
 import { SuspenseProvider } from "src/@packages/suspense";
 
 type AppContentProps = {
@@ -56,7 +55,12 @@ export default function App(props: any) {
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Yanone+Kaffeesatz&family=Playfair+Display:wght@400;700&display=swap"
+          href={
+            `https://fonts.googleapis.com/css2` +
+            `?family=Playfair+Display:wght@400;700` +
+            `&family=Source+Code+Pro:wght@400;700` +
+            `&display=swap`
+          }
           rel="stylesheet"
         />
       </Head>
@@ -70,34 +74,6 @@ export default function App(props: any) {
             <DialogProvider>
               <ToastProvider>
                 <AppContent {...props} />
-
-                {/* {Object.keys(tokens.palette).map((key) => {
-                  return (
-                    <div style={{ display: "flex" }}>
-                      {Object.keys(
-                        tokens.palette[key as keyof typeof tokens.palette]
-                      ).map((shade) => {
-                        return (
-                          <div
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                              width: 50,
-                              height: 50,
-                              background:
-                                tokens.palette[
-                                  key as keyof typeof tokens.palette
-                                ][shade],
-                            }}
-                          >
-                            <span>{shade}</span>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  );
-                })} */}
               </ToastProvider>
             </DialogProvider>
           </Suspense>

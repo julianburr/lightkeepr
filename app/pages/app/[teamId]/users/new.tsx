@@ -1,6 +1,8 @@
 import "src/utils/firebase";
 
 import { useForm } from "react-cool-form";
+import { useRouter } from "next/router";
+import styled from "styled-components";
 import {
   addDoc,
   collection,
@@ -10,7 +12,6 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { useRouter } from "next/router";
 
 import { api } from "src/utils/api-client";
 import { useAuthUser } from "src/hooks/use-auth-user";
@@ -26,7 +27,6 @@ import { Heading, P } from "src/components/text";
 import { Spacer } from "src/components/spacer";
 import { ButtonBar } from "src/components/button-bar";
 import { BackLink } from "src/components/back-link";
-import styled from "styled-components";
 
 const db = getFirestore();
 
@@ -48,12 +48,15 @@ export default function NewUser() {
     onSubmit: async (values) => {
       try {
         const teamRef = doc(db, "teams", teamId!);
-
         const userRef = doc(db, "users", values.email);
         const currentUserRef = doc(db, "users", authUser.user!.id);
 
         const check = await getDocs(
-          query(collection(db, "teamUsers"), where("user", "==", userRef))
+          query(
+            collection(db, "teamUsers"),
+            where("team", "==", teamRef),
+            where("user", "==", userRef)
+          )
         );
 
         if (check.size > 0) {

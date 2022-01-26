@@ -4,12 +4,9 @@ import { tokensToVars } from "src/@packages/sol/tokens";
 
 import { tokens } from "./tokens";
 
-const vars = tokensToVars(tokens);
-console.log({ vars });
-
 export const GlobalStyles = createGlobalStyle`
   :root {
-    ${vars}
+    ${tokensToVars(tokens)}
   }
 
   *, *:before, *:after {
@@ -51,12 +48,17 @@ export const GlobalStyles = createGlobalStyle`
   }
 
   h1 {
-    font-size: 2.2em;
+    font-size: 2.3em;
     font-weight: 900;
   }
 
   h2 {
-    font-size: 1.6em;
+    font-size: 2em;
+    font-weight: 400;
+  }
+
+  h3 {
+    font-size: 1.3em;
     font-weight: 400;
   }
 
@@ -68,6 +70,13 @@ export const GlobalStyles = createGlobalStyle`
 
   p {
     margin: .8rem 0;
+  }
+
+  p code {
+    font-family: "Source Code Pro", Consolas, Monaco, "Andale Mono", "Ubuntu Mono";
+    display: inline-block;
+    vertical-align: center;
+    font-size: 0.9em;
   }
 
   input, button, textarea, select {

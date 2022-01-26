@@ -1,3 +1,5 @@
+import "src/utils/firebase";
+
 import { useEffect, useRef, useState, Ref } from "react";
 import styled from "styled-components";
 import Link from "next/link";

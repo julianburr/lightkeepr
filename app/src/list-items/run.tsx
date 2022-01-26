@@ -46,7 +46,7 @@ export function RunListItem({ data }: RunListItemProps) {
   const router = useRouter();
   const { teamId, projectId } = router.query;
   return (
-    <ListItem href={`/app/${teamId}/projects/${projectId}/run/${data.id}`}>
+    <ListItem href={`/app/${teamId}/projects/${projectId}/runs/${data.id}`}>
       <Content>
         <StatusAvatar status={data.status} />
         <Title>
@@ -76,10 +76,12 @@ export function RunListItem({ data }: RunListItemProps) {
               <span>Not started yet</span>
             )}
 
-            <Branch>
-              <BranchSvg />
-              <span>{data.branch}</span>
-            </Branch>
+            {data.branch && (
+              <Branch>
+                <BranchSvg />
+                <span>{data.branch}</span>
+              </Branch>
+            )}
           </Small>
         </Title>
       </Content>

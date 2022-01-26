@@ -28,8 +28,8 @@ export function AccountActionMenu(props: AccountActionMenuProps) {
 
   return (
     <ActionMenu
-      placement="bottom-end"
       {...props}
+      placement="bottom-end"
       maxWidth="22rem"
       items={[
         {
@@ -60,7 +60,7 @@ export function AccountActionMenu(props: AccountActionMenuProps) {
         {
           items: [
             {
-              label: "Create new team",
+              label: "Create a new team",
               href: `/app/${router.query.teamId}/account/teams/new`,
             },
             {

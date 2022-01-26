@@ -1,9 +1,12 @@
 {
   "name": "@lightkeepr/cli",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "",
+  "engines": {
+    "node": ">= 12"
+  },
   "bin": {
-    "lighkeepr": "dist/index.js"
+    "lightkeepr": "dist/index.js"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -12,11 +15,11 @@
   "author": "Julian Burr <hello@julianburr.de>",
   "license": "MIT",
   "dependencies": {
-    "@lightkeepr/node": "^0.0.3",
-    "chalk": "^4.1.0",
+    "@lightkeepr/node": "^0.0.4",
+    "chalk": "^5.0.0",
     "cross-spawn": "^7.0.3",
-    "debug": "^4.3.1",
-    "yargs": "^16.2.0"
+    "debug": "^4.3.3",
+    "yargs": "^17.3.1"
   },
   "publishConfig": {
     "access": "public"

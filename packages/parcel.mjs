@@ -34,5 +34,5 @@ try {
     );
   }
 } catch (err) {
-  console.log(err.diagnostic);
+  console.error(err.diagnostic || err);
 }

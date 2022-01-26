@@ -1,31 +1,31 @@
 import { Storage } from "@google-cloud/storage";
+import createCompress from "compress-brotli";
+
+import { env } from "src/env";
+import { createHandler } from "src/utils/node/api";
 
 import credentials from "google-service-account.json";
 
-import { createHandler } from "src/utils/node/api";
+const { decompress } = createCompress();
 
-const storage = new Storage({ projectId: credentials.project_id, credentials });
-const bucket = storage.bucket("lightkeepr-7a7ee.appspot.com");
+const storage = new Storage({
+  projectId: credentials.project_id,
+  credentials,
+});
 
-async function readJson(stream: any): Promise<string> {
-  let buf = "";
-  return new Promise((resolve, reject) => {
-    stream
-      .on("data", (d: string) => (buf += d))
-      .on("end", () => resolve(buf))
-      .on("error", (e: any) => reject(e));
-  });
-}
+const bucket = storage.bucket(env.firebase.storageBucket!);
 
 export default createHandler({
   get: async (req, res) => {
     const { reportId } = req.query;
 
-    const file = bucket.file(`${reportId}.json`);
+    const file = bucket.file(`${reportId}.brotli`);
 
     const [meta, api] = await file.get();
-    const data = await readJson(file.createReadStream());
+    const [compressedContent] = await file.download();
 
-    res.status(200).json({ meta, api, report: JSON.parse(data) });
+    const content = await decompress(compressedContent);
+
+    res.status(200).json({ meta, api, report: JSON.parse(content) });
   },
 });

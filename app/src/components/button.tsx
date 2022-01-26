@@ -117,7 +117,8 @@ const Container = styled(_CoreButton)`
   ${({ intent }) => interactive(intent!)}
 
   svg {
-    height: ${({ size }) => (size === "large" ? "1.4em" : "1.2em")};
+    height: ${({ size }) =>
+      size === "large" ? "1.4em" : size === "small" ? "1em" : "1.2em"};
     width: auto;
     margin: 0 -0.6rem;
     filter: grayscale(1);

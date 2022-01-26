@@ -43,9 +43,9 @@ const Li = styled.li`
     padding: 1.2rem;
     border: 0 none;
     border-radius: 0.3rem;
-    background: var(--sol--container-light-background);
     transition: background 0.2s;
-    color: inherit;
+    background: var(--sol--container-light-background);
+    color: var(--sol--container-light-foreground);
     text-decoration: none;
 
     p {
