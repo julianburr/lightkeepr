@@ -9,5 +9,11 @@ type MsCellProps = {
 };
 
 export function MsCell({ value }: MsCellProps) {
-  return <Td>{Number.isNaN(value) ? "—" : `${Math.ceil(value)} ms`}</Td>;
+  return (
+    <Td>
+      {Number.isNaN(value) || value === undefined
+        ? "—"
+        : `${Math.ceil(value)} ms`}
+    </Td>
+  );
 }

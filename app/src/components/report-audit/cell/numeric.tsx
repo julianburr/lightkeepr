@@ -6,7 +6,9 @@ type NumericCellProps = {
 export function NumericCell({ value, granularity = 1 }: NumericCellProps) {
   return (
     <td>
-      {Number.isNaN(value) ? "—" : Math.ceil(value / granularity) * granularity}
+      {Number.isNaN(value) || value === undefined
+        ? "—"
+        : Math.ceil(value / granularity) * granularity}
     </td>
   );
 }

@@ -21,5 +21,7 @@ type BytesCellProps = {
 };
 
 export function BytesCell({ value }: BytesCellProps) {
-  return <Td>{Number.isNaN(value) ? "—" : format(value)}</Td>;
+  return (
+    <Td>{Number.isNaN(value) || value === undefined ? "—" : format(value)}</Td>
+  );
 }
