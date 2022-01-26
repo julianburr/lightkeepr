@@ -24,9 +24,14 @@ const Toggle = styled.button<{ expanded?: boolean }>`
     height: 1.05em;
     width: auto;
     transition: transform 0.2s;
-    transform: ${(props) =>
-      props.expanded ? "rotate(180deg)" : "rotate(0deg)"};
+    transform: rotate(0deg);
     margin: 0.2rem 0 0;
+  }
+
+  &[aria-expanded="true"] {
+    svg {
+      transform: rotate(180deg);
+    }
   }
 `;
 
@@ -37,18 +42,21 @@ type AccordionProps = PropsWithChildren<{
   initialExpanded?: boolean;
 }>;
 
+let uuid = 0;
+
 export function Accordion({
   title,
   children,
   initialExpanded,
 }: AccordionProps) {
   const [expanded, setExpanded] = useState(initialExpanded);
-
+  const [instaceUuid] = useState(++uuid);
   return (
     <Container>
       <Toggle
         onClick={() => setExpanded((state) => !state)}
-        expanded={expanded}
+        aria-expanded={expanded}
+        aria-controls="content-1"
       >
         <ChevronDownSvg />
         <Heading level={3}>{title}</Heading>
