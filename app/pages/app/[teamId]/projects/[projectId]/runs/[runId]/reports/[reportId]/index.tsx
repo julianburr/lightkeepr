@@ -86,8 +86,8 @@ const SummaryItem = styled.div<{ value: number }>`
 
   &:before,
   &:after,
-  & label:before,
-  & label:after {
+  & span:before,
+  & span:after {
     content: " ";
     position: absolute;
     color: ${(props) =>
@@ -131,7 +131,7 @@ const SummaryItem = styled.div<{ value: number }>`
       props.value <= 37.5 ? "0" : "var(--sol--border-radius-s)"};
   }
 
-  & label:before {
+  & span:before {
     bottom: 0;
     right: 50%;
     left: ${(props) =>
@@ -145,7 +145,7 @@ const SummaryItem = styled.div<{ value: number }>`
       props.value <= 62.5 ? "0" : "var(--sol--border-radius-s)"};
   }
 
-  & label:after {
+  & span:after {
     bottom: 50%;
     left: 0;
     top: ${(props) =>
