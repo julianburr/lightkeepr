@@ -22,5 +22,3 @@ const argv = yargs
   .alias("v", "version").argv;
 
 debug(`argv: ${JSON.stringify(argv)}`);
-
-export {};
