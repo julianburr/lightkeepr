@@ -3,7 +3,7 @@
   "version": "0.0.3",
   "description": "",
   "bin": {
-    "lighkeepr": "dist/index.js"
+    "lightkeepr": "dist/index.js"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
