@@ -11,12 +11,16 @@ export type StopRunArgs = {
 };
 
 export async function stopRun({
-  token = process.env.LIGHTKEEPR_TOKEN,
-  runId = process.env.LIGHTKEEPR_RUN_ID,
+  token: _token,
+  apiUrl: _apiUrl,
+  runId: _runId,
   statusCode = 0,
   error,
-  apiUrl = API_URL,
 }: StopRunArgs = {}): Promise<any> {
+  const token = _token || process.env.LIGHTKEEPR_TOKEN;
+  const apiUrl = _apiUrl || process.env.LIGHTKEEPR_API_URL || API_URL;
+  const runId = _runId || process.env.LIGHTKEEPR_RUN_ID;
+
   const res = await fetch(`${apiUrl}/runs/${runId}/stop`, {
     method: "POST",
     body: JSON.stringify({ statusCode, error }),

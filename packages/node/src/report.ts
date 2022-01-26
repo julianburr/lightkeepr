@@ -13,11 +13,15 @@ export type ReportArgs = {
 };
 
 export async function report({
-  token = process.env.LIGHTKEEPR_TOKEN,
-  runId = process.env.LIGHTKEEPR_RUN_ID,
+  token: _token,
+  apiUrl: _apiUrl,
+  runId: _runId,
   url,
-  apiUrl = API_URL,
 }: ReportArgs) {
+  const token = _token || process.env.LIGHTKEEPR_TOKEN;
+  const apiUrl = _apiUrl || process.env.LIGHTKEEPR_API_URL || API_URL;
+  const runId = _runId || process.env.LIGHTKEEPR_RUN_ID;
+
   const chrome = await chromeLauncher.launch({ chromeFlags: ["--headless"] });
   const result = await lighthouse(url, { output: "json", port: chrome.port });
   const reportData = cleanReportData(JSON.parse(result.report));

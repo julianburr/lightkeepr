@@ -110,9 +110,7 @@ export function ReportListItem({ data }: ReportListItemProps) {
                         ).length) *
                         100
                     )
-                  : data.summary?.[category.key]
-                  ? Math.ceil(data.summary?.[category.key] * 100)
-                  : null}
+                  : Math.ceil((data.summary?.[category.key] || 0) * 100)}
               </Score>
             </Avatar>
           ))}

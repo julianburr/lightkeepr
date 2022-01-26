@@ -10,6 +10,8 @@ export default createHandler({
   post: async (req, res) => {
     const [, token] = req.headers?.authorization?.match?.(/Bearer (.+)/) || [];
 
+    console.log({ token });
+
     if (!token) {
       return res.status(4401).json({ message: "No bearer token provided" });
     }

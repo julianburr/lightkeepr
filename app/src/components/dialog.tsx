@@ -23,7 +23,11 @@ const Backdrop = styled.div`
   background: rgba(0, 0, 0, 0.1);
   z-index: 400;
   backdrop-filter: blur(0.2rem);
-  padding: 2.4rem;
+  padding: 1.6rem;
+
+  @media (min-width: 800px) {
+    padding: 4.2rem;
+  }
 `;
 
 const Container = styled.div<{ width?: string; intent?: "error" | "warning" }>`

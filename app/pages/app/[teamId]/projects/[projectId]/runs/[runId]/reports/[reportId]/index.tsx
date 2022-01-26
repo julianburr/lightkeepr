@@ -24,11 +24,27 @@ const WrapSummary = styled.div`
   flex-direction: row;
   flex-wrap: wrap;
   gap: 1.2rem;
+  font-family: "Playfair Display";
+  text-align: center;
+  margin: 1.2rem 0;
+  padding: 1.2rem 0 1.6rem;
+  background: #fff;
+  z-index: 10;
+
+  a {
+    color: inherit;
+
+    &:hover,
+    &:focus {
+      color: inherit;
+      text-decoration: none;
+    }
+  }
 `;
 
-const SummaryItem = styled.a<{ value: number }>`
-  width: 12rem;
-  height: 12rem;
+const SummaryItem = styled.div<{ value: number }>`
+  width: 8rem;
+  height: 8rem;
   border: 0 none;
   border-radius: var(--sol--border-radius-s);
   transition: background 0.2s;
@@ -37,28 +53,18 @@ const SummaryItem = styled.a<{ value: number }>`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-family: "Playfair Display";
   position: relative;
   line-height: 1;
-  color: inherit;
-  background: transparent;
+  background: var(--sol--palette-sand-50);
 
   @media (min-width: 800px) {
-    width: 13rem;
-    height: 13rem;
-    border: 0 none;
-  }
-
-  @media (min-width: 1024px) {
-    width: 14rem;
-    height: 14rem;
+    width: 11rem;
+    height: 11rem;
     border: 0 none;
   }
 
   &:hover,
   &:focus {
-    color: inherit;
-    text-decoration: none;
     background: ${(props) =>
       props.value < 50
         ? `var(--sol--palette-red-50)`
@@ -107,8 +113,7 @@ const SummaryItem = styled.a<{ value: number }>`
       `${(Math.min(Math.max(props.value - 12.5, 0), 12.5) / 12.5) * 50}%`};
     border-top-style: ${(props) => (props.value <= 0 ? "none" : "solid")};
     border-right-style: ${(props) => (props.value <= 12.5 ? "none" : "solid")};
-    border-top-right-radius: var(--sol--border-radius-s);
-    display: ${(props) =>
+    border-top-right-radius: ${(props) =>
       props.value <= 12.5 ? "0" : "var(--sol--border-radius-s)"};
   }
 
@@ -163,11 +168,11 @@ const Label = styled.label`
 `;
 
 const Score = styled.span`
-  font-size: 4.6rem;
-  margin-top: -0.4rem;
+  font-size: 3.6rem;
+  margin-top: -0.8rem;
 
   @media (min-width: 800px) {
-    font-size: 5.4rem;
+    font-size: 4.2rem;
   }
 `;
 
@@ -203,15 +208,17 @@ export default function Report() {
                 },
               }}
             >
-              <SummaryItem
-                value={report.summary?.[item.key] * 100}
-                className={classNames({
-                  active: router.query.category === item.key,
-                })}
-              >
+              <a>
                 <Label>{item.label}</Label>
-                <Score>{report.summary?.[item.key] * 100}</Score>
-              </SummaryItem>
+                <SummaryItem
+                  value={report.summary?.[item.key] * 100}
+                  className={classNames({
+                    active: router.query.category === item.key,
+                  })}
+                >
+                  <Score>{report.summary?.[item.key] * 100}</Score>
+                </SummaryItem>
+              </a>
             </Link>
           ))}
         </WrapSummary>
