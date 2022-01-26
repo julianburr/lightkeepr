@@ -51,7 +51,7 @@ export async function createReport({
 
   fs.unlinkSync(tmpPath);
 
-  const data = await res.json();
+  const data: any = await res.json();
   if (res.status >= 400) {
     throw new Error(data.message);
   }
