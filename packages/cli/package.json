@@ -1,6 +1,6 @@
 {
   "name": "@lightkeepr/cli",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "",
   "engines": {
     "node": ">= 12"
@@ -15,7 +15,7 @@
   "author": "Julian Burr <hello@julianburr.de>",
   "license": "MIT",
   "dependencies": {
-    "@lightkeepr/node": "^0.0.4",
+    "@lightkeepr/node": "^0.0.5",
     "chalk": "^5.0.0",
     "cross-spawn": "^7.0.3",
     "debug": "^4.3.3",
