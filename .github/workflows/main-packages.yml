@@ -36,7 +36,7 @@ jobs:
 
       - name: Publish packages
         run: |-
-          yarn build
+          yarn --cwd=./packages build
 
           echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > .npmrc
           git config --global user.email "hello@julianburr.de"
