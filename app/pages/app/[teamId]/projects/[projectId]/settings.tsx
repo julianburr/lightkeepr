@@ -62,12 +62,6 @@ export default function ProjectSettings() {
 
           <Form ref={form}>
             <Field
-              name="id"
-              label="Project ID"
-              Input={ReadonlyInput}
-              inputProps={{ value: project.id }}
-            />
-            <Field
               name="apiToken"
               label="API token"
               Input={ReadonlyInput}

@@ -16,9 +16,9 @@ type StartRunArgs = {
 export async function startRun({
   token = global.process.env.LIGHTKEEPR_TOKEN,
   apiUrl = global.process.env.LIGHTKEEPR_API_URL || API_URL,
-  branch,
-  commitMessage,
-  repo,
+  branch = global.process.env.LIGHTKEER_BRANCH,
+  commitMessage = global.process.env.LIGHTKEER_COMMIT_MESSAGE,
+  repo = global.process.env.LIGHTKEER_REPO,
 }: StartRunArgs = {}): Promise<any> {
   const res = await fetch(`${apiUrl}/runs/start`, {
     method: "POST",

@@ -67,6 +67,14 @@ export const GlobalStyles = createGlobalStyle`
     line-height: 1.05;
     margin: 0;
     font-family: "Playfair Display";
+
+    svg {
+      display: inline-flex;
+      height: 1em;
+      width: auto;
+      vertical-align: middle;
+      margin: 0 .4rem 0 0;
+    }
   }
 
   p {

@@ -1,15 +1,9 @@
 import { useRouter } from "next/router";
 import styled from "styled-components";
-import {
-  collection,
-  getFirestore,
-  limit,
-  orderBy,
-  query,
-} from "firebase/firestore";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 
 import { interactive } from "src/@packages/sol/tokens";
-import { useCollection } from "src/@packages/firebase";
 import { StatusAvatar } from "src/components/status-avatar";
 import { Avatar } from "src/components/avatar";
 import { ListItem } from "src/components/list";
@@ -17,7 +11,7 @@ import { P, Small } from "src/components/text";
 
 import PlusSvg from "src/assets/icons/plus.svg";
 
-const db = getFirestore();
+dayjs.extend(relativeTime);
 
 const AddNewItem = styled(ListItem)`
   a {
@@ -63,7 +57,11 @@ function ProjectItem({ data }: any) {
         <StatusAvatar status={data.status} />
         <WrapText>
           <P>{data.name}</P>
-          <Small grey>{data.status || "Waiting for first report"}</Small>
+          <Small grey>
+            {data.lastRunAt
+              ? `Last run ${dayjs.unix(data.lastRunAt.seconds).fromNow()}`
+              : "Waiting for first report"}
+          </Small>
         </WrapText>
       </Title>
     </ListItem>

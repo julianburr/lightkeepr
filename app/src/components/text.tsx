@@ -1,13 +1,19 @@
-import { HTMLProps } from "react";
+import { HTMLProps, ReactNode } from "react";
 import styled from "styled-components";
 
 type HeadingProps = HTMLProps<HTMLHeadingElement> & {
   level: 1 | 2 | 3 | 4;
+  icon?: ReactNode;
 };
 
-export function Heading({ level = 1, ...props }: HeadingProps) {
+export function Heading({ level = 1, icon, children, ...props }: HeadingProps) {
   const El = `h${level}`;
-  return <El {...props} />;
+  return (
+    <El {...props}>
+      {icon}
+      <span>{children}</span>
+    </El>
+  );
 }
 
 export const GroupHeading = styled(({ level = 3, ...props }) => (
