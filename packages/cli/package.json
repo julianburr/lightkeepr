@@ -1,7 +1,7 @@
 {
   "name": "@lightkeepr/cli",
   "version": "0.0.5",
-  "description": "",
+  "description": "Lightkeepr CLI helper",
   "engines": {
     "node": ">= 12"
   },
