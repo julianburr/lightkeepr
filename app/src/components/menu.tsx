@@ -30,30 +30,29 @@ const Container = styled.menu`
 `;
 
 const Li = styled.li`
+  display: flex;
+  flex-direction: column;
   padding: 0;
   margin: 0;
   width: 100%;
 
   &.heading {
     margin: 2.4rem 0 0;
-
-    h3 {
-      margin: 0 0 0.2rem;
-    }
   }
 `;
 
 const CoreMenuItem = styled((props) => <CoreButton {...props} />)`
-  margin: 0.1rem 0 0;
   border: 0 none;
   color: inherit;
   text-decoration: none;
   display: flex;
+  flex: 1;
+  text-align: left;
   flex-direction: row;
   align-items: center;
   transition: background 0.2s;
   padding: var(--sol--spacing-s);
-  margin: 0 calc(var(--sol--spacing-s) * -1);
+  margin: 0.2rem calc(var(--sol--spacing-s) * -1) 0;
   border-radius: var(--sol--border-radius-s);
 
   ${interactive("lighter")}

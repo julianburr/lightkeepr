@@ -1,4 +1,4 @@
-import { Ref, Suspense, useCallback } from "react";
+import { Ref, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import styled from "styled-components";
 
@@ -15,6 +15,8 @@ import { BaseSidebar } from "./base";
 import { ProjectSidebar } from "./project";
 import { RunSidebar } from "./run";
 import { ReportSidebar } from "./report";
+import { useLayoutEffect } from "react";
+import { useSidebarLinkState } from "src/hooks/use-sidebar-link-state";
 
 const Container = styled.div`
   height: 100%;
@@ -121,22 +123,23 @@ type ContentProps = {
   projectId?: string;
   runId?: string;
   reportId?: string;
+  getLinkProps: (state?: any) => any;
 };
 
-function Content({ projectId, runId, reportId }: ContentProps) {
+function Content({ projectId, runId, reportId, getLinkProps }: ContentProps) {
   if (reportId) {
-    return <ReportSidebar reportId={reportId} />;
+    return <ReportSidebar reportId={reportId} getLinkProps={getLinkProps} />;
   }
 
   if (runId) {
-    return <RunSidebar runId={runId} />;
+    return <RunSidebar runId={runId} getLinkProps={getLinkProps} />;
   }
 
   if (projectId) {
-    return <ProjectSidebar projectId={projectId} />;
+    return <ProjectSidebar projectId={projectId} getLinkProps={getLinkProps} />;
   }
 
-  return <BaseSidebar />;
+  return <BaseSidebar getLinkProps={getLinkProps} />;
 }
 
 export function Sidebar() {
@@ -156,10 +159,30 @@ export function Sidebar() {
     [router.query.teamId]
   );
 
+  // HACK: this is a pretty convoluted way to allow the user to go through
+  // the menu structure without navigating until they hit a final link,
+  // but we only want this behaviour on mobile :/
+  const topContainerRef = useRef<HTMLDivElement>();
+  const [isMobile, setMobile] = useState(false);
+  useEffect(() => {
+    function handleResize() {
+      setMobile(!!topContainerRef?.current?.clientHeight);
+    }
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const { projectId, runId, reportId, getLinkProps } = useSidebarLinkState({
+    active,
+    isMobile,
+    menuRef,
+  });
+
   return (
     <Container ref={backdropRef as Ref<HTMLDivElement>} data-active={active}>
       <Menu ref={menuRef as Ref<HTMLMenuElement>}>
-        <TopContainer>
+        <TopContainer ref={topContainerRef as Ref<HTMLDivElement>}>
           <WrapProfile>
             <Avatar
               background="#3dc5ce"
@@ -183,9 +206,10 @@ export function Sidebar() {
         <Suspense fallback={<Loader />}>
           <WrapContent>
             <Content
-              projectId={router.query.projectId}
-              runId={router.query.runId}
-              reportId={router.query.reportId}
+              projectId={projectId}
+              runId={runId}
+              reportId={reportId}
+              getLinkProps={getLinkProps}
             />
           </WrapContent>
         </Suspense>

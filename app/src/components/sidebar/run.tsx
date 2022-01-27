@@ -22,9 +22,10 @@ const db = getFirestore();
 
 type RunSidebarProps = {
   runId: string;
+  getLinkProps: (state: any) => any;
 };
 
-export function RunSidebar({ runId }: RunSidebarProps) {
+export function RunSidebar({ runId, getLinkProps }: RunSidebarProps) {
   const router = useRouter();
 
   const runRef = doc(db, "runs", runId);
@@ -43,15 +44,15 @@ export function RunSidebar({ runId }: RunSidebarProps) {
     {
       icon: <ArrowLeftSvg />,
       label: "Back to project overview",
-      href: `/app/${router.query.teamId}/projects/${run.project.id}`,
       isBacklink: true,
+      ...getLinkProps({ projectId: run.project.id }),
     },
 
     {
       label: "Reports",
       items: reports.map((report: any) => ({
         label: report.name || report.url,
-        href: `/app/${router.query.teamId}/reports/${report.id}`,
+        ...getLinkProps({ reportId: report.id }),
       })),
     },
   ];

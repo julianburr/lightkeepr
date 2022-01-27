@@ -18,6 +18,7 @@ const db = getFirestore();
 
 type ReportSidebarProps = {
   reportId: string;
+  getLinkProps?: (state: any) => any;
 };
 
 function ReportMeta({ reportId }: ReportSidebarProps) {
@@ -87,7 +88,7 @@ function ReportMeta({ reportId }: ReportSidebarProps) {
   );
 }
 
-export function ReportSidebar({ reportId }: ReportSidebarProps) {
+export function ReportSidebar({ reportId, getLinkProps }: ReportSidebarProps) {
   const router = useRouter();
 
   const report = useDocument(doc(db, "reports", reportId));
@@ -98,6 +99,7 @@ export function ReportSidebar({ reportId }: ReportSidebarProps) {
       label: "Back to project overview",
       href: `/app/${router.query.teamId}/runs/${report.run.id}`,
       isBacklink: true,
+      ...(getLinkProps?.({ runId: report.run.id }) || {}),
     },
 
     // Report tabs

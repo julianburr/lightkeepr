@@ -21,7 +21,11 @@ import LifeBuoySvg from "src/assets/icons/life-buoy.svg";
 const auth = getAuth();
 const db = getFirestore();
 
-export function BaseSidebar() {
+type BaseSidebarProps = {
+  getLinkProps: (state: any) => any;
+};
+
+export function BaseSidebar({ getLinkProps }: BaseSidebarProps) {
   const router = useRouter();
 
   const teamRef = doc(db, "teams", router.query.teamId!);
@@ -59,7 +63,7 @@ export function BaseSidebar() {
       label: "Projects",
       items: projects.map((project: any) => ({
         label: project.name,
-        href: `/app/${router.query.teamId}/projects/${project.id}`,
+        ...getLinkProps({ projectId: project.id }),
       })),
     },
 

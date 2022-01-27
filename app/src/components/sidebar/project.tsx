@@ -12,9 +12,13 @@ const db = getFirestore();
 
 type ProjectSidebarProps = {
   projectId: string;
+  getLinkProps: (state?: any) => any;
 };
 
-export function ProjectSidebar({ projectId }: ProjectSidebarProps) {
+export function ProjectSidebar({
+  projectId,
+  getLinkProps,
+}: ProjectSidebarProps) {
   const router = useRouter();
   const project = useDocument(doc(db, "projects", projectId));
 
@@ -22,8 +26,8 @@ export function ProjectSidebar({ projectId }: ProjectSidebarProps) {
     {
       icon: <ArrowLeftSvg />,
       label: "Back to team overview",
-      href: `/app/${router.query.teamId}`,
       isBacklink: true,
+      ...getLinkProps(),
     },
 
     {
