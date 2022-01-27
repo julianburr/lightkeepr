@@ -128,6 +128,13 @@ export function Tooltip({
           offset: [0, 8],
         },
       },
+      {
+        name: "preventOverflow",
+        options: {
+          altAxis: true,
+          padding: 18,
+        },
+      },
     ],
   });
 

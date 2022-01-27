@@ -10,6 +10,17 @@ export function Heading({ level = 1, ...props }: HeadingProps) {
   return <El {...props} />;
 }
 
+export const GroupHeading = styled(({ level = 3, ...props }) => (
+  <Heading level={level} {...props} />
+))`
+  margin: 0;
+  padding: 0.8rem 1.2rem 0.2rem;
+  font-weight: 400;
+  font-size: 1rem;
+  opacity: 0.6;
+  text-transform: uppercase;
+`;
+
 export const P = styled.p<{ grey?: boolean }>`
   opacity: ${(props) => (props.grey ? ".6" : 1)};
 `;

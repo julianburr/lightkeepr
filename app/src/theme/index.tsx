@@ -35,6 +35,7 @@ export const GlobalStyles = createGlobalStyle`
     line-height: 1.4;
     background: var(--sol--color-white);
     color: var(--sol--typography-color-default);
+    overflow-wrap: anywhere;
   }
 
   @media (min-width: 800px) {

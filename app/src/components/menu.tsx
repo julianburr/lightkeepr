@@ -63,6 +63,10 @@ const CoreMenuItem = styled((props) => <CoreButton {...props} />)`
     text-decoration: none;
   }
 
+  &.backlink {
+    font-family: "Playfair Display";
+  }
+
   & svg {
     height: 1.1em;
     width: auto;
@@ -77,15 +81,18 @@ const CoreMenuItem = styled((props) => <CoreButton {...props} />)`
 type MenuItemProps = PropsWithChildren<{
   onClick?: (e: any) => void;
   href?: string;
-  active?: boolean;
+  isBacklink?: boolean;
 }>;
 
-function MenuItem({ onClick, href, active, children }: MenuItemProps) {
+function MenuItem({ onClick, href, children, isBacklink }: MenuItemProps) {
   const router = useRouter();
 
   if (onClick) {
     return (
-      <CoreMenuItem onClick={onClick} className={classnames({ active })}>
+      <CoreMenuItem
+        onClick={onClick}
+        className={classnames({ backlink: isBacklink })}
+      >
         {children}
       </CoreMenuItem>
     );
@@ -95,8 +102,8 @@ function MenuItem({ onClick, href, active, children }: MenuItemProps) {
     <CoreMenuItem
       href={href}
       className={classnames({
-        active:
-          active !== undefined ? active : href ? href === router.asPath : false,
+        backlink: isBacklink,
+        active: href === router.asPath,
       })}
     >
       {children}
@@ -111,7 +118,7 @@ type Item = {
   onClick?: (e: any) => void | Promise<void>;
   href?: string;
   mobile?: boolean;
-  active?: boolean;
+  isBacklink?: boolean;
 };
 
 type ItemGroup = {
@@ -149,7 +156,7 @@ export function Menu({ items }: MenuProps) {
               <MenuItem
                 onClick={item.onClick}
                 href={item.href}
-                active={item.active}
+                isBacklink={item.isBacklink}
               >
                 {item.icon}
                 <span>{item.label}</span>

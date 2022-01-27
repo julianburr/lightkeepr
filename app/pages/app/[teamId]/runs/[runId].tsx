@@ -17,7 +17,6 @@ import { Auth } from "src/components/auth";
 import { List } from "src/components/list";
 import { Spacer } from "src/components/spacer";
 import { Heading, P } from "src/components/text";
-import { BackLink } from "src/components/back-link";
 
 import { ReportListItem } from "src/list-items/report";
 import { Value } from "src/components/value";
@@ -50,9 +49,6 @@ export default function RunDetails() {
   return (
     <Auth>
       <AppLayout>
-        <BackLink href={`/app/${teamId}/projects/${projectId}`}>
-          Back to project overview
-        </BackLink>
         <Heading level={1}>
           Run: {run.commitMessage || run.commitHash || run.id}
         </Heading>

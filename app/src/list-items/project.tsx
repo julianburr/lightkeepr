@@ -1,13 +1,23 @@
 import { useRouter } from "next/router";
 import styled from "styled-components";
+import {
+  collection,
+  getFirestore,
+  limit,
+  orderBy,
+  query,
+} from "firebase/firestore";
 
+import { interactive } from "src/@packages/sol/tokens";
+import { useCollection } from "src/@packages/firebase";
+import { StatusAvatar } from "src/components/status-avatar";
 import { Avatar } from "src/components/avatar";
 import { ListItem } from "src/components/list";
 import { P, Small } from "src/components/text";
 
 import PlusSvg from "src/assets/icons/plus.svg";
-import { StatusAvatar } from "src/components/status-avatar";
-import { interactive } from "src/@packages/sol/tokens";
+
+const db = getFirestore();
 
 const AddNewItem = styled(ListItem)`
   a {
@@ -29,24 +39,24 @@ const WrapText = styled.div`
   padding: 0.4rem 0;
 `;
 
-export function ProjectListItem({ data }: any) {
+function NewProjectItem() {
   const router = useRouter();
+  return (
+    <AddNewItem href={`/app/${router.query.teamId}/projects/new`}>
+      <Title>
+        <Avatar>
+          <PlusSvg />
+        </Avatar>
+        <WrapText>
+          <P>Add new project</P>
+        </WrapText>
+      </Title>
+    </AddNewItem>
+  );
+}
 
-  if (data.id === "new") {
-    return (
-      <AddNewItem href={`/app/${router.query.teamId}/projects/new`}>
-        <Title>
-          <Avatar>
-            <PlusSvg />
-          </Avatar>
-          <WrapText>
-            <P>Add new project</P>
-          </WrapText>
-        </Title>
-      </AddNewItem>
-    );
-  }
-
+function ProjectItem({ data }: any) {
+  const router = useRouter();
   return (
     <ListItem href={`/app/${router.query.teamId}/projects/${data.id}`}>
       <Title>
@@ -58,4 +68,8 @@ export function ProjectListItem({ data }: any) {
       </Title>
     </ListItem>
   );
+}
+
+export function ProjectListItem({ data }: any) {
+  return data.id === "new" ? <NewProjectItem /> : <ProjectItem data={data} />;
 }

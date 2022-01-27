@@ -26,7 +26,6 @@ import { Auth } from "src/components/auth";
 import { Heading, P } from "src/components/text";
 import { Spacer } from "src/components/spacer";
 import { ButtonBar } from "src/components/button-bar";
-import { BackLink } from "src/components/back-link";
 
 const db = getFirestore();
 
@@ -88,7 +87,6 @@ export default function NewUser() {
       <Auth>
         <AppLayout>
           <Container>
-            <BackLink href={`/app/${teamId}/users`}>Back to user list</BackLink>
             <Heading level={1}>
               401 - You don't have the required permissions
             </Heading>
@@ -107,7 +105,6 @@ export default function NewUser() {
     <Auth>
       <AppLayout>
         <Container>
-          <BackLink href={`/app/${teamId}/users`}>Back to user list</BackLink>
           <Heading level={1}>Invite new user</Heading>
           <Spacer h="1.2rem" />
 

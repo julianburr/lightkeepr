@@ -13,7 +13,6 @@ import { Auth } from "src/components/auth";
 import { Heading } from "src/components/text";
 import { Spacer } from "src/components/spacer";
 import { Loader } from "src/components/loader";
-import { BackLink } from "src/components/back-link";
 import { ReportDetails } from "src/components/report-details";
 
 const db = getFirestore();
@@ -185,7 +184,6 @@ export default function Report() {
   return (
     <Auth>
       <AppLayout>
-        <BackLink href="/">Back to run overview</BackLink>
         <Heading level={1}>Report: {report.name}</Heading>
         <Spacer h="1.6rem" />
 
