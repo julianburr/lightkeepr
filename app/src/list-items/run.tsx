@@ -44,9 +44,8 @@ type RunListItemProps = {
 
 export function RunListItem({ data }: RunListItemProps) {
   const router = useRouter();
-  const { teamId, projectId } = router.query;
   return (
-    <ListItem href={`/app/${teamId}/projects/${projectId}/runs/${data.id}`}>
+    <ListItem href={`/app/${router.query.teamId}/runs/${data.id}`}>
       <Content>
         <StatusAvatar status={data.status} />
         <Title>
@@ -63,12 +62,12 @@ export function RunListItem({ data }: RunListItemProps) {
                 {(props) => (
                   <span {...props}>
                     {data.finishedAt
-                      ? `Finished ${dayjs(
-                          data.finishedAt.seconds * 1000
-                        ).fromNow()}`
-                      : `Started ${dayjs(
-                          data.startedAt.seconds * 1000
-                        ).fromNow()}`}
+                      ? `Finished ${dayjs
+                          .unix(data.finishedAt.seconds)
+                          .fromNow()}`
+                      : `Started ${dayjs
+                          .unix(data.startedAt.seconds)
+                          .fromNow()}`}
                   </span>
                 )}
               </Tooltip>

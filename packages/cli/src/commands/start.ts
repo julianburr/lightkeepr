@@ -8,6 +8,7 @@ async function runStart(argv) {
       apiUrl: argv.apiUrl,
       token: argv.token,
       branch: argv.branch,
+      commit: argv.commit,
       commitMessage: argv.commitMessage,
       repo: argv.repo,
     });
@@ -32,6 +33,9 @@ export default {
       })
       .option("branch", {
         description: "Current branch",
+      })
+      .option("commit", {
+        description: "Commit hash of the current commit",
       })
       .option("commitMessage", {
         description: "Commit message of the current commit",

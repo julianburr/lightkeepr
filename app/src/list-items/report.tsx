@@ -1,5 +1,5 @@
-import styled from "styled-components";
 import { useRouter } from "next/router";
+import styled from "styled-components";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
@@ -58,11 +58,8 @@ type ReportListItemProps = {
 
 export function ReportListItem({ data }: ReportListItemProps) {
   const router = useRouter();
-  const { teamId, projectId } = router.query;
   return (
-    <ListItem
-      href={`/app/${teamId}/projects/${projectId}/runs/${data.run.id}/reports/${data.id}`}
-    >
+    <ListItem href={`/app/${router.query.teamId}/reports/${data.id}`}>
       <Content>
         {data.type === "user-flow" && (
           <Avatar background="#dad9d044">

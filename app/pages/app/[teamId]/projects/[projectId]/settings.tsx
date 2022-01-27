@@ -17,7 +17,6 @@ import { Form } from "src/components/form";
 import { TextInput } from "src/components/text-input";
 import { Spacer } from "src/components/spacer";
 import { ButtonBar } from "src/components/button-bar";
-import { BackLink } from "src/components/back-link";
 import { ReadonlyInput } from "src/components/readonly-input";
 import { CopyButton } from "src/components/copy-button";
 import { Tooltip } from "src/components/tooltip";
@@ -58,19 +57,10 @@ export default function ProjectSettings() {
     <Auth>
       <AppLayout>
         <Container>
-          <BackLink href={`/app/${teamId}/projects/${projectId}`}>
-            Back to project overview
-          </BackLink>
           <h1>Project settings</h1>
           <Spacer h="1.6rem" />
 
           <Form ref={form}>
-            <Field
-              name="id"
-              label="Project ID"
-              Input={ReadonlyInput}
-              inputProps={{ value: project.id }}
-            />
             <Field
               name="apiToken"
               label="API token"

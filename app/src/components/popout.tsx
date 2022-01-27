@@ -110,6 +110,13 @@ export function Popout({
           offset: [0, showArrow ? 8 : 3],
         },
       },
+      {
+        name: "preventOverflow",
+        options: {
+          altAxis: true,
+          padding: 18,
+        },
+      },
     ],
   });
 

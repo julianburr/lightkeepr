@@ -19,7 +19,7 @@ import { Button } from "src/components/button";
 import { List } from "src/components/list";
 import { TitleBar } from "src/components/title-bar";
 import { Spacer } from "src/components/spacer";
-import { Heading } from "src/components/text";
+import { GroupHeading, Heading } from "src/components/text";
 import { Label } from "src/components/label";
 import { Loader } from "src/components/loader";
 
@@ -62,17 +62,15 @@ function UsersList() {
 
   return (
     <>
-      {owners.length > 0 && (
-        <>
-          <Label>Owners</Label>
-          <List items={owners} Item={UserListItem} />
-          <Spacer h="1.6rem" />
-        </>
-      )}
+      <GroupHeading>Owners</GroupHeading>
+      <Spacer h=".2rem" />
+      <List items={owners} Item={UserListItem} />
+      <Spacer h="1.6rem" />
 
       {others.length > 0 && (
         <>
-          <Label>Members</Label>
+          <GroupHeading>Billing managers &amp; members</GroupHeading>
+          <Spacer h=".2rem" />
           <List items={others} Item={UserListItem} />
           <Spacer h="1.6rem" />
         </>
@@ -81,8 +79,8 @@ function UsersList() {
       {pending.length > 0 && (
         <>
           <Spacer h=".6rem" />
-          <Heading level={2}>Pending invites</Heading>
-          <Spacer h=".6rem" />
+          <GroupHeading>Pending invites</GroupHeading>
+          <Spacer h=".2rem" />
           <List items={pending} Item={UserListItem} />
         </>
       )}
@@ -113,7 +111,7 @@ export default function Users() {
           }
         />
 
-        <Spacer h="1.2rem" />
+        <Spacer h="2.4rem" />
 
         <Suspense fallback={<Loader />}>
           <UsersList />

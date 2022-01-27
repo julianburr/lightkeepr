@@ -13,7 +13,6 @@ import { Auth } from "src/components/auth";
 import { Heading } from "src/components/text";
 import { Spacer } from "src/components/spacer";
 import { Loader } from "src/components/loader";
-import { BackLink } from "src/components/back-link";
 import { ReportDetails } from "src/components/report-details";
 
 const db = getFirestore();
@@ -55,7 +54,12 @@ const SummaryItem = styled.div<{ value: number }>`
   justify-content: center;
   position: relative;
   line-height: 1;
-  background: var(--sol--palette-sand-50);
+  background: ${(props) =>
+    props.value < 50
+      ? `var(--sol--palette-red-50)`
+      : props.value < 90
+      ? `var(--sol--palette-yellow-50)`
+      : `var(--sol--palette-green-50)`};
 
   @media (min-width: 800px) {
     width: 11rem;
@@ -67,21 +71,21 @@ const SummaryItem = styled.div<{ value: number }>`
   &:focus {
     background: ${(props) =>
       props.value < 50
-        ? `var(--sol--palette-red-50)`
-        : props.value < 90
-        ? `var(--sol--palette-yellow-50)`
-        : `var(--sol--palette-green-50)`};
-  }
-
-  &.active,
-  &.active:hover,
-  &.active:focus {
-    background: ${(props) =>
-      props.value < 50
         ? `var(--sol--palette-red-100)`
         : props.value < 90
         ? `var(--sol--palette-yellow-100)`
         : `var(--sol--palette-green-100)`};
+  }
+
+  &.active:hover,
+  &.active:focus,
+  &.active {
+    background: ${(props) =>
+      props.value < 50
+        ? `var(--sol--palette-red-200)`
+        : props.value < 90
+        ? `var(--sol--palette-yellow-200)`
+        : `var(--sol--palette-green-200)`};
   }
 
   &:before,
@@ -185,8 +189,7 @@ export default function Report() {
   return (
     <Auth>
       <AppLayout>
-        <BackLink href="/">Back to run overview</BackLink>
-        <Heading level={1}>Report: {report.name}</Heading>
+        <Heading level={1}>{report.name}</Heading>
         <Spacer h="1.6rem" />
 
         <WrapSummary>

@@ -27,7 +27,7 @@ const Main = styled.main`
   width: 100%;
   max-width: 90rem;
   margin: 0 auto;
-  padding: 3.2rem 2.4rem 2.4rem;
+  padding: 2.4rem;
 `;
 
 type AppLayoutProps = PropsWithChildren<Record<never, any>>;

@@ -9,6 +9,7 @@ type StartRunArgs = {
   token?: string;
   apiUrl?: string;
   branch?: string;
+  commit?: string;
   commitMessage?: string;
   repo?: string;
 };
@@ -16,13 +17,14 @@ type StartRunArgs = {
 export async function startRun({
   token = global.process.env.LIGHTKEEPR_TOKEN,
   apiUrl = global.process.env.LIGHTKEEPR_API_URL || API_URL,
-  branch,
-  commitMessage,
-  repo,
+  branch = global.process.env.LIGHTKEER_BRANCH,
+  commit = global.process.env.LIGHTKEER_COMMIT,
+  commitMessage = global.process.env.LIGHTKEER_COMMIT_MESSAGE,
+  repo = global.process.env.LIGHTKEER_REPO,
 }: StartRunArgs = {}): Promise<any> {
   const res = await fetch(`${apiUrl}/runs/start`, {
     method: "POST",
-    body: JSON.stringify({ branch, commitMessage, repo }),
+    body: JSON.stringify({ branch, commit, commitMessage, repo }),
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,

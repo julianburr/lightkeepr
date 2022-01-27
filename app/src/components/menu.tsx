@@ -6,11 +6,12 @@ import styled from "styled-components";
 import { interactive } from "src/@packages/sol/tokens";
 
 import { CoreButton } from "./button";
+import { GroupHeading } from "./text";
+import classNames from "classnames";
 
 const Container = styled.menu`
   width: 100%;
   margin: 0;
-  padding: calc(var(--sol--spacing-xl) - 0.4rem);
   display: flex;
   flex-direction: column;
 
@@ -29,31 +30,29 @@ const Container = styled.menu`
 `;
 
 const Li = styled.li`
+  display: flex;
+  flex-direction: column;
   padding: 0;
   margin: 0;
   width: 100%;
-`;
 
-const Heading = styled.h3`
-  font-size: 1rem;
-  font-weight: 400;
-  text-transform: uppercase;
-  color: rgba(0, 0, 0, 0.6);
-  padding: var(--sol--spacing-xxs) var(--sol--spacing-s);
-  margin: var(--sol--spacing-xl) 0 0;
+  &.heading {
+    margin: 2.4rem 0 0;
+  }
 `;
 
 const CoreMenuItem = styled((props) => <CoreButton {...props} />)`
-  margin: 0.1rem 0 0;
   border: 0 none;
-  width: 100%;
   color: inherit;
   text-decoration: none;
   display: flex;
+  flex: 1;
+  text-align: left;
   flex-direction: row;
   align-items: center;
   transition: background 0.2s;
   padding: var(--sol--spacing-s);
+  margin: 0.2rem calc(var(--sol--spacing-s) * -1) 0;
   border-radius: var(--sol--border-radius-s);
 
   ${interactive("lighter")}
@@ -61,6 +60,10 @@ const CoreMenuItem = styled((props) => <CoreButton {...props} />)`
   &:focus,
   &:hover {
     text-decoration: none;
+  }
+
+  &.backlink {
+    font-family: "Playfair Display";
   }
 
   & svg {
@@ -71,21 +74,25 @@ const CoreMenuItem = styled((props) => <CoreButton {...props} />)`
 
   @media (min-width: 800px) {
     padding: 0.6rem;
+    margin: 0 -0.6rem;
   }
 `;
 
 type MenuItemProps = PropsWithChildren<{
   onClick?: (e: any) => void;
   href?: string;
-  active?: boolean;
+  isBacklink?: boolean;
 }>;
 
-function MenuItem({ onClick, href, active, children }: MenuItemProps) {
+function MenuItem({ onClick, href, children, isBacklink }: MenuItemProps) {
   const router = useRouter();
 
   if (onClick) {
     return (
-      <CoreMenuItem onClick={onClick} className={classnames({ active })}>
+      <CoreMenuItem
+        onClick={onClick}
+        className={classnames({ backlink: isBacklink })}
+      >
         {children}
       </CoreMenuItem>
     );
@@ -95,8 +102,8 @@ function MenuItem({ onClick, href, active, children }: MenuItemProps) {
     <CoreMenuItem
       href={href}
       className={classnames({
-        active:
-          active !== undefined ? active : href ? href === router.asPath : false,
+        backlink: isBacklink,
+        active: href === router.asPath,
       })}
     >
       {children}
@@ -111,7 +118,7 @@ type Item = {
   onClick?: (e: any) => void | Promise<void>;
   href?: string;
   mobile?: boolean;
-  active?: boolean;
+  isBacklink?: boolean;
 };
 
 type ItemGroup = {
@@ -135,11 +142,15 @@ export function Menu({ items }: MenuProps) {
         {items.map((item, index) => {
           if ("items" in item) {
             return (
-              <Li data-mobile={item.mobile} key={index}>
-                <Heading>
+              <Li
+                data-mobile={item.mobile}
+                key={index}
+                className={classNames("heading", { mobile: item.mobile })}
+              >
+                <GroupHeading>
                   {item.icon}
                   <span>{item.label}</span>
-                </Heading>
+                </GroupHeading>
                 {renderItems(item.items)}
               </Li>
             );
@@ -149,7 +160,7 @@ export function Menu({ items }: MenuProps) {
               <MenuItem
                 onClick={item.onClick}
                 href={item.href}
-                active={item.active}
+                isBacklink={item.isBacklink}
               >
                 {item.icon}
                 <span>{item.label}</span>

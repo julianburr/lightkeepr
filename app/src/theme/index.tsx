@@ -35,6 +35,7 @@ export const GlobalStyles = createGlobalStyle`
     line-height: 1.4;
     background: var(--sol--color-white);
     color: var(--sol--typography-color-default);
+    overflow-wrap: anywhere;
   }
 
   @media (min-width: 800px) {
@@ -66,6 +67,14 @@ export const GlobalStyles = createGlobalStyle`
     line-height: 1.05;
     margin: 0;
     font-family: "Playfair Display";
+
+    svg {
+      display: inline-flex;
+      height: 1em;
+      width: auto;
+      vertical-align: middle;
+      margin: 0 .4rem 0 0;
+    }
   }
 
   p {

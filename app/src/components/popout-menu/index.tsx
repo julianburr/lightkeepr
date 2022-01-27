@@ -11,7 +11,8 @@ import {
 } from "react";
 import styled from "styled-components";
 
-import { HeadingItem } from "./heading-item";
+import { GroupHeading } from "src/components/text";
+
 import { MenuItem, MenuItemObj } from "./menu-item";
 
 const Ul = styled.ul`
@@ -48,6 +49,12 @@ const Li = styled.li`
 
 const Container = styled.div`
   padding: 1.2rem;
+`;
+
+const Heading = styled(GroupHeading)`
+  && {
+    padding: 0.8rem 1.2rem 0.2rem;
+  }
 `;
 
 type CustomItemObj = {
@@ -129,7 +136,7 @@ export function PopoutMenu({ items, setVisible, element }: PopoutMenuProps) {
               <ul>
                 {item.label && (
                   <Li>
-                    <HeadingItem item={item} />
+                    <Heading>{item.label}</Heading>
                   </Li>
                 )}
                 {renderItems(item.items)}
