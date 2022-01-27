@@ -12,8 +12,11 @@ import { useRouter } from "next/router";
 
 import { useCollection, useDocument } from "src/@packages/firebase";
 import { Menu } from "src/components/menu";
+import { Spacer } from "src/components/spacer";
+import { Meta } from "src/components/meta";
 
 import ArrowLeftSvg from "src/assets/icons/arrow-left.svg";
+import dayjs from "dayjs";
 
 const db = getFirestore();
 
@@ -53,5 +56,39 @@ export function RunSidebar({ runId }: RunSidebarProps) {
     },
   ];
 
-  return <Menu items={items} />;
+  const meta = [
+    run.branch && {
+      label: "Branch",
+      value: run.branch,
+    },
+    run.commit && {
+      label: "Commit",
+      value: run.commit,
+    },
+    {
+      label: "Status",
+      value: run.status,
+    },
+    {
+      label: "Started at",
+      value: run.startedAt
+        ? dayjs.unix(run.startedAt.seconds).format("D MMM YYYY h:mma")
+        : null,
+    },
+    {
+      label: "Finished at",
+      value: run.finishedAt
+        ? dayjs.unix(run.finishedAt.seconds).format("D MMM YYYY h:mma")
+        : null,
+    },
+  ].filter(Boolean);
+
+  return (
+    <>
+      <Menu items={items} />
+
+      <Spacer h="2.4rem" />
+      <Meta data={meta} />
+    </>
+  );
 }

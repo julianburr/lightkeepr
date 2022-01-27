@@ -6,11 +6,12 @@ import styled from "styled-components";
 import { interactive } from "src/@packages/sol/tokens";
 
 import { CoreButton } from "./button";
+import { GroupHeading } from "./text";
+import classNames from "classnames";
 
 const Container = styled.menu`
   width: 100%;
   margin: 0;
-  padding: calc(var(--sol--spacing-xl) - 0.4rem);
   display: flex;
   flex-direction: column;
 
@@ -32,21 +33,19 @@ const Li = styled.li`
   padding: 0;
   margin: 0;
   width: 100%;
-`;
 
-const Heading = styled.h3`
-  font-size: 1rem;
-  font-weight: 400;
-  text-transform: uppercase;
-  color: rgba(0, 0, 0, 0.6);
-  padding: var(--sol--spacing-xxs) var(--sol--spacing-s);
-  margin: var(--sol--spacing-xl) 0 0;
+  &.heading {
+    margin: 2.4rem 0 0;
+
+    h3 {
+      margin: 0 0 0.2rem;
+    }
+  }
 `;
 
 const CoreMenuItem = styled((props) => <CoreButton {...props} />)`
   margin: 0.1rem 0 0;
   border: 0 none;
-  width: 100%;
   color: inherit;
   text-decoration: none;
   display: flex;
@@ -54,6 +53,7 @@ const CoreMenuItem = styled((props) => <CoreButton {...props} />)`
   align-items: center;
   transition: background 0.2s;
   padding: var(--sol--spacing-s);
+  margin: 0 calc(var(--sol--spacing-s) * -1);
   border-radius: var(--sol--border-radius-s);
 
   ${interactive("lighter")}
@@ -75,6 +75,7 @@ const CoreMenuItem = styled((props) => <CoreButton {...props} />)`
 
   @media (min-width: 800px) {
     padding: 0.6rem;
+    margin: 0 -0.6rem;
   }
 `;
 
@@ -142,11 +143,15 @@ export function Menu({ items }: MenuProps) {
         {items.map((item, index) => {
           if ("items" in item) {
             return (
-              <Li data-mobile={item.mobile} key={index}>
-                <Heading>
+              <Li
+                data-mobile={item.mobile}
+                key={index}
+                className={classNames("heading", { mobile: item.mobile })}
+              >
+                <GroupHeading>
                   {item.icon}
                   <span>{item.label}</span>
-                </Heading>
+                </GroupHeading>
                 {renderItems(item.items)}
               </Li>
             );

@@ -50,35 +50,9 @@ export default function RunDetails() {
     <Auth>
       <AppLayout>
         <Heading level={1}>
-          Run: {run.commitMessage || run.commitHash || run.id}
+          {run.commitMessage || run.commitHash || run.id}
         </Heading>
         <Spacer h="2.4rem" />
-
-        <Value horizontal label="Status" value={run.status} />
-        <Spacer h=".4rem" />
-        <Value horizontal label="Type" value={run.type} />
-        <Spacer h=".4rem" />
-        <Value
-          horizontal
-          label="Started"
-          value={
-            run.startedAt
-              ? dayjs(run.startedAt.seconds * 1000).format("D MMM YYYY h:mma")
-              : null
-          }
-        />
-        <Spacer h=".4rem" />
-        <Value
-          horizontal
-          label="Finished"
-          value={
-            run.finishedAt
-              ? dayjs(run.finishedAt.seconds * 1000).format("D MMM YYYY h:mma")
-              : null
-          }
-        />
-
-        <Spacer h="2.8rem" />
 
         <Heading level={2}>Reports</Heading>
         <Spacer h="1.2rem" />

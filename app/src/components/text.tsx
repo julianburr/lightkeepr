@@ -20,7 +20,7 @@ export const GroupHeading = styled(({ level = 3, ...props }) => (
   <Heading level={level} {...props} />
 ))`
   margin: 0;
-  padding: 0.8rem 1.2rem 0.2rem;
+  padding: 0;
   font-weight: 400;
   font-size: 1rem;
   opacity: 0.6;

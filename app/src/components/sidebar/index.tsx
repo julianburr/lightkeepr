@@ -41,7 +41,7 @@ const Container = styled.div`
     &[data-active="true"] {
       z-index: 2;
       position: relative;
-      width: 24rem;
+      width: 26rem;
       background: transparent;
       pointer-events: all;
       backdrop-filter: none;
@@ -66,6 +66,12 @@ const Menu = styled.menu`
 
   @media (min-width: 800px) {
     && {
+      max-height: calc(100% - 6.8rem);
+      position: fixed;
+      z-index: 10;
+      top: 6.8rem;
+      left: 0;
+      bottom: 0;
       transform: translateX(0);
       box-shadow: none;
       width: 100%;
@@ -105,6 +111,10 @@ const WrapName = styled.div`
     margin: 0;
     line-height: 1.2;
   }
+`;
+
+const WrapContent = styled.div`
+  padding: var(--sol--spacing-xl);
 `;
 
 type ContentProps = {
@@ -171,11 +181,13 @@ export function Sidebar() {
         </TopContainer>
 
         <Suspense fallback={<Loader />}>
-          <Content
-            projectId={router.query.projectId}
-            runId={router.query.runId}
-            reportId={router.query.reportId}
-          />
+          <WrapContent>
+            <Content
+              projectId={router.query.projectId}
+              runId={router.query.runId}
+              reportId={router.query.reportId}
+            />
+          </WrapContent>
         </Suspense>
       </Menu>
     </Container>

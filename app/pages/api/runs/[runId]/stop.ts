@@ -57,7 +57,7 @@ export default createHandler({
       .doc(project.id)
       .update({
         lastRunAt: now,
-        status: project.mainBranch === run.branch ? status : project.status,
+        status: project.gitMain === run.branch ? status : project.status,
       });
 
     return res.status(200).json({ id: run.id, ...run.data() });

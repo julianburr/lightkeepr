@@ -6,6 +6,7 @@ import {
   collection,
   doc,
   getFirestore,
+  orderBy,
   query,
   where,
 } from "firebase/firestore";
@@ -29,7 +30,8 @@ function ProjectsList() {
   const projects = useCollection(
     query(
       collection(db, "projects"),
-      where("team", "==", doc(db, "teams", teamId!))
+      where("team", "==", doc(db, "teams", teamId!)),
+      orderBy("name", "asc")
     ),
     { key: `${teamId}/projects` }
   );

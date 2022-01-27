@@ -51,6 +51,12 @@ const Container = styled.div`
   padding: 1.2rem;
 `;
 
+const Heading = styled(GroupHeading)`
+  && {
+    padding: 0.8rem 1.2rem 0.2rem;
+  }
+`;
+
 type CustomItemObj = {
   key?: string;
   isCustom: true;
@@ -130,7 +136,7 @@ export function PopoutMenu({ items, setVisible, element }: PopoutMenuProps) {
               <ul>
                 {item.label && (
                   <Li>
-                    <GroupHeading>{item.label}</GroupHeading>
+                    <Heading>{item.label}</Heading>
                   </Li>
                 )}
                 {renderItems(item.items)}
