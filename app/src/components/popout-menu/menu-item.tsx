@@ -18,7 +18,7 @@ const Container = styled(CoreButton)`
     align-items: center;
     justify-content: flex-start;
     line-height: 1.1;
-    background: rgba(0, 0, 0, 0);
+    background: transparent;
     transition: background 0.2s;
     align-self: inherit;
     justify-self: inherit;
@@ -28,7 +28,7 @@ const Container = styled(CoreButton)`
 
     &:focus,
     &:hover {
-      background: rgba(0, 0, 0, 0.05);
+      background: var(--sol--palette-sand-50);
     }
 
     p {

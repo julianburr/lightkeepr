@@ -11,10 +11,10 @@ import { AppLayout } from "src/layouts/app";
 import { Auth } from "src/components/auth";
 import { Button } from "src/components/button";
 import { Field } from "src/components/field";
-import { Form } from "src/components/form";
 import { TextInput } from "src/components/text-input";
 import { Spacer } from "src/components/spacer";
 import { ButtonBar } from "src/components/button-bar";
+import { FormGrid } from "src/components/form-grid";
 
 const db = getFirestore();
 
@@ -54,31 +54,33 @@ export default function NewProject() {
           <h1>Create a new project</h1>
           <Spacer h="1.6rem" />
 
-          <Form ref={form}>
-            <Field
-              name="name"
-              label="Project name"
-              Input={TextInput}
-              required
-            />
-            <Field
-              name="gitMain"
-              label="Git base branch name"
-              description="This information is used to be able to compare a given report to the latest report on your base branch"
-              Input={TextInput}
-            />
-            <ButtonBar
-              left={
-                <Button
-                  type="submit"
-                  intent="primary"
-                  disabled={use("isSubmitting")}
-                >
-                  Create project
-                </Button>
-              }
-            />
-          </Form>
+          <form ref={form}>
+            <FormGrid>
+              <Field
+                name="name"
+                label="Project name"
+                Input={TextInput}
+                required
+              />
+              <Field
+                name="gitMain"
+                label="Git base branch name"
+                description="This information is used to be able to compare a given report to the latest report on your base branch"
+                Input={TextInput}
+              />
+              <ButtonBar
+                left={
+                  <Button
+                    type="submit"
+                    intent="primary"
+                    disabled={use("isSubmitting")}
+                  >
+                    Create project
+                  </Button>
+                }
+              />
+            </FormGrid>
+          </form>
         </Container>
       </AppLayout>
     </Auth>

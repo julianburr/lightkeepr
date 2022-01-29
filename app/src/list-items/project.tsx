@@ -3,7 +3,6 @@ import styled from "styled-components";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
-import { interactive } from "src/@packages/sol/tokens";
 import { StatusAvatar } from "src/components/status-avatar";
 import { Avatar } from "src/components/avatar";
 import { ListItem } from "src/components/list";
@@ -16,7 +15,12 @@ dayjs.extend(relativeTime);
 const AddNewItem = styled(ListItem)`
   a {
     font-family: "Playfair Display";
-    ${interactive("secondary")}
+    background: var(--sol--palette-sand-200);
+
+    &:hover,
+    &:focus {
+      background: var(--sol--palette-sand-300);
+    }
   }
 `;
 

@@ -13,12 +13,12 @@ import { useConfirmationDialog } from "src/hooks/use-dialog";
 import { Auth } from "src/components/auth";
 import { Heading, P } from "src/components/text";
 import { Spacer } from "src/components/spacer";
-import { Form } from "src/components/form";
 import { Field } from "src/components/field";
 import { EmailInput, TextInput } from "src/components/text-input";
 import { Button } from "src/components/button";
 import { ButtonBar } from "src/components/button-bar";
 import { ReadonlyInput } from "src/components/readonly-input";
+import { FormGrid } from "src/components/form-grid";
 
 const db = getFirestore();
 
@@ -30,11 +30,7 @@ const Container = styled.div`
 export default function TeamSettings() {
   const authUser = useAuthUser();
   const router = useRouter();
-
-  const { teamId } = router.query;
-
   const toast = useToast();
-  const confirmationDialog = useConfirmationDialog();
 
   const { form, use } = useForm({
     defaultValues: {
@@ -42,7 +38,7 @@ export default function TeamSettings() {
       billingEmail: authUser.team?.billingEmail,
     },
     onSubmit: async (values) => {
-      await updateDoc(doc(db, "teams", teamId!), {
+      await updateDoc(doc(db, "teams", router.query.teamId!), {
         name: values.name,
         billingEmail: values.billingEmail,
       });
@@ -65,15 +61,17 @@ export default function TeamSettings() {
             <Heading level={1}>Team settings</Heading>
             <Spacer h="1.2rem" />
 
-            <Form>
-              <Field
-                name="id"
-                label="Team ID"
-                Input={ReadonlyInput}
-                inputProps={{ value: authUser.team?.id }}
-              />
-              <Field name="name" label="Name" Input={ReadonlyInput} />
-            </Form>
+            <form>
+              <FormGrid>
+                <Field
+                  name="id"
+                  label="Team ID"
+                  Input={ReadonlyInput}
+                  inputProps={{ value: authUser.team?.id }}
+                />
+                <Field name="name" label="Name" Input={ReadonlyInput} />
+              </FormGrid>
+            </form>
 
             <Spacer h="1.6rem" />
 
@@ -94,31 +92,33 @@ export default function TeamSettings() {
           <Heading level={1}>Team settings</Heading>
           <Spacer h="1.2rem" />
 
-          <Form ref={form}>
-            <Field
-              name="id"
-              label="Team ID"
-              Input={ReadonlyInput}
-              inputProps={{ value: authUser.team?.id }}
-            />
-            <Field name="name" label="Name" Input={TextInput} required />
-            <Field
-              name="billingEmail"
-              label="Billing email"
-              Input={EmailInput}
-            />
-            <ButtonBar
-              left={
-                <Button
-                  type="submit"
-                  intent="primary"
-                  disabled={use("isSubmitting")}
-                >
-                  Update settings
-                </Button>
-              }
-            />
-          </Form>
+          <form ref={form}>
+            <FormGrid>
+              <Field
+                name="id"
+                label="Team ID"
+                Input={ReadonlyInput}
+                inputProps={{ value: authUser.team?.id }}
+              />
+              <Field name="name" label="Name" Input={TextInput} required />
+              <Field
+                name="billingEmail"
+                label="Billing email"
+                Input={EmailInput}
+              />
+              <ButtonBar
+                left={
+                  <Button
+                    type="submit"
+                    intent="primary"
+                    disabled={use("isSubmitting")}
+                  >
+                    Update settings
+                  </Button>
+                }
+              />
+            </FormGrid>
+          </form>
         </Container>
       </AppLayout>
     </Auth>
