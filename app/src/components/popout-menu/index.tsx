@@ -31,7 +31,7 @@ const Ul = styled.ul`
   hr {
     border: 0 none;
     height: 0.1rem;
-    background: rgba(0, 0, 0, 0.05);
+    background: var(--sol--palette-sand-100);
     width: calc(100% - 0.8rem);
     margin: 0.5rem auto;
   }

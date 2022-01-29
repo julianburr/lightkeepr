@@ -8,7 +8,6 @@ import { AppLayout } from "src/layouts/app";
 import { Auth } from "src/components/auth";
 import { Heading } from "src/components/text";
 import { Spacer } from "src/components/spacer";
-import { Form } from "src/components/form";
 import { Field } from "src/components/field";
 import { ReadonlyInput } from "src/components/readonly-input";
 import { useDocument } from "src/@packages/firebase";
@@ -17,6 +16,7 @@ import { ButtonBar } from "src/components/button-bar";
 import { Button } from "src/components/button";
 import { useForm } from "react-cool-form";
 import { useToast } from "src/hooks/use-toast";
+import { FormGrid } from "src/components/form-grid";
 
 const db = getFirestore();
 
@@ -49,26 +49,28 @@ export default function AccountSettings() {
           <Heading level={1}>Profile settings</Heading>
           <Spacer h="1.2rem" />
 
-          <Form ref={form}>
-            <Field
-              name="email"
-              label="Email"
-              Input={ReadonlyInput}
-              inputProps={{ value: user.id }}
-            />
-            <Field name="name" label="Name" Input={TextInput} required />
-            <ButtonBar
-              left={
-                <Button
-                  type="submit"
-                  intent="primary"
-                  disabled={use("isSubmitting")}
-                >
-                  Update settings
-                </Button>
-              }
-            />
-          </Form>
+          <form ref={form}>
+            <FormGrid>
+              <Field
+                name="email"
+                label="Email"
+                Input={ReadonlyInput}
+                inputProps={{ value: user.id }}
+              />
+              <Field name="name" label="Name" Input={TextInput} required />
+              <ButtonBar
+                left={
+                  <Button
+                    type="submit"
+                    intent="primary"
+                    disabled={use("isSubmitting")}
+                  >
+                    Update settings
+                  </Button>
+                }
+              />
+            </FormGrid>
+          </form>
         </Container>
       </AppLayout>
     </Auth>

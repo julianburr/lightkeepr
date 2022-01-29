@@ -16,9 +16,9 @@ import { Auth } from "src/components/auth";
 import { Field } from "src/components/field";
 import { EmailInput, TextInput } from "src/components/text-input";
 import { Button } from "src/components/button";
-import { Form } from "src/components/form";
 import { Spacer } from "src/components/spacer";
 import { ButtonBar } from "src/components/button-bar";
+import { FormGrid } from "src/components/form-grid";
 
 const db = getFirestore();
 
@@ -64,26 +64,28 @@ export default function TeamSetup() {
         <h1>Almost done! You'll need to create a team to get started.</h1>
         <Spacer height="1.6rem" />
 
-        <Form ref={form}>
-          <Field name="name" label="Team name" Input={TextInput} required />
-          <Field
-            name="billingEmail"
-            label="Billing email"
-            Input={EmailInput}
-            required
-          />
-          <ButtonBar
-            left={
-              <Button
-                intent="primary"
-                type="submit"
-                disabled={use("isSubmitting")}
-              >
-                Create team
-              </Button>
-            }
-          />
-        </Form>
+        <form ref={form}>
+          <FormGrid>
+            <Field name="name" label="Team name" Input={TextInput} required />
+            <Field
+              name="billingEmail"
+              label="Billing email"
+              Input={EmailInput}
+              required
+            />
+            <ButtonBar
+              left={
+                <Button
+                  intent="primary"
+                  type="submit"
+                  disabled={use("isSubmitting")}
+                >
+                  Create team
+                </Button>
+              }
+            />
+          </FormGrid>
+        </form>
       </SetupLayout>
     </Auth>
   );

@@ -33,8 +33,19 @@ export default createHandler({
       project = { id: p.id, ...p.data() };
     });
 
-    // TODO!
-    const status = req.body?.statusCode === 0 ? "success" : "failed";
+    // Get status based on report statuses
+    const reportsSnap = await db
+      .collection("reports")
+      .where("run", "==", db.collection("runs").doc(req.query.runId as string))
+      .get();
+
+    let status = "passed";
+    reportsSnap.forEach((r: any) => {
+      if (r.data()?.status?.startsWith?.("failed")) {
+        status = "failed";
+      }
+    });
+
     const now = Timestamp.fromDate(new Date());
 
     await db
@@ -46,10 +57,11 @@ export default createHandler({
         finishedAt: now,
       });
 
-    const run: any = await db
+    const runSnap: any = await db
       .collection("runs")
       .doc(req.query.runId as string)
       .get();
+    const run = { id: runSnap.id, ...runSnap.data() };
 
     // Update project status
     await db
@@ -60,6 +72,6 @@ export default createHandler({
         status: project.gitMain === run.branch ? status : project.status,
       });
 
-    return res.status(200).json({ id: run.id, ...run.data() });
+    return res.status(200).json(run);
   },
 });

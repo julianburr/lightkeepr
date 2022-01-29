@@ -9,9 +9,9 @@ import { Auth } from "src/components/auth";
 import { Field } from "src/components/field";
 import { TextInput } from "src/components/text-input";
 import { Button } from "src/components/button";
-import { Form } from "src/components/form";
 import { Spacer } from "src/components/spacer";
 import { ButtonBar } from "src/components/button-bar";
+import { FormGrid } from "src/components/form-grid";
 
 const db = getFirestore();
 
@@ -33,20 +33,22 @@ export default function UserSetup() {
         <h1>Please complete the set up of your user account</h1>
         <Spacer height="2.4rem" />
 
-        <Form ref={form}>
-          <Field name="name" label="Name" Input={TextInput} required />
-          <ButtonBar
-            left={
-              <Button
-                intent="primary"
-                type="submit"
-                disabled={use("isSubmitting")}
-              >
-                Create account
-              </Button>
-            }
-          />
-        </Form>
+        <form ref={form}>
+          <FormGrid>
+            <Field name="name" label="Name" Input={TextInput} required />
+            <ButtonBar
+              left={
+                <Button
+                  intent="primary"
+                  type="submit"
+                  disabled={use("isSubmitting")}
+                >
+                  Create account
+                </Button>
+              }
+            />
+          </FormGrid>
+        </form>
       </SetupLayout>
     </Auth>
   );

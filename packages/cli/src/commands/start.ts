@@ -15,7 +15,6 @@ async function runStart(argv) {
     if (!run?.id) {
       process.exit(1);
     }
-    console.log(run.id);
   } catch (e) {
     console.error(e);
     process.exit(1);

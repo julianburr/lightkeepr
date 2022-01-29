@@ -7,6 +7,7 @@ import { ListItem } from "src/components/list";
 import { P, Small } from "src/components/text";
 import { Tooltip } from "src/components/tooltip";
 import { Avatar } from "src/components/avatar";
+import { StatusAvatar } from "src/components/status-avatar";
 
 import LayersSvg from "src/assets/icons/layers.svg";
 
@@ -14,14 +15,10 @@ dayjs.extend(relativeTime);
 
 const Content = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: center;
   flex: 1;
   gap: 1.2rem;
-
-  @media (min-width: 800px) {
-    flex-direction: row;
-    align-items: center;
-  }
 `;
 
 const Title = styled.div`
@@ -31,24 +28,18 @@ const Title = styled.div`
 `;
 
 const Scores = styled.div`
-  display: flex;
+  display: none;
   flex-direction: row;
   align-items: center;
   gap: 0.3rem;
 
-  & > * {
-    flex-direction: column;
+  @media (min-width: 800px) {
+    display: flex;
   }
 `;
 
-const Label = styled.span`
-  font-size: 0.6rem;
-  text-transform: uppercase;
-  color: rgba(0, 0, 0, 0.6);
-`;
-
 const Score = styled.span`
-  font-size: 2rem;
+  font-size: 1.8rem;
   margin: -0.4rem 0 0;
 `;
 
@@ -61,11 +52,7 @@ export function ReportListItem({ data }: ReportListItemProps) {
   return (
     <ListItem href={`/app/${router.query.teamId}/reports/${data.id}`}>
       <Content>
-        {data.type === "user-flow" && (
-          <Avatar background="#dad9d044">
-            <LayersSvg />
-          </Avatar>
-        )}
+        <StatusAvatar status={data.status} />
         <Title>
           <P>
             <span>{data.name || data.url || "n/a"}</span>
@@ -92,8 +79,15 @@ export function ReportListItem({ data }: ReportListItemProps) {
             { label: "SEO", key: "seo" },
             { label: "PWA", key: "pwa" },
           ].map((category) => (
-            <Avatar key={category.key} background="#dad9d044">
-              <Label>{category.label}</Label>
+            <Avatar
+              key={category.key}
+              background={
+                data.status?.startsWith("failed") &&
+                data.statusReason?.includes?.(category.key)
+                  ? "var(--sol--palette-sand-400)"
+                  : "var(--sol--palette-sand-200)"
+              }
+            >
               <Score>
                 {data.type === "user-flow"
                   ? Math.ceil(

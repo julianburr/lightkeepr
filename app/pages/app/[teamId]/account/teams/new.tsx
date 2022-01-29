@@ -16,11 +16,11 @@ import { AppLayout } from "src/layouts/app";
 import { Auth } from "src/components/auth";
 import { Button } from "src/components/button";
 import { Field } from "src/components/field";
-import { Form } from "src/components/form";
 import { EmailInput, TextInput } from "src/components/text-input";
 import { Spacer } from "src/components/spacer";
 import { ButtonBar } from "src/components/button-bar";
 import { api } from "src/utils/api-client";
+import { FormGrid } from "src/components/form-grid";
 
 const db = getFirestore();
 
@@ -75,26 +75,28 @@ export default function NewTeam() {
           <h1>Create a new team</h1>
           <Spacer h="1.6rem" />
 
-          <Form ref={form}>
-            <Field name="name" label="Team name" Input={TextInput} required />
-            <Field
-              name="billingEmail"
-              label="Billing email"
-              Input={EmailInput}
-              required
-            />
-            <ButtonBar
-              left={
-                <Button
-                  type="submit"
-                  intent="primary"
-                  disabled={use("isSubmitting")}
-                >
-                  Create team
-                </Button>
-              }
-            />
-          </Form>
+          <form ref={form}>
+            <FormGrid>
+              <Field name="name" label="Team name" Input={TextInput} required />
+              <Field
+                name="billingEmail"
+                label="Billing email"
+                Input={EmailInput}
+                required
+              />
+              <ButtonBar
+                left={
+                  <Button
+                    type="submit"
+                    intent="primary"
+                    disabled={use("isSubmitting")}
+                  >
+                    Create team
+                  </Button>
+                }
+              />
+            </FormGrid>
+          </form>
         </Container>
       </AppLayout>
     </Auth>

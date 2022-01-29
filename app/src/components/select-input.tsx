@@ -1,16 +1,8 @@
-import {
-  Ref,
-  ReactNode,
-  useCallback,
-  useRef,
-  useMemo,
-  useContext,
-} from "react";
+import { Ref, ReactNode, useCallback, useRef, useMemo } from "react";
 import styled from "styled-components";
 
 import { Popout } from "./popout";
 import { PopoutMenu } from "./popout-menu";
-import { FormContext } from "./form";
 
 import ChevronDownSvg from "src/assets/icons/chevron-down.svg";
 
@@ -81,27 +73,7 @@ type SelectInputProps = {
   onChange?: (item: Item) => void | Promise<void>;
 };
 
-function FormSelectInput(props: SelectInputProps) {
-  const { formMethods } = useContext(FormContext);
-  return (
-    <ControlledSelectInput
-      {...props}
-      value={formMethods?.use?.("values")[props.name]}
-      onChange={(item) => formMethods?.setValue?.(props.name, item)}
-    />
-  );
-}
-
-function ControlledSelectInput({
-  id,
-  name,
-  items,
-  suggestions,
-  searchable,
-  minChars,
-  value,
-  onChange,
-}: SelectInputProps) {
+export function SelectInput({ items, value, onChange }: SelectInputProps) {
   const containerRef = useRef<HTMLDivElement>();
 
   const enhanceItems = useCallback(
@@ -157,15 +129,4 @@ function ControlledSelectInput({
       </Popout>
     </Container>
   );
-}
-
-// HACK: within a form we want to use the `react-cool-form` methods to control
-// the input value, otherwise we want to control it manually
-export function SelectInput(props: SelectInputProps) {
-  // eslint-disable-next-line
-  // @ts-ignore
-  if (FormContext.Consumer._currentValue?.formMethods !== undefined) {
-    return <FormSelectInput {...props} />;
-  }
-  return <ControlledSelectInput {...props} />;
 }

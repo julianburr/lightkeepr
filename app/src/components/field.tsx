@@ -1,5 +1,5 @@
 import { Ref, ComponentType, ReactNode } from "react";
-import { useFormMethods } from "react-cool-form";
+import { useControlled, useFormMethods } from "react-cool-form";
 import styled from "styled-components";
 import { Label } from "./label";
 
@@ -36,6 +36,11 @@ const Error = styled.p`
   }
 `;
 
+function Controlled({ Input, name, ...props }: any) {
+  const [fieldProps] = useControlled(name);
+  return <Input {...props} {...fieldProps} />;
+}
+
 type FieldProps = {
   id?: string;
   name: string;
@@ -60,8 +65,7 @@ export function Field({
   required,
   showError = true,
 }: FieldProps) {
-  const { use } = useFormMethods();
-  const errors = use("errors");
+  const [fieldProps, { error }] = useControlled(name);
 
   return (
     <Container>
@@ -76,15 +80,15 @@ export function Field({
 
       <Input
         id={id}
-        name={name}
         label={label}
         description={description}
         required={required}
-        error={errors[name]}
+        error={error}
+        {...fieldProps}
         {...inputProps}
       />
 
-      {errors[name] && showError && <Error>{errors[name]}</Error>}
+      {error && showError && <Error>{error}</Error>}
     </Container>
   );
 }

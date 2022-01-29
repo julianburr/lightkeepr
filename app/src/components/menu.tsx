@@ -74,7 +74,7 @@ const CoreMenuItem = styled((props) => <CoreButton {...props} />)`
 
   @media (min-width: 800px) {
     padding: 0.6rem;
-    margin: 0 -0.6rem;
+    margin: 0.2rem -0.6rem 0;
   }
 `;
 
