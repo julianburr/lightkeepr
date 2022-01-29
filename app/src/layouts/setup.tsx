@@ -1,7 +1,31 @@
+import "src/utils/firebase";
+
 import { Suspense, PropsWithChildren } from "react";
 import styled from "styled-components";
+import { getAuth } from "firebase/auth";
 
 import { TopBar } from "src/components/top-bar";
+import { Button } from "src/components/button";
+
+import LogoSvg from "src/assets/logo.svg";
+
+const auth = getAuth();
+
+const Logo = styled.div`
+  height: 6.8rem;
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  align-items: flex-end;
+  margin: 0 0 0 -0.6rem;
+  position: relative;
+  z-index: 2;
+
+  svg {
+    height: 5.4rem;
+    width: auto;
+  }
+`;
 
 const Container = styled.div`
   display: flex;
@@ -22,7 +46,14 @@ type SetupLayoutProps = PropsWithChildren<Record<never, any>>;
 export function SetupLayout({ children }: SetupLayoutProps) {
   return (
     <Container>
-      <TopBar setup />
+      <TopBar
+        logo={
+          <Logo>
+            <LogoSvg />
+          </Logo>
+        }
+        actions={<Button onClick={() => auth.signOut()}>Logout</Button>}
+      />
       <Suspense fallback={null}>
         <Content>{children}</Content>
       </Suspense>

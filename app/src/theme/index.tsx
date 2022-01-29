@@ -19,11 +19,13 @@ export const GlobalStyles = createGlobalStyle`
 
   html {
     font-size: 62.5%;
+    scroll-padding-top: 6.8rem;
+    scroll-behavior: smooth;
   }
 
   html, body, #__next {
     width: 100%;
-    height: 100%;
+    min-height: 100%;
   }
 
   body {

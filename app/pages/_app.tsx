@@ -1,30 +1,18 @@
 import "src/utils/firebase";
 
-import { Suspense, ComponentType } from "react";
 import { Reset } from "styled-reset";
 import Head from "next/head";
 
 import { GlobalStyles } from "src/theme";
 import { FirebaseProvider } from "src/@packages/firebase";
-import { useAuthUser } from "src/hooks/use-auth-user";
 
 import favicon from "src/assets/favicon.png";
 import { DialogProvider } from "src/hooks/use-dialog";
 import { ToastProvider } from "src/hooks/use-toast";
-import { Loader } from "src/components/loader";
 import { SuspenseProvider } from "src/@packages/suspense";
+import { Suspense } from "react";
 
-type AppContentProps = {
-  Component: ComponentType<any>;
-  pageProps: any;
-};
-
-function AppContent({ Component, pageProps }: AppContentProps) {
-  const authUser = useAuthUser();
-  return <Component authUser={authUser} {...pageProps} />;
-}
-
-export default function App(props: any) {
+export default function App({ Component, pageProps }: any) {
   // HACK: Suspense not suported on SSR yet :/
   // https://nextjs.org/docs/advanced-features/react-18
   if (typeof window === "undefined") {
@@ -59,6 +47,7 @@ export default function App(props: any) {
             `https://fonts.googleapis.com/css2` +
             `?family=Playfair+Display:wght@400;700` +
             `&family=Source+Code+Pro:wght@400;700` +
+            `&family=Lato` +
             `&display=swap`
           }
           rel="stylesheet"
@@ -68,17 +57,17 @@ export default function App(props: any) {
       <Reset />
       <GlobalStyles />
 
-      <SuspenseProvider>
-        <FirebaseProvider>
-          <Suspense fallback={<Loader message="Loading..." />}>
+      <Suspense fallback={null}>
+        <SuspenseProvider>
+          <FirebaseProvider>
             <DialogProvider>
               <ToastProvider>
-                <AppContent {...props} />
+                <Component {...pageProps} />
               </ToastProvider>
             </DialogProvider>
-          </Suspense>
-        </FirebaseProvider>
-      </SuspenseProvider>
+          </FirebaseProvider>
+        </SuspenseProvider>
+      </Suspense>
     </>
   );
 }
