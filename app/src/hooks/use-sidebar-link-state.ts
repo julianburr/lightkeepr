@@ -1,7 +1,7 @@
 import { Ref, RefObject, useCallback, useLayoutEffect, useState } from "react";
 import { useRouter } from "next/router";
 
-type useSidebarLinkStateProps = {
+type useSidebarLinkStateArgs = {
   active: boolean;
   isMobile: boolean;
   menuRef: RefObject<HTMLMenuElement | undefined>;
@@ -11,7 +11,7 @@ export function useSidebarLinkState({
   active,
   isMobile,
   menuRef,
-}: useSidebarLinkStateProps) {
+}: useSidebarLinkStateArgs) {
   const router = useRouter();
 
   const [mobileState, setMobileState] = useState({
