@@ -73,7 +73,7 @@ const Lighthouse = styled(LighthouseSvg)`
 const Content = styled.div`
   width: 100%;
   max-width: 104rem;
-  padding: 8rem 2.4rem 40rem;
+  padding: 11rem 2.4rem 40rem;
   margin: 0 auto;
   display: flex;
   flex-direction: column;

@@ -96,14 +96,22 @@ const CodeExamples = styled.div`
 `;
 
 const Features = styled.div`
-  margin: 4.2rem 0 0;
   display: grid;
   grid-template-columns: 1fr;
   gap: 1.2rem;
+  width: 100%;
+  max-width: 30rem;
+  margin: 4.2rem auto 0;
 
-  @media (min-width: 800px) {
-    grid-template-columns: 1fr 1fr 1fr;
+  @media (min-width: 600px) {
     gap: 1.6rem;
+    grid-template-columns: 1fr 1fr;
+    max-width: 66rem;
+  }
+
+  @media (min-width: 1000px) {
+    grid-template-columns: 1fr 1fr 1fr;
+    max-width: none;
   }
 `;
 

@@ -1,10 +1,14 @@
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useEffect, Ref } from "react";
 import styled, { keyframes } from "styled-components";
 import Link from "next/link";
 
+import { useSidebarState } from "src/hooks/use-sidebar-state";
 import { TopBar } from "src/components/top-bar";
+import { Button } from "src/components/button";
+import { Spacer } from "src/components/spacer";
 
 import LogoSvg from "src/assets/logo.svg";
+import MenuSvg from "src/assets/icons/menu.svg";
 import GithubSvg from "src/assets/icons/github.svg";
 import TwitterSvg from "src/assets/icons/twitter.svg";
 import WavesSvg from "src/assets/illustrations/waves.svg";
@@ -189,9 +193,105 @@ const Water = styled.div`
   opacity: 0.5;
 `;
 
-export function WebsiteLayout({
-  children,
-}: PropsWithChildren<Record<never, any>>) {
+const MobileButton = styled(Button)`
+  && {
+    &:hover,
+    &:focus {
+      background: rgba(0, 0, 0, 0.05);
+    }
+
+    &:active,
+    &.active {
+      background: rgba(0, 0, 0, 0.1);
+    }
+  }
+`;
+
+const MobileSidebar = styled.div`
+  height: 100%;
+  flex-shrink: 0;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  background: rgba(0, 0, 0, 0);
+  pointer-events: none;
+  transition: background 0.2s, backdrop-filter 0.2s;
+
+  &[data-active="true"] {
+    opacity: 1;
+    pointer-events: all;
+    background: rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(0.2rem);
+  }
+
+  @media (min-width: 800px) {
+    display: none;
+  }
+`;
+
+const MobileMenu = styled.menu`
+  height: 100%;
+  width: calc(100% - 2.4rem);
+  max-width: 28rem;
+  background: rgba(255, 255, 255, 0.9);
+  transform: translateX(100%);
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  transition: transform 0.2s, box-shadow 0.2s;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 3.2rem 3.2rem 6rem;
+  font-family: "Playfair Display";
+  font-size: 2.8rem;
+  gap: 1.2rem;
+
+  [data-active="true"] > & {
+    box-shadow: 0 0 1.8rem rgba(0, 0, 0, 0.1);
+    transform: translateX(0);
+  }
+
+  a,
+  a:hover,
+  a:focus {
+    color: inherit;
+  }
+`;
+
+type WebsiteLayoutProps = PropsWithChildren<Record<never, any>>;
+
+export function WebsiteLayout({ children }: WebsiteLayoutProps) {
+  const { menuRef, backdropRef, active, setActive } = useSidebarState();
+
+  useEffect(() => {
+    if (!active) {
+      return;
+    }
+
+    const links = menuRef.current?.getElementsByTagName("a");
+    if (!links?.length) {
+      return;
+    }
+
+    function handleClick() {
+      setActive(false);
+    }
+
+    for (let i = 0; i < links.length; i++) {
+      links[i].addEventListener("click", handleClick);
+    }
+    return () => {
+      for (let i = 0; i < links.length; i++) {
+        links[i].removeEventListener("click", handleClick);
+      }
+    };
+  }, [active]);
+
   return (
     <>
       <StyledTopBar
@@ -206,22 +306,59 @@ export function WebsiteLayout({
           </Logo>
         }
         actions={
-          <Menu data-tablet>
-            <Link href="/#features">
-              <a>Features</a>
-            </Link>
-            <Link href="/pricing">
-              <a>Pricing</a>
-            </Link>
-            <Link href="/documentation">
-              <a>Documentation</a>
-            </Link>
-            <Link href="/sign-in">
-              <a>Sign in</a>
-            </Link>
-          </Menu>
+          <>
+            <Menu data-tablet>
+              <Link href="/#features">
+                <a>Features</a>
+              </Link>
+              <Link href="/pricing">
+                <a>Pricing</a>
+              </Link>
+              <Link href="/documentation">
+                <a>Documentation</a>
+              </Link>
+              <Link href="/sign-in">
+                <a>Sign in</a>
+              </Link>
+            </Menu>
+
+            <MobileButton
+              data-mobile
+              icon={<MenuSvg />}
+              size="large"
+              intent="ghost"
+              onClick={() => {
+                const event = new CustomEvent("toggleMobileMenu");
+                window.document.body.dispatchEvent(event);
+              }}
+            />
+          </>
         }
       />
+
+      <MobileSidebar
+        ref={backdropRef as Ref<HTMLDivElement>}
+        data-active={active}
+      >
+        <MobileMenu ref={menuRef as Ref<HTMLMenuElement>}>
+          <Link href="/">
+            <a>Home</a>
+          </Link>
+          <Link href="/#features">
+            <a>Features</a>
+          </Link>
+          <Link href="/pricing">
+            <a>Pricing</a>
+          </Link>
+          <Link href="/documentation">
+            <a>Documentation</a>
+          </Link>
+          <Spacer h="2.4rem" />
+          <Link href="/sign-in">
+            <a>Sign in</a>
+          </Link>
+        </MobileMenu>
+      </MobileSidebar>
 
       <Content>{children}</Content>
 

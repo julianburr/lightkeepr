@@ -71,5 +71,5 @@ export function useSidebarState() {
     };
   }, [active]);
 
-  return { active, backdropRef, menuRef };
+  return { active, setActive, backdropRef, menuRef };
 }

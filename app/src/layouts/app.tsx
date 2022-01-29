@@ -9,6 +9,7 @@ import { Sidebar } from "src/components/sidebar";
 import { Loader } from "src/components/loader";
 import { Tooltip } from "src/components/tooltip";
 import { Button } from "src/components/button";
+import { Spacer } from "src/components/spacer";
 import { AccountActionMenu } from "src/action-menus/account";
 
 import LogoSvg from "src/assets/logo.svg";
@@ -17,7 +18,6 @@ import SearchSvg from "src/assets/icons/search.svg";
 import LifeBuoySvg from "src/assets/icons/life-buoy.svg";
 import GridSvg from "src/assets/icons/grid.svg";
 import MenuSvg from "src/assets/icons/menu.svg";
-import { Spacer } from "src/components/spacer";
 
 const Container = styled.div`
   display: flex;
