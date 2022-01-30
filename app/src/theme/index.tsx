@@ -20,7 +20,6 @@ export const GlobalStyles = createGlobalStyle`
   html {
     font-size: 62.5%;
     scroll-padding-top: 6.8rem;
-    scroll-behavior: smooth;
     height: 100%;
   }
 
