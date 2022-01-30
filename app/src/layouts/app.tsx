@@ -1,16 +1,19 @@
+import "src/utils/firebase";
+
 import { PropsWithChildren, Suspense } from "react";
 import styled from "styled-components";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { getAuth } from "firebase/auth";
 
 import { useAuthUser } from "src/hooks/use-auth-user";
 import { TopBar } from "src/components/top-bar";
-import { Sidebar } from "src/components/sidebar";
 import { Loader } from "src/components/loader";
 import { Tooltip } from "src/components/tooltip";
 import { Button } from "src/components/button";
 import { Spacer } from "src/components/spacer";
 import { AccountActionMenu } from "src/action-menus/account";
+import { AppSidebar } from "src/sidebars/app";
 
 import LogoSvg from "src/assets/logo.svg";
 import BellSvg from "src/assets/icons/bell.svg";
@@ -18,6 +21,8 @@ import SearchSvg from "src/assets/icons/search.svg";
 import LifeBuoySvg from "src/assets/icons/life-buoy.svg";
 import GridSvg from "src/assets/icons/grid.svg";
 import MenuSvg from "src/assets/icons/menu.svg";
+
+const auth = getAuth();
 
 const Container = styled.div`
   display: flex;
@@ -46,17 +51,16 @@ const Main = styled.main`
 
 const Logo = styled.div`
   height: 6.8rem;
+  position: relative;
   display: flex;
   flex: 1;
   flex-direction: row;
-  align-items: flex-end;
-  margin: 0 0 0 -0.6rem;
-  position: relative;
-  z-index: 2;
+  align-items: center;
 
   svg {
     height: 5.4rem;
     width: auto;
+    margin: 0 0 -0.6rem;
   }
 `;
 
@@ -95,8 +99,10 @@ export function AppLayout({ children }: AppLayoutProps) {
               <Tooltip content="Notifications">
                 {(props) => <Button {...props} icon={<BellSvg />} />}
               </Tooltip>
-              <Tooltip content="Support">
-                {(props) => <Button {...props} icon={<LifeBuoySvg />} />}
+              <Tooltip content="Documentation">
+                {(props) => (
+                  <Button {...props} href="/docs" icon={<LifeBuoySvg />} />
+                )}
               </Tooltip>
 
               <Spacer w="1.2rem" />
@@ -107,7 +113,38 @@ export function AppLayout({ children }: AppLayoutProps) {
 
               <Spacer w="1.2rem" />
 
-              <AccountActionMenu>
+              <AccountActionMenu
+                items={[
+                  {
+                    label: "Teams",
+                    items:
+                      authUser?.teams?.map?.((team: any) => {
+                        return {
+                          selectable: true,
+                          selected: team.id === router.query.teamId,
+                          label: team.name || "n/a",
+                          href: `/app/${team.id}`,
+                        };
+                      }) || [],
+                  },
+                  {
+                    items: [
+                      {
+                        label: "Create a new team",
+                        href: `/app/${router.query.teamId}/account/teams/new`,
+                      },
+                      {
+                        label: "Profile settings",
+                        href: `/app/${router.query.teamId}/account/settings`,
+                      },
+                      {
+                        label: "Sign out",
+                        onClick: () => auth.signOut(),
+                      },
+                    ],
+                  },
+                ]}
+              >
                 {(props) => (
                   <Button
                     {...props}
@@ -153,7 +190,7 @@ export function AppLayout({ children }: AppLayoutProps) {
         }
       />
       <Content>
-        <Sidebar />
+        <AppSidebar />
         <Suspense fallback={<Loader message="Load content..." />}>
           <Main>{children}</Main>
         </Suspense>

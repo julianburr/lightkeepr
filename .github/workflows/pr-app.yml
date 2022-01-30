@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - app/**
+      - docs/**
 
 jobs:
   deploy_app_staging:

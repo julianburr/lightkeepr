@@ -57,7 +57,7 @@ const Logo = styled.div`
     }
 
     svg {
-      height: 5.8rem;
+      height: 5.4rem;
       width: auto;
       opacity: 0;
       transition: opacity 0.4s;
@@ -314,7 +314,7 @@ export function WebsiteLayout({ children }: WebsiteLayoutProps) {
               <Link href="/pricing">
                 <a>Pricing</a>
               </Link>
-              <Link href="/documentation">
+              <Link href="/docs">
                 <a>Documentation</a>
               </Link>
               <Link href="/sign-in">

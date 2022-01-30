@@ -69,10 +69,10 @@ type ItemGroup = {
   key?: string;
   label?: ReactNode;
   icon?: ReactNode;
-  items: Item[] | ItemGroup[];
+  items: (Item | ItemGroup)[];
 };
 
-export type Items = Item[] | ItemGroup[];
+export type Items = (Item | ItemGroup)[];
 
 type PopoutMenuProps = {
   items: Items;

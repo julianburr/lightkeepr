@@ -129,7 +129,7 @@ type ItemGroup = {
   mobile?: boolean;
 };
 
-type Items = Item[] | ItemGroup[];
+type Items = (Item | ItemGroup)[];
 
 type MenuProps = {
   items: Items;

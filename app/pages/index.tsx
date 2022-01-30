@@ -334,7 +334,7 @@ export default function HomePage() {
               },
 
               {
-                title: "Cyress",
+                title: "Cypress",
                 files: [
                   {
                     title: "In your cypress/support/index.js",

@@ -53,9 +53,9 @@ export function BaseSidebar({ getLinkProps }: BaseSidebarProps) {
     },
     {
       mobile: true,
-      label: "Support",
+      label: "Documentation",
       icon: <LifeBuoySvg />,
-      href: `/app/${router.query.teamId}/account/support`,
+      href: `/docs`,
     },
 
     // Projects list
