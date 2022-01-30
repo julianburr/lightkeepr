@@ -1,15 +1,21 @@
 import "src/utils/firebase";
 
-import { PropsWithChildren, Suspense } from "react";
+import { PropsWithChildren } from "react";
 import styled from "styled-components";
 import Link from "next/link";
 import { getAuth } from "firebase/auth";
 
+import { SuspenseProvider } from "src/@packages/suspense";
+import { FirebaseProvider } from "src/@packages/firebase";
+import { DialogProvider } from "src/hooks/use-dialog";
+import { ToastProvider } from "src/hooks/use-toast";
 import { useAuthUser } from "src/hooks/use-auth-user";
 import { TopBar } from "src/components/top-bar";
 import { Button } from "src/components/button";
 import { Tooltip } from "src/components/tooltip";
 import { Spacer } from "src/components/spacer";
+import { Suspense } from "src/components/suspense";
+
 import { AccountActionMenu } from "src/action-menus/account";
 import { DocsSidebar } from "src/sidebars/docs";
 
@@ -20,6 +26,7 @@ import SearchSvg from "src/assets/icons/search.svg";
 import ExternalLinkSvg from "src/assets/icons/external-link.svg";
 import LoginSvg from "src/assets/icons/log-in.svg";
 import UserSvg from "src/assets/icons/user.svg";
+import { ActionMenu } from "src/components/action-menu";
 
 const auth = getAuth();
 
@@ -167,145 +174,166 @@ export function DocsLayout({ children }: DocsLayoutProps) {
           </Logo>
         }
         actions={
-          <Suspense fallback={null}>
-            <TopBarActions />
+          <Suspense
+            fallback={
+              <Buttons>
+                <Tooltip content="Search (cmd+k)">
+                  {(props) => <Button {...props} icon={<SearchSvg />} />}
+                </Tooltip>
 
-            <Button
-              data-mobile
-              icon={<MenuSvg />}
-              size="large"
-              intent="ghost"
-              onClick={() => {
-                const event = new CustomEvent("toggleMobileMenu");
-                window.document.body.dispatchEvent(event);
-              }}
-            />
+                <Tooltip content="App switcher">
+                  {(props) => <Button {...props} icon={<GridSvg />} />}
+                </Tooltip>
+
+                <Spacer w="1.2rem" />
+                <Button disabled intent={"secondary"} icon={<UserSvg />} />
+              </Buttons>
+            }
+          >
+            <SuspenseProvider>
+              <FirebaseProvider>
+                <DialogProvider>
+                  <ToastProvider>
+                    <TopBarActions />
+
+                    <Button
+                      data-mobile
+                      icon={<MenuSvg />}
+                      size="large"
+                      intent="ghost"
+                      onClick={() => {
+                        const event = new CustomEvent("toggleMobileMenu");
+                        window.document.body.dispatchEvent(event);
+                      }}
+                    />
+                  </ToastProvider>
+                </DialogProvider>
+              </FirebaseProvider>
+            </SuspenseProvider>
           </Suspense>
         }
       />
       <Content>
-        <Suspense fallback={null}>
-          <DocsSidebar
-            menuItems={[
-              {
-                mobile: true,
-                label: "Search",
-                icon: <SearchSvg />,
-                onClick: () => alert("Search"),
-              },
-              {
-                mobile: true,
-                label: "Go to app",
-                href: "/app",
-                icon: <LoginSvg />,
-              },
-              {
-                mobile: true,
-                label: "App switcher",
-                icon: <GridSvg />,
-                onClick: () => alert("Hi!"),
-              },
+        <DocsSidebar
+          menuItems={[
+            {
+              mobile: true,
+              label: "Search",
+              icon: <SearchSvg />,
+              onClick: () => alert("Search"),
+            },
+            {
+              mobile: true,
+              label: "Go to app",
+              href: "/app",
+              icon: <LoginSvg />,
+            },
+            {
+              mobile: true,
+              label: "App switcher",
+              icon: <GridSvg />,
+              onClick: () => alert("Hi!"),
+            },
 
-              {
-                mobile: true,
-                label: "",
-                items: [],
-              },
+            {
+              mobile: true,
+              label: "",
+              items: [],
+            },
 
-              {
-                label: "Getting started",
-                href: "/docs/getting-started",
-              },
+            {
+              label: "Getting started",
+              href: "/docs/getting-started",
+            },
 
-              {
-                label: "Features",
-                items: [
-                  {
-                    label: "Teams",
-                    href: "/docs/features/teams",
-                  },
-                  {
-                    label: "Projects",
-                    href: "/docs/features/projects",
-                  },
-                  {
-                    label: "Runs",
-                    href: "/docs/features/runs",
-                  },
-                  {
-                    label: "Reports",
-                    href: "/docs/features/reports",
-                  },
-                  {
-                    label: "Compare reports",
-                    href: "/docs/features/compare-reports",
-                  },
-                ],
-              },
-              {
-                label: "CLI",
-                items: [
-                  {
-                    label: "Getting started",
-                    href: "/docs/cli/getting-started",
-                  },
-                  {
-                    label: "Options",
-                    href: "/docs/cli/options",
-                  },
-                ],
-              },
-              {
-                label: "Node",
-                items: [
-                  {
-                    label: "Getting started",
-                    href: "/docs/node/getting-started",
-                  },
-                  {
-                    label: "Options",
-                    href: "/docs/node/options",
-                  },
-                ],
-              },
-              {
-                label: "Cypress",
-                items: [
-                  {
-                    label: "Getting started",
-                    href: "/docs/cypress/getting-started",
-                  },
-                  {
-                    label: "Options",
-                    href: "/docs/cypress/options",
-                  },
-                ],
-              },
-              {
-                label: "Contribute",
-                items: [
-                  {
-                    label: "Contribution guide",
-                    href: "/docs/contribute/guide",
-                  },
-                  {
-                    label: "Contribute to the docs",
-                    href: "/docs/contribute/contribute-to-docs",
-                  },
-                  {
-                    label: "Report an issue",
-                    href: "/docs/contribute/report-an-issue",
-                  },
-                  {
-                    label: "Github repo",
-                    href: "https://github.com/julianburr/lightkeepr",
-                    icon: <ExternalLinkSvg />,
-                  },
-                ],
-              },
-            ]}
-          />
-        </Suspense>
+            {
+              label: "Features",
+              items: [
+                {
+                  label: "Teams",
+                  href: "/docs/features/teams",
+                },
+                {
+                  label: "Projects",
+                  href: "/docs/features/projects",
+                },
+                {
+                  label: "Runs",
+                  href: "/docs/features/runs",
+                },
+                {
+                  label: "Reports",
+                  href: "/docs/features/reports",
+                },
+                {
+                  label: "Compare reports",
+                  href: "/docs/features/compare-reports",
+                },
+              ],
+            },
+            {
+              label: "CLI",
+              items: [
+                {
+                  label: "Getting started",
+                  href: "/docs/cli/getting-started",
+                },
+                {
+                  label: "Options",
+                  href: "/docs/cli/options",
+                },
+              ],
+            },
+            {
+              label: "Node",
+              items: [
+                {
+                  label: "Getting started",
+                  href: "/docs/node/getting-started",
+                },
+                {
+                  label: "Options",
+                  href: "/docs/node/options",
+                },
+              ],
+            },
+            {
+              label: "Cypress",
+              items: [
+                {
+                  label: "Getting started",
+                  href: "/docs/cypress/getting-started",
+                },
+                {
+                  label: "Options",
+                  href: "/docs/cypress/options",
+                },
+              ],
+            },
+            {
+              label: "Contribute",
+              items: [
+                {
+                  label: "Contribution guide",
+                  href: "/docs/contribute/guide",
+                },
+                {
+                  label: "Contribute to the docs",
+                  href: "/docs/contribute/contribute-to-docs",
+                },
+                {
+                  label: "Report an issue",
+                  href: "/docs/contribute/report-an-issue",
+                },
+                {
+                  label: "Github repo",
+                  href: "https://github.com/julianburr/lightkeepr",
+                  icon: <ExternalLinkSvg />,
+                },
+              ],
+            },
+          ]}
+        />
         <Main>{children}</Main>
       </Content>
     </Container>

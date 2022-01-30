@@ -1,6 +1,6 @@
 import "src/utils/firebase";
 
-import { Suspense, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import styled from "styled-components";
 import dayjs from "dayjs";
@@ -19,6 +19,7 @@ import { Spacer } from "src/components/spacer";
 import { Heading, P, Small } from "src/components/text";
 import { Value } from "src/components/value";
 import { Loader } from "src/components/loader";
+import { Suspense } from "src/components/suspense";
 
 import { InvoiceListItem } from "src/list-items/invoice";
 import { PaymentMethodListItem } from "src/list-items/payment-method";

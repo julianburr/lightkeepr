@@ -1,4 +1,4 @@
-import { useLayoutEffect, useState, Fragment } from "react";
+import { useState, Fragment, useEffect } from "react";
 import styled from "styled-components";
 import classnames from "classnames";
 
@@ -267,7 +267,7 @@ export function CodePreview({ code }: CodePreview) {
   const [tab, setTab] = useState(0);
   const tabContent = code[tab];
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     Prism.highlightAll();
   }, [tab, code]);
 

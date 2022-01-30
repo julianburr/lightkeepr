@@ -21,11 +21,14 @@ export const GlobalStyles = createGlobalStyle`
     font-size: 62.5%;
     scroll-padding-top: 6.8rem;
     scroll-behavior: smooth;
+    height: 100%;
   }
 
   html, body, #__next {
     width: 100%;
     min-height: 100%;
+    display: flex;
+    flex-direction: column;
   }
 
   body {

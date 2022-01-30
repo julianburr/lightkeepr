@@ -1,4 +1,4 @@
-import { Suspense, useCallback, RefObject } from "react";
+import { useCallback, RefObject } from "react";
 import { useRouter } from "next/router";
 import styled from "styled-components";
 
@@ -9,6 +9,8 @@ import { Loader } from "src/components/loader";
 import { P, Small } from "src/components/text";
 import { Spacer } from "src/components/spacer";
 import { Sidebar } from "src/components/sidebar";
+import { Suspense } from "src/components/suspense";
+
 import { TeamSelectInput } from "src/selects/team";
 
 import { BaseSidebar } from "./base";
@@ -103,9 +105,7 @@ export function AppSidebar() {
       }
     >
       {({ isMobile, active, menuRef }) => (
-        <Suspense fallback={<Loader />}>
-          <Content isMobile={isMobile} active={active} menuRef={menuRef} />
-        </Suspense>
+        <Content isMobile={isMobile} active={active} menuRef={menuRef} />
       )}
     </Sidebar>
   );

@@ -1,6 +1,5 @@
 import "src/utils/firebase";
 
-import { Suspense } from "react";
 import { useRouter } from "next/router";
 import { doc, getFirestore } from "firebase/firestore";
 
@@ -10,6 +9,7 @@ import { api } from "src/utils/api-client";
 import { Menu } from "src/components/menu";
 import { Spacer } from "src/components/spacer";
 import { Meta } from "src/components/meta";
+import { Suspense } from "src/components/suspense";
 
 import ArrowLeftSvg from "src/assets/icons/arrow-left.svg";
 import dayjs from "dayjs";

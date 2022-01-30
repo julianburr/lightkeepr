@@ -180,7 +180,7 @@ export default function SignIn({ isSignUp }: SigninProps) {
       {isSignUp ? (
         <p>
           Already have an account? Click here to{" "}
-          <Link href="/sign-in">
+          <Link href="/auth/sign-in">
             <a>sign in</a>
           </Link>{" "}
           instead.
@@ -189,7 +189,7 @@ export default function SignIn({ isSignUp }: SigninProps) {
         <p>
           Don't have an account yet? No problem, click here to{" "}
           <Link
-            href={`/sign-up${
+            href={`/auth/sign-up${
               use("values")?.email ? `?email=${use("values")?.email}` : ""
             }`}
           >

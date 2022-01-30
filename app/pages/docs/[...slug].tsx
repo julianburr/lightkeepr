@@ -2,7 +2,7 @@ import * as fs from "fs";
 import * as path from "path";
 import glob from "glob";
 import twemoji from "twemoji";
-import { useRef, useLayoutEffect, Ref } from "react";
+import { useRef, Ref, useEffect } from "react";
 import styled from "styled-components";
 import Head from "next/head";
 import { MDXRemote } from "next-mdx-remote";
@@ -60,7 +60,7 @@ const components = {};
 
 export default function DocsHomePage({ meta, source }: any) {
   const contentRef = useRef<HTMLDivElement>();
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (contentRef.current) {
       twemoji.parse(contentRef.current as any, {
         ext: ".svg",

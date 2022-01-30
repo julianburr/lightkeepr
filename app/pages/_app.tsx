@@ -1,23 +1,28 @@
-import "src/utils/firebase";
-
 import { Reset } from "styled-reset";
 import Head from "next/head";
 
 import { GlobalStyles } from "src/theme";
-import { FirebaseProvider } from "src/@packages/firebase";
 
 import favicon from "src/assets/favicon.png";
+import { useRouter } from "next/router";
+import { Suspense } from "src/components/suspense";
+import { Loader } from "src/components/loader";
+import { SuspenseProvider } from "src/@packages/suspense";
+import { FirebaseProvider } from "src/@packages/firebase";
 import { DialogProvider } from "src/hooks/use-dialog";
 import { ToastProvider } from "src/hooks/use-toast";
-import { SuspenseProvider } from "src/@packages/suspense";
-import { Suspense } from "react";
 
 export default function App({ Component, pageProps }: any) {
-  // HACK: Suspense not suported on SSR yet :/
-  // https://nextjs.org/docs/advanced-features/react-18
-  if (typeof window === "undefined") {
-    return null;
-  }
+  const router = useRouter();
+
+  // HACK: the main app and auth flows need the provider wrapped here
+  // because a lot of pages use suspense directly, should probably refactor
+  // to make `useSuspense`/`useDocument`/`useCollection`/etc SSR-safe
+  const shouldRenderProviders =
+    router.asPath === "/app" ||
+    router.asPath?.startsWith("/app/") ||
+    router.asPath?.startsWith("/setup") ||
+    router.asPath?.startsWith("/auth");
 
   return (
     <>
@@ -57,17 +62,21 @@ export default function App({ Component, pageProps }: any) {
       <Reset />
       <GlobalStyles />
 
-      <Suspense fallback={null}>
-        <SuspenseProvider>
-          <FirebaseProvider>
-            <DialogProvider>
-              <ToastProvider>
-                <Component {...pageProps} />
-              </ToastProvider>
-            </DialogProvider>
-          </FirebaseProvider>
-        </SuspenseProvider>
-      </Suspense>
+      {shouldRenderProviders ? (
+        <Suspense fallback={<Loader />}>
+          <SuspenseProvider>
+            <FirebaseProvider>
+              <DialogProvider>
+                <ToastProvider>
+                  <Component {...pageProps} />
+                </ToastProvider>
+              </DialogProvider>
+            </FirebaseProvider>
+          </SuspenseProvider>
+        </Suspense>
+      ) : (
+        <Component {...pageProps} />
+      )}
     </>
   );
 }

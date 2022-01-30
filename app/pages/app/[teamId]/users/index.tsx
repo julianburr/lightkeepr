@@ -1,6 +1,6 @@
 import "src/utils/firebase";
 
-import { Suspense, useMemo } from "react";
+import { useMemo } from "react";
 import { useRouter } from "next/router";
 import {
   collection,
@@ -20,8 +20,8 @@ import { List } from "src/components/list";
 import { TitleBar } from "src/components/title-bar";
 import { Spacer } from "src/components/spacer";
 import { GroupHeading, Heading } from "src/components/text";
-import { Label } from "src/components/label";
 import { Loader } from "src/components/loader";
+import { Suspense } from "src/components/suspense";
 
 import { UserListItem } from "src/list-items/user";
 

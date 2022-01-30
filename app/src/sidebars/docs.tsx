@@ -1,4 +1,4 @@
-import { Suspense, ComponentProps } from "react";
+import { ComponentProps } from "react";
 import styled from "styled-components";
 
 import { useAuthUser } from "src/hooks/use-auth-user";
@@ -8,6 +8,7 @@ import { P, Small } from "src/components/text";
 import { Spacer } from "src/components/spacer";
 import { Sidebar } from "src/components/sidebar";
 import { Menu } from "src/components/menu";
+import { Suspense } from "src/components/suspense";
 
 const WrapProfile = styled.div`
   display: flex;

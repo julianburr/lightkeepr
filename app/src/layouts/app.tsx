@@ -1,6 +1,6 @@
 import "src/utils/firebase";
 
-import { PropsWithChildren, Suspense } from "react";
+import { PropsWithChildren } from "react";
 import styled from "styled-components";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -12,6 +12,7 @@ import { Loader } from "src/components/loader";
 import { Tooltip } from "src/components/tooltip";
 import { Button } from "src/components/button";
 import { Spacer } from "src/components/spacer";
+import { Suspense } from "src/components/suspense";
 import { AccountActionMenu } from "src/action-menus/account";
 import { AppSidebar } from "src/sidebars/app";
 
