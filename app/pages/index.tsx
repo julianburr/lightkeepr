@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import classNames from "classnames";
 import Head from "next/head";
@@ -334,7 +334,7 @@ export default function HomePage() {
               },
 
               {
-                title: "Cyress",
+                title: "Cypress",
                 files: [
                   {
                     title: "In your cypress/support/index.js",

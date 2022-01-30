@@ -1,6 +1,5 @@
 import "src/utils/firebase";
 
-import { Suspense } from "react";
 import { useRouter } from "next/router";
 import { doc, getFirestore } from "firebase/firestore";
 import styled from "styled-components";
@@ -14,6 +13,7 @@ import { Heading } from "src/components/text";
 import { Spacer } from "src/components/spacer";
 import { Loader } from "src/components/loader";
 import { ReportDetails } from "src/components/report-details";
+import { Suspense } from "src/components/suspense";
 
 const db = getFirestore();
 

@@ -59,7 +59,6 @@ type TopBarProps = ComponentProps<typeof Container> & {
 };
 
 export function TopBar({ logo, actions, className, props }: TopBarProps) {
-  console.log({ className, props });
   const containerRef = useRef<HTMLDivElement>();
   const [scrolled, setScrolled] = useState(false);
   useEffect(() => {

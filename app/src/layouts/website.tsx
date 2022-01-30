@@ -13,6 +13,15 @@ import GithubSvg from "src/assets/icons/github.svg";
 import TwitterSvg from "src/assets/icons/twitter.svg";
 import WavesSvg from "src/assets/illustrations/waves.svg";
 import DuckSvg from "src/assets/illustrations/rubber-duck.svg";
+import { Tooltip } from "src/components/tooltip";
+
+const Container = styled.div`
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  font-size: 1.6rem;
+  font-family: Lato;
+`;
 
 const StyledTopBar = styled(TopBar)`
   && {
@@ -57,7 +66,7 @@ const Logo = styled.div`
     }
 
     svg {
-      height: 5.8rem;
+      height: 5.4rem;
       width: auto;
       opacity: 0;
       transition: opacity 0.4s;
@@ -97,8 +106,9 @@ const Menu = styled.menu`
 `;
 
 const Content = styled.main`
-  font-size: 1.6rem;
-  font-family: Lato;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
 `;
 
 // #22c2fa
@@ -293,7 +303,7 @@ export function WebsiteLayout({ children }: WebsiteLayoutProps) {
   }, [active]);
 
   return (
-    <>
+    <Container>
       <StyledTopBar
         logo={
           <Logo>
@@ -314,10 +324,10 @@ export function WebsiteLayout({ children }: WebsiteLayoutProps) {
               <Link href="/pricing">
                 <a>Pricing</a>
               </Link>
-              <Link href="/documentation">
+              <Link href="/docs">
                 <a>Documentation</a>
               </Link>
-              <Link href="/sign-in">
+              <Link href="/auth/sign-in">
                 <a>Sign in</a>
               </Link>
             </Menu>
@@ -354,7 +364,7 @@ export function WebsiteLayout({ children }: WebsiteLayoutProps) {
             <a>Documentation</a>
           </Link>
           <Spacer h="2.4rem" />
-          <Link href="/sign-in">
+          <Link href="/auth/sign-in">
             <a>Sign in</a>
           </Link>
         </MobileMenu>
@@ -368,20 +378,30 @@ export function WebsiteLayout({ children }: WebsiteLayoutProps) {
             <FooterLogo>lightkeepr</FooterLogo> &copy; 2022
           </Copyright>
           <Social>
-            <a
-              href="https://twitter.com/jburr90"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <TwitterSvg />
-            </a>
-            <a
-              href="https://github.com/julianburr/lightkeepr"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <GithubSvg />
-            </a>
+            <Tooltip content="@jburr90 on Twitter">
+              {(props) => (
+                <a
+                  {...props}
+                  href="https://twitter.com/jburr90"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
+                  <TwitterSvg />
+                </a>
+              )}
+            </Tooltip>
+            <Tooltip content={"View on Github"}>
+              {(props) => (
+                <a
+                  {...props}
+                  href="https://github.com/julianburr/lightkeepr"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
+                  <GithubSvg />
+                </a>
+              )}
+            </Tooltip>
           </Social>
         </FooterInner>
 
@@ -389,6 +409,6 @@ export function WebsiteLayout({ children }: WebsiteLayoutProps) {
         <Duck />
         <Water />
       </Footer>
-    </>
+    </Container>
   );
 }

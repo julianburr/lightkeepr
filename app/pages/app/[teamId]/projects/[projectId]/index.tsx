@@ -1,6 +1,5 @@
 import "src/utils/firebase";
 
-import { Suspense } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import {
@@ -13,7 +12,6 @@ import {
 } from "firebase/firestore";
 
 import { useCollection, useDocument } from "src/@packages/firebase";
-import { useAuthUser } from "src/hooks/use-auth-user";
 import { AppLayout } from "src/layouts/app";
 import { Auth } from "src/components/auth";
 import { List } from "src/components/list";
@@ -21,6 +19,7 @@ import { Spacer } from "src/components/spacer";
 import { Heading, P } from "src/components/text";
 import { CodePreview } from "src/components/code-preview";
 import { HelpBox } from "src/components/help-box";
+import { Suspense } from "src/components/suspense";
 
 import { RunListItem } from "src/list-items/run";
 

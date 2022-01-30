@@ -1,6 +1,6 @@
 import "src/utils/firebase";
 
-import { Suspense, useMemo } from "react";
+import { useMemo } from "react";
 import { useRouter } from "next/router";
 import {
   collection,
@@ -16,10 +16,11 @@ import { AppLayout } from "src/layouts/app";
 import { Auth } from "src/components/auth";
 import { List } from "src/components/list";
 import { Loader } from "src/components/loader";
-
-import { ProjectListItem } from "src/list-items/project";
 import { Heading } from "src/components/text";
 import { Spacer } from "src/components/spacer";
+import { Suspense } from "src/components/suspense";
+
+import { ProjectListItem } from "src/list-items/project";
 
 const db = getFirestore();
 

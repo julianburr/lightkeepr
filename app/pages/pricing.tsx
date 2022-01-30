@@ -128,7 +128,7 @@ export default function PricingPage() {
                 <Feature>Last 100 Lighthouse reports retained</Feature>
               </ul>
             </Description>
-            <Button intent="primary" href="/sign-up">
+            <Button intent="primary" href="/auth/sign-up">
               Get started
             </Button>
           </PriceItem>
@@ -147,7 +147,7 @@ export default function PricingPage() {
                 <Feature>Last 2000 Lighthouse reports retained</Feature>
               </ul>
             </Description>
-            <Button href="/sign-up?plan=premium">Choose</Button>
+            <Button href="/auth/sign-up?plan=premium">Choose</Button>
           </PriceItem>
           <PriceItem>
             <Description>

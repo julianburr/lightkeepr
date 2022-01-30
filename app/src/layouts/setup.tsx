@@ -1,11 +1,12 @@
 import "src/utils/firebase";
 
-import { Suspense, PropsWithChildren } from "react";
+import { PropsWithChildren } from "react";
 import styled from "styled-components";
 import { getAuth } from "firebase/auth";
 
 import { TopBar } from "src/components/top-bar";
 import { Button } from "src/components/button";
+import { Suspense } from "src/components/suspense";
 
 import LogoSvg from "src/assets/logo.svg";
 

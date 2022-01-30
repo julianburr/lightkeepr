@@ -1,6 +1,5 @@
 import "src/utils/firebase";
 
-import { Suspense } from "react";
 import { useRouter } from "next/router";
 import {
   collection,
@@ -17,10 +16,9 @@ import { Auth } from "src/components/auth";
 import { List } from "src/components/list";
 import { Spacer } from "src/components/spacer";
 import { Heading, P } from "src/components/text";
+import { Suspense } from "src/components/suspense";
 
 import { ReportListItem } from "src/list-items/report";
-import { Value } from "src/components/value";
-import dayjs from "dayjs";
 
 const db = getFirestore();
 

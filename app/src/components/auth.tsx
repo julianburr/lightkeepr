@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import { useAuthUser } from "src/hooks/use-auth-user";
 import { usePersistedState } from "src/hooks/use-persisted-state";
 
-import SignIn from "pages/sign-in";
+import SignIn from "pages/auth/sign-in";
 
 type AuthProps = PropsWithChildren<Record<never, any>>;
 
