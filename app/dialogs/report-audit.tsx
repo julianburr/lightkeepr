@@ -3,7 +3,7 @@ import { Spacer } from "src/components/spacer";
 import { P } from "src/components/text";
 import { Markdown } from "src/components/markdown";
 import { Table } from "src/components/report-audit/table";
-import { Hint } from "src/components/report-audit/hint";
+import { Hint } from "src/components/hint";
 
 const MAP = {
   table: Table,
@@ -11,24 +11,22 @@ const MAP = {
 };
 
 export function ReportAuditDialog({ data }: any) {
-  const Value = MAP[data.audit?.details?.type as keyof typeof MAP];
+  const Value = MAP[data?.details?.type as keyof typeof MAP];
 
   const stackPack = data.report?.stackPacks?.find?.(
-    (pack: any) => pack.descriptions[data.audit.id]
+    (pack: any) => pack.descriptions[data.id]
   );
 
   return (
-    <Dialog title={<Markdown>{data.audit.title}</Markdown>}>
-      {data.audit.displayValue && (
-        <P grey>{data.audit.displayValue.replace(/•/g, "—")}</P>
-      )}
-      {data.audit.description && <Markdown>{data.audit.description}</Markdown>}
+    <Dialog title={<Markdown>{data.title}</Markdown>}>
+      {data.displayValue && <P grey>{data.displayValue.replace(/•/g, "—")}</P>}
+      {data.description && <Markdown>{data.description}</Markdown>}
 
-      {stackPack?.descriptions?.[data.audit.id] && (
+      {stackPack?.descriptions?.[data.id] && (
         <>
           <Spacer h="1.8rem" />
           <Hint>
-            <Markdown>{stackPack.descriptions[data.audit.id]}</Markdown>
+            <Markdown>{stackPack.descriptions[data.id]}</Markdown>
           </Hint>
           <Spacer h=".6rem" />
         </>
@@ -37,7 +35,7 @@ export function ReportAuditDialog({ data }: any) {
       {Value && (
         <>
           <Spacer h="1.8rem" />
-          <Value {...data.audit?.details} />
+          <Value {...data?.details} />
         </>
       )}
     </Dialog>

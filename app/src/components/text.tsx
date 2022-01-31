@@ -44,3 +44,7 @@ export const Bold = styled.b``;
 export const Semibold = styled.b``;
 
 export const Underline = styled.u``;
+
+export const Grey = styled.span`
+  opacity: 0.6;
+`;

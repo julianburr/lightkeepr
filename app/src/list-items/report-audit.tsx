@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useDialog } from "src/hooks/use-dialog";
 import { ListItem } from "src/components/list";
 import { Markdown } from "src/components/markdown";
-import { P } from "src/components/text";
+import { Grey, P } from "src/components/text";
 
 import { ReportAuditDialog } from "dialogs/report-audit";
 
@@ -16,16 +16,30 @@ import EyeSvg from "src/assets/icons/eye.svg";
 const Container = styled.div`
   display: flex;
   flex-direction: row;
+  align-items: flex-start;
+  gap: 0.8rem;
+  margin: -0.3rem;
+  width: calc(100% + 0.6rem);
+`;
+
+const Content = styled.div`
+  display: flex;
+  flex-direction: row;
   flex-wrap: wrap;
   flex: 1;
-  line-height: 1.1;
+  line-height: 1.2;
   gap: 0.6rem;
   text-align: left;
+  padding: 0.6rem 0 0.5rem;
+
+  p p {
+    display: inline;
+  }
 `;
 
 const Status = styled.div<{ type: string }>`
-  width: 2.4rem;
-  height: 2.4rem;
+  width: 2.8rem;
+  height: 2.8rem;
   border-radius: var(--sol--border-radius-s);
   background: ${(props) =>
     props.type === "improvement"
@@ -37,7 +51,6 @@ const Status = styled.div<{ type: string }>`
     ["improvement", "passed"].includes(props.type)
       ? "var(--sol--color-white)"
       : "var(--sol--palette-sand-700)"};
-  margin: -0.2rem 0.8rem -0.2rem -0.3rem;
   display: flex;
   align-self: flex-start;
   align-items: center;
@@ -52,20 +65,24 @@ const Status = styled.div<{ type: string }>`
 export function ReportAuditListItem({ data }: any) {
   const reportAuditDialog = useDialog(ReportAuditDialog);
   return (
-    <ListItem onClick={() => reportAuditDialog.open({ data })}>
-      <Status type={data.type}>
-        {data.type === "improvement" && <AlertSvg />}
-        {data.type === "notApplicable" && <CrossSvg />}
-        {data.type === "passed" && <CheckSvg />}
-        {data.type === "manual" && <EyeSvg />}
-        {data.type === "informative" && <InfoSvg />}
-      </Status>
+    <ListItem onClick={() => reportAuditDialog.open({ data: data.audit })}>
       <Container>
-        <Markdown>{data.audit.title}</Markdown>
+        <Status type={data.type}>
+          {data.type === "improvement" && <AlertSvg />}
+          {data.type === "notApplicable" && <CrossSvg />}
+          {data.type === "passed" && <CheckSvg />}
+          {data.type === "manual" && <EyeSvg />}
+          {data.type === "informative" && <InfoSvg />}
+        </Status>
+        <Content>
+          <P>
+            <Markdown>{data.audit?.title}</Markdown>
 
-        {data.audit.displayValue && (
-          <P grey>— {data.audit.displayValue.replace(/•/g, "—")}</P>
-        )}
+            {data.audit?.displayValue && (
+              <Grey> —&nbsp;{data.audit.displayValue.replace(/•/g, "—")}</Grey>
+            )}
+          </P>
+        </Content>
       </Container>
     </ListItem>
   );

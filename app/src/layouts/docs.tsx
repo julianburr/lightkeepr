@@ -73,15 +73,15 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-height: 100%;
+  flex: 1;
   width: 100%;
 `;
 
 const Content = styled.div`
   width: 100%;
-  min-height: 100%;
   display: flex;
   flex-direction: row;
+  flex: 1;
 `;
 
 const Main = styled.main`

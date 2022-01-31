@@ -25,8 +25,8 @@ export const GlobalStyles = createGlobalStyle`
 
   html, body, #__next {
     width: 100%;
-    min-height: 100%;
     display: flex;
+    flex:1;
     flex-direction: column;
   }
 
@@ -40,6 +40,8 @@ export const GlobalStyles = createGlobalStyle`
     background: var(--sol--color-white);
     color: var(--sol--typography-color-default);
     overflow-wrap: anywhere;
+    height: 100%;
+
   }
 
   @media (min-width: 800px) {

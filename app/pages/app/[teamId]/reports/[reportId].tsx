@@ -22,7 +22,7 @@ const WrapSummary = styled.div`
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  gap: 1.2rem;
+  gap: 0.4rem 1.2rem;
   font-family: "Playfair Display";
   text-align: center;
   margin: 1.2rem 0;
@@ -183,8 +183,14 @@ const Score = styled.span`
 export default function Report() {
   const router = useRouter();
 
-  const reportRef = doc(db, "reports", router.query.reportId!);
-  const report = useDocument(reportRef);
+  const reportRef = router.query.reportId
+    ? doc(db, "reports", router.query.reportId)
+    : null;
+  const report = useDocument(reportRef, { fetch: router.isReady });
+
+  if (!router.isReady) {
+    return <Loader />;
+  }
 
   return (
     <Auth>

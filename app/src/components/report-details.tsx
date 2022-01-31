@@ -8,6 +8,7 @@ import { Heading, P } from "src/components/text";
 import { Spacer } from "src/components/spacer";
 import { Accordion } from "src/components/accordion";
 import { Markdown } from "src/components/markdown";
+import { ReportSummary } from "src/components/report-summary";
 
 import { ReportAuditListItem } from "src/list-items/report-audit";
 
@@ -30,7 +31,7 @@ export function ReportDetails() {
   );
 
   if (!router.query.category) {
-    return <P>Smart report not yet implemented</P>;
+    return <ReportSummary reportId={router.query.reportId!} />;
   }
 
   const category = data.report.categories[router.query.category];
@@ -100,7 +101,7 @@ export function ReportDetails() {
       {Object.keys(groups.others).map(
         (groupKey) =>
           groups.others[groupKey]?.length > 0 && (
-            <>
+            <Fragment key={groupKey}>
               {data.report.categoryGroups[groupKey]?.title && (
                 <>
                   <Heading level={3}>
@@ -119,7 +120,7 @@ export function ReportDetails() {
                 Item={ReportAuditListItem}
               />
               <Spacer h="1.8rem" />
-            </>
+            </Fragment>
           )
       )}
 

@@ -11,6 +11,7 @@ import { env } from "src/env";
 import { createHandler } from "src/utils/node/api";
 
 import credentials from "google-service-account.json";
+import { AUDITS } from "src/utils/audits";
 
 const storage = new Storage({
   projectId: credentials.project_id,
@@ -65,6 +66,17 @@ function getFlowSummary(reportData: any) {
   return reportData?.steps?.map?.((step: any) => getSummary(step?.lhr));
 }
 
+function getAudits(reportData: any) {
+  return AUDITS.reduce((all: any, audit) => {
+    all[audit.id] = reportData?.audits?.[audit.id];
+    return all;
+  }, {});
+}
+
+function getFlowAudits(reportData: any) {
+  return reportData?.steps?.map?.((step: any) => getAudits(step?.lhr));
+}
+
 export const config = {
   api: {
     bodyParser: false,
@@ -107,6 +119,7 @@ export default createHandler({
       project = { id: p.id, ...p.data() };
     });
     const projectRef = db.collection("projects").doc(project.id);
+    const teamRef = db.collection("teams").doc(project.team.id);
 
     if (!files?.file?.filepath) {
       return res.status(400).json({ message: "No report file provided" });
@@ -126,9 +139,14 @@ export default createHandler({
         ? getFlowSummary(reportData)
         : getSummary(reportData);
 
+    // Store some audits for easier access for summaries and reporting
+    const audits =
+      fields.type === "user-flow"
+        ? getFlowAudits(reportData)
+        : getAudits(reportData);
+
     // Find reports for comparison, most recent report on the same branch as well as
     // the most recent report on the main branch
-
     let previousBranchReport: any = null;
     if (run.brach) {
       const branchReportsSnap = await db
@@ -189,6 +207,7 @@ export default createHandler({
     }
 
     const ref = await db.collection("reports").add({
+      team: teamRef,
       project: projectRef,
       run: db.collection("runs").doc(run.id),
       branch: run.branch,
@@ -197,6 +216,7 @@ export default createHandler({
       createdAt: Timestamp.fromDate(new Date()),
       meta,
       summary,
+      audits,
       previousBranchReport: previousBranchReport?.id
         ? db.collection("reports").doc(previousBranchReport.id)
         : null,
