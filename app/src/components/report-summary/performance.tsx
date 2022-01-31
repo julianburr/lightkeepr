@@ -50,10 +50,15 @@ export function PerformanceSummary({ pastReports }: PerformanceSummaryProps) {
             });
             return all;
           },
-          audits.reduce<any>((all: any, audit: any) => (all[audit.id] = []), {})
+          audits.reduce<any>((all: any, audit: any) => {
+            all[audit.id] = [];
+            return all;
+          }, {})
         ),
     [pastReports]
   );
+
+  console.log({ items, pastReports, audits });
 
   const regressions = useMemo(() => getRegressionsFromObject(items), [items]);
 

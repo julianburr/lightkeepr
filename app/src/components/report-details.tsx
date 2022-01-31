@@ -11,6 +11,7 @@ import { Markdown } from "src/components/markdown";
 import { ReportSummary } from "src/components/report-summary";
 
 import { ReportAuditListItem } from "src/list-items/report-audit";
+import { useMemo } from "react";
 
 type Audit = any;
 
@@ -34,63 +35,83 @@ export function ReportDetails() {
     return <ReportSummary reportId={router.query.reportId!} />;
   }
 
-  const category = data.report.categories[router.query.category];
-
-  const groups: GroupedAudits = category.auditRefs.reduce(
-    (all: GroupedAudits, ref: any) => {
-      const audit = data.report.audits[ref.id];
-      if (ref.group === "hidden") {
-        return all;
-      } else if (audit.scoreDisplayMode === "manual") {
-        all.manual.push({
-          audit,
-          ref,
-          type: "manual",
-          report: data.report,
-        });
-      } else if (audit.scoreDisplayMode === "notApplicable") {
-        all.notApplicable.push({
-          audit,
-          ref,
-          type: "notApplicable",
-          report: data.report,
-        });
-      } else if (audit.scoreDisplayMode === "informative") {
-        all.informative.push({
-          audit,
-          ref,
-          type: "informative",
-          report: data.report,
-        });
-      } else if (audit.score >= 0.9) {
-        all.passed.push({
-          audit,
-          ref,
-          type: "passed",
-          report: data.report,
-        });
-      } else {
-        const groupKey = ref.group || "__";
-        if (!all.others[groupKey]) {
-          all.others[groupKey] = [];
-        }
-        all.others[groupKey].push({
-          audit,
-          ref,
-          type: "improvement",
-          report: data.report,
-        });
-      }
-      return all;
-    },
-    {
-      manual: [],
-      notApplicable: [],
-      informative: [],
-      passed: [],
-      others: { __: [] },
+  const { category, groups } = useMemo(() => {
+    if (!router.query.category) {
+      return {};
     }
-  );
+
+    const category = data.report.categories[router.query.category];
+    if (!category) {
+      return {};
+    }
+
+    const groups: GroupedAudits = category.auditRefs.reduce(
+      (all: GroupedAudits, ref: any) => {
+        const audit = data.report.audits[ref.id];
+        if (ref.group === "hidden") {
+          return all;
+        } else if (audit.scoreDisplayMode === "manual") {
+          all.manual.push({
+            audit,
+            ref,
+            type: "manual",
+            report: data.report,
+          });
+        } else if (audit.scoreDisplayMode === "notApplicable") {
+          all.notApplicable.push({
+            audit,
+            ref,
+            type: "notApplicable",
+            report: data.report,
+          });
+        } else if (audit.scoreDisplayMode === "informative") {
+          all.informative.push({
+            audit,
+            ref,
+            type: "informative",
+            report: data.report,
+          });
+        } else if (audit.score >= 0.9) {
+          all.passed.push({
+            audit,
+            ref,
+            type: "passed",
+            report: data.report,
+          });
+        } else {
+          const groupKey = ref.group || "__";
+          if (!all.others[groupKey]) {
+            all.others[groupKey] = [];
+          }
+          all.others[groupKey].push({
+            audit,
+            ref,
+            type: "improvement",
+            report: data.report,
+          });
+        }
+        return all;
+      },
+      {
+        manual: [],
+        notApplicable: [],
+        informative: [],
+        passed: [],
+        others: { __: [] },
+      }
+    );
+
+    return { category, groups };
+  }, [data, router.query.category]);
+
+  if (!groups || !category) {
+    return (
+      <>
+        <Heading level={2}>n/a</Heading>
+        <P>This category has been excluded from the report.</P>
+      </>
+    );
+  }
 
   return (
     <Fragment key={category.id}>

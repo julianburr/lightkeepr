@@ -14,6 +14,7 @@ import { Spacer } from "src/components/spacer";
 import { Loader } from "src/components/loader";
 import { ReportDetails } from "src/components/report-details";
 import { Suspense } from "src/components/suspense";
+import { CATEGORIES } from "src/utils/audits";
 
 const db = getFirestore();
 
@@ -41,7 +42,7 @@ const WrapSummary = styled.div`
   }
 `;
 
-const SummaryItem = styled.div<{ value: number }>`
+const SummaryItem = styled.div<{ value: number; hasRun?: boolean }>`
   width: 8rem;
   height: 8rem;
   border: 0 none;
@@ -55,7 +56,9 @@ const SummaryItem = styled.div<{ value: number }>`
   position: relative;
   line-height: 1;
   background: ${(props) =>
-    props.value < 50
+    !props.hasRun
+      ? `var(--sol--palette-sand-100)`
+      : props.value < 50
       ? `var(--sol--palette-red-50)`
       : props.value < 90
       ? `var(--sol--palette-yellow-50)`
@@ -70,7 +73,9 @@ const SummaryItem = styled.div<{ value: number }>`
   &:hover,
   &:focus {
     background: ${(props) =>
-      props.value < 50
+      !props.hasRun
+        ? `var(--sol--palette-sand-200)`
+        : props.value < 50
         ? `var(--sol--palette-red-100)`
         : props.value < 90
         ? `var(--sol--palette-yellow-100)`
@@ -81,7 +86,9 @@ const SummaryItem = styled.div<{ value: number }>`
   &.active:focus,
   &.active {
     background: ${(props) =>
-      props.value < 50
+      !props.hasRun
+        ? `var(--sol--palette-sand-400)`
+        : props.value < 50
         ? `var(--sol--palette-red-200)`
         : props.value < 90
         ? `var(--sol--palette-yellow-200)`
@@ -95,7 +102,9 @@ const SummaryItem = styled.div<{ value: number }>`
     content: " ";
     position: absolute;
     color: ${(props) =>
-      props.value < 50
+      !props.hasRun
+        ? `var(--sol--palette-sand-500)`
+        : props.value < 50
         ? `var(--sol--palette-red-500)`
         : props.value < 90
         ? `var(--sol--palette-yellow-500)`
@@ -199,37 +208,40 @@ export default function Report() {
         <Spacer h="1.6rem" />
 
         <WrapSummary>
-          {[
-            { label: "Performance", key: "performance" },
-            { label: "Accessbility", key: "accessibility" },
-            { label: "Best practices", key: "best-practices" },
-            { label: "SEO", key: "seo" },
-            { label: "PWA", key: "pwa" },
-          ].map((item) => (
-            <Link
-              key={item.key}
-              passHref
-              href={{
-                query: {
-                  ...router.query,
-                  category:
-                    router.query.category === item.key ? undefined : item.key,
-                },
-              }}
-            >
-              <a>
-                <Label>{item.label}</Label>
-                <SummaryItem
-                  value={report.summary?.[item.key] * 100}
-                  className={classNames({
-                    active: router.query.category === item.key,
-                  })}
-                >
-                  <Score>{report.summary?.[item.key] * 100}</Score>
-                </SummaryItem>
-              </a>
-            </Link>
-          ))}
+          {CATEGORIES.map((item) => {
+            const { category, ...q } = router.query;
+            console.log({ category, item });
+
+            const hasRun =
+              report.summary?.[item.id] || report.summary?.[item.id] === 0;
+
+            return (
+              <Link
+                key={item.id}
+                href={{
+                  query: {
+                    ...q,
+                    ...(category === item.id ? {} : { category: item.id }),
+                  },
+                }}
+              >
+                <a>
+                  <Label>{item.label}</Label>
+                  <SummaryItem
+                    hasRun={hasRun}
+                    value={hasRun ? report.summary?.[item.id] * 100 : 0}
+                    className={classNames({
+                      active: router.query.category === item.id,
+                    })}
+                  >
+                    <Score>
+                      {hasRun ? report.summary?.[item.id] * 100 : "n/a"}
+                    </Score>
+                  </SummaryItem>
+                </a>
+              </Link>
+            );
+          })}
         </WrapSummary>
         <Spacer h="1.6rem" />
 

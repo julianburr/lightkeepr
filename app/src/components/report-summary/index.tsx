@@ -21,6 +21,7 @@ import { PerformanceSummary } from "./performance";
 import { NetworkSummary } from "./network";
 import { UserTimingsSummary } from "./user-timings";
 import { OpportunitiesSummary } from "./opportunities";
+import { BudgetsSummary } from "./budgets";
 
 const db = getFirestore();
 
@@ -56,7 +57,20 @@ function Summary({ reportId }: ReportSummaryProps) {
 
   return (
     <>
-      {/* TODO: add budgets */}
+      {!!data.report.audits?.["performance-budget"]?.details?.items?.length &&
+        !!data.report.audits?.["performance-budget"]?.details?.items
+          ?.length && (
+          <>
+            <h2>Budgets</h2>
+            <BudgetsSummary
+              report={report}
+              pastReports={pastReports}
+              data={data}
+            />
+
+            <Spacer h="3.2rem" />
+          </>
+        )}
 
       <h2>Opportunities</h2>
       <OpportunitiesSummary

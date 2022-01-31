@@ -97,12 +97,6 @@ export const AUDITS = [
     default: true,
   },
   {
-    id: "network-requests",
-    label: "Network requests",
-    category: "network",
-    default: true,
-  },
-  {
     id: "server-response-time",
     label: "Server response time",
     category: "network",

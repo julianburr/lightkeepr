@@ -52,7 +52,10 @@ export function NetworkSummary({ pastReports, data }: NetworkSummaryProps) {
             });
             return all;
           },
-          audits.reduce<any>((all: any, audit: any) => (all[audit.id] = []), {})
+          audits.reduce<any>((all: any, audit: any) => {
+            all[audit.id] = [];
+            return all;
+          }, {})
         ),
     [pastReports]
   );

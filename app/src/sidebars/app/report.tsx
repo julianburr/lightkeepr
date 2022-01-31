@@ -96,8 +96,7 @@ export function ReportSidebar({ reportId, getLinkProps }: ReportSidebarProps) {
   const items = [
     {
       icon: <ArrowLeftSvg />,
-      label: "Back to project overview",
-      href: `/app/${router.query.teamId}/runs/${report.run.id}`,
+      label: "Back to run overview",
       isBacklink: true,
       ...(getLinkProps?.({ runId: report.run.id }) || {}),
     },

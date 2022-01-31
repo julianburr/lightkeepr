@@ -56,7 +56,6 @@ export function ScoresSummary({ pastReports }: ScoresSummaryProps) {
   );
 
   const regressions = useMemo(() => getRegressionsFromObject(items), [items]);
-  console.log({ regressions });
 
   return (
     <>
