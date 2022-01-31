@@ -22,7 +22,7 @@ import { Tooltip } from "src/components/tooltip";
 
 import RefreshSvg from "src/assets/icons/refresh-cw.svg";
 import { useAuthUser } from "src/hooks/use-auth-user";
-import { Heading } from "src/components/text";
+import { Heading, Small } from "src/components/text";
 import { FormGrid } from "src/components/form-grid";
 import { useCallback } from "react";
 import { CheckboxInput } from "src/components/checkbox-input";
@@ -50,23 +50,23 @@ export default function ProjectSettings() {
       name: project.name,
       gitMain: project.gitMain,
       failOnRegression: project.failOnRegression,
-      performanceBudget: project.budget?.performance,
-      accessibilityBudget: project.budget?.accessibility,
-      bestPracticesBudget: project.budget?.["best-practices"],
-      seoBudget: project.budget?.seo,
-      pwaBudget: project.budget?.pwa,
+      performanceTarget: project.targets?.performance || 0,
+      accessibilityTarget: project.targets?.accessibility || 0,
+      bestPracticesTarget: project.targets?.["best-practices"] || 0,
+      seoTarget: project.targets?.seo || 0,
+      pwaTarget: project.targets?.pwa || 0,
     },
     onSubmit: async (values) => {
       await updateDoc(projectRef, {
         name: values.name,
         gitMain: values.gitMain,
         failOnRegression: values.failOnRegression,
-        budget: {
-          performance: values.performanceBudget,
-          accessibility: values.accessibilityBudget,
-          ["best-practices"]: values.bestPracticesBudget,
-          seo: values.seoBudget,
-          pwa: values.pwaBudget,
+        targets: {
+          performance: values.performanceTarget,
+          accessibility: values.accessibilityTarget,
+          ["best-practices"]: values.bestPracticesTarget,
+          seo: values.seoTarget,
+          pwa: values.pwaTarget,
         },
       });
       toast.show({ message: "Project settings have been updated" });
@@ -144,49 +144,65 @@ export default function ProjectSettings() {
 
             <Spacer h="2.4rem" />
 
-            <Heading level={2}>Budgets and conditions</Heading>
+            <Heading level={2}>Reports</Heading>
             <Spacer h="1.2rem" />
-            <FormGrid>
+            <Field
+              name="failOnRegression"
+              Input={CheckboxInput}
+              inputProps={{
+                label: "Fail on score regression",
+                description: (
+                  <>
+                    Whenever a report has a regression of more than 2 points in
+                    any of the scores compared to the previous report on the
+                    same branch, the report will marked as failed.
+                  </>
+                ),
+              }}
+            />
+
+            <Spacer h="1.6rem" />
+
+            <Heading level={3}>Score targets</Heading>
+            <Small grey>
+              These targets allow you to specify the score you want to aim for
+              in all reports in this project. If the scores are below their
+              targets, the report will be marked as failed.
+            </Small>
+            <Spacer h=".6rem" />
+
+            <FormGrid columns={2}>
               <Field
-                name="failOnRegression"
-                label="Fail on score regression"
-                description={
-                  `Whenever a report has a regression of more than 2 points in any of ` +
-                  `the scores compared to the previous report on the same branch, the ` +
-                  `report will marked as failed.`
-                }
-                Input={CheckboxInput}
-                inputProps={{ label: "Enable" }}
-              />
-              <Field
-                name="performanceBudget"
-                label="Performance budget"
+                name="performanceTarget"
+                label="Performance"
                 Input={RangeInput}
               />
               <Field
-                name="accessibilityBudget"
-                label="Accessibility budget"
+                name="accessibilityTarget"
+                label="Accessibility"
                 Input={RangeInput}
               />
               <Field
-                name="bestPracticesBudget"
-                label="Best practices budget"
+                name="bestPracticesTarget"
+                label="Best practices"
                 Input={RangeInput}
               />
-              <Field name="seoBudget" label="SEO budget" Input={RangeInput} />
-              <Field name="pwaBudget" label="PWA budget" Input={RangeInput} />
-              <ButtonBar
-                left={
-                  <Button
-                    type="submit"
-                    intent="primary"
-                    disabled={use("isSubmitting")}
-                  >
-                    Update settings
-                  </Button>
-                }
-              />
+              <Field name="seoTarget" label="SEO" Input={RangeInput} />
+              <Field name="pwaTarget" label="PWA" Input={RangeInput} />
             </FormGrid>
+
+            <Spacer h="1.6rem" />
+            <ButtonBar
+              left={
+                <Button
+                  type="submit"
+                  intent="primary"
+                  disabled={use("isSubmitting")}
+                >
+                  Update settings
+                </Button>
+              }
+            />
           </form>
         </Container>
       </AppLayout>

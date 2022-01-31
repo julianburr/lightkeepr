@@ -22,31 +22,31 @@ type ReportSidebarProps = {
 };
 
 function ReportMeta({ reportId }: ReportSidebarProps) {
-  const { data } = useSuspense(() => api.get(`/api/reports/${reportId}`), {
-    key: `report/${reportId}`,
-  });
+  const report = useDocument(doc(db, "reports", reportId));
 
   return (
     <Meta
       data={[
         {
           label: "Generated at",
-          value: dayjs(data.report.fetchTime).format("D MMM YYYY h:mma"),
+          value: report.createdAt
+            ? dayjs.unix(report.createdAt.seconds).format("D MMM YYYY h:mma")
+            : null,
         },
         {
           label: "Lighthouse version",
-          value: data.report.lighthouseVersion,
+          value: report.meta.lighthouseVersion,
         },
         {
           label: "Device",
-          value: data.report.configSettings.formFactor,
+          value: report.meta.configSettings.formFactor,
         },
         {
           label: "Screen emulation",
           value: (
             <>
-              {data.report.configSettings.screenEmulation.width}&times;
-              {data.report.configSettings.screenEmulation.height}
+              {report.meta.configSettings.screenEmulation.width}&times;
+              {report.meta.configSettings.screenEmulation.height}
             </>
           ),
         },
@@ -54,7 +54,7 @@ function ReportMeta({ reportId }: ReportSidebarProps) {
           label: "Throttling (request latency)",
           value: `${
             Math.ceil(
-              data.report.configSettings.throttling.requestLatencyMs * 100
+              report.meta.configSettings.throttling.requestLatencyMs * 100
             ) / 100
           } kb/s`,
         },
@@ -62,7 +62,7 @@ function ReportMeta({ reportId }: ReportSidebarProps) {
           label: "Throttling (downloads)",
           value: `${
             Math.ceil(
-              data.report.configSettings.throttling.downloadThroughputKbps * 100
+              report.meta.configSettings.throttling.downloadThroughputKbps * 100
             ) / 100
           } kb/s`,
         },
@@ -70,7 +70,7 @@ function ReportMeta({ reportId }: ReportSidebarProps) {
           label: "Throttling (uploads)",
           value: `${
             Math.ceil(
-              data.report.configSettings.throttling.uploadThroughputKbps * 100
+              report.meta.configSettings.throttling.uploadThroughputKbps * 100
             ) / 100
           } kb/s`,
         },
@@ -78,7 +78,7 @@ function ReportMeta({ reportId }: ReportSidebarProps) {
           label: "Throttling (CPU)",
           value: (
             <>
-              {data.report.configSettings.throttling.cpuSlowdownMultiplier}
+              {report.meta.configSettings.throttling.cpuSlowdownMultiplier}
               &times;
             </>
           ),
@@ -96,8 +96,7 @@ export function ReportSidebar({ reportId, getLinkProps }: ReportSidebarProps) {
   const items = [
     {
       icon: <ArrowLeftSvg />,
-      label: "Back to project overview",
-      href: `/app/${router.query.teamId}/runs/${report.run.id}`,
+      label: "Back to run overview",
       isBacklink: true,
       ...(getLinkProps?.({ runId: report.run.id }) || {}),
     },

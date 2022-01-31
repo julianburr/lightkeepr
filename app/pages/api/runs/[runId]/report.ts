@@ -11,6 +11,7 @@ import { env } from "src/env";
 import { createHandler } from "src/utils/node/api";
 
 import credentials from "google-service-account.json";
+import { AUDITS } from "src/utils/audits";
 
 const storage = new Storage({
   projectId: credentials.project_id,
@@ -20,8 +21,9 @@ const storage = new Storage({
 const bucket = storage.bucket(env.firebase.storageBucket!);
 
 const brotli = createCompress();
-
 const db = getFirestore();
+
+const REGRESSION_THRESHOLD = 0.2;
 
 function parseRequest(
   req: NextApiRequest
@@ -63,6 +65,17 @@ function getSummary(reportData: any) {
 
 function getFlowSummary(reportData: any) {
   return reportData?.steps?.map?.((step: any) => getSummary(step?.lhr));
+}
+
+function getAudits(reportData: any) {
+  return AUDITS.reduce((all: any, audit) => {
+    all[audit.id] = reportData?.audits?.[audit.id];
+    return all;
+  }, {});
+}
+
+function getFlowAudits(reportData: any) {
+  return reportData?.steps?.map?.((step: any) => getAudits(step?.lhr));
 }
 
 export const config = {
@@ -107,6 +120,7 @@ export default createHandler({
       project = { id: p.id, ...p.data() };
     });
     const projectRef = db.collection("projects").doc(project.id);
+    const teamRef = db.collection("teams").doc(project.team.id);
 
     if (!files?.file?.filepath) {
       return res.status(400).json({ message: "No report file provided" });
@@ -126,9 +140,14 @@ export default createHandler({
         ? getFlowSummary(reportData)
         : getSummary(reportData);
 
+    // Store some audits for easier access for summaries and reporting
+    const audits =
+      fields.type === "user-flow"
+        ? getFlowAudits(reportData)
+        : getAudits(reportData);
+
     // Find reports for comparison, most recent report on the same branch as well as
     // the most recent report on the main branch
-
     let previousBranchReport: any = null;
     if (run.brach) {
       const branchReportsSnap = await db
@@ -161,34 +180,72 @@ export default createHandler({
       });
     }
 
-    // Determine status based on project setttings
+    // Determine status based on project setttings and lighthouse budgets
     let status = "passed";
-    let statusReason = null;
+    const statusReasons = [];
 
-    if (project.failOnRegression && previousBranchReport) {
-      const hasRegression = Object.keys(summary).filter(
-        (category) =>
-          summary[category] < previousBranchReport.summary[category] - 0.2
-      );
-      if (hasRegression?.length) {
-        status = "failed:regression";
-        statusReason = hasRegression;
+    // Any primary score regression
+    let regressions: string[] = [];
+
+    if (project.failOnRegression) {
+      if (previousBranchReport) {
+        regressions = Object.keys(summary).filter(
+          (category) =>
+            previousBranchReport.summary[category] &&
+            (summary[category] || summary[category] === 0) &&
+            previousBranchReport.summary[category] - summary[category] >
+              REGRESSION_THRESHOLD
+        );
+        if (regressions?.length) {
+          status = "failed";
+          statusReasons.push("regression:branch");
+        }
+      }
+
+      if (previousMainReport) {
+        regressions = Object.keys(summary).filter(
+          (category) =>
+            previousMainReport.summary[category] &&
+            (summary[category] || summary[category] === 0) &&
+            previousMainReport.summary[category] - summary[category] >
+              REGRESSION_THRESHOLD
+        );
+        if (regressions?.length) {
+          status = "failed";
+          statusReasons.push("regression:main");
+        }
       }
     }
 
-    if (status === "passed") {
-      const hasBudgetFail = Object.keys(summary).filter(
-        (category) =>
-          project.budget?.[category] &&
-          summary[category] * 100 < project.budget?.[category]
-      );
-      if (hasBudgetFail?.length) {
-        status = "failed:budget";
-        statusReason = hasBudgetFail;
-      }
+    // Any targets not met
+    const failedTargets = Object.keys(summary).filter(
+      (category) =>
+        project.targets?.[category] &&
+        summary[category] * 100 < project.targets?.[category]
+    );
+    if (failedTargets?.length) {
+      status = "failed";
+      statusReasons.push("target");
+    }
+
+    // Any budgets not met
+    const budgets = [
+      ...(reportData?.audits?.["performance-budget"]?.details?.items || []),
+      ...(reportData?.audits?.["timing-budget"]?.details?.items || []),
+    ];
+    const failedBudgets = budgets.filter(
+      (budget) =>
+        !!budget.sizeOverBudget ||
+        !!budget.countOverBudget ||
+        !!budget.overBudget
+    );
+    if (failedBudgets?.length) {
+      status = "failed";
+      statusReasons.push("budget");
     }
 
     const ref = await db.collection("reports").add({
+      team: teamRef,
       project: projectRef,
       run: db.collection("runs").doc(run.id),
       branch: run.branch,
@@ -197,14 +254,20 @@ export default createHandler({
       createdAt: Timestamp.fromDate(new Date()),
       meta,
       summary,
+      audits,
+      budgets,
       previousBranchReport: previousBranchReport?.id
         ? db.collection("reports").doc(previousBranchReport.id)
         : null,
       previousMainReport: previousMainReport?.id
         ? db.collection("reports").doc(previousMainReport.id)
         : null,
+      targets: project.targets,
       status,
-      statusReason,
+      statusReasons,
+      regressions,
+      failedBudgets,
+      failedTargets,
     });
     const report = await ref.get();
 

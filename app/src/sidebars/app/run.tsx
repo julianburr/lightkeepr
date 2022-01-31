@@ -8,7 +8,6 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { useRouter } from "next/router";
 
 import { useCollection, useDocument } from "src/@packages/firebase";
 import { Menu } from "src/components/menu";
@@ -26,8 +25,6 @@ type RunSidebarProps = {
 };
 
 export function RunSidebar({ runId, getLinkProps }: RunSidebarProps) {
-  const router = useRouter();
-
   const runRef = doc(db, "runs", runId);
   const run = useDocument(runRef);
 

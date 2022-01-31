@@ -19,7 +19,7 @@ const Ul = styled.ul<{ columns?: number; gap?: string }>`
   grid-template-columns: 1fr;
   gap: ${(props) => props.gap || ".3rem"};
 
-  @media (min-width: 600px) {
+  @media (min-width: 800px) {
     grid-template-columns: ${(props) => getColumns(props.columns, 2)};
   }
 

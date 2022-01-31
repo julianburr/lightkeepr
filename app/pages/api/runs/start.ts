@@ -29,7 +29,12 @@ export default createHandler({
       project = { id: p.id, ...p.data() };
     });
 
+    const projectRef = db.collection("projects").doc(project.id);
+    const teamRef = db.collection("teams").doc(project.team.id);
+
     const ref = await db.collection("runs").add({
+      project: projectRef,
+      team: teamRef,
       startedAt: Timestamp.fromDate(new Date()),
       finishedAt: null,
       lastReportAt: null,
@@ -37,7 +42,6 @@ export default createHandler({
       commit: req.body.commit || null,
       commitMessage: req.body.commitMessage || null,
       repo: req.body.repo || null,
-      project: db.collection("projects").doc(project.id),
       status: "running",
     });
     const run = await ref.get();

@@ -74,6 +74,7 @@ type ChildrenProps = {
   onFocus: (e: any) => void;
   onBlur: (e: any) => void;
   "aria-describedby": string;
+  tabIndex: 0;
   _: {
     update: UpdateFn | null;
   };
@@ -201,6 +202,7 @@ export function Tooltip({
         onFocus: handleShow,
         onBlur: handleHide,
         "aria-describedby": `tooltip-${instanceUuid}`,
+        tabIndex: 0,
         _: { update },
       })}
 

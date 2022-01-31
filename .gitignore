@@ -3,5 +3,12 @@ node_modules
 # Misc
 .DS_Store
 
+# Caches
 .vercel
 .parcel-cache
+
+# TS
+tsconfig.tsbuildinfo
+
+# Test scripts
+__testing/
