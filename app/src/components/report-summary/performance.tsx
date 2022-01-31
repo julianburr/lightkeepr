@@ -58,8 +58,6 @@ export function PerformanceSummary({ pastReports }: PerformanceSummaryProps) {
     [pastReports]
   );
 
-  console.log({ items, pastReports, audits });
-
   const regressions = useMemo(() => getRegressionsFromObject(items), [items]);
 
   return (

@@ -202,6 +202,12 @@ export default function HomePage() {
   const [auditCategory, setAuditCategory] =
     useState<keyof typeof auditExamples>("accessibility");
 
+  useEffect(() => {
+    window.performance.mark("loaded");
+    window.performance.measure("Load time", "requestStart", "loaded");
+    window.performance.measure("Render time", "beforeRender", "loaded");
+  }, []);
+
   return (
     <WebsiteLayout>
       <Head>

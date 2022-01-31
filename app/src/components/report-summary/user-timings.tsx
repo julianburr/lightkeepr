@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import styled from "styled-components";
+import dayjs from "dayjs";
 
 import { formatMs } from "src/utils/format";
 import { getRegressionsFromObject } from "src/utils/regressions";
@@ -36,7 +37,13 @@ export function UserTimingsSummary({ pastReports }: UserTimingsSummaryProps) {
               if (!all[timing.name]) {
                 all[timing.name] = [];
               }
-              all[timing.name].push(timing);
+              all[timing.name].push({
+                ...timing,
+                date: report.createdAt
+                  ? dayjs.unix(report.createdAt.seconds)
+                  : undefined,
+                report,
+              });
             });
           return all;
         }, {}),
@@ -73,10 +80,10 @@ export function UserTimingsSummary({ pastReports }: UserTimingsSummaryProps) {
             {Object.keys(items).map((name) => (
               <Trend
                 key={name}
-                label={name || "n/a"}
+                label={name}
                 items={items[name].map((item: any, _: number, all: any[]) => {
-                  const max = Math.max(...all.map((i: any) => i.duration));
-                  const value = item.duration / max;
+                  const fastest = Math.min(...all.map((i: any) => i.duration));
+                  const value = (fastest / item.duration) * 100;
                   return {
                     ...item,
                     value,

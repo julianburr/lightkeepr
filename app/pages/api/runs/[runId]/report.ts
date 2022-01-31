@@ -185,7 +185,7 @@ export default createHandler({
     const statusReasons = [];
 
     // Any primary score regression
-    let regressions;
+    let regressions: string[] = [];
 
     if (project.failOnRegression) {
       if (previousBranchReport) {
@@ -234,7 +234,10 @@ export default createHandler({
       ...(reportData?.audits?.["timing-budget"]?.details?.items || []),
     ];
     const failedBudgets = budgets.filter(
-      (budget) => !!budget.sizeOverBudget || !!budget.overBudget
+      (budget) =>
+        !!budget.sizeOverBudget ||
+        !!budget.countOverBudget ||
+        !!budget.overBudget
     );
     if (failedBudgets?.length) {
       status = "failed";

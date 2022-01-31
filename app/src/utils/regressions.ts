@@ -2,6 +2,7 @@ const REGRESSION_THRESHOLD = 10;
 
 type Item = {
   value: number;
+  displayValue: any;
   report?: any;
 };
 
@@ -27,32 +28,37 @@ export function getRegressions(items: Item[] = []) {
   filteredItems.forEach((item, index, all) => {
     const regression = index === 0 ? 0 : all[index - 1].value - item.value;
     if (regression >= REGRESSION_THRESHOLD) {
-      regressions.push({
-        type: "immediate",
-        item,
-        prevItem: all[index - 1],
-        regression,
-        commit: item.report?.commit,
-        commitMessage: item.report?.commitMessage,
-      });
+      // Check if the regression has already been recovered from
+      const recovered = all.findIndex((i) => i.value >= all[index - 1].value);
+      console.log({ item });
+      if (!recovered) {
+        regressions.push({
+          type: "immediate",
+          item,
+          prevItem: all[index - 1],
+          regression,
+          commit: item.report?.commit,
+          commitMessage: item.report?.commitMessage,
+        });
+      }
     }
   });
 
-  // TODO: filter out regressions that are already recovered from
-
   // Potential over time regression
-  const current = filteredItems[filteredItems.length - 1];
-  const maxValue = Math.max(...filteredItems.map((item) => item.value));
-  const max = filteredItems.find((item) => item.value === maxValue)!;
-  if (max.value - current.value >= REGRESSION_THRESHOLD) {
-    regressions.push({
-      type: "trend",
-      item: current,
-      prevItem: max,
-      regression: max.value - current.value,
-      commit: current.report?.commit,
-      commitMessage: current.report?.commitMessage,
-    });
+  if (!regressions.length) {
+    const current = filteredItems[filteredItems.length - 1];
+    const maxValue = Math.max(...filteredItems.map((item) => item.value));
+    const max = filteredItems.find((item) => item.value === maxValue)!;
+    if (max.value - current.value >= REGRESSION_THRESHOLD) {
+      regressions.push({
+        type: "trend",
+        item: current,
+        prevItem: max,
+        regression: max.value - current.value,
+        commit: current.report?.commit,
+        commitMessage: current.report?.commitMessage,
+      });
+    }
   }
 
   return regressions;
@@ -65,12 +71,7 @@ type Obj = {
 export function getRegressionsFromObject(obj: Obj) {
   return Object.keys(obj).reduce<(Regression & { groupKey: string })[]>(
     (all, key: any) => {
-      const r = getRegressions(
-        obj[key].map((val: any) => ({
-          value: val.value,
-          report: val.report,
-        }))
-      );
+      const r = getRegressions(obj[key]);
       return all.concat(
         r.map((regression) => ({
           ...regression,

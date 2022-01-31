@@ -210,7 +210,6 @@ export default function Report() {
         <WrapSummary>
           {CATEGORIES.map((item) => {
             const { category, ...q } = router.query;
-            console.log({ category, item });
 
             const hasRun =
               report.summary?.[item.id] || report.summary?.[item.id] === 0;

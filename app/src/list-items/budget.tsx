@@ -52,12 +52,14 @@ const Status = styled.div<{ failed: boolean }>`
 `;
 
 export function BudgetListItem({ data }: any) {
+  const failed =
+    !!data.sizeOverBudget || !!data.countOverBudget || !!data.sizeOverBudget;
   return (
     <ListItem>
       <Container>
-        <Status failed={!!data.sizeOverBudget}>
-          {!!data.sizeOverBudget && <AlertSvg />}
-          {!data.sizeOverBudget && <CheckSvg />}
+        <Status failed={failed}>
+          {failed && <AlertSvg />}
+          {!failed && <CheckSvg />}
         </Status>
         <Content>
           <P>
@@ -69,8 +71,11 @@ export function BudgetListItem({ data }: any) {
               <Grey>
                 {" "}
                 —&nbsp;{formatBytes(data.transferSize)}{" "}
-                {data.sizeOverBudget &&
-                  `(+ ${formatBytes(data.sizeOverBudget)})`}
+                {data.sizeOverBudget
+                  ? `(+${formatBytes(data.sizeOverBudget)})`
+                  : data.countOverBudget
+                  ? `(+${data.countOverBudget})`
+                  : null}
               </Grey>
             )}
 

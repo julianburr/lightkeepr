@@ -59,11 +59,11 @@ export function RegressionListItem({ data }: any) {
           </Status>
           <Content>
             <P>
-              Potential slow {data.title?.toLowerCase?.()} regression over time{" "}
+              {data.title} over time{" "}
               <Grey>
-                —&nbsp;Value dropped by{" "}
-                {Math.round(data.regression * 100) / 100} compared to highest
-                point in recent reports
+                —&nbsp;Value changed from{" "}
+                {data.prevItem.displayValue || data.prevItem.value} at its
+                highest point to {data.item.displayValue || data.item.value} now
               </Grey>
             </P>
           </Content>
@@ -99,10 +99,11 @@ export function RegressionListItem({ data }: any) {
         </Status>
         <Content>
           <P>
-            {data.title} regression{" "}
+            {data.title}{" "}
             <Grey>
-              —&nbsp;Value dropped by {Math.round(data.regression * 100) / 100}{" "}
-              compared to previous report
+              —&nbsp;Value changed from{" "}
+              {data.prevItem.displayValue || data.prevItem.value} to{" "}
+              {data.item.displayValue || data.item.value}
             </Grey>
           </P>
         </Content>
