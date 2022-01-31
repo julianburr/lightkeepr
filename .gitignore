@@ -6,3 +6,6 @@ node_modules
 # Caches
 .vercel
 .parcel-cache
+
+# TS
+tsconfig.tsbuildinfo
