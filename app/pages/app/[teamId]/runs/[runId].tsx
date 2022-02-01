@@ -15,18 +15,22 @@ import { AppLayout } from "src/layouts/app";
 import { Auth } from "src/components/auth";
 import { List } from "src/components/list";
 import { Spacer } from "src/components/spacer";
-import { Heading, P } from "src/components/text";
+import { Heading } from "src/components/text";
 import { Suspense } from "src/components/suspense";
+import { Loader } from "src/components/loader";
 
 import { ReportListItem } from "src/list-items/report";
 
 const db = getFirestore();
 
-function ReportsList() {
+function Content() {
   const router = useRouter();
 
+  const { runId } = router.query;
   const runRef = doc(db, "runs", router.query.runId!);
-  const runs = useCollection(
+
+  const run = useDocument(runRef);
+  const reports = useCollection(
     query(
       collection(db, "reports"),
       where("run", "==", runRef),
@@ -36,25 +40,6 @@ function ReportsList() {
   );
 
   return (
-    <>
-      <Heading level={2}>Reports</Heading>
-      <Spacer h=".8rem" />
-
-      {/* TODO: filters */}
-      <List items={runs} Item={ReportListItem} />
-    </>
-  );
-}
-
-export default function RunDetails() {
-  const router = useRouter();
-
-  const { runId } = router.query;
-  const run = useDocument(runId ? doc(db, "runs", runId) : undefined, {
-    fetch: !!runId,
-  });
-
-  return (
     <Auth>
       <AppLayout>
         <Heading level={1}>
@@ -62,8 +47,22 @@ export default function RunDetails() {
         </Heading>
         <Spacer h="2.4rem" />
 
-        <Suspense fallback={null}>
-          <ReportsList />
+        <Heading level={2}>Reports</Heading>
+        <Spacer h=".8rem" />
+
+        {/* TODO: filters */}
+        <List items={reports} Item={ReportListItem} />
+      </AppLayout>
+    </Auth>
+  );
+}
+
+export default function RunDetails() {
+  return (
+    <Auth>
+      <AppLayout>
+        <Suspense fallback={<Loader />}>
+          <Content />
         </Suspense>
       </AppLayout>
     </Auth>

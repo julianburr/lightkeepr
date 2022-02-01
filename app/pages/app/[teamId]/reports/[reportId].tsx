@@ -189,7 +189,7 @@ const Score = styled.span`
   }
 `;
 
-export default function Report() {
+function Content() {
   const router = useRouter();
 
   const reportRef = router.query.reportId
@@ -198,58 +198,68 @@ export default function Report() {
   const report = useDocument(reportRef, { fetch: router.isReady });
 
   return (
+    <>
+      <Heading level={1}>{report.name}</Heading>
+      {report.url && report.url !== report.name && (
+        <Small grey>{report.url}</Small>
+      )}
+
+      <Spacer h="1.2rem" />
+
+      <WrapSummary>
+        {CATEGORIES.map((item) => {
+          const { category, ...q } = router.query;
+
+          const hasRun =
+            report.summary?.[item.id] || report.summary?.[item.id] === 0;
+          const score = hasRun
+            ? Math.round(report.summary?.[item.id] * 100)
+            : 0;
+
+          return (
+            <Link
+              key={item.id}
+              href={{
+                query: {
+                  ...q,
+                  ...(category === item.id ? {} : { category: item.id }),
+                },
+              }}
+            >
+              <a>
+                <Label>{item.label}</Label>
+                <SummaryItem
+                  hasRun={hasRun}
+                  value={score}
+                  className={classNames({
+                    active: router.query.category === item.id,
+                  })}
+                >
+                  <Score>{hasRun ? score : "n/a"}</Score>
+                </SummaryItem>
+              </a>
+            </Link>
+          );
+        })}
+      </WrapSummary>
+      <Spacer h="1.6rem" />
+
+      <Suspense fallback={<Loader />}>
+        <ReportDetails
+          reportId={router.query.reportId!}
+          categoryId={router.query.category}
+        />
+      </Suspense>
+    </>
+  );
+}
+
+export default function ReportDetailsPage() {
+  return (
     <Auth>
       <AppLayout>
-        <Heading level={1}>{report.name}</Heading>
-        {report.url && report.url !== report.name && (
-          <Small grey>{report.url}</Small>
-        )}
-
-        <Spacer h="1.2rem" />
-
-        <WrapSummary>
-          {CATEGORIES.map((item) => {
-            const { category, ...q } = router.query;
-
-            const hasRun =
-              report.summary?.[item.id] || report.summary?.[item.id] === 0;
-            const score = hasRun
-              ? Math.round(report.summary?.[item.id] * 100)
-              : 0;
-
-            return (
-              <Link
-                key={item.id}
-                href={{
-                  query: {
-                    ...q,
-                    ...(category === item.id ? {} : { category: item.id }),
-                  },
-                }}
-              >
-                <a>
-                  <Label>{item.label}</Label>
-                  <SummaryItem
-                    hasRun={hasRun}
-                    value={score}
-                    className={classNames({
-                      active: router.query.category === item.id,
-                    })}
-                  >
-                    <Score>{hasRun ? score : "n/a"}</Score>
-                  </SummaryItem>
-                </a>
-              </Link>
-            );
-          })}
-        </WrapSummary>
-        <Spacer h="1.6rem" />
-
         <Suspense fallback={<Loader />}>
-          <ReportDetails
-            reportId={router.query.reportId!}
-            categoryId={router.query.category}
-          />
+          <Content />
         </Suspense>
       </AppLayout>
     </Auth>

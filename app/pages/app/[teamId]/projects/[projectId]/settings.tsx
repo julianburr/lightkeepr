@@ -2,7 +2,7 @@ import "src/utils/firebase";
 
 import { useCallback } from "react";
 import { useRouter } from "next/router";
-import { doc, getFirestore, updateDoc } from "firebase/firestore";
+import { deleteDoc, doc, getFirestore, updateDoc } from "firebase/firestore";
 import styled from "styled-components";
 
 import { useDocument } from "src/@packages/firebase";
@@ -12,6 +12,7 @@ import { useToast } from "src/hooks/use-toast";
 import { useAutoSaveForm } from "src/hooks/use-auto-save-form";
 import { AppLayout } from "src/layouts/app";
 import { Auth } from "src/components/auth";
+import { ButtonBar } from "src/components/button-bar";
 import { Button } from "src/components/button";
 import { Field } from "src/components/field";
 import { TextInput } from "src/components/text-input";
@@ -39,23 +40,30 @@ export default function ProjectSettings() {
   const authUser = useAuthUser();
   const router = useRouter();
 
-  const toast = useToast();
-  const confirmationDialog = useConfirmationDialog();
-
   const projectRef = doc(db, "projects", router.query.projectId!);
   const project = useDocument(projectRef);
 
+  console.log({ project });
+
+  if (!project) {
+    const e: any = new Error("Project does not exist");
+    e.code = 404;
+    throw e;
+  }
+
+  const confirmationDialog = useConfirmationDialog();
+
   const { form } = useAutoSaveForm({
     defaultValues: {
-      name: project.name,
-      gitMain: project.gitMain,
-      failOnRegression: project.failOnRegression || false,
+      name: project?.name,
+      gitMain: project?.gitMain,
+      failOnRegression: project?.failOnRegression || false,
       targets: {
-        performance: project.targets?.performance || 0,
-        accessibility: project.targets?.accessibility || 0,
-        "best-practices": project.targets?.["best-practices"] || 0,
-        seo: project.targets?.seo || 0,
-        pwa: project.targets?.pwa || 0,
+        performance: project?.targets?.performance || 0,
+        accessibility: project?.targets?.accessibility || 0,
+        "best-practices": project?.targets?.["best-practices"] || 0,
+        seo: project?.targets?.seo || 0,
+        pwa: project?.targets?.pwa || 0,
       },
     },
     onSubmit: async (values) => {
@@ -185,6 +193,37 @@ export default function ProjectSettings() {
               <Field name="targets.pwa" label="PWA" Input={RangeInput} />
             </FormGrid>
           </form>
+
+          <Spacer h="3.2rem" />
+
+          <Heading level={2}>Delete project</Heading>
+          <Small grey>
+            This action will delete the project together with all its runs and
+            reports. This cannot be reverted, so please make sure you really
+            want to do this.
+          </Small>
+          <Spacer h=".6rem" />
+          <ButtonBar
+            left={
+              <Button
+                intent="danger"
+                onClick={() =>
+                  confirmationDialog.open({
+                    message:
+                      "Are you sure you want to delete this project and all its runs and reports? This action cannot be reverted.",
+                    confirmLabel: "Delete project",
+                    intent: "danger",
+                    onConfirm: () => {
+                      deleteDoc(projectRef);
+                      router.push(`/app/${router.query.teamId}`);
+                    },
+                  })
+                }
+              >
+                Delete project
+              </Button>
+            }
+          />
         </Container>
       </AppLayout>
     </Auth>

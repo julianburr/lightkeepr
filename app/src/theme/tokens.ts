@@ -98,6 +98,20 @@ const container = {
     },
   },
 
+  danger: {
+    background: color.error[500],
+    foreground: typography.color.contrast,
+    border: border.width.none,
+
+    hover: {
+      background: color.error[600],
+    },
+
+    active: {
+      background: color.error[700],
+    },
+  },
+
   error: {
     background: color.error[500],
     foreground: typography.color.contrast,

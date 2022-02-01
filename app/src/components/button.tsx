@@ -67,7 +67,7 @@ export const CoreButton = forwardRef(function CoreButton(
 });
 
 type ContainerProps = {
-  intent?: "primary" | "secondary" | "outline" | "ghost";
+  intent?: "primary" | "secondary" | "danger" | "outline" | "ghost";
   size?: "small" | "medium" | "large";
   icon?: boolean;
   fullWidth?: boolean;

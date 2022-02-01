@@ -39,7 +39,7 @@ const Container = styled.div`
   max-width: 60rem;
 `;
 
-function RunsList() {
+function Content() {
   const router = useRouter();
   const { projectId } = router.query;
 
@@ -81,79 +81,86 @@ function RunsList() {
 
   if (!runs?.length) {
     return (
-      <HelpBox>
-        <Heading level={2}>Get started</Heading>
-        <Spacer h=".6rem" />
-        <P>
-          There are no report runs recorded on this project yet. To get started,
-          trigger a lightkeepr run with the following API key and pass the
-          project ID in. See some examples below or see our{" "}
-          <Link href="/docs/getting-started">
-            <a>docs</a>
-          </Link>{" "}
-          for more details.
-        </P>
-        <Spacer h="1.6rem" />
+      <>
+        <Heading level={1}>{project.name}</Heading>
+        <Spacer h="1.8rem" />
+        <HelpBox>
+          <Heading level={2}>Get started</Heading>
+          <Spacer h=".6rem" />
+          <P>
+            There are no report runs recorded on this project yet. To get
+            started, trigger a lightkeepr run with the following API key and
+            pass the project ID in. See some examples below or see our{" "}
+            <Link href="/docs/getting-started">
+              <a>docs</a>
+            </Link>{" "}
+            for more details.
+          </P>
+          <Spacer h="1.6rem" />
 
-        <CodePreview
-          code={[
-            {
-              title: "CLI",
-              language: "bash",
-              code:
-                `# Set API token\n` +
-                `export LIGHTKEEPR_TOKEN=${project.apiToken}\n\n` +
-                `# Start run and store returned ID in env\n` +
-                `export LIGHTKEEPR_RUN_ID=$(npx lightkeepr start)\n\n` +
-                `# Run lighthouse reports\n` +
-                `npx lightkeepr report --url=https://www.julianburr.de/til\n` +
-                `npx lightkeepr report --url=https://www.julianburr.de/around-the-world\n\n` +
-                `# Finish run\n` +
-                `npx lightkeepr stop`,
-            },
-            {
-              title: "Node",
-              language: "javascript",
-              code:
-                `const lightkeepr = require('@lightkeepr/node');\n\n` +
-                `// Start run with API token\n` +
-                `const run = await lightkeepr.start({ token: '${project.apiToken}' });\n\n` +
-                `// Run lighthouse reports\n` +
-                `await run.report({ url: 'https://www.julianburr.de/til' });\n` +
-                `await run.report({ url: 'https://www.julianburr.de/around-the-world' });\n\n` +
-                `// Finish run\n` +
-                `await run.stop();`,
-              showLineNumbers: true,
-            },
-            {
-              title: "Cypress",
-              files: [
-                {
-                  language: "javascript",
-                  code: `import '@lightkeepr/cypress';`,
-                  title: "cypress/support/index.js",
-                },
-                {
-                  language: "javascript",
-                  code: `// Trigger a report\n` + `cy.lightkeepr();`,
-                  title: "In your test file",
-                },
-                {
-                  language: "bash",
-                  code:
-                    `# Run Cypress through lightkeepr instead of directly through the Cypress CLI\n` +
-                    `LIGHTKEEPR_TOKEN=${project.apiToken} npx lightkeepr exec -- cypress run`,
-                },
-              ],
-            },
-          ]}
-        />
-      </HelpBox>
+          <CodePreview
+            code={[
+              {
+                title: "CLI",
+                language: "bash",
+                code:
+                  `# Set API token\n` +
+                  `export LIGHTKEEPR_TOKEN=${project.apiToken}\n\n` +
+                  `# Start run and store returned ID in env\n` +
+                  `export LIGHTKEEPR_RUN_ID=$(npx lightkeepr start)\n\n` +
+                  `# Run lighthouse reports\n` +
+                  `npx lightkeepr report --url=https://www.julianburr.de/til\n` +
+                  `npx lightkeepr report --url=https://www.julianburr.de/around-the-world\n\n` +
+                  `# Finish run\n` +
+                  `npx lightkeepr stop`,
+              },
+              {
+                title: "Node",
+                language: "javascript",
+                code:
+                  `const lightkeepr = require('@lightkeepr/node');\n\n` +
+                  `// Start run with API token\n` +
+                  `const run = await lightkeepr.start({ token: '${project.apiToken}' });\n\n` +
+                  `// Run lighthouse reports\n` +
+                  `await run.report({ url: 'https://www.julianburr.de/til' });\n` +
+                  `await run.report({ url: 'https://www.julianburr.de/around-the-world' });\n\n` +
+                  `// Finish run\n` +
+                  `await run.stop();`,
+                showLineNumbers: true,
+              },
+              {
+                title: "Cypress",
+                files: [
+                  {
+                    language: "javascript",
+                    code: `import '@lightkeepr/cypress';`,
+                    title: "cypress/support/index.js",
+                  },
+                  {
+                    language: "javascript",
+                    code: `// Trigger a report\n` + `cy.lightkeepr();`,
+                    title: "In your test file",
+                  },
+                  {
+                    language: "bash",
+                    code:
+                      `# Run Cypress through lightkeepr instead of directly through the Cypress CLI\n` +
+                      `LIGHTKEEPR_TOKEN=${project.apiToken} npx lightkeepr exec -- cypress run`,
+                  },
+                ],
+              },
+            ]}
+          />
+        </HelpBox>
+      </>
     );
   }
 
   return (
     <>
+      <Heading level={1}>{project.name}</Heading>
+      <Spacer h="1.8rem" />
+
       {runs?.[0] && !runs[0].commitMessage && (
         <>
           <Spacer h=".8rem" />
@@ -233,28 +240,12 @@ function RunsList() {
   );
 }
 
-export function Details() {
-  const router = useRouter();
-
-  const projectRef = doc(db, "projects", router.query.projectId!);
-  const project = useDocument(projectRef);
-
-  return (
-    <>
-      <Heading level={1}>{project.name}</Heading>
-      <Spacer h="1.8rem" />
-
-      <RunsList />
-    </>
-  );
-}
-
 export default function ProjectDetails() {
   return (
     <Auth>
       <AppLayout>
         <Suspense fallback={<Loader />}>
-          <Details />
+          <Content />
         </Suspense>
       </AppLayout>
     </Auth>
