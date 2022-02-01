@@ -11,8 +11,7 @@ import { Auth } from "src/components/auth";
 import { List, ListItem } from "src/components/list";
 import { Spacer } from "src/components/spacer";
 import { P, Small } from "src/components/text";
-import { ActionMenu } from "src/components/action-menu";
-import { ActionButton } from "src/components/action-button";
+import { SplitButton } from "src/components/split-button";
 
 const db = getFirestore();
 
@@ -40,7 +39,7 @@ function InviteListItem({ data }: any) {
         <P>{team.name}</P>
         <Small grey>Invited by {data.createdBy.id}</Small>
       </Container>
-      <ActionButton
+      <SplitButton
         onClick={() => updateStatus("active")}
         placement="bottom-end"
         items={[
@@ -55,7 +54,7 @@ function InviteListItem({ data }: any) {
         ]}
       >
         Accept
-      </ActionButton>
+      </SplitButton>
     </ListItem>
   );
 }

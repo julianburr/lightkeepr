@@ -1,8 +1,15 @@
-import { ComponentType, Dispatch, useCallback } from "react";
-import { PropsWithChildren } from "react";
-import { SetStateAction } from "react";
-import { useContext } from "react";
-import { createContext, useEffect, useState } from "react";
+import { ComponentProps } from "react";
+import {
+  ComponentType,
+  Dispatch,
+  useCallback,
+  createContext,
+  useState,
+  useContext,
+  SetStateAction,
+  PropsWithChildren,
+} from "react";
+
 import { ConfirmationDialog, ErrorDialog } from "src/components/dialog";
 
 export const DialogMetaContext = createContext<{
@@ -59,16 +66,28 @@ export function useDialog(Dialog: ComponentType<any>) {
 export function useErrorDialog() {
   const dialog = useDialog(ErrorDialog);
 
-  const open = useCallback((e: Error | { message: string }) => {
-    return dialog.open({
-      message: e.message,
-      stack: "stack" in e ? e.stack : undefined,
-    });
-  }, []);
+  const open = useCallback(
+    (e: Error | Partial<ComponentProps<typeof ErrorDialog>>) => {
+      return dialog.open({
+        message: e.message,
+        stack: "stack" in e ? e.stack : undefined,
+      });
+    },
+    []
+  );
 
   return { ...dialog, open };
 }
 
 export function useConfirmationDialog() {
-  return useDialog(ConfirmationDialog);
+  const dialog = useDialog(ConfirmationDialog);
+
+  const open = useCallback(
+    (args: Partial<ComponentProps<typeof ConfirmationDialog>>) => {
+      return dialog.open(args);
+    },
+    []
+  );
+
+  return { ...dialog, open };
 }

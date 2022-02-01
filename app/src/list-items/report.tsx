@@ -4,19 +4,20 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
 import { ListItem } from "src/components/list";
-import { P, Small } from "src/components/text";
+import { P, Small, Span } from "src/components/text";
 import { Tooltip } from "src/components/tooltip";
 import { Avatar } from "src/components/avatar";
 import { StatusAvatar } from "src/components/status-avatar";
 
-import LayersSvg from "src/assets/icons/layers.svg";
+import MobileSvg from "src/assets/icons/smartphone.svg";
+import DesktopSvg from "src/assets/icons/monitor.svg";
 
 dayjs.extend(relativeTime);
 
 const Content = styled.div`
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: flex-start;
   flex: 1;
   gap: 1.2rem;
 `;
@@ -25,6 +26,19 @@ const Title = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1;
+  align-self: center;
+`;
+
+const Device = styled.span`
+  margin: 0 0 0 0.8rem;
+  opacity: 0.6;
+
+  svg {
+    height: 1em;
+    width: auto;
+    vertical-align: middle;
+    margin: -0.3rem 0 0;
+  }
 `;
 
 const Scores = styled.div`
@@ -56,6 +70,9 @@ export function ReportListItem({ data }: ReportListItemProps) {
         <Title>
           <P>
             <span>{data.name || data.url || "n/a"}</span>
+            {data.url && data.url !== data.name && (
+              <Span grey> —&nbsp;{data.url}</Span>
+            )}
           </P>
           <Small grey>
             <Tooltip
@@ -69,6 +86,23 @@ export function ReportListItem({ data }: ReportListItemProps) {
                 </span>
               )}
             </Tooltip>
+            <Tooltip
+              content={
+                data.meta.configSettings.formFactor === "mobile"
+                  ? "Mobile"
+                  : "Desktop"
+              }
+            >
+              {(props) => (
+                <Device {...props}>
+                  {data.meta.configSettings.formFactor === "mobile" ? (
+                    <MobileSvg />
+                  ) : (
+                    <DesktopSvg />
+                  )}
+                </Device>
+              )}
+            </Tooltip>
           </Small>
         </Title>
         <Scores>
@@ -78,33 +112,27 @@ export function ReportListItem({ data }: ReportListItemProps) {
             { label: "Best P.", key: "best-practices" },
             { label: "SEO", key: "seo" },
             { label: "PWA", key: "pwa" },
-          ].map((category) => (
-            <Avatar
-              key={category.key}
-              background={
-                data.status?.startsWith("failed") &&
-                data.statusReason?.includes?.(category.key)
-                  ? "var(--sol--palette-sand-400)"
-                  : "var(--sol--palette-sand-200)"
-              }
-            >
-              <Score>
-                {data.type === "user-flow"
-                  ? Math.ceil(
-                      (data.summary.reduce(
-                        (all: any, score: any) =>
-                          all + score[category.key] || 0,
-                        0
-                      ) /
-                        data.summary.filter(
-                          (score: any) => score[category.key] !== null
-                        ).length) *
-                        100
-                    )
-                  : Math.ceil((data.summary?.[category.key] || 0) * 100)}
-              </Score>
-            </Avatar>
-          ))}
+          ].map((category) => {
+            const score =
+              data.type === "user-flow"
+                ? Math.ceil(
+                    data.summary.reduce(
+                      (all: any, score: any) => all + score[category.key] || 0,
+                      0
+                    ) /
+                      data.summary.filter(
+                        (score: any) => score[category.key] !== null
+                      ).length
+                  )
+                : data.summary?.[category.key];
+            return (
+              <Avatar key={category.key}>
+                <Score>
+                  {!score && score !== 0 ? "n/a" : Math.round(score * 100)}
+                </Score>
+              </Avatar>
+            );
+          })}
         </Scores>
       </Content>
     </ListItem>

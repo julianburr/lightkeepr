@@ -11,7 +11,10 @@ import {
 } from "react";
 import Link, { LinkProps } from "next/link";
 import styled from "styled-components";
+
 import { interactive } from "src/@packages/sol/tokens";
+
+import MoreSvg from "src/assets/icons/more-vertical.svg";
 
 type AnchorTagProps = PropsWithChildren<LinkProps>;
 
@@ -67,7 +70,7 @@ export const CoreButton = forwardRef(function CoreButton(
 });
 
 type ContainerProps = {
-  intent?: "primary" | "secondary" | "outline" | "ghost";
+  intent?: "primary" | "secondary" | "danger" | "outline" | "ghost";
   size?: "small" | "medium" | "large";
   icon?: boolean;
   fullWidth?: boolean;
@@ -118,7 +121,7 @@ const Container = styled(_CoreButton)`
 
   svg {
     height: ${({ size }) =>
-      size === "large" ? "1.4em" : size === "small" ? "1em" : "1.2em"};
+      size === "large" ? "1.3em" : size === "small" ? "1em" : "1em"};
     width: auto;
     margin: 0 -0.6rem;
     filter: grayscale(1);
@@ -168,4 +171,11 @@ export const Button = forwardRef(function Button(
       </Container>
     </>
   );
+});
+
+export const ActionButton = forwardRef(function ActionButton(
+  props: ButtonProps,
+  ref
+) {
+  return <Button intent="ghost" icon={<MoreSvg />} ref={ref} {...props} />;
 });

@@ -1,10 +1,12 @@
-import { Avatar } from "./avatar";
+import styled, { keyframes } from "styled-components";
+
+import { Avatar } from "src/components/avatar";
 
 import CheckSvg from "src/assets/icons/check.svg";
 import AlertSvg from "src/assets/icons/alert-circle.svg";
 import MinusSvg from "src/assets/icons/minus.svg";
 import LoaderSvg from "src/assets/icons/loader.svg";
-import styled, { keyframes } from "styled-components";
+import XSvg from "src/assets/icons/x.svg";
 
 const spin = keyframes`
   0% { transform: rotate(0deg); }
@@ -20,13 +22,17 @@ function getBackground(status: string) {
     ? "var(--sol--palette-red-500)"
     : status === "passed"
     ? "var(--sol--palette-green-500)"
-    : "#dad9d044";
+    : status === "running"
+    ? "var(--sol--color-brand-500)"
+    : undefined;
 }
 
 function getColor(status: string) {
-  return status?.startsWith?.("failed") || status === "passed"
+  return status?.startsWith?.("failed") ||
+    status === "passed" ||
+    status === "running"
     ? "var(--sol--color-white)"
-    : "var(--sol--color-black)";
+    : "var(--sol--palette-sand-800)";
 }
 
 function getIcon(status: string) {
@@ -36,6 +42,8 @@ function getIcon(status: string) {
     <CheckSvg />
   ) : status === "running" ? (
     <LoaderIcon />
+  ) : status === "cancelled" ? (
+    <XSvg />
   ) : (
     <MinusSvg />
   );

@@ -22,6 +22,7 @@ import SearchSvg from "src/assets/icons/search.svg";
 import LifeBuoySvg from "src/assets/icons/life-buoy.svg";
 import GridSvg from "src/assets/icons/grid.svg";
 import MenuSvg from "src/assets/icons/menu.svg";
+import { ErrorBoundary } from "src/components/error-boundary";
 
 const auth = getAuth();
 
@@ -192,12 +193,16 @@ export function AppLayout({ children }: AppLayoutProps) {
       />
 
       <Content>
-        <Suspense fallback={<Loader message="Load content..." />}>
-          <AppSidebar />
+        <ErrorBoundary>
           <Suspense fallback={<Loader />}>
-            <Main>{children}</Main>
+            <AppSidebar />
+            <ErrorBoundary>
+              <Suspense fallback={<Loader />}>
+                <Main>{children}</Main>
+              </Suspense>
+            </ErrorBoundary>
           </Suspense>
-        </Suspense>
+        </ErrorBoundary>
       </Content>
     </Container>
   );

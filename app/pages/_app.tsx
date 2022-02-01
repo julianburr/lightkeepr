@@ -11,6 +11,7 @@ import { SuspenseProvider } from "src/@packages/suspense";
 import { FirebaseProvider } from "src/@packages/firebase";
 import { DialogProvider } from "src/hooks/use-dialog";
 import { ToastProvider } from "src/hooks/use-toast";
+import { ErrorBoundary } from "src/components/error-boundary";
 
 export default function App({ Component, pageProps }: any) {
   const router = useRouter();
@@ -63,17 +64,26 @@ export default function App({ Component, pageProps }: any) {
       <GlobalStyles />
 
       {shouldRenderProviders ? (
-        <Suspense fallback={<Loader />}>
-          <SuspenseProvider>
-            <FirebaseProvider>
-              <DialogProvider>
-                <ToastProvider>
-                  <Component {...pageProps} />
-                </ToastProvider>
-              </DialogProvider>
-            </FirebaseProvider>
-          </SuspenseProvider>
-        </Suspense>
+        router.isReady ? (
+          <ErrorBoundary>
+            <Suspense fallback={<Loader />}>
+              <SuspenseProvider>
+                <FirebaseProvider>
+                  <DialogProvider>
+                    <ToastProvider>
+                      <Component {...pageProps} />
+                    </ToastProvider>
+                  </DialogProvider>
+                </FirebaseProvider>
+              </SuspenseProvider>
+            </Suspense>
+          </ErrorBoundary>
+        ) : (
+          // HACK: on the first rehydrated render the router apparently isn't fully
+          // set yet, so we cannot rely on it to load the report :/
+          // https://github.com/vercel/next.js/discussions/11484#discussioncomment-356055
+          <Loader />
+        )
       ) : (
         <Component {...pageProps} />
       )}

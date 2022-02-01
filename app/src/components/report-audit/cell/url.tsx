@@ -5,12 +5,6 @@ import { P, Small } from "src/components/text";
 const Td = styled.td`
   max-width: 30rem;
   min-width: 20rem;
-
-  ${P} {
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-  }
 `;
 
 type UrlCellProps = {
@@ -22,7 +16,9 @@ export function UrlCell({ value }: UrlCellProps) {
   const val = path || value || "—";
   return (
     <Td>
-      <P title={val}>{val}</P>
+      <P ellipsis title={val}>
+        {val}
+      </P>
       {url && <Small grey>{url}</Small>}
     </Td>
   );

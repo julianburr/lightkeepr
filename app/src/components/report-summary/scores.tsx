@@ -37,7 +37,7 @@ export function ScoresSummary({ pastReports }: ScoresSummaryProps) {
             CATEGORIES.map((category) => category.id).forEach((key) => {
               all[key]?.push?.({
                 value: report.summary[key]
-                  ? report.summary[key] * 100
+                  ? Math.round(report.summary[key] * 100)
                   : report.summary[key],
                 date: report.createdAt
                   ? dayjs.unix(report.createdAt.seconds)

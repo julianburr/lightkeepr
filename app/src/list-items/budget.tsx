@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 import { ListItem } from "src/components/list";
-import { Grey, P } from "src/components/text";
+import { Span, P } from "src/components/text";
 
 import AlertSvg from "src/assets/icons/alert-circle.svg";
 import CheckSvg from "src/assets/icons/check.svg";
@@ -68,7 +68,7 @@ export function BudgetListItem({ data }: any) {
             </P>
 
             {data.transferSize && (
-              <Grey>
+              <Span grey>
                 {" "}
                 —&nbsp;{formatBytes(data.transferSize)}{" "}
                 {data.sizeOverBudget
@@ -76,15 +76,15 @@ export function BudgetListItem({ data }: any) {
                   : data.countOverBudget
                   ? `(+${data.countOverBudget})`
                   : null}
-              </Grey>
+              </Span>
             )}
 
             {data.measurement && (
-              <Grey>
+              <Span grey>
                 {" "}
                 —&nbsp;{formatMs(data.measurement)}{" "}
                 {data.overBudget && `(+ ${formatMs(data.overBudget)})`}
-              </Grey>
+              </Span>
             )}
           </P>
         </Content>

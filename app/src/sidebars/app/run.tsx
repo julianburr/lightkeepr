@@ -8,16 +8,32 @@ import {
   query,
   where,
 } from "firebase/firestore";
+import dayjs from "dayjs";
+import styled, { keyframes } from "styled-components";
 
 import { useCollection, useDocument } from "src/@packages/firebase";
+import { formatMs } from "src/utils/format";
 import { Menu } from "src/components/menu";
 import { Spacer } from "src/components/spacer";
 import { Meta } from "src/components/meta";
 
 import ArrowLeftSvg from "src/assets/icons/arrow-left.svg";
-import dayjs from "dayjs";
+import LoaderSvg from "src/assets/icons/loader.svg";
 
 const db = getFirestore();
+
+const spin = keyframes`
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+`;
+
+const LoaderIcon = styled(LoaderSvg)`
+  height: 0.8em;
+  width: auto;
+  vertical-align: middle;
+  margin: -0.1rem 0.3rem 0 0;
+  animation: ${spin} 3s ease-in-out infinite;
+`;
 
 type RunSidebarProps = {
   runId: string;
@@ -65,7 +81,21 @@ export function RunSidebar({ runId, getLinkProps }: RunSidebarProps) {
     },
     {
       label: "Status",
-      value: run.status,
+      value:
+        run.status === "passed" ? (
+          "Passed"
+        ) : run.status === "running" ? (
+          <>
+            <LoaderIcon />
+            <span>Running</span>
+          </>
+        ) : run.status === "failed" ? (
+          "Failed"
+        ) : run.status === "cancelled" ? (
+          "Cancelled"
+        ) : (
+          run.status
+        ),
     },
     {
       label: "Started at",
@@ -74,9 +104,9 @@ export function RunSidebar({ runId, getLinkProps }: RunSidebarProps) {
         : null,
     },
     {
-      label: "Finished at",
+      label: "Duration",
       value: run.finishedAt
-        ? dayjs.unix(run.finishedAt.seconds).format("D MMM YYYY h:mma")
+        ? formatMs((run.finishedAt.seconds - run.startedAt.seconds) * 1000)
         : null,
     },
   ].filter(Boolean);

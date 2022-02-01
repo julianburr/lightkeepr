@@ -24,7 +24,7 @@ import { ProjectListItem } from "src/list-items/project";
 
 const db = getFirestore();
 
-function ProjectsList() {
+function Content() {
   const router = useRouter();
 
   const teamId = router.query.teamId;
@@ -37,19 +37,25 @@ function ProjectsList() {
     { key: `${teamId}/projects` }
   );
 
+  // Add a fake "new" item to allow users to add new projects more easily
   const items = useMemo(() => [...projects, { id: "new" }], [projects]);
-  return <List columns={3} items={items} Item={ProjectListItem} />;
+
+  return (
+    <>
+      <Heading level={1}>Projects</Heading>
+      <Spacer h="1.2rem" />
+
+      <List columns={3} items={items} Item={ProjectListItem} />
+    </>
+  );
 }
 
 export default function TeamDashboard() {
   return (
     <Auth>
       <AppLayout>
-        <Heading level={1}>Projects</Heading>
-        <Spacer h="1.2rem" />
-
         <Suspense fallback={<Loader />}>
-          <ProjectsList />
+          <Content />
         </Suspense>
       </AppLayout>
     </Auth>

@@ -4,6 +4,7 @@ import {
   collection,
   doc,
   getFirestore,
+  limit,
   orderBy,
   query,
   where,
@@ -47,7 +48,8 @@ function Summary({ reportId }: ReportSummaryProps) {
         where("name", "==", report.name),
         where("branch", "==", project.gitMain),
         where("createdAt", "<=", report.createdAt),
-        orderBy("createdAt", "desc")
+        orderBy("createdAt", "desc"),
+        limit(50)
       ),
     {
       key: `${report?.id}/pastReports`,

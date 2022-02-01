@@ -16,6 +16,7 @@ import { useState } from "react";
 import { P } from "./text";
 import { Button } from "./button";
 import { ButtonBar } from "./button-bar";
+import { ComponentProps } from "react";
 
 const Backdrop = styled.div`
   position: fixed;
@@ -274,7 +275,7 @@ export function ErrorDialog({ message, stack, onClose }: ErrorDialogProps) {
   return (
     <Dialog
       intent="error"
-      width="35rem"
+      width="38rem"
       actions={
         <ButtonBar
           right={
@@ -294,6 +295,7 @@ type ConfirmationDialogProps = {
   message: ReactNode;
   cancelLabel?: ReactNode;
   confirmLabel?: ReactNode;
+  intent?: ComponentProps<typeof Button>["intent"];
   onConfirm?: () => any;
   onResponse?: (response: boolean) => any;
   onClose?: () => void;
@@ -303,13 +305,14 @@ export function ConfirmationDialog({
   message,
   cancelLabel = "Cancel",
   confirmLabel = "Confirm",
+  intent = "primary",
   onConfirm,
   onResponse,
   onClose,
 }: ConfirmationDialogProps) {
   return (
     <Dialog
-      width="35rem"
+      width="38rem"
       actions={
         <ButtonBar
           right={
@@ -324,7 +327,7 @@ export function ConfirmationDialog({
                 {cancelLabel}
               </Button>
               <Button
-                intent="primary"
+                intent={intent}
                 autoFocus
                 onClick={async () => {
                   await onResponse?.(true);

@@ -1,20 +1,25 @@
 import "src/utils/firebase";
 
 import { useRouter } from "next/router";
-import { doc, getFirestore } from "firebase/firestore";
+import { deleteDoc, doc, getFirestore } from "firebase/firestore";
 import styled from "styled-components";
 import Link from "next/link";
 import classNames from "classnames";
 
 import { useDocument } from "src/@packages/firebase";
+import { CATEGORIES } from "src/utils/audits";
+import { useToast } from "src/hooks/use-toast";
+import { useConfirmationDialog } from "src/hooks/use-dialog";
 import { AppLayout } from "src/layouts/app";
 import { Auth } from "src/components/auth";
-import { Heading } from "src/components/text";
+import { Heading, Small } from "src/components/text";
 import { Spacer } from "src/components/spacer";
 import { Loader } from "src/components/loader";
 import { ReportDetails } from "src/components/report-details";
 import { Suspense } from "src/components/suspense";
-import { CATEGORIES } from "src/utils/audits";
+import { ButtonBar } from "src/components/button-bar";
+import { ActionMenu } from "src/components/action-menu";
+import { ActionButton } from "src/components/button";
 
 const db = getFirestore();
 
@@ -189,63 +194,110 @@ const Score = styled.span`
   }
 `;
 
-export default function Report() {
+function Content() {
   const router = useRouter();
 
-  const reportRef = router.query.reportId
-    ? doc(db, "reports", router.query.reportId)
-    : null;
+  const toast = useToast();
+  const confirmationDialog = useConfirmationDialog();
+
+  const reportRef = doc(db, "reports", router.query.reportId!);
   const report = useDocument(reportRef, { fetch: router.isReady });
 
-  if (!router.isReady) {
-    return <Loader />;
-  }
+  return (
+    <>
+      <ButtonBar
+        left={<Heading level={1}>{report.name}</Heading>}
+        right={
+          <ActionMenu
+            placement="bottom-end"
+            items={[
+              {
+                label: "Delete report",
+                onClick: () =>
+                  confirmationDialog.open({
+                    message:
+                      "Are you sure you want to delete this report? This can not be reverted.",
+                    confirmLabel: "Delete report",
+                    intent: "danger",
+                    onConfirm: async () => {
+                      router.push(
+                        `/app/${router.query.teamId}/runs/${report.run.id}`
+                      );
+                      await deleteDoc(reportRef);
+                      toast.show({
+                        message: "Report has been deleted successfully",
+                      });
+                    },
+                  }),
+                intent: "danger",
+              },
+            ]}
+          >
+            {(props) => <ActionButton intent="secondary" {...props} />}
+          </ActionMenu>
+        }
+      />
 
+      {report.url && report.url !== report.name && (
+        <Small grey>{report.url}</Small>
+      )}
+
+      <Spacer h="1.2rem" />
+
+      <WrapSummary>
+        {CATEGORIES.map((item) => {
+          const { category, ...q } = router.query;
+
+          const hasRun =
+            report.summary?.[item.id] || report.summary?.[item.id] === 0;
+          const score = hasRun
+            ? Math.round(report.summary?.[item.id] * 100)
+            : 0;
+
+          return (
+            <Link
+              key={item.id}
+              href={{
+                query: {
+                  ...q,
+                  ...(category === item.id ? {} : { category: item.id }),
+                },
+              }}
+            >
+              <a>
+                <Label>{item.label}</Label>
+                <SummaryItem
+                  hasRun={hasRun}
+                  value={score}
+                  className={classNames({
+                    active: router.query.category === item.id,
+                  })}
+                >
+                  <Score>{hasRun ? score : "n/a"}</Score>
+                </SummaryItem>
+              </a>
+            </Link>
+          );
+        })}
+      </WrapSummary>
+      <Spacer h="1.6rem" />
+
+      <Suspense fallback={<Loader />}>
+        <ReportDetails
+          reportId={router.query.reportId!}
+          categoryId={router.query.category}
+        />
+      </Suspense>
+    </>
+  );
+}
+
+export default function ReportDetailsPage() {
   return (
     <Auth>
       <AppLayout>
-        <Heading level={1}>{report.name}</Heading>
-        <Spacer h="1.6rem" />
-
-        <WrapSummary>
-          {CATEGORIES.map((item) => {
-            const { category, ...q } = router.query;
-
-            const hasRun =
-              report.summary?.[item.id] || report.summary?.[item.id] === 0;
-
-            return (
-              <Link
-                key={item.id}
-                href={{
-                  query: {
-                    ...q,
-                    ...(category === item.id ? {} : { category: item.id }),
-                  },
-                }}
-              >
-                <a>
-                  <Label>{item.label}</Label>
-                  <SummaryItem
-                    hasRun={hasRun}
-                    value={hasRun ? report.summary?.[item.id] * 100 : 0}
-                    className={classNames({
-                      active: router.query.category === item.id,
-                    })}
-                  >
-                    <Score>
-                      {hasRun ? report.summary?.[item.id] * 100 : "n/a"}
-                    </Score>
-                  </SummaryItem>
-                </a>
-              </Link>
-            );
-          })}
-        </WrapSummary>
-        <Spacer h="1.6rem" />
-
         <Suspense fallback={<Loader />}>
-          <ReportDetails />
+          <Content />
         </Suspense>
       </AppLayout>
     </Auth>

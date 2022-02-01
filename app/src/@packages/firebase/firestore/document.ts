@@ -1,13 +1,14 @@
-import { useContext, useLayoutEffect } from "react";
+import { useContext } from "react";
 import invariant from "invariant";
 import { onSnapshot } from "firebase/firestore";
 
-import { FirestoreContext } from "./context";
+import { FirestoreContext, NotFoundError } from "./context";
 
 type UseDocumentOptions = {
   key?: string;
   suspense?: boolean;
   fetch?: boolean;
+  throw?: boolean;
 };
 
 export function useDocument(query: any, options?: UseDocumentOptions) {
@@ -56,6 +57,14 @@ export function useDocument(query: any, options?: UseDocumentOptions) {
 
   if (cacheItem?.data === undefined && cacheItem?.promise) {
     throw cacheItem.promise;
+  }
+
+  if (cacheItem?.data === null && options?.throw !== false) {
+    throw new NotFoundError({
+      message: "Document not found",
+      code: 404,
+      query,
+    });
   }
 
   return cacheItem?.data;
