@@ -1,7 +1,7 @@
-import { EmailLayout } from "src/layouts/email";
 import { Button } from "src/components/mjml/button";
-import { Heading, P } from "src/components/mjml/text";
 import { Spacer } from "src/components/mjml/spacer";
+import { Heading, P } from "src/components/mjml/text";
+import { EmailLayout } from "src/layouts/email";
 
 type VerifyEmailProps = {
   title: string;

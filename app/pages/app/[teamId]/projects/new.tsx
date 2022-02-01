@@ -1,20 +1,20 @@
 import "src/utils/firebase";
 
-import { useForm } from "react-cool-form";
-import { useRouter } from "next/router";
 import { addDoc, collection, doc, getFirestore } from "firebase/firestore";
+import { useRouter } from "next/router";
+import { useForm } from "react-cool-form";
 import styled from "styled-components";
 
-import { generateApiToken } from "src/utils/api-token";
-import { useAuthUser } from "src/hooks/use-auth-user";
-import { AppLayout } from "src/layouts/app";
 import { Auth } from "src/components/auth";
 import { Button } from "src/components/button";
-import { Field } from "src/components/field";
-import { TextInput } from "src/components/text-input";
-import { Spacer } from "src/components/spacer";
 import { ButtonBar } from "src/components/button-bar";
+import { Field } from "src/components/field";
 import { FormGrid } from "src/components/form-grid";
+import { Spacer } from "src/components/spacer";
+import { TextInput } from "src/components/text-input";
+import { useAuthUser } from "src/hooks/use-auth-user";
+import { AppLayout } from "src/layouts/app";
+import { generateApiToken } from "src/utils/api-token";
 
 const db = getFirestore();
 

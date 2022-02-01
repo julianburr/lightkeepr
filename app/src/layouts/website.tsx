@@ -1,19 +1,19 @@
+import Link from "next/link";
 import { PropsWithChildren, useEffect, Ref } from "react";
 import styled, { keyframes } from "styled-components";
-import Link from "next/link";
 
-import { useSidebarState } from "src/hooks/use-sidebar-state";
-import { TopBar } from "src/components/top-bar";
 import { Button } from "src/components/button";
 import { Spacer } from "src/components/spacer";
-
-import LogoSvg from "src/assets/logo.svg";
-import MenuSvg from "src/assets/icons/menu.svg";
-import GithubSvg from "src/assets/icons/github.svg";
-import TwitterSvg from "src/assets/icons/twitter.svg";
-import WavesSvg from "src/assets/illustrations/waves.svg";
-import DuckSvg from "src/assets/illustrations/rubber-duck.svg";
 import { Tooltip } from "src/components/tooltip";
+import { TopBar } from "src/components/top-bar";
+import { useSidebarState } from "src/hooks/use-sidebar-state";
+
+import GithubSvg from "src/assets/icons/github.svg";
+import MenuSvg from "src/assets/icons/menu.svg";
+import TwitterSvg from "src/assets/icons/twitter.svg";
+import DuckSvg from "src/assets/illustrations/rubber-duck.svg";
+import WavesSvg from "src/assets/illustrations/waves.svg";
+import LogoSvg from "src/assets/logo.svg";
 
 const Container = styled.div`
   display: flex;

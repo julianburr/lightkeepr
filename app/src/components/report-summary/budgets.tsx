@@ -1,7 +1,6 @@
-import { Spacer } from "src/components/spacer";
 import { List } from "src/components/list";
+import { Spacer } from "src/components/spacer";
 import { GroupHeading } from "src/components/text";
-
 import { BudgetListItem } from "src/list-items/budget";
 
 type BudgetsSummaryProps = {

@@ -1,9 +1,5 @@
 import "src/utils/firebase";
 
-import { useState } from "react";
-import { useForm } from "react-cool-form";
-import Link from "next/link";
-import { useRouter } from "next/router";
 import {
   createUserWithEmailAndPassword,
   getAuth,
@@ -12,20 +8,24 @@ import {
   signInWithEmailAndPassword,
   signInWithRedirect,
 } from "firebase/auth";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { useState } from "react";
+import { useForm } from "react-cool-form";
 
-import { api } from "src/utils/api-client";
+import { Button } from "src/components/button";
+import { Field } from "src/components/field";
+import { FormGrid } from "src/components/form-grid";
+import { PasswordInput } from "src/components/password-input";
+import { Spacer } from "src/components/spacer";
+import { EmailInput } from "src/components/text-input";
 import { useAuthUser } from "src/hooks/use-auth-user";
 import { useErrorDialog } from "src/hooks/use-dialog";
 import { AuthLayout } from "src/layouts/auth";
-import { Field } from "src/components/field";
-import { PasswordInput } from "src/components/password-input";
-import { EmailInput } from "src/components/text-input";
-import { Spacer } from "src/components/spacer";
-import { Button } from "src/components/button";
+import { api } from "src/utils/api-client";
 
-import GoogleSvg from "src/assets/auth/google.svg";
 import GithubSvg from "src/assets/auth/github.svg";
-import { FormGrid } from "src/components/form-grid";
+import GoogleSvg from "src/assets/auth/google.svg";
 
 const auth = getAuth();
 const googleProvider = new GoogleAuthProvider();

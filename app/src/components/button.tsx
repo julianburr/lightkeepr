@@ -1,3 +1,4 @@
+import Link, { LinkProps } from "next/link";
 import {
   ComponentProps,
   ReactNode,
@@ -9,7 +10,6 @@ import {
   useState,
   useCallback,
 } from "react";
-import Link, { LinkProps } from "next/link";
 import styled from "styled-components";
 
 import { interactive } from "src/@packages/sol/tokens";

@@ -1,9 +1,9 @@
+import { ComponentProps } from "react";
 import styled from "styled-components";
 
-import { useAuthUser } from "src/hooks/use-auth-user";
 import { ActionMenu } from "src/components/action-menu";
 import { P, Small } from "src/components/text";
-import { ComponentProps } from "react";
+import { useAuthUser } from "src/hooks/use-auth-user";
 
 const Email = styled(Small)`
   && {

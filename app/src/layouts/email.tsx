@@ -11,8 +11,8 @@ import {
 } from "mjml-react";
 import { PropsWithChildren } from "react";
 
-import { getBase64Url } from "src/utils/node/files";
 import { tokens } from "src/theme/tokens";
+import { getBase64Url } from "src/utils/node/files";
 
 type EmailLayoutProps = PropsWithChildren<{
   title: string;

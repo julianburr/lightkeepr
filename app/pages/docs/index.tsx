@@ -2,13 +2,13 @@ import Head from "next/head";
 import Link from "next/link";
 import styled from "styled-components";
 
-import { DocsLayout } from "src/layouts/docs";
 import { P } from "src/components/text";
+import { DocsLayout } from "src/layouts/docs";
 
+import PotionSvg from "src/assets/icons/website/potion.svg";
+import RocketSvg from "src/assets/icons/website/rocket.svg";
 import DiverSvg from "src/assets/illustrations/diving-helmet.svg";
 import FishSvg from "src/assets/illustrations/fish.svg";
-import RocketSvg from "src/assets/icons/website/rocket.svg";
-import PotionSvg from "src/assets/icons/website/potion.svg";
 
 const Grid = styled.div`
   display: grid;

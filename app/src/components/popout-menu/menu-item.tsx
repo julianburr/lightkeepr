@@ -1,8 +1,8 @@
 import { SetStateAction, ReactNode, Dispatch } from "react";
 import styled from "styled-components";
 
-import { P, Small } from "src/components/text";
 import { CoreButton } from "src/components/button";
+import { P, Small } from "src/components/text";
 
 import CheckSvg from "src/assets/icons/check.svg";
 

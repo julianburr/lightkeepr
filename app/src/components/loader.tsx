@@ -1,7 +1,7 @@
+import { ReactNode } from "react";
 import styled, { keyframes } from "styled-components";
 
 import LogoSvg from "src/assets/logo.svg";
-import { ReactNode } from "react";
 
 const spin = keyframes`
   0% {

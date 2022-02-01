@@ -1,6 +1,5 @@
 import "src/utils/firebase";
 
-import { useForm } from "react-cool-form";
 import {
   addDoc,
   collection,
@@ -8,17 +7,18 @@ import {
   getFirestore,
   updateDoc,
 } from "firebase/firestore";
+import { useForm } from "react-cool-form";
 
-import { api } from "src/utils/api-client";
+import { Auth } from "src/components/auth";
+import { Button } from "src/components/button";
+import { ButtonBar } from "src/components/button-bar";
+import { Field } from "src/components/field";
+import { FormGrid } from "src/components/form-grid";
+import { Spacer } from "src/components/spacer";
+import { EmailInput, TextInput } from "src/components/text-input";
 import { useAuthUser } from "src/hooks/use-auth-user";
 import { SetupLayout } from "src/layouts/setup";
-import { Auth } from "src/components/auth";
-import { Field } from "src/components/field";
-import { EmailInput, TextInput } from "src/components/text-input";
-import { Button } from "src/components/button";
-import { Spacer } from "src/components/spacer";
-import { ButtonBar } from "src/components/button-bar";
-import { FormGrid } from "src/components/form-grid";
+import { api } from "src/utils/api-client";
 
 const db = getFirestore();
 

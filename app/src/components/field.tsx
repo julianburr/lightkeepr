@@ -1,6 +1,7 @@
 import { Ref, ComponentType, ReactNode } from "react";
-import { useControlled, useFormMethods } from "react-cool-form";
+import { useControlled } from "react-cool-form";
 import styled from "styled-components";
+
 import { Label } from "./label";
 
 const Container = styled.div`

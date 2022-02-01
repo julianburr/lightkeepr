@@ -1,6 +1,6 @@
-import { useContext } from "react";
-import invariant from "invariant";
 import { onSnapshot } from "firebase/firestore";
+import invariant from "invariant";
+import { useContext } from "react";
 
 import { FirestoreContext, NotFoundError } from "./context";
 

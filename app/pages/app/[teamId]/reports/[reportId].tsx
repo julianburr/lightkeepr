@@ -1,5 +1,6 @@
 import "src/utils/firebase";
 
+import classNames from "classnames";
 import {
   collection,
   deleteDoc,
@@ -10,27 +11,26 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
-import styled from "styled-components";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import classNames from "classnames";
+import styled from "styled-components";
 
 import { useCollection, useDocument } from "src/@packages/firebase";
-import { CATEGORIES } from "src/utils/audits";
-import { useAuthUser } from "src/hooks/use-auth-user";
-import { useToast } from "src/hooks/use-toast";
-import { useConfirmationDialog } from "src/hooks/use-dialog";
-import { AppLayout } from "src/layouts/app";
 import { Auth } from "src/components/auth";
-import { GroupHeading, Heading, P, Small } from "src/components/text";
-import { Spacer } from "src/components/spacer";
+import { Button } from "src/components/button";
 import { Loader } from "src/components/loader";
 import { ReportDetails } from "src/components/report-details";
-import { Suspense } from "src/components/suspense";
-import { Button } from "src/components/button";
+import { Spacer } from "src/components/spacer";
 import { SplitButton } from "src/components/split-button";
-import { Tooltip } from "src/components/tooltip";
 import { StatusAvatar } from "src/components/status-avatar";
+import { Suspense } from "src/components/suspense";
+import { GroupHeading, Heading, P, Small } from "src/components/text";
+import { Tooltip } from "src/components/tooltip";
+import { useAuthUser } from "src/hooks/use-auth-user";
+import { useConfirmationDialog } from "src/hooks/use-dialog";
+import { useToast } from "src/hooks/use-toast";
+import { AppLayout } from "src/layouts/app";
+import { CATEGORIES } from "src/utils/audits";
 
 import ChevronLeftSvg from "src/assets/icons/chevron-left.svg";
 import ChevronRightSvg from "src/assets/icons/chevron-right.svg";

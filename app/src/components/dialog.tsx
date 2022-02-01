@@ -1,7 +1,4 @@
-import styled from "styled-components";
 import { createFocusTrap } from "focus-trap";
-
-import CrossSvg from "src/assets/icons/x.svg";
 import {
   PropsWithChildren,
   ReactNode,
@@ -9,14 +6,19 @@ import {
   useEffect,
   useRef,
 } from "react";
-import { createPortal } from "react-dom";
 import { Ref } from "react";
-import { DialogMetaContext } from "src/hooks/use-dialog";
 import { useState } from "react";
-import { P } from "./text";
+import { ComponentProps } from "react";
+import { createPortal } from "react-dom";
+import styled from "styled-components";
+
+import { DialogMetaContext } from "src/hooks/use-dialog";
+
+import CrossSvg from "src/assets/icons/x.svg";
+
 import { Button } from "./button";
 import { ButtonBar } from "./button-bar";
-import { ComponentProps } from "react";
+import { P } from "./text";
 
 const Backdrop = styled.div`
   position: fixed;

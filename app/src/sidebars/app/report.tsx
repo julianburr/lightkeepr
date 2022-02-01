@@ -1,18 +1,16 @@
 import "src/utils/firebase";
 
-import { useRouter } from "next/router";
+import dayjs from "dayjs";
 import { doc, getFirestore } from "firebase/firestore";
+import { useRouter } from "next/router";
 
 import { useDocument } from "src/@packages/firebase";
-import { useSuspense } from "src/@packages/suspense";
-import { api } from "src/utils/api-client";
 import { Menu } from "src/components/menu";
-import { Spacer } from "src/components/spacer";
 import { Meta } from "src/components/meta";
+import { Spacer } from "src/components/spacer";
 import { Suspense } from "src/components/suspense";
 
 import ArrowLeftSvg from "src/assets/icons/arrow-left.svg";
-import dayjs from "dayjs";
 
 const db = getFirestore();
 

@@ -1,32 +1,30 @@
 import "src/utils/firebase";
 
+import { getAuth } from "firebase/auth";
+import Link from "next/link";
 import { PropsWithChildren } from "react";
 import styled from "styled-components";
-import Link from "next/link";
-import { getAuth } from "firebase/auth";
 
-import { SuspenseProvider } from "src/@packages/suspense";
 import { FirebaseProvider } from "src/@packages/firebase";
-import { DialogProvider } from "src/hooks/use-dialog";
-import { ToastProvider } from "src/hooks/use-toast";
-import { useAuthUser } from "src/hooks/use-auth-user";
-import { TopBar } from "src/components/top-bar";
+import { SuspenseProvider } from "src/@packages/suspense";
+import { AccountActionMenu } from "src/action-menus/account";
 import { Button } from "src/components/button";
-import { Tooltip } from "src/components/tooltip";
 import { Spacer } from "src/components/spacer";
 import { Suspense } from "src/components/suspense";
-
-import { AccountActionMenu } from "src/action-menus/account";
+import { Tooltip } from "src/components/tooltip";
+import { TopBar } from "src/components/top-bar";
+import { useAuthUser } from "src/hooks/use-auth-user";
+import { DialogProvider } from "src/hooks/use-dialog";
+import { ToastProvider } from "src/hooks/use-toast";
 import { DocsSidebar } from "src/sidebars/docs";
 
-import LogoSvg from "src/assets/logo.svg";
-import MenuSvg from "src/assets/icons/menu.svg";
-import GridSvg from "src/assets/icons/grid.svg";
-import SearchSvg from "src/assets/icons/search.svg";
 import ExternalLinkSvg from "src/assets/icons/external-link.svg";
+import GridSvg from "src/assets/icons/grid.svg";
 import LoginSvg from "src/assets/icons/log-in.svg";
+import MenuSvg from "src/assets/icons/menu.svg";
+import SearchSvg from "src/assets/icons/search.svg";
 import UserSvg from "src/assets/icons/user.svg";
-import { ActionMenu } from "src/components/action-menu";
+import LogoSvg from "src/assets/logo.svg";
 
 const auth = getAuth();
 

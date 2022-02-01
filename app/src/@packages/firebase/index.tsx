@@ -1,10 +1,10 @@
 import React from "react";
+import { PropsWithChildren } from "react";
 
 import { AuthProvider, useAuth } from "./auth";
+import { useCollection } from "./firestore/collection";
 import { FirestoreProvider } from "./firestore/context";
 import { useDocument } from "./firestore/document";
-import { useCollection } from "./firestore/collection";
-import { PropsWithChildren } from "react";
 
 type FirebaseProviderProps = PropsWithChildren<Record<never, any>>;
 

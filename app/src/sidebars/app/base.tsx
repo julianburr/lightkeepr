@@ -1,7 +1,5 @@
 import "src/utils/firebase";
 
-import { useRouter } from "next/router";
-import { useCollection } from "src/@packages/firebase";
 import { getAuth } from "firebase/auth";
 import {
   collection,
@@ -11,7 +9,9 @@ import {
   query,
   where,
 } from "firebase/firestore";
+import { useRouter } from "next/router";
 
+import { useCollection } from "src/@packages/firebase";
 import { Menu } from "src/components/menu";
 
 import BellSvg from "src/assets/icons/bell.svg";

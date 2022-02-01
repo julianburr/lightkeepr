@@ -1,5 +1,5 @@
-import { ComponentProps } from "react";
 import { MjmlButton } from "mjml-react";
+import { ComponentProps } from "react";
 
 import { tokens } from "src/theme/tokens";
 

@@ -10,19 +10,19 @@ import {
   where,
 } from "firebase/firestore";
 
-import { useSuspense } from "src/@packages/suspense";
 import { useCollection, useDocument } from "src/@packages/firebase";
-import { api } from "src/utils/api-client";
-import { Spacer } from "src/components/spacer";
+import { useSuspense } from "src/@packages/suspense";
 import { Loader } from "src/components/loader";
+import { Spacer } from "src/components/spacer";
 import { Suspense } from "src/components/suspense";
+import { api } from "src/utils/api-client";
 
-import { ScoresSummary } from "./scores";
-import { PerformanceSummary } from "./performance";
-import { NetworkSummary } from "./network";
-import { UserTimingsSummary } from "./user-timings";
-import { OpportunitiesSummary } from "./opportunities";
 import { BudgetsSummary } from "./budgets";
+import { NetworkSummary } from "./network";
+import { OpportunitiesSummary } from "./opportunities";
+import { PerformanceSummary } from "./performance";
+import { ScoresSummary } from "./scores";
+import { UserTimingsSummary } from "./user-timings";
 
 const db = getFirestore();
 

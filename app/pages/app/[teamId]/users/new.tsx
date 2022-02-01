@@ -1,28 +1,28 @@
 import "src/utils/firebase";
 
-import { useForm } from "react-cool-form";
-import { useRouter } from "next/router";
 import { doc, getFirestore, updateDoc } from "firebase/firestore";
+import { useRouter } from "next/router";
+import { Suspense } from "react";
+import { useForm } from "react-cool-form";
 import styled from "styled-components";
 
 import { useDocument } from "src/@packages/firebase";
-import { api } from "src/utils/api-client";
+import { PermissionError } from "src/@packages/firebase/firestore/context";
+import { Auth } from "src/components/auth";
+import { Button } from "src/components/button";
+import { ButtonBar } from "src/components/button-bar";
+import { Field } from "src/components/field";
+import { FormGrid } from "src/components/form-grid";
+import { Loader } from "src/components/loader";
+import { SelectInput } from "src/components/select-input";
+import { Spacer } from "src/components/spacer";
+import { Heading } from "src/components/text";
+import { EmailInput } from "src/components/text-input";
 import { useAuthUser } from "src/hooks/use-auth-user";
 import { useErrorDialog } from "src/hooks/use-dialog";
 import { useToast } from "src/hooks/use-toast";
 import { AppLayout } from "src/layouts/app";
-import { Field } from "src/components/field";
-import { EmailInput } from "src/components/text-input";
-import { SelectInput } from "src/components/select-input";
-import { Button } from "src/components/button";
-import { Auth } from "src/components/auth";
-import { Heading, P } from "src/components/text";
-import { Spacer } from "src/components/spacer";
-import { ButtonBar } from "src/components/button-bar";
-import { FormGrid } from "src/components/form-grid";
-import { Suspense } from "react";
-import { Loader } from "src/components/loader";
-import { PermissionError } from "src/@packages/firebase/firestore/context";
+import { api } from "src/utils/api-client";
 
 const db = getFirestore();
 

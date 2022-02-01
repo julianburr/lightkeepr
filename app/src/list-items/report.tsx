@@ -1,16 +1,16 @@
-import { useRouter } from "next/router";
-import styled from "styled-components";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { useRouter } from "next/router";
+import styled from "styled-components";
 
+import { Avatar } from "src/components/avatar";
 import { ListItem } from "src/components/list";
+import { StatusAvatar } from "src/components/status-avatar";
 import { P, Small, Span } from "src/components/text";
 import { Tooltip } from "src/components/tooltip";
-import { Avatar } from "src/components/avatar";
-import { StatusAvatar } from "src/components/status-avatar";
 
-import MobileSvg from "src/assets/icons/smartphone.svg";
 import DesktopSvg from "src/assets/icons/monitor.svg";
+import MobileSvg from "src/assets/icons/smartphone.svg";
 
 dayjs.extend(relativeTime);
 

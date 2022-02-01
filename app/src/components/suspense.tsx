@@ -1,4 +1,4 @@
-import { ComponentProps, Suspense as OriginalSuspense, useState } from "react";
+import { ComponentProps, Suspense as OriginalSuspense } from "react";
 
 export function Suspense({
   fallback,

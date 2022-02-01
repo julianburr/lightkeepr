@@ -1,14 +1,14 @@
 import { ComponentProps } from "react";
 import styled from "styled-components";
 
-import { useAuthUser } from "src/hooks/use-auth-user";
 import { Avatar } from "src/components/avatar";
 import { Loader } from "src/components/loader";
-import { P, Small } from "src/components/text";
-import { Spacer } from "src/components/spacer";
-import { Sidebar } from "src/components/sidebar";
 import { Menu } from "src/components/menu";
+import { Sidebar } from "src/components/sidebar";
+import { Spacer } from "src/components/spacer";
 import { Suspense } from "src/components/suspense";
+import { P, Small } from "src/components/text";
+import { useAuthUser } from "src/hooks/use-auth-user";
 
 const WrapProfile = styled.div`
   display: flex;

@@ -1,25 +1,24 @@
-import { useCallback, RefObject } from "react";
 import { useRouter } from "next/router";
+import { useCallback, RefObject } from "react";
 import styled from "styled-components";
 
-import { useAuthUser } from "src/hooks/use-auth-user";
-import { useSidebarLinkState } from "src/hooks/use-sidebar-link-state";
 import { Avatar } from "src/components/avatar";
-import { P, Small } from "src/components/text";
-import { Spacer } from "src/components/spacer";
-import { Sidebar } from "src/components/sidebar";
-import { Suspense } from "src/components/suspense";
 import { ErrorBoundary, ErrorMessage } from "src/components/error-boundary";
 import { Menu } from "src/components/menu";
-
+import { Sidebar } from "src/components/sidebar";
+import { Spacer } from "src/components/spacer";
+import { Suspense } from "src/components/suspense";
+import { P, Small } from "src/components/text";
+import { useAuthUser } from "src/hooks/use-auth-user";
+import { useSidebarLinkState } from "src/hooks/use-sidebar-link-state";
 import { TeamSelectInput } from "src/selects/team";
+
+import ArrowLeftSvg from "src/assets/icons/arrow-left.svg";
 
 import { BaseSidebar } from "./base";
 import { ProjectSidebar } from "./project";
-import { RunSidebar } from "./run";
 import { ReportSidebar } from "./report";
-
-import ArrowLeftSvg from "src/assets/icons/arrow-left.svg";
+import { RunSidebar } from "./run";
 
 const WrapProfile = styled.div`
   display: flex;

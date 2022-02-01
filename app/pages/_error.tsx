@@ -1,10 +1,10 @@
 import { useRouter } from "next/router";
-import { P } from "src/components/text";
+import styled from "styled-components";
 
+import { P } from "src/components/text";
 import { AppLayout } from "src/layouts/app";
 import { DocsLayout } from "src/layouts/docs";
 import { WebsiteLayout } from "src/layouts/website";
-import styled from "styled-components";
 
 const Container = styled.div`
   display: flex;

@@ -1,5 +1,6 @@
 import "src/utils/firebase";
 
+import dayjs from "dayjs";
 import {
   collection,
   doc,
@@ -8,14 +9,13 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import dayjs from "dayjs";
 import styled, { keyframes } from "styled-components";
 
 import { useCollection, useDocument } from "src/@packages/firebase";
-import { formatMs } from "src/utils/format";
 import { Menu } from "src/components/menu";
-import { Spacer } from "src/components/spacer";
 import { Meta } from "src/components/meta";
+import { Spacer } from "src/components/spacer";
+import { formatMs } from "src/utils/format";
 
 import ArrowLeftSvg from "src/assets/icons/arrow-left.svg";
 import LoaderSvg from "src/assets/icons/loader.svg";
