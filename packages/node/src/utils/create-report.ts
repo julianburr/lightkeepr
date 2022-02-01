@@ -11,9 +11,9 @@ type CreateReportArgs = {
   token: string;
   apiUrl: string;
   runId: string;
-  url: string;
+  url?: string;
   name?: string;
-  type?: string;
+  type?: null | "user-flow";
   reportData: any;
 };
 
