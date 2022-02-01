@@ -43,8 +43,6 @@ export default function ProjectSettings() {
   const projectRef = doc(db, "projects", router.query.projectId!);
   const project = useDocument(projectRef);
 
-  console.log({ project });
-
   if (!project) {
     const e: any = new Error("Project does not exist");
     e.code = 404;
@@ -66,10 +64,7 @@ export default function ProjectSettings() {
         pwa: project?.targets?.pwa || 0,
       },
     },
-    onSubmit: async (values) => {
-      console.log("#onSubmit");
-      await updateDoc(projectRef, removeUndefined(values));
-    },
+    onSubmit: (values) => updateDoc(projectRef, removeUndefined(values)),
   });
 
   const handleRefresh = useCallback(() => {
@@ -185,7 +180,7 @@ export default function ProjectSettings() {
                 Input={RangeInput}
               />
               <Field
-                name="targets.bestPractices"
+                name="targets.best-practices"
                 label="Best practices"
                 Input={RangeInput}
               />

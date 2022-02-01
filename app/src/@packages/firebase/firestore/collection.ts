@@ -43,15 +43,29 @@ export function useCollection(query: any, options: UseCollectionOptions) {
       if (snap.metadata?.fromCache) {
         return;
       }
+
+      // Since we might be updating multiple cache items, we collect all updates in a new
+      // state object
+      const newState: any = {};
+
       const items: any[] = [];
       snap.forEach(async (doc: any) => {
-        items.push(
-          options?.mapItem
-            ? await options.mapItem({ id: doc.id, ...doc.data() })
-            : { id: doc.id, ...doc.data() }
-        );
+        const item = options?.mapItem
+          ? await options.mapItem({ id: doc.id, ...doc.data() })
+          : { id: doc.id, ...doc.data() };
+
+        items.push(item);
+
+        // If we can get the item document path, add the item itself also to the document
+        // cache, this way we don't need to re-fetch items we already fetched from a list
+        if (doc.ref?.path) {
+          const documentCacheKey = `doc/${doc.ref?.path}`;
+          newState[documentCacheKey] = { data: item };
+        }
       });
-      setCache?.((state) => ({ ...state, [cacheKey]: { data: items } }));
+      newState[cacheKey] = { data: items };
+
+      setCache?.((state) => ({ ...state, ...newState }));
       cacheItem?.resolve();
     });
   }

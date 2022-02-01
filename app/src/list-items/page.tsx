@@ -79,7 +79,10 @@ export function PageListItem({ data }: PageListItemProps) {
   return (
     <ListItem href={`/app/${router.query.teamId}/reports/${lastReport.id}`}>
       <Content>
-        <StatusAvatar status={lastReport.status} />
+        <StatusAvatar
+          status={lastReport.status}
+          statusReasons={lastReport.statusReasons}
+        />
         <Title>
           <P>
             {lastReport.name || lastReport.url || "n/a"}

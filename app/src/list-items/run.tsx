@@ -47,7 +47,7 @@ export function RunListItem({ data }: RunListItemProps) {
   return (
     <ListItem href={`/app/${router.query.teamId}/runs/${data.id}`}>
       <Content>
-        <StatusAvatar status={data.status} />
+        <StatusAvatar status={data.status} statusReasons={data.statusReasons} />
         <Title>
           <P>
             <span>{data.commitMessage || data.commitHash || data.id}</span>

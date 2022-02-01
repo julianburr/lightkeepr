@@ -1,4 +1,4 @@
-import { Ref, useEffect, useRef } from "react";
+import { Ref, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -123,6 +123,11 @@ export function RangeInput({
   value = min,
   onChange,
 }: RangeInputProps) {
+  const [localValue, setLocalValue] = useState(value);
+  useEffect(() => {
+    setLocalValue(value);
+  }, [value]);
+
   const markerRef = useRef<HTMLSpanElement>();
   const trackRef = useRef<HTMLSpanElement>();
   const valueRef = useRef<HTMLSpanElement>();
@@ -171,7 +176,7 @@ export function RangeInput({
           Math.max(roundClient(startOffset + moved), 0),
           trackRef.current!.clientWidth - markerRef.current!.clientWidth
         );
-        onChange?.(getValue(pos));
+        setLocalValue(getValue(pos));
       }
     }
 
@@ -181,6 +186,9 @@ export function RangeInput({
         e.stopPropagation();
         dragging = false;
         markerRef.current!.classList.remove("active");
+        onChange?.(
+          parseInt(markerRef.current!.getAttribute("data-valuenow") || "0")
+        );
       }
     }
 
@@ -256,7 +264,7 @@ export function RangeInput({
       markerRef.current?.removeEventListener?.("keydown", handleKeyDown);
   }, [step, min, max, value]);
 
-  const safeValue = Math.min(Math.max(value, min), max);
+  const safeValue = Math.min(Math.max(localValue, min), max);
 
   return (
     <Container>
