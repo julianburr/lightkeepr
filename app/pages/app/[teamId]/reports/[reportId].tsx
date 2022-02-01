@@ -266,6 +266,8 @@ function Content() {
   const report = useDocument(reportRef, { fetch: router.isReady });
 
   const runRef = doc(db, "runs", report.run.id);
+  const run = useDocument(runRef);
+
   const reports = useCollection(
     query(
       collection(db, "reports"),
@@ -274,6 +276,9 @@ function Content() {
     ),
     { key: `${report.run.id}/reports` }
   );
+
+  const projectRef = doc(db, "projects", run.project.id);
+  const project = useDocument(projectRef);
 
   const currentIndex = reports.findIndex((r: any) => r.id === report.id);
   const prev = currentIndex === 0 ? undefined : reports[currentIndex - 1];
@@ -375,6 +380,14 @@ function Content() {
                       status: "passed",
                       statusReasons: ["manual"],
                     });
+
+                    if (project.lastRun?.id === run.id) {
+                      // If this run is the latest of the current project, also update the project status
+                      await updateDoc(projectRef, {
+                        status: "passed",
+                        statusReasons: ["manual"],
+                      });
+                    }
                   }
 
                   toast.show({ message: "Report has been manually approved" });

@@ -58,9 +58,8 @@ export function useAutoSaveForm(...args: UseAutoSaveFormArgs) {
   // yet, we want to trigger a submit just to be sure
   useEffect(() => {
     return () => {
-      console.log({ timer: timer.current });
       if (timer.current) {
-        clearTimeout(timer.current!);
+        clearTimeout(timer.current);
         form.submit();
       }
     };
