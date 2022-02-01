@@ -1,7 +1,5 @@
 import "src/utils/firebase";
 
-import { useForm } from "react-cool-form";
-import { useRouter } from "next/router";
 import {
   addDoc,
   collection,
@@ -9,18 +7,20 @@ import {
   getFirestore,
   updateDoc,
 } from "firebase/firestore";
+import { useRouter } from "next/router";
+import { useForm } from "react-cool-form";
 import styled from "styled-components";
 
-import { useAuthUser } from "src/hooks/use-auth-user";
-import { AppLayout } from "src/layouts/app";
 import { Auth } from "src/components/auth";
 import { Button } from "src/components/button";
-import { Field } from "src/components/field";
-import { EmailInput, TextInput } from "src/components/text-input";
-import { Spacer } from "src/components/spacer";
 import { ButtonBar } from "src/components/button-bar";
-import { api } from "src/utils/api-client";
+import { Field } from "src/components/field";
 import { FormGrid } from "src/components/form-grid";
+import { Spacer } from "src/components/spacer";
+import { EmailInput, TextInput } from "src/components/text-input";
+import { useAuthUser } from "src/hooks/use-auth-user";
+import { AppLayout } from "src/layouts/app";
+import { api } from "src/utils/api-client";
 
 const db = getFirestore();
 

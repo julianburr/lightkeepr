@@ -1,11 +1,11 @@
-import { useRouter } from "next/router";
-import styled from "styled-components";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { useRouter } from "next/router";
+import styled from "styled-components";
 
-import { StatusAvatar } from "src/components/status-avatar";
 import { Avatar } from "src/components/avatar";
 import { ListItem } from "src/components/list";
+import { StatusAvatar } from "src/components/status-avatar";
 import { P, Small } from "src/components/text";
 
 import PlusSvg from "src/assets/icons/plus.svg";

@@ -1,12 +1,13 @@
 import * as path from "path";
+
 import matter from "gray-matter";
-import getReadingTime from "reading-time";
 import { serialize } from "next-mdx-remote/serialize";
-import smartypants from "remark-smartypants";
-import copyLinkedFiles from "remark-copy-linked-files";
+import getReadingTime from "reading-time";
+import autolinkHeadings from "rehype-autolink-headings";
 import externalLinks from "rehype-external-links";
 import slug from "rehype-slug";
-import autolinkHeadings from "rehype-autolink-headings";
+import copyLinkedFiles from "remark-copy-linked-files";
+import smartypants from "remark-smartypants";
 
 export async function parseMdx(mdxString: string) {
   const { data, content } = matter(mdxString);

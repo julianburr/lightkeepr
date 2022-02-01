@@ -1,17 +1,17 @@
 import "src/utils/firebase";
 
-import { useCallback } from "react";
 import { doc, getFirestore, updateDoc } from "firebase/firestore";
+import { useCallback } from "react";
 import styled from "styled-components";
 
-import { useAuthUser } from "src/hooks/use-auth-user";
-import { SetupLayout } from "src/layouts/setup";
+import { useDocument } from "src/@packages/firebase";
 import { Auth } from "src/components/auth";
 import { List, ListItem } from "src/components/list";
 import { Spacer } from "src/components/spacer";
-import { P, Small } from "src/components/text";
 import { SplitButton } from "src/components/split-button";
-import { useDocument } from "src/@packages/firebase";
+import { P, Small } from "src/components/text";
+import { useAuthUser } from "src/hooks/use-auth-user";
+import { SetupLayout } from "src/layouts/setup";
 
 const db = getFirestore();
 

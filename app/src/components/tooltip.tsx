@@ -1,3 +1,4 @@
+import { Placement } from "@popperjs/core";
 import {
   ReactNode,
   Ref,
@@ -7,7 +8,6 @@ import {
   useState,
 } from "react";
 import { createPortal } from "react-dom";
-import { Placement } from "@popperjs/core";
 import { usePopper } from "react-popper";
 import styled from "styled-components";
 

@@ -1,28 +1,27 @@
 import "src/utils/firebase";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
-import styled from "styled-components";
 import dayjs from "dayjs";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import styled from "styled-components";
 
 import { useSuspense } from "src/@packages/suspense";
-import { env } from "src/env";
-import { api } from "src/utils/api-client";
-import { stripeClient } from "src/utils/stripe";
-import { useAuthUser } from "src/hooks/use-auth-user";
-import { useToast } from "src/hooks/use-toast";
-import { AppLayout } from "src/layouts/app";
 import { Auth } from "src/components/auth";
 import { Button } from "src/components/button";
 import { List } from "src/components/list";
+import { Loader } from "src/components/loader";
 import { Spacer } from "src/components/spacer";
+import { Suspense } from "src/components/suspense";
 import { Heading, P, Small } from "src/components/text";
 import { Value } from "src/components/value";
-import { Loader } from "src/components/loader";
-import { Suspense } from "src/components/suspense";
-
+import { env } from "src/env";
+import { useAuthUser } from "src/hooks/use-auth-user";
+import { useToast } from "src/hooks/use-toast";
+import { AppLayout } from "src/layouts/app";
 import { InvoiceListItem } from "src/list-items/invoice";
 import { PaymentMethodListItem } from "src/list-items/payment-method";
+import { api } from "src/utils/api-client";
+import { stripeClient } from "src/utils/stripe";
 
 const Container = styled.div`
   width: 100%;

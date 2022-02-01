@@ -1,13 +1,13 @@
+import classnames from "classnames";
+import classNames from "classnames";
 import { useRouter } from "next/router";
 import { PropsWithChildren, ReactNode, useCallback } from "react";
-import classnames from "classnames";
 import styled from "styled-components";
 
 import { interactive } from "src/@packages/sol/tokens";
 
 import { CoreButton } from "./button";
 import { GroupHeading } from "./text";
-import classNames from "classnames";
 
 const Container = styled.menu`
   width: 100%;

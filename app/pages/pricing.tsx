@@ -1,12 +1,12 @@
+import Head from "next/head";
 import { PropsWithChildren } from "react";
 import styled from "styled-components";
-import Head from "next/head";
 
-import { WebsiteLayout } from "src/layouts/website";
+import { Button } from "src/components/button";
 import { Section, SectionContent } from "src/components/homepage/section";
+import { WebsiteLayout } from "src/layouts/website";
 
 import CheckSvg from "src/assets/icons/check.svg";
-import { Button } from "src/components/button";
 
 const PriceGrid = styled.div`
   width: 100%;

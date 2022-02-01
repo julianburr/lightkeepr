@@ -1,5 +1,6 @@
-import * as path from "path";
 import * as fs from "fs";
+import * as path from "path";
+
 import mime from "mime-types";
 
 export function getBase64Url(filePath: string, type?: string) {

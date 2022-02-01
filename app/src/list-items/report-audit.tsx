@@ -1,17 +1,16 @@
+import { ReportAuditDialog } from "dialogs/report-audit";
 import styled from "styled-components";
 
-import { useDialog } from "src/hooks/use-dialog";
 import { ListItem } from "src/components/list";
 import { Markdown } from "src/components/markdown";
 import { Span, P } from "src/components/text";
-
-import { ReportAuditDialog } from "dialogs/report-audit";
+import { useDialog } from "src/hooks/use-dialog";
 
 import AlertSvg from "src/assets/icons/alert-circle.svg";
-import CrossSvg from "src/assets/icons/x.svg";
 import CheckSvg from "src/assets/icons/check.svg";
-import InfoSvg from "src/assets/icons/info.svg";
 import EyeSvg from "src/assets/icons/eye.svg";
+import InfoSvg from "src/assets/icons/info.svg";
+import CrossSvg from "src/assets/icons/x.svg";
 
 const Container = styled.div`
   display: flex;

@@ -1,12 +1,12 @@
-import styled from "styled-components";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { useRouter } from "next/router";
+import styled from "styled-components";
 
 import { ListItem } from "src/components/list";
-import { P, Small } from "src/components/text";
 import { StatusAvatar } from "src/components/status-avatar";
+import { P, Small } from "src/components/text";
 import { Tooltip } from "src/components/tooltip";
-import { useRouter } from "next/router";
 
 import BranchSvg from "src/assets/icons/git-branch.svg";
 

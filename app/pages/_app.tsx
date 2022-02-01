@@ -1,17 +1,16 @@
-import { Reset } from "styled-reset";
 import Head from "next/head";
-
-import { GlobalStyles } from "src/theme";
-
-import favicon from "src/assets/favicon.png";
 import { useRouter } from "next/router";
-import { Suspense } from "src/components/suspense";
-import { Loader } from "src/components/loader";
-import { SuspenseProvider } from "src/@packages/suspense";
+import { Reset } from "styled-reset";
+
 import { FirebaseProvider } from "src/@packages/firebase";
+import { SuspenseProvider } from "src/@packages/suspense";
+import favicon from "src/assets/favicon.png";
+import { ErrorBoundary } from "src/components/error-boundary";
+import { Loader } from "src/components/loader";
+import { Suspense } from "src/components/suspense";
 import { DialogProvider } from "src/hooks/use-dialog";
 import { ToastProvider } from "src/hooks/use-toast";
-import { ErrorBoundary } from "src/components/error-boundary";
+import { GlobalStyles } from "src/theme";
 
 export default function App({ Component, pageProps }: any) {
   const router = useRouter();

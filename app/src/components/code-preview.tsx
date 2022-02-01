@@ -1,16 +1,16 @@
+import classnames from "classnames";
+import Prism from "prismjs";
 import { useState, Fragment, useEffect } from "react";
 import styled from "styled-components";
-import classnames from "classnames";
 
-import Prism from "prismjs";
 import "prismjs/components/prism-bash";
 import "prismjs/components/prism-yaml";
 import "prismjs/plugins/line-numbers/prism-line-numbers";
 
-import { CopyButton } from "./copy-button";
-
-import TerminalSvg from "src/assets/icons/terminal.svg";
 import FileSvg from "src/assets/icons/file.svg";
+import TerminalSvg from "src/assets/icons/terminal.svg";
+
+import { CopyButton } from "./copy-button";
 
 const Container = styled.div`
   display: flex;

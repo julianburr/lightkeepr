@@ -1,11 +1,10 @@
 import "src/utils/firebase";
 
-import { collection, getFirestore } from "firebase/firestore";
-
-import { useCollection } from "src/@packages/firebase";
-import { useAuthUser } from "src/hooks/use-auth-user";
-import { SelectInput } from "src/components/select-input";
+import { getFirestore } from "firebase/firestore";
 import { ComponentProps } from "react";
+
+import { SelectInput } from "src/components/select-input";
+import { useAuthUser } from "src/hooks/use-auth-user";
 
 const db = getFirestore();
 

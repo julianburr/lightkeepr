@@ -1,14 +1,14 @@
 import "src/utils/node/firebase";
 
 import { createHash } from "crypto";
-import { getAuth } from "firebase-admin/auth";
+
 import sgMail from "@sendgrid/mail";
+import { VerifyEmail } from "emails/verify";
+import { getAuth } from "firebase-admin/auth";
 import { render } from "mjml-react";
 
 import { env } from "src/env";
 import { createHandler } from "src/utils/node/api";
-
-import { VerifyEmail } from "emails/verify";
 
 const auth = getAuth();
 

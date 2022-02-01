@@ -1,28 +1,28 @@
 import "src/utils/firebase";
 
-import { PropsWithChildren } from "react";
-import styled from "styled-components";
+import { getAuth } from "firebase/auth";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { getAuth } from "firebase/auth";
+import { PropsWithChildren } from "react";
+import styled from "styled-components";
 
-import { useAuthUser } from "src/hooks/use-auth-user";
-import { TopBar } from "src/components/top-bar";
-import { Loader } from "src/components/loader";
-import { Tooltip } from "src/components/tooltip";
+import { AccountActionMenu } from "src/action-menus/account";
 import { Button } from "src/components/button";
+import { ErrorBoundary } from "src/components/error-boundary";
+import { Loader } from "src/components/loader";
 import { Spacer } from "src/components/spacer";
 import { Suspense } from "src/components/suspense";
-import { AccountActionMenu } from "src/action-menus/account";
+import { Tooltip } from "src/components/tooltip";
+import { TopBar } from "src/components/top-bar";
+import { useAuthUser } from "src/hooks/use-auth-user";
 import { AppSidebar } from "src/sidebars/app";
 
-import LogoSvg from "src/assets/logo.svg";
 import BellSvg from "src/assets/icons/bell.svg";
-import SearchSvg from "src/assets/icons/search.svg";
-import LifeBuoySvg from "src/assets/icons/life-buoy.svg";
 import GridSvg from "src/assets/icons/grid.svg";
+import LifeBuoySvg from "src/assets/icons/life-buoy.svg";
 import MenuSvg from "src/assets/icons/menu.svg";
-import { ErrorBoundary } from "src/components/error-boundary";
+import SearchSvg from "src/assets/icons/search.svg";
+import LogoSvg from "src/assets/logo.svg";
 
 const auth = getAuth();
 

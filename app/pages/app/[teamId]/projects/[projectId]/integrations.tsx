@@ -1,9 +1,9 @@
 import { useRouter } from "next/router";
 
-import { AppLayout } from "src/layouts/app";
 import { Auth } from "src/components/auth";
-import { Heading, P } from "src/components/text";
 import { Spacer } from "src/components/spacer";
+import { Heading, P } from "src/components/text";
+import { AppLayout } from "src/layouts/app";
 
 export default function ProjectIntegrations() {
   const router = useRouter();

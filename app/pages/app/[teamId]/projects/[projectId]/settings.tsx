@@ -1,33 +1,32 @@
 import "src/utils/firebase";
 
-import { useCallback } from "react";
-import { useRouter } from "next/router";
 import { deleteDoc, doc, getFirestore, updateDoc } from "firebase/firestore";
+import { useRouter } from "next/router";
+import { useCallback } from "react";
 import styled from "styled-components";
 
 import { useDocument } from "src/@packages/firebase";
-import { generateApiToken } from "src/utils/api-token";
-import { useConfirmationDialog } from "src/hooks/use-dialog";
-import { useToast } from "src/hooks/use-toast";
-import { useAutoSaveForm } from "src/hooks/use-auto-save-form";
-import { AppLayout } from "src/layouts/app";
 import { Auth } from "src/components/auth";
-import { ButtonBar } from "src/components/button-bar";
 import { Button } from "src/components/button";
-import { Field } from "src/components/field";
-import { TextInput } from "src/components/text-input";
-import { Spacer } from "src/components/spacer";
-import { ReadonlyInput } from "src/components/readonly-input";
+import { ButtonBar } from "src/components/button-bar";
+import { CheckboxInput } from "src/components/checkbox-input";
 import { CopyButton } from "src/components/copy-button";
+import { Field } from "src/components/field";
+import { FormGrid } from "src/components/form-grid";
+import { RangeInput } from "src/components/range-input";
+import { ReadonlyInput } from "src/components/readonly-input";
+import { Spacer } from "src/components/spacer";
+import { Heading, Small } from "src/components/text";
+import { TextInput } from "src/components/text-input";
 import { Tooltip } from "src/components/tooltip";
+import { useAuthUser } from "src/hooks/use-auth-user";
+import { useAutoSaveForm } from "src/hooks/use-auto-save-form";
+import { useConfirmationDialog } from "src/hooks/use-dialog";
+import { AppLayout } from "src/layouts/app";
+import { generateApiToken } from "src/utils/api-token";
+import { removeUndefined } from "src/utils/format";
 
 import RefreshSvg from "src/assets/icons/refresh-cw.svg";
-import { useAuthUser } from "src/hooks/use-auth-user";
-import { Heading, Small } from "src/components/text";
-import { FormGrid } from "src/components/form-grid";
-import { CheckboxInput } from "src/components/checkbox-input";
-import { RangeInput } from "src/components/range-input";
-import { removeUndefined } from "src/utils/format";
 
 const db = getFirestore();
 

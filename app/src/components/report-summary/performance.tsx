@@ -1,15 +1,14 @@
-import { useMemo } from "react";
 import dayjs from "dayjs";
+import { useMemo } from "react";
 import styled from "styled-components";
 
+import { List } from "src/components/list";
+import { Spacer } from "src/components/spacer";
+import { GroupHeading, P, Small } from "src/components/text";
+import { Trend, Trends } from "src/components/trend";
+import { RegressionListItem } from "src/list-items/regression";
 import { AUDITS } from "src/utils/audits";
 import { getRegressionsFromObject } from "src/utils/regressions";
-import { GroupHeading, P, Small } from "src/components/text";
-import { Spacer } from "src/components/spacer";
-import { Trend, Trends } from "src/components/trend";
-import { List } from "src/components/list";
-
-import { RegressionListItem } from "src/list-items/regression";
 
 const Content = styled.div`
   display: flex;

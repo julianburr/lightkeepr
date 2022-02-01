@@ -1,12 +1,11 @@
 import "src/utils/firebase";
 
-import { PropsWithChildren, useEffect } from "react";
 import { useRouter } from "next/router";
+import SignIn from "pages/auth/sign-in";
+import { PropsWithChildren, useEffect } from "react";
 
 import { useAuthUser } from "src/hooks/use-auth-user";
 import { usePersistedState } from "src/hooks/use-persisted-state";
-
-import SignIn from "pages/auth/sign-in";
 
 type AuthProps = PropsWithChildren<Record<never, any>>;
 

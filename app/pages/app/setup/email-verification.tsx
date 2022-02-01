@@ -2,14 +2,14 @@ import "src/utils/firebase";
 
 import { useRouter } from "next/router";
 
-import { api } from "src/utils/api-client";
-import { useAuthUser } from "src/hooks/use-auth-user";
-import { SetupLayout } from "src/layouts/setup";
 import { Auth } from "src/components/auth";
-import { Spacer } from "src/components/spacer";
-import { P } from "src/components/text";
 import { Button } from "src/components/button";
 import { ButtonBar } from "src/components/button-bar";
+import { Spacer } from "src/components/spacer";
+import { P } from "src/components/text";
+import { useAuthUser } from "src/hooks/use-auth-user";
+import { SetupLayout } from "src/layouts/setup";
+import { api } from "src/utils/api-client";
 
 export default function EmailVerificationSetup() {
   const router = useRouter();

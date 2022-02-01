@@ -1,14 +1,14 @@
 import "src/utils/firebase";
 
-import styled from "styled-components";
 import dayjs from "dayjs";
+import styled from "styled-components";
 
+import { Button } from "src/components/button";
 import { ListItem } from "src/components/list";
 import { P, Small } from "src/components/text";
-import { Button } from "src/components/button";
+import { Tooltip } from "src/components/tooltip";
 
 import PaperclipSvg from "src/assets/icons/paperclip.svg";
-import { Tooltip } from "src/components/tooltip";
 
 const Content = styled.div`
   display: flex;

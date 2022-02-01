@@ -1,20 +1,20 @@
-import { useState } from "react";
-import styled from "styled-components";
 import classNames from "classnames";
 import Head from "next/head";
+import { useState } from "react";
+import styled from "styled-components";
 
-import { WebsiteLayout } from "src/layouts/website";
+import { CodePreview } from "src/components/code-preview";
 import { Hero } from "src/components/homepage/hero";
-import { Section, SectionContent } from "src/components/homepage/section";
 import { Highlight } from "src/components/homepage/highlight";
+import { Section, SectionContent } from "src/components/homepage/section";
+import { WebsiteLayout } from "src/layouts/website";
 
-import UsersSvg from "src/assets/icons/website/rocket.svg";
 import ChatSvg from "src/assets/icons/website/bubble-chat.svg";
-import BellSvg from "src/assets/icons/website/snooze.svg";
 import BulbSvg from "src/assets/icons/website/bulb.svg";
 import CompareSvg from "src/assets/icons/website/divide.svg";
 import ReadSvg from "src/assets/icons/website/read.svg";
-import { CodePreview } from "src/components/code-preview";
+import UsersSvg from "src/assets/icons/website/rocket.svg";
+import BellSvg from "src/assets/icons/website/snooze.svg";
 
 const Screenshots = styled.div`
   width: 90%;

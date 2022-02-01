@@ -1,3 +1,4 @@
+import { Placement } from "@popperjs/core";
 import {
   ComponentType,
   ReactNode,
@@ -8,12 +9,10 @@ import {
   useState,
   Dispatch,
   SetStateAction,
-  useMemo,
 } from "react";
 import { createPortal } from "react-dom";
 import { usePopper } from "react-popper";
 import styled from "styled-components";
-import { Placement, VirtualElement } from "@popperjs/core";
 
 const Container = styled.div`
   background: #fff;

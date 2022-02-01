@@ -1,5 +1,5 @@
-import { Ref, RefObject, useCallback, useLayoutEffect, useState } from "react";
 import { useRouter } from "next/router";
+import { RefObject, useCallback, useLayoutEffect, useState } from "react";
 
 type useSidebarLinkStateArgs = {
   active: boolean;

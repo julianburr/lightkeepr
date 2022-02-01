@@ -2,11 +2,11 @@ import styled, { keyframes } from "styled-components";
 
 import { Avatar } from "src/components/avatar";
 
-import CheckSvg from "src/assets/icons/check.svg";
-import CheckCircleSvg from "src/assets/icons/check-circle.svg";
 import AlertSvg from "src/assets/icons/alert-circle.svg";
-import MinusSvg from "src/assets/icons/minus.svg";
+import CheckCircleSvg from "src/assets/icons/check-circle.svg";
+import CheckSvg from "src/assets/icons/check.svg";
 import LoaderSvg from "src/assets/icons/loader.svg";
+import MinusSvg from "src/assets/icons/minus.svg";
 import XSvg from "src/assets/icons/x.svg";
 
 const spin = keyframes`

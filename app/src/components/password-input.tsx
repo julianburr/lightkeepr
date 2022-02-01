@@ -1,10 +1,10 @@
 import { ComponentProps, forwardRef, useState, Ref } from "react";
 import styled from "styled-components";
 
-import { Input } from "./text-input";
-
-import EyeSvg from "src/assets/icons/eye.svg";
 import EyeOffSvg from "src/assets/icons/eye-off.svg";
+import EyeSvg from "src/assets/icons/eye.svg";
+
+import { Input } from "./text-input";
 
 const Container = styled.div`
   position: relative;

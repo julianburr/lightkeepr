@@ -1,10 +1,11 @@
 import { useCallback, useRef, Ref, ComponentProps } from "react";
 import styled from "styled-components";
 
-import { useToast } from "src/hooks/use-toast";
 import { Button } from "src/components/button";
+import { useToast } from "src/hooks/use-toast";
 
 import ClipboardSvg from "src/assets/icons/clipboard.svg";
+
 import { Tooltip } from "./tooltip";
 
 const TextArea = styled.textarea`

@@ -1,5 +1,5 @@
-import { useMemo } from "react";
 import { useRouter } from "next/router";
+import { useMemo } from "react";
 
 type UseRunFiltersArgs = {
   runs: any[];

@@ -2,10 +2,10 @@ import styled from "styled-components";
 
 import { ListItem } from "src/components/list";
 import { Span, P } from "src/components/text";
+import { formatBytes, formatMs } from "src/utils/format";
 
 import AlertSvg from "src/assets/icons/alert-circle.svg";
 import CheckSvg from "src/assets/icons/check.svg";
-import { formatBytes, formatMs } from "src/utils/format";
 
 const Container = styled.div`
   display: flex;

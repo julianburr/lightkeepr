@@ -1,21 +1,20 @@
 import "src/utils/firebase";
 
-import { useMemo } from "react";
-import { useRouter } from "next/router";
 import { doc, getFirestore } from "firebase/firestore";
+import { useRouter } from "next/router";
+import { useMemo } from "react";
 
 import { useDocument } from "src/@packages/firebase";
-import { AppLayout } from "src/layouts/app";
-import { useAuthUser } from "src/hooks/use-auth-user";
 import { Auth } from "src/components/auth";
 import { Button } from "src/components/button";
 import { List } from "src/components/list";
-import { TitleBar } from "src/components/title-bar";
 import { Spacer } from "src/components/spacer";
 import { GroupHeading } from "src/components/text";
-
-import { UserListItem } from "src/list-items/user";
+import { TitleBar } from "src/components/title-bar";
+import { useAuthUser } from "src/hooks/use-auth-user";
+import { AppLayout } from "src/layouts/app";
 import { InviteListItem } from "src/list-items/invite";
+import { UserListItem } from "src/list-items/user";
 
 import PlusSvg from "src/assets/icons/plus.svg";
 

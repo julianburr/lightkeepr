@@ -1,5 +1,5 @@
-import { ComponentProps } from "react";
 import { MjmlText } from "mjml-react";
+import { ComponentProps } from "react";
 
 export function P(props: ComponentProps<typeof MjmlText>) {
   return (

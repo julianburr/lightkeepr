@@ -1,5 +1,5 @@
-import { ComponentType, PropsWithChildren } from "react";
 import Link from "next/link";
+import { ComponentType, PropsWithChildren } from "react";
 import styled from "styled-components";
 
 import { Button } from "src/components/button";

@@ -1,3 +1,4 @@
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import React, {
   createContext,
   PropsWithChildren,
@@ -6,7 +7,6 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 let resolveUserPromise: any;
 const userPromise = new Promise((resolve) => {

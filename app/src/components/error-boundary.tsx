@@ -1,6 +1,6 @@
+import * as Sentry from "@sentry/react";
 import { ComponentProps, PropsWithChildren } from "react";
 import styled from "styled-components";
-import * as Sentry from "@sentry/react";
 
 import { Heading, P } from "src/components/text";
 

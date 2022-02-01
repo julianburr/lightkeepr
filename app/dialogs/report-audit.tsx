@@ -1,9 +1,9 @@
 import { Dialog } from "src/components/dialog";
-import { Spacer } from "src/components/spacer";
-import { P } from "src/components/text";
+import { Hint } from "src/components/hint";
 import { Markdown } from "src/components/markdown";
 import { Table } from "src/components/report-audit/table";
-import { Hint } from "src/components/hint";
+import { Spacer } from "src/components/spacer";
+import { P } from "src/components/text";
 
 const MAP = {
   table: Table,

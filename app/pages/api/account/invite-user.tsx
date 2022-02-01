@@ -1,14 +1,13 @@
 import "src/utils/node/firebase";
 
-import { NextApiRequest, NextApiResponse } from "next";
-import { render } from "mjml-react";
-import { getFirestore } from "firebase-admin/firestore";
 import sgMail from "@sendgrid/mail";
+import { InviteUserEmail } from "emails/invite-user";
+import { getFirestore } from "firebase-admin/firestore";
+import { render } from "mjml-react";
+import { NextApiRequest, NextApiResponse } from "next";
 
 import { env } from "src/env";
 import { createHandler } from "src/utils/node/api";
-
-import { InviteUserEmail } from "emails/invite-user";
 
 const db = getFirestore();
 

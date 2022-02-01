@@ -1,6 +1,7 @@
 import "src/utils/node/firebase";
 
 import { createHash } from "crypto";
+
 import { getAuth } from "firebase-admin/auth";
 
 import { createHandler } from "src/utils/node/api";
