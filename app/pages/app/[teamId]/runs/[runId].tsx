@@ -3,14 +3,17 @@ import "src/utils/firebase";
 import { useRouter } from "next/router";
 import {
   collection,
+  deleteDoc,
   doc,
   getFirestore,
   orderBy,
   query,
+  updateDoc,
   where,
 } from "firebase/firestore";
 
 import { useCollection, useDocument } from "src/@packages/firebase";
+import { useConfirmationDialog } from "src/hooks/use-dialog";
 import { AppLayout } from "src/layouts/app";
 import { Auth } from "src/components/auth";
 import { List } from "src/components/list";
@@ -18,18 +21,24 @@ import { Spacer } from "src/components/spacer";
 import { Heading } from "src/components/text";
 import { Suspense } from "src/components/suspense";
 import { Loader } from "src/components/loader";
+import { ButtonBar } from "src/components/button-bar";
+import { ActionMenu } from "src/components/action-menu";
+import { ActionButton } from "src/components/button";
 
 import { ReportListItem } from "src/list-items/report";
+import { useToast } from "src/hooks/use-toast";
 
 const db = getFirestore();
 
 function Content() {
   const router = useRouter();
 
-  const { runId } = router.query;
-  const runRef = doc(db, "runs", router.query.runId!);
+  const toast = useToast();
+  const confirmationDialog = useConfirmationDialog();
 
+  const runRef = doc(db, "runs", router.query.runId!);
   const run = useDocument(runRef);
+
   const reports = useCollection(
     query(
       collection(db, "reports"),
@@ -40,20 +49,72 @@ function Content() {
   );
 
   return (
-    <Auth>
-      <AppLayout>
-        <Heading level={1}>
-          {run.commitMessage || run.commitHash || run.id}
-        </Heading>
-        <Spacer h="2.4rem" />
+    <>
+      <ButtonBar
+        left={
+          <Heading level={1}>
+            {run.commitMessage || run.commitHash || run.id}
+          </Heading>
+        }
+        right={
+          <ActionMenu
+            placement="bottom-end"
+            items={[
+              ...(run.status === "running"
+                ? [
+                    {
+                      label: "Cancel run",
+                      onClick: () =>
+                        confirmationDialog.open({
+                          message: "Are you sure you want to cancel this run?",
+                          onConfirm: async () => {
+                            await updateDoc(runRef, {
+                              status: "cancelled",
+                              finishedAt: new Date(),
+                            });
+                            toast.show({
+                              message: "Run has been cancelled successfully",
+                            });
+                          },
+                        }),
+                    },
+                  ]
+                : []),
+              {
+                label: "Delete run",
+                onClick: () =>
+                  confirmationDialog.open({
+                    message:
+                      "Are you sure you want to delete this run? It will also delete all the " +
+                      "reports within it. This can not be reverted.",
+                    confirmLabel: "Delete run",
+                    intent: "danger",
+                    onConfirm: async () => {
+                      router.push(
+                        `/app/${router.query.teamId}/projects/${run.project.id}`
+                      );
+                      await deleteDoc(runRef);
+                      toast.show({
+                        message: "Run has been deleted successfully",
+                      });
+                    },
+                  }),
+                intent: "danger",
+              },
+            ]}
+          >
+            {(props) => <ActionButton intent="secondary" {...props} />}
+          </ActionMenu>
+        }
+      />
+      <Spacer h="2.4rem" />
 
-        <Heading level={2}>Reports</Heading>
-        <Spacer h=".8rem" />
+      <Heading level={2}>Reports</Heading>
+      <Spacer h=".8rem" />
 
-        {/* TODO: filters */}
-        <List items={reports} Item={ReportListItem} />
-      </AppLayout>
-    </Auth>
+      {/* TODO: filters */}
+      <List items={reports} Item={ReportListItem} />
+    </>
   );
 }
 

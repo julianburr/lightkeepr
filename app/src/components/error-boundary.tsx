@@ -1,6 +1,6 @@
-import { Component, ComponentType } from "react";
-
+import { ComponentProps } from "react";
 import styled from "styled-components";
+import * as Sentry from "@sentry/react";
 
 import { Heading, P } from "src/components/text";
 
@@ -44,22 +44,7 @@ export const ErrorMessage = styled.div`
   }
 `;
 
-type PassThroughProps = {
-  error: any;
-  errorInfo: any;
-  reset: () => void;
-};
-
-type ErrorBoundaryProps = {
-  Error?: ComponentType<PassThroughProps>;
-};
-
-type ErrorBoundaryState = {
-  error?: any;
-  errorInfo?: any;
-};
-
-function DefaultError({ error }: PassThroughProps) {
+function DefaultError({ error }: any) {
   if (error.code === 404) {
     return (
       <Container>
@@ -86,34 +71,9 @@ function DefaultError({ error }: PassThroughProps) {
   );
 }
 
-export class ErrorBoundary extends Component<
-  ErrorBoundaryProps,
-  ErrorBoundaryState
-> {
-  state = {
-    error: undefined,
-    errorInfo: undefined,
-  };
-
-  componentDidCatch(error: any, errorInfo: any) {
-    console.log({ error, errorInfo });
-    this.setState({ error, errorInfo });
-  }
-
-  render() {
-    if (this.state.error) {
-      const Error = this.props.Error || DefaultError;
-      return (
-        <Error
-          error={this.state.error}
-          errorInfo={this.state.errorInfo}
-          reset={() =>
-            this.setState({ error: undefined, errorInfo: undefined })
-          }
-        />
-      );
-    }
-
-    return this.props.children;
-  }
+export function ErrorBoundary({
+  fallback = DefaultError,
+  ...props
+}: ComponentProps<typeof Sentry.ErrorBoundary>) {
+  return <Sentry.ErrorBoundary fallback={fallback} {...props} />;
 }

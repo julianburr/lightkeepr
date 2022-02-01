@@ -1,20 +1,14 @@
 import { ComponentProps, useCallback } from "react";
 import styled from "styled-components";
 
-import { Button } from "./button";
-import { Popout } from "./popout";
-import { Items, PopoutMenu } from "./popout-menu";
-
-import MoreSvg from "src/assets/icons/more-vertical.svg";
+import { Popout } from "src/components/popout";
+import { Items, PopoutMenu } from "src/components/popout-menu";
+import { ActionButton } from "src/components/button";
 
 const Container = styled.div<{ maxWidth?: string }>`
   min-width: 16rem;
   max-width: ${(props) => props.maxWidth || "28rem"};
 `;
-
-function DefaultButton(props: ComponentProps<typeof Button>) {
-  return <Button intent="ghost" icon={<MoreSvg />} {...props} />;
-}
 
 type ActionMenuProps = Omit<
   ComponentProps<typeof Popout>,
@@ -28,7 +22,7 @@ type ActionMenuProps = Omit<
 export function ActionMenu({
   items,
   maxWidth,
-  children = DefaultButton,
+  children = ActionButton,
   ...props
 }: ActionMenuProps) {
   const Content = useCallback(

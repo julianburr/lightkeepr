@@ -11,7 +11,10 @@ import {
 } from "react";
 import Link, { LinkProps } from "next/link";
 import styled from "styled-components";
+
 import { interactive } from "src/@packages/sol/tokens";
+
+import MoreSvg from "src/assets/icons/more-vertical.svg";
 
 type AnchorTagProps = PropsWithChildren<LinkProps>;
 
@@ -168,4 +171,11 @@ export const Button = forwardRef(function Button(
       </Container>
     </>
   );
+});
+
+export const ActionButton = forwardRef(function ActionButton(
+  props: ButtonProps,
+  ref
+) {
+  return <Button intent="ghost" icon={<MoreSvg />} ref={ref} {...props} />;
 });

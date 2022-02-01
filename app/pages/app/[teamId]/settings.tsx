@@ -1,6 +1,5 @@
 import "src/utils/firebase";
 
-import { useForm } from "react-cool-form";
 import { useRouter } from "next/router";
 import { doc, getFirestore, updateDoc } from "firebase/firestore";
 import styled from "styled-components";
@@ -8,15 +7,13 @@ import styled from "styled-components";
 import { api } from "src/utils/api-client";
 import { AppLayout } from "src/layouts/app";
 import { useAuthUser } from "src/hooks/use-auth-user";
+import { useAutoSaveForm } from "src/hooks/use-auto-save-form";
 import { useToast } from "src/hooks/use-toast";
-import { useConfirmationDialog } from "src/hooks/use-dialog";
 import { Auth } from "src/components/auth";
 import { Heading, P } from "src/components/text";
 import { Spacer } from "src/components/spacer";
 import { Field } from "src/components/field";
 import { EmailInput, TextInput } from "src/components/text-input";
-import { Button } from "src/components/button";
-import { ButtonBar } from "src/components/button-bar";
 import { ReadonlyInput } from "src/components/readonly-input";
 import { FormGrid } from "src/components/form-grid";
 
@@ -32,7 +29,7 @@ export default function TeamSettings() {
   const router = useRouter();
   const toast = useToast();
 
-  const { form, use } = useForm({
+  const { form } = useAutoSaveForm({
     defaultValues: {
       name: authUser.team?.name || "",
       billingEmail: authUser.team?.billingEmail,
@@ -48,8 +45,6 @@ export default function TeamSettings() {
         email: values.billingEmail,
         name: values.name,
       });
-
-      toast.show({ message: "Team settings have been updated" });
     },
   });
 
@@ -63,12 +58,6 @@ export default function TeamSettings() {
 
             <form>
               <FormGrid>
-                <Field
-                  name="id"
-                  label="Team ID"
-                  Input={ReadonlyInput}
-                  inputProps={{ value: authUser.team?.id }}
-                />
                 <Field name="name" label="Name" Input={ReadonlyInput} />
               </FormGrid>
             </form>
@@ -94,28 +83,11 @@ export default function TeamSettings() {
 
           <form ref={form}>
             <FormGrid>
-              <Field
-                name="id"
-                label="Team ID"
-                Input={ReadonlyInput}
-                inputProps={{ value: authUser.team?.id }}
-              />
               <Field name="name" label="Name" Input={TextInput} required />
               <Field
                 name="billingEmail"
                 label="Billing email"
                 Input={EmailInput}
-              />
-              <ButtonBar
-                left={
-                  <Button
-                    type="submit"
-                    intent="primary"
-                    disabled={use("isSubmitting")}
-                  >
-                    Update settings
-                  </Button>
-                }
               />
             </FormGrid>
           </form>

@@ -91,6 +91,8 @@ export function RunSidebar({ runId, getLinkProps }: RunSidebarProps) {
           </>
         ) : run.status === "failed" ? (
           "Failed"
+        ) : run.status === "cancelled" ? (
+          "Cancelled"
         ) : (
           run.status
         ),

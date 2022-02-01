@@ -6,7 +6,7 @@ import { CoreButton } from "src/components/button";
 
 import CheckSvg from "src/assets/icons/check.svg";
 
-const Container = styled(CoreButton)`
+const Container = styled(CoreButton)<{ intent?: string }>`
   && {
     width: 100%;
     border: 0 none;
@@ -23,12 +23,18 @@ const Container = styled(CoreButton)`
     align-self: inherit;
     justify-self: inherit;
     height: auto;
-    color: inherit;
+    color: ${(props) =>
+      props.intent === "danger" ? "var(--sol--palette-red-500)" : "inherit"};
     text-decoration: none;
 
     &:focus,
     &:hover {
-      background: var(--sol--palette-sand-50);
+      background: ${(props) =>
+        props.intent === "danger"
+          ? "var(--sol--palette-red-50)"
+          : "var(--sol--palette-sand-50)"};
+      color: ${(props) =>
+        props.intent === "danger" ? "var(--sol--palette-red-600)" : "inherit"};
     }
 
     p {
@@ -81,6 +87,7 @@ export type MenuItemObj = {
   selectable?: boolean;
   selected?: boolean;
   disabled?: boolean;
+  intent?: "danger";
 };
 
 type MenuItemProps = {
@@ -108,7 +115,12 @@ export function MenuItem({ item, setVisible, element }: MenuItemProps) {
     <>
       {/* eslint-disable-next-line */}
       {/* @ts-ignore */}
-      <Container tabIndex={-1} data-focusable {...containerProps}>
+      <Container
+        tabIndex={-1}
+        data-focusable
+        intent={item.intent}
+        {...containerProps}
+      >
         <Inner>
           {item.icon && <WrapIcon>{item.icon}</WrapIcon>}
           {item.selectable && (

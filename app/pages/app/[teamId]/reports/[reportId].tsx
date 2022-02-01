@@ -1,13 +1,15 @@
 import "src/utils/firebase";
 
 import { useRouter } from "next/router";
-import { doc, getFirestore } from "firebase/firestore";
+import { deleteDoc, doc, getFirestore } from "firebase/firestore";
 import styled from "styled-components";
 import Link from "next/link";
 import classNames from "classnames";
 
 import { useDocument } from "src/@packages/firebase";
 import { CATEGORIES } from "src/utils/audits";
+import { useToast } from "src/hooks/use-toast";
+import { useConfirmationDialog } from "src/hooks/use-dialog";
 import { AppLayout } from "src/layouts/app";
 import { Auth } from "src/components/auth";
 import { Heading, Small } from "src/components/text";
@@ -15,6 +17,9 @@ import { Spacer } from "src/components/spacer";
 import { Loader } from "src/components/loader";
 import { ReportDetails } from "src/components/report-details";
 import { Suspense } from "src/components/suspense";
+import { ButtonBar } from "src/components/button-bar";
+import { ActionMenu } from "src/components/action-menu";
+import { ActionButton } from "src/components/button";
 
 const db = getFirestore();
 
@@ -192,14 +197,47 @@ const Score = styled.span`
 function Content() {
   const router = useRouter();
 
-  const reportRef = router.query.reportId
-    ? doc(db, "reports", router.query.reportId)
-    : null;
+  const toast = useToast();
+  const confirmationDialog = useConfirmationDialog();
+
+  const reportRef = doc(db, "reports", router.query.reportId!);
   const report = useDocument(reportRef, { fetch: router.isReady });
 
   return (
     <>
-      <Heading level={1}>{report.name}</Heading>
+      <ButtonBar
+        left={<Heading level={1}>{report.name}</Heading>}
+        right={
+          <ActionMenu
+            placement="bottom-end"
+            items={[
+              {
+                label: "Delete report",
+                onClick: () =>
+                  confirmationDialog.open({
+                    message:
+                      "Are you sure you want to delete this report? This can not be reverted.",
+                    confirmLabel: "Delete report",
+                    intent: "danger",
+                    onConfirm: async () => {
+                      router.push(
+                        `/app/${router.query.teamId}/runs/${report.run.id}`
+                      );
+                      await deleteDoc(reportRef);
+                      toast.show({
+                        message: "Report has been deleted successfully",
+                      });
+                    },
+                  }),
+                intent: "danger",
+              },
+            ]}
+          >
+            {(props) => <ActionButton intent="secondary" {...props} />}
+          </ActionMenu>
+        }
+      />
+
       {report.url && report.url !== report.name && (
         <Small grey>{report.url}</Small>
       )}

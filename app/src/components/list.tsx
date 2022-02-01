@@ -101,7 +101,12 @@ export function List({
     <>
       <Ul columns={columns} gap={gap}>
         {items.map((data: any, index) => (
-          <Item key={getKey(data)} data={data} index={index} items={items} />
+          <Item
+            key={getKey(data) || index}
+            data={data}
+            index={index}
+            items={items}
+          />
         ))}
       </Ul>
       {loadMore && (

@@ -27,11 +27,7 @@ type ActionButtonProps = ComponentProps<typeof Button> & {
   placement?: ComponentProps<typeof ActionMenu>["placement"];
 };
 
-export function ActionButton({
-  items,
-  placement,
-  ...props
-}: ActionButtonProps) {
+export function SplitButton({ items, placement, ...props }: ActionButtonProps) {
   return (
     <Container>
       <Button {...props} />
