@@ -66,7 +66,7 @@ export function ReportListItem({ data }: ReportListItemProps) {
   return (
     <ListItem href={`/app/${router.query.teamId}/reports/${data.id}`}>
       <Content>
-        <StatusAvatar status={data.status} />
+        <StatusAvatar status={data.status} statusReasons={data.statusReasons} />
         <Title>
           <P>
             <span>{data.name || data.url || "n/a"}</span>

@@ -3,6 +3,7 @@ import styled, { keyframes } from "styled-components";
 import { Avatar } from "src/components/avatar";
 
 import CheckSvg from "src/assets/icons/check.svg";
+import CheckCircleSvg from "src/assets/icons/check-circle.svg";
 import AlertSvg from "src/assets/icons/alert-circle.svg";
 import MinusSvg from "src/assets/icons/minus.svg";
 import LoaderSvg from "src/assets/icons/loader.svg";
@@ -35,11 +36,15 @@ function getColor(status: string) {
     : "var(--sol--palette-sand-800)";
 }
 
-function getIcon(status: string) {
+function getIcon(status: string, statusReasons?: string[]) {
   return status?.startsWith?.("failed") ? (
     <AlertSvg />
   ) : status === "passed" ? (
-    <CheckSvg />
+    statusReasons?.includes?.("manual") ? (
+      <CheckCircleSvg />
+    ) : (
+      <CheckSvg />
+    )
   ) : status === "running" ? (
     <LoaderIcon />
   ) : status === "cancelled" ? (
@@ -51,12 +56,13 @@ function getIcon(status: string) {
 
 type StatusAvatarProps = {
   status: string;
+  statusReasons?: string[];
 };
 
-export function StatusAvatar({ status }: StatusAvatarProps) {
+export function StatusAvatar({ status, statusReasons }: StatusAvatarProps) {
   return (
     <Avatar background={getBackground(status)} color={getColor(status)}>
-      {getIcon(status)}
+      {getIcon(status, statusReasons)}
     </Avatar>
   );
 }

@@ -49,8 +49,6 @@ export default createHandler({
       ? "failed"
       : "passed";
 
-    const now = Timestamp.fromDate(new Date());
-
     await db
       .collection("runs")
       .doc(req.query.runId as string)
@@ -58,7 +56,7 @@ export default createHandler({
         status,
         reportStatus,
         error: req.body?.error || null,
-        finishedAt: now,
+        finishedAt: Timestamp.fromDate(new Date()),
       });
 
     const runSnap: any = await db
@@ -72,7 +70,6 @@ export default createHandler({
       .collection("projects")
       .doc(project.id)
       .update({
-        lastRunAt: now,
         status: project.gitMain === run.branch ? status : project.status,
       });
 

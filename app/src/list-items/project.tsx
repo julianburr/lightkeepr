@@ -58,7 +58,7 @@ function ProjectItem({ data }: any) {
   return (
     <ListItem href={`/app/${router.query.teamId}/projects/${data.id}`}>
       <Title>
-        <StatusAvatar status={data.status} />
+        <StatusAvatar status={data.status} statusReasons={data.statusReasons} />
         <WrapText>
           <P>{data.name}</P>
           <Small grey>

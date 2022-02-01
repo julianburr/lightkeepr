@@ -32,10 +32,12 @@ export default createHandler({
     const projectRef = db.collection("projects").doc(project.id);
     const teamRef = db.collection("teams").doc(project.team.id);
 
+    const now = Timestamp.fromDate(new Date());
+
     const ref = await db.collection("runs").add({
       project: projectRef,
       team: teamRef,
-      startedAt: Timestamp.fromDate(new Date()),
+      startedAt: now,
       finishedAt: null,
       lastReportAt: null,
       branch: req.body.branch || null,
@@ -45,6 +47,15 @@ export default createHandler({
       status: "running",
     });
     const run = await ref.get();
+
+    // Update project status
+    await db
+      .collection("projects")
+      .doc(project.id)
+      .update({
+        lastRunAt: now,
+        lastRun: db.collection("runs").doc(run.id),
+      });
 
     return res.status(200).json({ id: run.id, ...run.data() });
   },
