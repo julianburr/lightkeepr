@@ -3,18 +3,18 @@ import { SetStateAction } from "react";
 import { createContext, useState } from "react";
 import { PropsWithChildren } from "react";
 
-type NotFoundErrorArgs = {
+// Custom errors
+type ErrorArgs = {
   message?: string;
-  code: number;
   query?: any;
 };
 
 export class NotFoundError extends Error {
   name: string;
-  code: number;
+  code: 404;
   query: any;
 
-  constructor({ query, code, message }: NotFoundErrorArgs) {
+  constructor({ query, message }: ErrorArgs) {
     // Pass remaining arguments (including vendor specific ones) to parent constructor
     super(message);
 
@@ -24,11 +24,32 @@ export class NotFoundError extends Error {
     }
 
     this.name = "NotFoundError";
-    this.code = code;
+    this.code = 404;
     this.query = query;
   }
 }
 
+export class PermissionError extends Error {
+  name: string;
+  code: 401;
+  query: any;
+
+  constructor({ query, message }: ErrorArgs) {
+    // Pass remaining arguments (including vendor specific ones) to parent constructor
+    super(message);
+
+    // Maintains proper stack trace for where our error was thrown (only available on V8)
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, NotFoundError);
+    }
+
+    this.name = "PermissionError";
+    this.code = 401;
+    this.query = query;
+  }
+}
+
+// Cache context
 type Cache = {
   [key: string]: any;
 };

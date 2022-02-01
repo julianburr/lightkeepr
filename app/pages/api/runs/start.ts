@@ -55,6 +55,7 @@ export default createHandler({
       .update({
         lastRunAt: now,
         lastRun: db.collection("runs").doc(run.id),
+        status: "running",
       });
 
     return res.status(200).json({ id: run.id, ...run.data() });

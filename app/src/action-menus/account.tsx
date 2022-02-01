@@ -30,7 +30,7 @@ export function AccountActionMenu({ items, ...props }: AccountActionMenuProps) {
             authUser?.user ? (
               <>
                 <P>You are currently logged in as {authUser?.user?.name}</P>
-                <Email grey>{authUser?.user?.id}</Email>
+                <Email grey>{authUser?.user?.email}</Email>
               </>
             ) : (
               <P grey>You are currently not logged in</P>

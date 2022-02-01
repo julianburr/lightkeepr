@@ -12,6 +12,7 @@ import { Button } from "src/components/button";
 import { Spacer } from "src/components/spacer";
 import { ButtonBar } from "src/components/button-bar";
 import { FormGrid } from "src/components/form-grid";
+import { ReadonlyInput } from "src/components/readonly-input";
 
 const db = getFirestore();
 
@@ -21,7 +22,8 @@ export default function UserSetup() {
   const { form, use } = useForm({
     defaultValues: { name: authUser.displayName },
     onSubmit: async (values) => {
-      await setDoc(doc(db, "users", authUser.email!), {
+      await setDoc(doc(db, "users", authUser.uid!), {
+        email: authUser.email,
         name: values.name,
       });
     },
@@ -35,6 +37,12 @@ export default function UserSetup() {
 
         <form ref={form}>
           <FormGrid>
+            <Field
+              name="email"
+              label="Email"
+              Input={ReadonlyInput}
+              inputProps={{ value: authUser.email }}
+            />
             <Field name="name" label="Name" Input={TextInput} required />
             <ButtonBar
               left={

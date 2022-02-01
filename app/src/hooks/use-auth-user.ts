@@ -1,6 +1,5 @@
 import "src/utils/firebase";
 
-import { useMemo } from "react";
 import {
   getFirestore,
   doc,
@@ -8,34 +7,12 @@ import {
   query,
   where,
 } from "firebase/firestore";
-
-import { useAuth, useCollection, useDocument } from "../@packages/firebase";
+import { useMemo, Dispatch, SetStateAction } from "react";
 import { useRouter } from "next/router";
-import { Dispatch } from "react";
-import { SetStateAction } from "react";
+
+import { useAuth, useCollection, useDocument } from "src/@packages/firebase";
 
 const db = getFirestore();
-
-type User = {
-  id: string;
-  name: string;
-};
-
-type Team = {
-  id: string;
-  name: string;
-  billingEmail?: string;
-  stripeCustomerId?: string;
-  apiKey?: string;
-};
-
-type TeamUser = {
-  id: string;
-  team: { id: string };
-  user: { id: string };
-  status: string;
-  role: string;
-};
 
 type ProviderData = {
   providerId: string;
@@ -49,13 +26,37 @@ type FirebaseUser = {
   providerData?: ProviderData[];
 };
 
+type User = {
+  id: string;
+  email: string;
+  name: string;
+};
+
+type Team = {
+  id: string;
+  name: string;
+  billingEmail?: string;
+  stripeCustomerId?: string;
+  apiKey?: string;
+};
+
+type TeamRole = "owner" | "billing" | "member";
+
+type Invite = {
+  status: "pending" | "declined";
+  createdAt: any;
+  createdBy: any;
+  sentAt?: any;
+  declinedAt?: any;
+};
+
 type UseAuthUserResponse = FirebaseUser & {
   user?: User;
   teams?: Team[];
-  teamUsers?: TeamUser[];
   team?: Team;
-  teamUser?: TeamUser;
-  pendingInvites?: TeamUser[];
+  teamRoles?: { [teamId: string]: TeamRole };
+  teamRole?: TeamRole;
+  pendingInvites?: (Invite & { team: Team })[];
   setAuthUser: Dispatch<SetStateAction<FirebaseUser>>;
 };
 
@@ -63,42 +64,61 @@ export function useAuthUser(): UseAuthUserResponse {
   const authUser = useAuth();
   const router = useRouter();
 
-  const userRef = authUser?.email
-    ? doc(db, "users", authUser.email)
-    : undefined;
-  const user = useDocument(userRef);
+  const userRef = authUser?.uid ? doc(db, "users", authUser.uid) : undefined;
+  const user = useDocument(userRef, { throw: false });
 
-  const teams = useCollection(collection(db, "teams"), {
-    key: `${authUser?.email}/teams`,
+  // Get all teams the user is a member of
+  const teamsQuery = authUser?.uid
+    ? query(
+        collection(db, "teams"),
+        where("users", "array-contains", authUser?.uid)
+      )
+    : undefined;
+  const teams: any[] = useCollection(teamsQuery, {
+    key: `${authUser?.uid}/teams`,
   });
 
-  const teamUsers = useCollection(
-    userRef
-      ? query(collection(db, "teamUsers"), where("user", "==", userRef))
-      : undefined,
-    { key: `${authUser?.email}/teamUsers` }
-  );
+  // Get invites that include the users email address
+  const inviteQuery = authUser?.email
+    ? query(
+        collection(db, "teams"),
+        where("invites", "array-contains", authUser?.email)
+      )
+    : undefined;
+  const invites: any[] = useCollection(inviteQuery, {
+    key: `${authUser?.uid}/pendingInvites`,
+  });
 
   return useMemo(() => {
-    const activeTeamUsers = teamUsers?.filter?.(
-      (u: any) => u.status === "active"
-    );
+    // Get current team
+    const team = teams?.find((team: any) => team.id === router.query.teamId);
+
+    // Get all roles for the teams the user is a member of
+    const teamRoles =
+      teams?.reduce?.((all, team) => {
+        all[team.id] = team.userRoles?.[authUser?.uid];
+        return all;
+      }, {}) || {};
+    const teamRole = team?.id ? teamRoles[team.id] : undefined;
+
+    // Prepare pending invites
+    const pendingInvites = invites
+      ?.map?.((team) => ({
+        ...(team.inviteStatus[authUser?.email] || {}),
+        team,
+      }))
+      ?.filter((invite) => invite.status === "pending");
 
     return {
       ...authUser,
       user,
 
-      teamUsers: activeTeamUsers,
-      teams: teams?.filter?.((team: any) =>
-        activeTeamUsers?.find?.((user: any) => user.team.id === team.id)
-      ),
+      teams,
+      team,
+      teamRoles,
+      teamRole,
 
-      teamUser: activeTeamUsers?.find?.(
-        (user: any) => user.team.id === router.query.teamId
-      ),
-      team: teams?.find?.((team: any) => team.id === router.query.teamId),
-
-      pendingInvites: teamUsers?.filter?.((u: any) => u.status === "pending"),
+      pendingInvites,
     };
-  }, [authUser, user, teamUsers, teams, router.query.teamId]);
+  }, [user, teams, invites]);
 }

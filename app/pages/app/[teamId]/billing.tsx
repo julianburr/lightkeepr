@@ -44,6 +44,7 @@ type SectionProps = {
 
 function PlanDetails({ uuid, refresh }: SectionProps) {
   const authUser = useAuthUser();
+
   const toast = useToast();
 
   const customerId = authUser?.team?.stripeCustomerId;
@@ -57,7 +58,7 @@ function PlanDetails({ uuid, refresh }: SectionProps) {
     return (
       <>
         <P>Free — $0 / month</P>
-        {["owner", "billing"].includes(authUser.teamUser?.role || "") && (
+        {["owner", "billing"].includes(authUser.teamRole!) && (
           <Button
             onClick={async () => {
               const session: any = await api
@@ -88,7 +89,7 @@ function PlanDetails({ uuid, refresh }: SectionProps) {
     return (
       <>
         <P>Free — $0 / month</P>
-        {["owner", "billing"].includes(authUser.teamUser?.role || "") && (
+        {["owner", "billing"].includes(authUser.teamRole!) && (
           <Button
             onClick={async () => {
               // TODO
@@ -106,7 +107,7 @@ function PlanDetails({ uuid, refresh }: SectionProps) {
       <P>
         Premium — ${item.plan.amount / 100} / {item.plan.interval}
       </P>
-      {["owner", "billing"].includes(authUser.teamUser?.role || "") ? (
+      {["owner", "billing"].includes(authUser.teamRole!) ? (
         subscription.cancel_at_period_end ? (
           <>
             <Small>
@@ -263,7 +264,7 @@ export default function Billing() {
             <Spacer h="2.4rem" />
           </section>
 
-          {["owner", "billing"].includes(authUser.teamUser?.role || "") ? (
+          {["owner", "billing"].includes(authUser.teamRole!) ? (
             <>
               <section>
                 <Heading level={2}>Billing details</Heading>

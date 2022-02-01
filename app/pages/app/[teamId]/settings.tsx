@@ -48,7 +48,7 @@ export default function TeamSettings() {
     },
   });
 
-  if (authUser.teamUser?.role !== "owner") {
+  if (authUser.teamRole !== "owner") {
     return (
       <Auth>
         <AppLayout>

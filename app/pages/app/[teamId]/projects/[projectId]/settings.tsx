@@ -105,7 +105,7 @@ export default function ProjectSettings() {
                         intent="ghost"
                         text={project.apiToken}
                       />
-                      {authUser.teamUser?.role === "owner" && (
+                      {authUser.teamRole === "owner" && (
                         <Tooltip content="Refresh API key">
                           {(props) => (
                             <Button

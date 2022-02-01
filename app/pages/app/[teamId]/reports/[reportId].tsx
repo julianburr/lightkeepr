@@ -1,6 +1,5 @@
 import "src/utils/firebase";
 
-import { useRouter } from "next/router";
 import {
   collection,
   deleteDoc,
@@ -13,10 +12,12 @@ import {
 } from "firebase/firestore";
 import styled from "styled-components";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import classNames from "classnames";
 
 import { useCollection, useDocument } from "src/@packages/firebase";
 import { CATEGORIES } from "src/utils/audits";
+import { useAuthUser } from "src/hooks/use-auth-user";
 import { useToast } from "src/hooks/use-toast";
 import { useConfirmationDialog } from "src/hooks/use-dialog";
 import { AppLayout } from "src/layouts/app";
@@ -26,16 +27,13 @@ import { Spacer } from "src/components/spacer";
 import { Loader } from "src/components/loader";
 import { ReportDetails } from "src/components/report-details";
 import { Suspense } from "src/components/suspense";
-import { ButtonBar } from "src/components/button-bar";
-import { ActionMenu } from "src/components/action-menu";
-import { ActionButton, Button } from "src/components/button";
-
-import ChevronLeftSvg from "src/assets/icons/chevron-left.svg";
-import ChevronRightSvg from "src/assets/icons/chevron-right.svg";
+import { Button } from "src/components/button";
 import { SplitButton } from "src/components/split-button";
 import { Tooltip } from "src/components/tooltip";
 import { StatusAvatar } from "src/components/status-avatar";
-import { useAuthUser } from "src/hooks/use-auth-user";
+
+import ChevronLeftSvg from "src/assets/icons/chevron-left.svg";
+import ChevronRightSvg from "src/assets/icons/chevron-right.svg";
 
 const db = getFirestore();
 
@@ -326,36 +324,6 @@ function Content() {
           )}
         </WrapHeading>
         <WrapButtons>
-          {prev ? (
-            <Tooltip content={`Previous report: ${prev.name || prev.url}`}>
-              {(props) => (
-                <Button
-                  {...props}
-                  icon={<ChevronLeftSvg />}
-                  href={`/app/${router.query.teamId}/reports/${prev.id}`}
-                />
-              )}
-            </Tooltip>
-          ) : (
-            <Button icon={<ChevronLeftSvg />} disabled />
-          )}
-
-          {next ? (
-            <Tooltip content={`Next report: ${next.name || next.url}`}>
-              {(props) => (
-                <Button
-                  {...props}
-                  icon={<ChevronRightSvg />}
-                  href={`/app/${router.query.teamId}/reports/${next.id}`}
-                />
-              )}
-            </Tooltip>
-          ) : (
-            <Button icon={<ChevronRightSvg />} disabled />
-          )}
-
-          <Spacer w=".8rem" />
-
           <SplitButton
             onClick={() =>
               confirmationDialog.open({
@@ -421,6 +389,36 @@ function Content() {
           >
             {report.status === "passed" ? "Report passed" : "Approve"}
           </SplitButton>
+
+          <Spacer w=".8rem" />
+
+          {prev ? (
+            <Tooltip content={`Previous report: ${prev.name || prev.url}`}>
+              {(props) => (
+                <Button
+                  {...props}
+                  icon={<ChevronLeftSvg />}
+                  href={`/app/${router.query.teamId}/reports/${prev.id}`}
+                />
+              )}
+            </Tooltip>
+          ) : (
+            <Button icon={<ChevronLeftSvg />} disabled />
+          )}
+
+          {next ? (
+            <Tooltip content={`Next report: ${next.name || next.url}`}>
+              {(props) => (
+                <Button
+                  {...props}
+                  icon={<ChevronRightSvg />}
+                  href={`/app/${router.query.teamId}/reports/${next.id}`}
+                />
+              )}
+            </Tooltip>
+          ) : (
+            <Button icon={<ChevronRightSvg />} disabled />
+          )}
         </WrapButtons>
       </WrapTitle>
 

@@ -1,10 +1,11 @@
 import "src/utils/firebase";
 
 import { useMemo } from "react";
+import { doc, getFirestore, updateDoc } from "firebase/firestore";
+import { useRouter } from "next/router";
 import styled from "styled-components";
-import { deleteDoc, doc, getFirestore, updateDoc } from "firebase/firestore";
 
-import { useAuth, useDocument } from "src/@packages/firebase";
+import { useDocument } from "src/@packages/firebase";
 import { api } from "src/utils/api-client";
 import { useAuthUser } from "src/hooks/use-auth-user";
 import { useConfirmationDialog, useErrorDialog } from "src/hooks/use-dialog";
@@ -43,29 +44,26 @@ type UserItemProps = {
 };
 
 export function UserListItem({ data, items }: UserItemProps) {
+  const router = useRouter();
+  const authUser = useAuthUser();
+
   const toast = useToast();
   const errorDialog = useErrorDialog();
   const confirmationDialog = useConfirmationDialog();
 
-  const authUser = useAuthUser();
-  const user = useDocument(doc(db, "users", data.user.id));
+  const user = useDocument(doc(db, "users", data.userId));
+
+  const teamRef = doc(db, "teams", router.query.teamId!);
+  const team = useDocument(teamRef);
 
   const actions = useMemo(() => {
     const isOnlyOwner =
       data.role === "owner" &&
-      !items.find((item: any) => item.role === "owner" && item.id !== data.id);
+      !items.find(
+        (item: any) => item.role === "owner" && item.userId !== user.id
+      );
 
     const ACTIONS = {
-      RESEND_INVITE: {
-        label: "Resend invite email",
-        onClick: async () => {
-          await api.post("/api/account/invite-user", {
-            teamUserId: data.id,
-          });
-          toast.show({ message: "Invite email resend to user" });
-        },
-      },
-
       REMOVE: {
         label: "Remove from team",
         onClick: () => {
@@ -82,16 +80,18 @@ export function UserListItem({ data, items }: UserItemProps) {
             message: (
               <>
                 Are you sure you want to remove{" "}
-                <b>
-                  {authUser.teamUser?.id === data.id
-                    ? "yourself"
-                    : data.user.id}
-                </b>{" "}
-                from your team?
+                <b>{authUser.uid === user.id ? "yourself" : user.email}</b> from
+                your team?
               </>
             ),
             onConfirm: async () => {
-              await deleteDoc(doc(db, "teamUsers", data.id));
+              const newUserRoles = { ...(team.userRoles || {}) };
+              delete newUserRoles[user.id];
+              await updateDoc(teamRef, {
+                users: team.users?.filter?.((id: string) => id !== user.id),
+                userRoles: newUserRoles,
+              });
+              toast.show({ message: "User has been removed from the team" });
             },
           });
         },
@@ -101,7 +101,7 @@ export function UserListItem({ data, items }: UserItemProps) {
         label: `Change to ${label}`,
         onClick: async () => {
           if (role !== "owner") {
-            if (data.role === "owner" && data.id === authUser.teamUser?.id) {
+            if (data.role === "owner" && user.id === authUser.uid) {
               errorDialog.open({
                 message:
                   `You cannot remove the owner role from yourself. Please ` +
@@ -120,15 +120,13 @@ export function UserListItem({ data, items }: UserItemProps) {
               return;
             }
           }
-          await updateDoc(doc(db, "teamUsers", data.id), { role });
+          await updateDoc(teamRef, {
+            userRoles: { ...(team.userRoles || {}), [user.id]: role },
+          });
           toast.show({ message: "User role has been updated" });
         },
       }),
     };
-
-    if (data.status === "pending") {
-      return [ACTIONS.REMOVE, ACTIONS.RESEND_INVITE];
-    }
 
     return [
       ACTIONS.REMOVE,
@@ -143,27 +141,23 @@ export function UserListItem({ data, items }: UserItemProps) {
           .map((item) => ACTIONS.UPDATE_ROLE(item)),
       },
     ];
-  }, [data.status, data.id, authUser.teamUser?.id]);
+  }, [data.role, team.users, team.userRoles, user.id, authUser.uid]);
 
   return (
     <ListItem>
       <Content>
-        <Avatar name={user?.name || data.user?.id} />
+        <Avatar name={user.name || user.email} />
         <Title>
-          <Email>{data.user.id}</Email>
+          <Email>{user.email}</Email>
           <Small grey>
-            {data.status === "active"
-              ? data.role === "billing"
-                ? `${user?.name} — Billing manager`
-                : user?.name
-              : user?.name
-              ? user.name
-              : "—"}
+            {data.role === "billing"
+              ? `${user?.name} — Billing manager`
+              : user?.name}
           </Small>
         </Title>
       </Content>
       <Spacer w="1.8rem" />
-      {authUser.teamUser?.role === "owner" && (
+      {authUser.teamRole === "owner" && (
         <ActionMenu placement="bottom-end" items={actions} />
       )}
     </ListItem>
