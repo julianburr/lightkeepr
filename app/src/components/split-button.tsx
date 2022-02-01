@@ -1,9 +1,10 @@
-import { Button } from "./button";
-
-import MoreSvg from "src/assets/icons/more-vertical.svg";
-import styled from "styled-components";
-import { ActionMenu } from "./action-menu";
 import { ComponentProps } from "react";
+import styled from "styled-components";
+
+import { ActionMenu } from "src/components/action-menu";
+import { Button } from "src/components/button";
+
+import MoreSvg from "src/assets/icons/more-horizontal.svg";
 
 const Container = styled.div`
   display: flex;

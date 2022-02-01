@@ -324,36 +324,6 @@ function Content() {
           )}
         </WrapHeading>
         <WrapButtons>
-          {prev ? (
-            <Tooltip content={`Previous report: ${prev.name || prev.url}`}>
-              {(props) => (
-                <Button
-                  {...props}
-                  icon={<ChevronLeftSvg />}
-                  href={`/app/${router.query.teamId}/reports/${prev.id}`}
-                />
-              )}
-            </Tooltip>
-          ) : (
-            <Button icon={<ChevronLeftSvg />} disabled />
-          )}
-
-          {next ? (
-            <Tooltip content={`Next report: ${next.name || next.url}`}>
-              {(props) => (
-                <Button
-                  {...props}
-                  icon={<ChevronRightSvg />}
-                  href={`/app/${router.query.teamId}/reports/${next.id}`}
-                />
-              )}
-            </Tooltip>
-          ) : (
-            <Button icon={<ChevronRightSvg />} disabled />
-          )}
-
-          <Spacer w=".8rem" />
-
           <SplitButton
             onClick={() =>
               confirmationDialog.open({
@@ -419,6 +389,36 @@ function Content() {
           >
             {report.status === "passed" ? "Report passed" : "Approve"}
           </SplitButton>
+
+          <Spacer w=".8rem" />
+
+          {prev ? (
+            <Tooltip content={`Previous report: ${prev.name || prev.url}`}>
+              {(props) => (
+                <Button
+                  {...props}
+                  icon={<ChevronLeftSvg />}
+                  href={`/app/${router.query.teamId}/reports/${prev.id}`}
+                />
+              )}
+            </Tooltip>
+          ) : (
+            <Button icon={<ChevronLeftSvg />} disabled />
+          )}
+
+          {next ? (
+            <Tooltip content={`Next report: ${next.name || next.url}`}>
+              {(props) => (
+                <Button
+                  {...props}
+                  icon={<ChevronRightSvg />}
+                  href={`/app/${router.query.teamId}/reports/${next.id}`}
+                />
+              )}
+            </Tooltip>
+          ) : (
+            <Button icon={<ChevronRightSvg />} disabled />
+          )}
         </WrapButtons>
       </WrapTitle>
 
