@@ -45,16 +45,12 @@ export const ErrorMessage = styled.div`
 `;
 
 function DefaultError({ error }: any) {
-  if (error.code === 404) {
+  if ([401, 404].includes(error.code)) {
     return (
       <Container>
         <Jellyfish />
-        <Heading level={1}>404</Heading>
-        <P>
-          The resource you were trying to access does not seem to exist. Maybe
-          you tried to access an outdated page or you're trying to access a
-          resource from another team.
-        </P>
+        <Heading level={1}>{error.code}</Heading>
+        <P>{error.message}</P>
       </Container>
     );
   }
@@ -62,7 +58,7 @@ function DefaultError({ error }: any) {
   return (
     <Container>
       <Jellyfish />
-      <Heading level={1}>{error.code || "Ooops!"}</Heading>
+      <Heading level={1}>Ooops!</Heading>
       <P>
         Something went wrong. Please try again. If the error persist, consider
         creating an error report with reproduction steps.

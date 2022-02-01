@@ -60,9 +60,15 @@ export function useDocument(query: any, options?: UseDocumentOptions) {
   }
 
   if (cacheItem?.data === null && options?.throw !== false) {
+    console.error(
+      "The following error was triggered in the query with this cache key",
+      cacheKey
+    );
     throw new NotFoundError({
-      message: "Document not found",
-      code: 404,
+      message:
+        "The resource you were trying to access does not seem to exist. Maybe you " +
+        "tried to access an outdated page or you're trying to access a resource from " +
+        "another team.",
       query,
     });
   }

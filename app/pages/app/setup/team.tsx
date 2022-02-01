@@ -36,14 +36,10 @@ export default function TeamSetup() {
         plan: "free",
         createdAt: new Date(),
         createdBy: doc(db, "users", userId!),
-      });
-
-      // Create organisation user
-      await addDoc(collection(db, "teamUsers"), {
-        user: doc(db, "users", authUser.email!),
-        team: doc(db, "teams", team.id),
-        role: "owner",
-        status: "active",
+        users: [authUser.uid],
+        userRoles: {
+          [authUser.uid!]: "owner",
+        },
       });
 
       // Create stripe customer
@@ -52,6 +48,8 @@ export default function TeamSetup() {
         name: values.name,
         teamId: team.id,
       });
+
+      // Add new stripe customer id to the team
       await updateDoc(doc(db, "teams", team.id), {
         stripeCustomerId: stripeCustomer.data?.id,
       });

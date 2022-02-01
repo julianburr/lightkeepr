@@ -43,16 +43,10 @@ export default function NewTeam() {
         plan: "free",
         createdAt: new Date(),
         createdBy: userRef,
-      });
-
-      const teamRef = doc(db, "teams", team.id!);
-      await addDoc(collection(db, "teamUsers"), {
-        team: teamRef,
-        user: userRef,
-        role: "owner",
-        status: "active",
-        createdAt: new Date(),
-        createdBy: userRef,
+        users: [authUser.uid],
+        userRoles: {
+          [authUser.uid!]: "owner",
+        },
       });
 
       const stripeCustomer = await api.post("/api/stripe/customers/create", {
@@ -60,6 +54,7 @@ export default function NewTeam() {
         name: values.name,
         teamId: team.id,
       });
+
       await updateDoc(doc(db, "teams", team.id), {
         stripeCustomerId: stripeCustomer.data?.id,
       });

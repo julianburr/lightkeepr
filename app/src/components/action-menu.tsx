@@ -10,6 +10,8 @@ const Container = styled.div<{ maxWidth?: string }>`
   max-width: ${(props) => props.maxWidth || "28rem"};
 `;
 
+const DefaultButton = (props: any) => <ActionButton {...props} />;
+
 type ActionMenuProps = Omit<
   ComponentProps<typeof Popout>,
   "Content" | "children"
@@ -22,7 +24,7 @@ type ActionMenuProps = Omit<
 export function ActionMenu({
   items,
   maxWidth,
-  children = ActionButton,
+  children = DefaultButton,
   ...props
 }: ActionMenuProps) {
   const Content = useCallback(

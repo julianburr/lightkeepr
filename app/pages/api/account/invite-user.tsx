@@ -21,31 +21,44 @@ export default createHandler({
       }
 
       // Get team and team user data from firestore
-      if (!req.body.teamUserId) {
-        return res.status(400).json({ message: "No team user specified" });
+      if (!req.body.email) {
+        return res.status(400).json({ message: "No email specified" });
       }
 
-      const teamUserSnapshot = await db
-        .doc(`teamUsers/${req.body.teamUserId}`)
-        .get();
-
-      const teamUser = teamUserSnapshot.data();
-      if (!teamUser) {
-        return res.status(404).json({ message: "Team user not found" });
+      if (!req.body.teamId) {
+        return res.status(400).json({ message: "No team ID specified" });
       }
 
-      if (teamUser.status !== "pending") {
-        return res.status(400).json({
-          message: "Team user has invalid status to send invitation email",
-        });
-      }
-
-      const teamSnapshot = await db.doc(`teams/${teamUser.team.id}`).get();
+      const teamSnapshot = await db.doc(`teams/${req.body.teamId}`).get();
 
       const team = teamSnapshot.data();
       if (!team) {
         return res.status(404).json({ message: "Team not found" });
       }
+
+      if (!team.invites?.includes(req.body.email)) {
+        return res.status(400).json({
+          message: "Email not found in team invites",
+        });
+      }
+
+      const inviteStatus = team.inviteStatus?.[req.body.email];
+      if (!inviteStatus) {
+        return res.status(400).json({
+          message: "Email does not have an invite status defined",
+        });
+      }
+
+      if (inviteStatus.status !== "pending") {
+        return res.status(400).json({
+          message: "Invalid invite status",
+        });
+      }
+
+      const invitedBy: any = await db
+        .doc(`users/${inviteStatus.createdBy.id}`)
+        .get()
+        .then((res) => res.data());
 
       // Put together email html
       const title = "You've been invited to Lightkeepr";
@@ -53,7 +66,7 @@ export default createHandler({
       const { html } = render(
         <InviteUserEmail
           title={title}
-          teamUser={teamUser as any}
+          invitedBy={invitedBy}
           team={team as any}
           acceptUrl={`${req.headers.origin}/app/setup/pending-invites`}
         />,
@@ -63,7 +76,7 @@ export default createHandler({
       // Send via sendgrid
       sgMail.setApiKey(env.sendgrid.apiKey);
       const response = await sgMail.send({
-        to: teamUser.user.id,
+        to: req.body.email,
         from: "Lightkeepr <lightkeepr@julianburr.de>",
         subject: title,
         html,
