@@ -147,7 +147,7 @@ export function AppSidebar() {
     >
       {({ isMobile, active, menuRef }) => (
         <ErrorBoundary
-          Error={() => (
+          fallback={() => (
             <Fallback isMobile={isMobile} active={active} menuRef={menuRef} />
           )}
         >

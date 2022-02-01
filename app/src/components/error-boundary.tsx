@@ -1,4 +1,4 @@
-import { ComponentProps } from "react";
+import { ComponentProps, PropsWithChildren } from "react";
 import styled from "styled-components";
 import * as Sentry from "@sentry/react";
 
@@ -74,6 +74,6 @@ function DefaultError({ error }: any) {
 export function ErrorBoundary({
   fallback = DefaultError,
   ...props
-}: ComponentProps<typeof Sentry.ErrorBoundary>) {
+}: PropsWithChildren<ComponentProps<typeof Sentry.ErrorBoundary>>) {
   return <Sentry.ErrorBoundary fallback={fallback} {...props} />;
 }
