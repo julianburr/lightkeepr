@@ -2,6 +2,8 @@ import { ComponentType, PropsWithChildren } from "react";
 import Link from "next/link";
 import styled from "styled-components";
 
+import { Button } from "src/components/button";
+
 function getColumns(columns?: number, maxColumns?: number) {
   return Array.from(
     new Array(
@@ -66,12 +68,21 @@ const Li = styled.li`
   }
 `;
 
+const WrapButton = styled.div`
+  width: 100%;
+  display:flex
+  align-items:center;
+  justify-content:center;
+  margin: .8rem 0 0;
+`;
+
 type ListProps = {
   items: any[];
   Item: ComponentType<{ data: any; index: number; items: any[] }>;
   getKey?: (data: any) => string | number;
   columns?: 1 | 2 | 3;
   gap?: string;
+  loadMore?: () => void | Promise<void>;
 };
 
 export function List({
@@ -80,17 +91,25 @@ export function List({
   getKey = (data) => data.id,
   columns = 1,
   gap,
+  loadMore,
 }: ListProps) {
   if (!items?.length) {
     return <p>No items</p>;
   }
 
   return (
-    <Ul columns={columns} gap={gap}>
-      {items.map((data: any, index) => (
-        <Item key={getKey(data)} data={data} index={index} items={items} />
-      ))}
-    </Ul>
+    <>
+      <Ul columns={columns} gap={gap}>
+        {items.map((data: any, index) => (
+          <Item key={getKey(data)} data={data} index={index} items={items} />
+        ))}
+      </Ul>
+      {loadMore && (
+        <WrapButton>
+          <Button onClick={loadMore}>Load more</Button>
+        </WrapButton>
+      )}
+    </>
   );
 }
 

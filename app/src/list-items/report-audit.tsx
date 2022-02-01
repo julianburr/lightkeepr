@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useDialog } from "src/hooks/use-dialog";
 import { ListItem } from "src/components/list";
 import { Markdown } from "src/components/markdown";
-import { Grey, P } from "src/components/text";
+import { Span, P } from "src/components/text";
 
 import { ReportAuditDialog } from "dialogs/report-audit";
 
@@ -79,7 +79,10 @@ export function ReportAuditListItem({ data }: any) {
             <Markdown>{data.audit?.title}</Markdown>
 
             {data.audit?.displayValue && (
-              <Grey> —&nbsp;{data.audit.displayValue.replace(/•/g, "—")}</Grey>
+              <Span grey>
+                {" "}
+                —&nbsp;{data.audit.displayValue.replace(/•/g, "—")}
+              </Span>
             )}
           </P>
         </Content>

@@ -1,5 +1,7 @@
-import lighthouse from "lighthouse";
+import merge from "merge";
 import * as chromeLauncher from "chrome-launcher";
+import lighthouse from "lighthouse";
+import desktopConfig from "lighthouse/lighthouse-core/config/desktop-config";
 
 import { createReport } from "./utils/create-report";
 import { cleanReportData } from "./utils/clean-report-data";
@@ -12,7 +14,9 @@ export type ReportArgs = {
   apiUrl?: string;
   runId?: string;
   url: string;
+  name?: string;
   port?: number;
+  desktop?: boolean;
   options?: LighthouseOptions;
 };
 
@@ -21,13 +25,15 @@ export async function report({
   apiUrl = global.process.env.LIGHTKEEPR_API_URL || API_URL,
   runId = global.process.env.LIGHTKEEPR_RUN_ID,
   url,
+  name,
   port,
+  desktop,
   options = {},
 }: ReportArgs) {
-  const lhConfig = {
-    extends: "lighthouse:default",
-    settings: options,
-  };
+  const lhConfig = desktop
+    ? merge.recursive(desktopConfig, { settings: options })
+    : { extends: "lighthouse:default", settings: options };
+
   let result: any;
 
   if (port) {
@@ -53,7 +59,8 @@ export async function report({
     token,
     runId,
     apiUrl,
-    name: url,
+    url,
+    name,
     reportData: cleanReportData(JSON.parse(result.report)),
   });
   return response;

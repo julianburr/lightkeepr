@@ -244,12 +244,15 @@ export default createHandler({
       statusReasons.push("budget");
     }
 
+    const reportName = fields.name || fields.url || null;
+
     const ref = await db.collection("reports").add({
       team: teamRef,
       project: projectRef,
       run: db.collection("runs").doc(run.id),
       branch: run.branch,
-      name: fields.name || null,
+      url: fields.url || null,
+      name: reportName,
       type: fields.type || null,
       createdAt: Timestamp.fromDate(new Date()),
       meta,
@@ -270,6 +273,13 @@ export default createHandler({
       failedTargets,
     });
     const report = await ref.get();
+
+    // Update project to have list of unique report names cheaply available
+    if (!project.pages?.includes(reportName)) {
+      await projectRef.update({
+        pages: [...(project.pages || []), reportName],
+      });
+    }
 
     // Upload report to gcloud
     const options = { destination: `${report.id}.brotli` };

@@ -63,17 +63,24 @@ export default function App({ Component, pageProps }: any) {
       <GlobalStyles />
 
       {shouldRenderProviders ? (
-        <Suspense fallback={<Loader />}>
-          <SuspenseProvider>
-            <FirebaseProvider>
-              <DialogProvider>
-                <ToastProvider>
-                  <Component {...pageProps} />
-                </ToastProvider>
-              </DialogProvider>
-            </FirebaseProvider>
-          </SuspenseProvider>
-        </Suspense>
+        router.isReady ? (
+          <Suspense fallback={<Loader />}>
+            <SuspenseProvider>
+              <FirebaseProvider>
+                <DialogProvider>
+                  <ToastProvider>
+                    <Component {...pageProps} />
+                  </ToastProvider>
+                </DialogProvider>
+              </FirebaseProvider>
+            </SuspenseProvider>
+          </Suspense>
+        ) : (
+          // HACK: on the first rehydrated render the router apparently isn't fully
+          // set yet, so we cannot rely on it to load the report :/
+          // https://github.com/vercel/next.js/discussions/11484#discussioncomment-356055
+          <Loader />
+        )
       ) : (
         <Component {...pageProps} />
       )}

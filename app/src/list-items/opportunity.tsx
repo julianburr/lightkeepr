@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useDialog } from "src/hooks/use-dialog";
 import { ListItem } from "src/components/list";
 import { Markdown } from "src/components/markdown";
-import { Grey, P } from "src/components/text";
+import { Span, P } from "src/components/text";
 
 import { ReportAuditDialog } from "dialogs/report-audit";
 
@@ -64,19 +64,19 @@ export function OpportunityListItem({ data }: any) {
             <Markdown>{data.title}</Markdown>
 
             {data.type === "performance" && data.details?.overallSavingsMs && (
-              <Grey>
+              <Span grey>
                 {" "}
                 —&nbsp;Potential savings of{" "}
                 {formatMs(data.details?.overallSavingsMs)}
-              </Grey>
+              </Span>
             )}
 
             {data.type === "network" && data.details?.overallSavingsBytes && (
-              <Grey>
+              <Span grey>
                 {" "}
                 —&nbsp;Potential savings of{" "}
                 {formatBytes(data.details?.overallSavingsBytes)}
-              </Grey>
+              </Span>
             )}
           </P>
         </Content>

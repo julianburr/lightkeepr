@@ -118,7 +118,7 @@ const Container = styled(_CoreButton)`
 
   svg {
     height: ${({ size }) =>
-      size === "large" ? "1.4em" : size === "small" ? "1em" : "1.2em"};
+      size === "large" ? "1.3em" : size === "small" ? "1em" : "1em"};
     width: auto;
     margin: 0 -0.6rem;
     filter: grayscale(1);

@@ -58,15 +58,6 @@ export function BaseSidebar({ getLinkProps }: BaseSidebarProps) {
       href: `/docs`,
     },
 
-    // Projects list
-    {
-      label: "Projects",
-      items: projects.map((project: any) => ({
-        label: project.name,
-        ...getLinkProps({ projectId: project.id }),
-      })),
-    },
-
     // Team menu items
     {
       label: "Team",
@@ -88,6 +79,15 @@ export function BaseSidebar({ getLinkProps }: BaseSidebarProps) {
           href: `/app/${router.query.teamId}/settings`,
         },
       ],
+    },
+
+    // Projects list
+    {
+      label: "Projects",
+      items: projects.map((project: any) => ({
+        label: project.name,
+        ...getLinkProps({ projectId: project.id }),
+      })),
     },
 
     // Profile menu items

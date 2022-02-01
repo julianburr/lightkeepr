@@ -28,10 +28,16 @@ export function getRegressions(items: Item[] = []) {
   filteredItems.forEach((item, index, all) => {
     const regression = index === 0 ? 0 : all[index - 1].value - item.value;
     if (regression >= REGRESSION_THRESHOLD) {
-      // Check if the regression has already been recovered from
-      const recovered = all.findIndex((i) => i.value >= all[index - 1].value);
-      console.log({ item });
-      if (!recovered) {
+      // Check if the regression has already been recovered from - to add some buffer,
+      // we allow for a recovery of 90% instead of insisting on full recovery to
+      // original score, the slow regression over time will catch too many 90% recoveries
+      const recovered = filteredItems.findIndex(
+        (i, idx) =>
+          i.value >= filteredItems[index - 1].value - regression * 0.1 &&
+          idx > index
+      );
+      console.log({ recovered });
+      if (recovered === -1) {
         regressions.push({
           type: "immediate",
           item,

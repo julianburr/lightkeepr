@@ -35,14 +35,24 @@ function ReportsList() {
     { key: `${router.query.runId}/reports` }
   );
 
-  return <List items={runs} Item={ReportListItem} />;
+  return (
+    <>
+      <Heading level={2}>Reports</Heading>
+      <Spacer h=".8rem" />
+
+      {/* TODO: filters */}
+      <List items={runs} Item={ReportListItem} />
+    </>
+  );
 }
 
 export default function RunDetails() {
   const router = useRouter();
 
-  const { teamId, projectId, runId } = router.query;
-  const run = useDocument(doc(db, "runs", runId!));
+  const { runId } = router.query;
+  const run = useDocument(runId ? doc(db, "runs", runId) : undefined, {
+    fetch: !!runId,
+  });
 
   return (
     <Auth>
@@ -52,8 +62,6 @@ export default function RunDetails() {
         </Heading>
         <Spacer h="2.4rem" />
 
-        <Heading level={2}>Reports</Heading>
-        <Spacer h="1.2rem" />
         <Suspense fallback={null}>
           <ReportsList />
         </Suspense>

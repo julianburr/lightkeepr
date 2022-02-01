@@ -3,27 +3,18 @@ import styled from "styled-components";
 
 const Container = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
   width: 100%;
   gap: 0.4rem;
-
-  @media (min-width: 800px) {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-  }
 `;
 
 const Inner = styled.div`
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  flex-direction: row;
+  align-items: center;
   gap: 0.4rem;
-
-  @media (min-width: 800px) {
-    flex-direction: row;
-    align-items: center;
-  }
 `;
 
 const Left = styled(Inner)`

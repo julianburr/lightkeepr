@@ -94,7 +94,9 @@ export function MenuItem({ item, setVisible, element }: MenuItemProps) {
     ? { href: item.href }
     : {
         onClick: async (e: any) => {
+          console.log({ e });
           await item?.onClick?.(e);
+          console.log({ e2: e });
           if (!e.defaultPrevented) {
             element?.focus?.();
             setVisible(false);

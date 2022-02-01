@@ -7,14 +7,14 @@ import Link from "next/link";
 import classNames from "classnames";
 
 import { useDocument } from "src/@packages/firebase";
+import { CATEGORIES } from "src/utils/audits";
 import { AppLayout } from "src/layouts/app";
 import { Auth } from "src/components/auth";
-import { Heading } from "src/components/text";
+import { Heading, Small } from "src/components/text";
 import { Spacer } from "src/components/spacer";
 import { Loader } from "src/components/loader";
 import { ReportDetails } from "src/components/report-details";
 import { Suspense } from "src/components/suspense";
-import { CATEGORIES } from "src/utils/audits";
 
 const db = getFirestore();
 
@@ -197,15 +197,15 @@ export default function Report() {
     : null;
   const report = useDocument(reportRef, { fetch: router.isReady });
 
-  if (!router.isReady) {
-    return <Loader />;
-  }
-
   return (
     <Auth>
       <AppLayout>
         <Heading level={1}>{report.name}</Heading>
-        <Spacer h="1.6rem" />
+        {report.url && report.url !== report.name && (
+          <Small grey>{report.url}</Small>
+        )}
+
+        <Spacer h="1.2rem" />
 
         <WrapSummary>
           {CATEGORIES.map((item) => {
@@ -213,6 +213,9 @@ export default function Report() {
 
             const hasRun =
               report.summary?.[item.id] || report.summary?.[item.id] === 0;
+            const score = hasRun
+              ? Math.round(report.summary?.[item.id] * 100)
+              : 0;
 
             return (
               <Link
@@ -228,14 +231,12 @@ export default function Report() {
                   <Label>{item.label}</Label>
                   <SummaryItem
                     hasRun={hasRun}
-                    value={hasRun ? report.summary?.[item.id] * 100 : 0}
+                    value={score}
                     className={classNames({
                       active: router.query.category === item.id,
                     })}
                   >
-                    <Score>
-                      {hasRun ? report.summary?.[item.id] * 100 : "n/a"}
-                    </Score>
+                    <Score>{hasRun ? score : "n/a"}</Score>
                   </SummaryItem>
                 </a>
               </Link>
@@ -245,7 +246,10 @@ export default function Report() {
         <Spacer h="1.6rem" />
 
         <Suspense fallback={<Loader />}>
-          <ReportDetails />
+          <ReportDetails
+            reportId={router.query.reportId!}
+            categoryId={router.query.category}
+          />
         </Suspense>
       </AppLayout>
     </Auth>

@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 import { ListItem } from "src/components/list";
-import { Grey, P } from "src/components/text";
+import { Span, P } from "src/components/text";
 
 import TrendingDownSvg from "src/assets/icons/trending-down.svg";
 import { ActionMenu } from "src/components/action-menu";
@@ -60,11 +60,11 @@ export function RegressionListItem({ data }: any) {
           <Content>
             <P>
               {data.title} over time{" "}
-              <Grey>
+              <Span grey>
                 —&nbsp;Value changed from{" "}
                 {data.prevItem.displayValue || data.prevItem.value} at its
                 highest point to {data.item.displayValue || data.item.value} now
-              </Grey>
+              </Span>
             </P>
           </Content>
           <ActionMenu
@@ -100,11 +100,11 @@ export function RegressionListItem({ data }: any) {
         <Content>
           <P>
             {data.title}{" "}
-            <Grey>
+            <Span grey>
               —&nbsp;Value changed from{" "}
               {data.prevItem.displayValue || data.prevItem.value} to{" "}
               {data.item.displayValue || data.item.value}
-            </Grey>
+            </Span>
           </P>
         </Content>
         <ActionMenu

@@ -39,7 +39,10 @@ function ReportMeta({ reportId }: ReportSidebarProps) {
         },
         {
           label: "Device",
-          value: report.meta.configSettings.formFactor,
+          value:
+            report.meta.configSettings.formFactor === "mobile"
+              ? "Mobile"
+              : "Desktop",
         },
         {
           label: "Screen emulation",

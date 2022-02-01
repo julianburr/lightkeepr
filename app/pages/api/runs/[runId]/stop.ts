@@ -39,12 +39,15 @@ export default createHandler({
       .where("run", "==", db.collection("runs").doc(req.query.runId as string))
       .get();
 
-    let status = "passed";
+    const reports: any[] = [];
     reportsSnap.forEach((r: any) => {
-      if (r.data()?.status?.startsWith?.("failed")) {
-        status = "failed";
-      }
+      reports.push({ id: r.id, ...r.data() });
     });
+
+    const reportStatus = reports.map((report) => report.status);
+    const status = reportStatus.find((status) => status === "failed")
+      ? "failed"
+      : "passed";
 
     const now = Timestamp.fromDate(new Date());
 
@@ -53,6 +56,7 @@ export default createHandler({
       .doc(req.query.runId as string)
       .update({
         status,
+        reportStatus,
         error: req.body?.error || null,
         finishedAt: now,
       });

@@ -1,6 +1,6 @@
 import "src/utils/firebase";
 
-import { useForm } from "react-cool-form";
+import { useCallback } from "react";
 import { useRouter } from "next/router";
 import { doc, getFirestore, updateDoc } from "firebase/firestore";
 import styled from "styled-components";
@@ -9,13 +9,13 @@ import { useDocument } from "src/@packages/firebase";
 import { generateApiToken } from "src/utils/api-token";
 import { useConfirmationDialog } from "src/hooks/use-dialog";
 import { useToast } from "src/hooks/use-toast";
+import { useAutoSaveForm } from "src/hooks/use-auto-save-form";
 import { AppLayout } from "src/layouts/app";
 import { Auth } from "src/components/auth";
 import { Button } from "src/components/button";
 import { Field } from "src/components/field";
 import { TextInput } from "src/components/text-input";
 import { Spacer } from "src/components/spacer";
-import { ButtonBar } from "src/components/button-bar";
 import { ReadonlyInput } from "src/components/readonly-input";
 import { CopyButton } from "src/components/copy-button";
 import { Tooltip } from "src/components/tooltip";
@@ -24,9 +24,9 @@ import RefreshSvg from "src/assets/icons/refresh-cw.svg";
 import { useAuthUser } from "src/hooks/use-auth-user";
 import { Heading, Small } from "src/components/text";
 import { FormGrid } from "src/components/form-grid";
-import { useCallback } from "react";
 import { CheckboxInput } from "src/components/checkbox-input";
 import { RangeInput } from "src/components/range-input";
+import { removeUndefined } from "src/utils/format";
 
 const db = getFirestore();
 
@@ -45,31 +45,22 @@ export default function ProjectSettings() {
   const projectRef = doc(db, "projects", router.query.projectId!);
   const project = useDocument(projectRef);
 
-  const { form, use } = useForm({
+  const { form } = useAutoSaveForm({
     defaultValues: {
       name: project.name,
       gitMain: project.gitMain,
-      failOnRegression: project.failOnRegression,
-      performanceTarget: project.targets?.performance || 0,
-      accessibilityTarget: project.targets?.accessibility || 0,
-      bestPracticesTarget: project.targets?.["best-practices"] || 0,
-      seoTarget: project.targets?.seo || 0,
-      pwaTarget: project.targets?.pwa || 0,
+      failOnRegression: project.failOnRegression || false,
+      targets: {
+        performance: project.targets?.performance || 0,
+        accessibility: project.targets?.accessibility || 0,
+        "best-practices": project.targets?.["best-practices"] || 0,
+        seo: project.targets?.seo || 0,
+        pwa: project.targets?.pwa || 0,
+      },
     },
     onSubmit: async (values) => {
-      await updateDoc(projectRef, {
-        name: values.name,
-        gitMain: values.gitMain,
-        failOnRegression: values.failOnRegression,
-        targets: {
-          performance: values.performanceTarget,
-          accessibility: values.accessibilityTarget,
-          ["best-practices"]: values.bestPracticesTarget,
-          seo: values.seoTarget,
-          pwa: values.pwaTarget,
-        },
-      });
-      toast.show({ message: "Project settings have been updated" });
+      console.log("#onSubmit");
+      await updateDoc(projectRef, removeUndefined(values));
     },
   });
 
@@ -91,7 +82,10 @@ export default function ProjectSettings() {
       <AppLayout>
         <Container>
           <h1>Project settings</h1>
-          <Spacer h="1.6rem" />
+          <Spacer h="3.2rem" />
+
+          <Heading level={2}>General settings</Heading>
+          <Spacer h="1.2rem" />
 
           <form ref={form}>
             <FormGrid>
@@ -144,7 +138,7 @@ export default function ProjectSettings() {
 
             <Spacer h="2.4rem" />
 
-            <Heading level={2}>Reports</Heading>
+            <Heading level={3}>Reports</Heading>
             <Spacer h="1.2rem" />
             <Field
               name="failOnRegression"
@@ -173,36 +167,23 @@ export default function ProjectSettings() {
 
             <FormGrid columns={2}>
               <Field
-                name="performanceTarget"
+                name="targets.performance"
                 label="Performance"
                 Input={RangeInput}
               />
               <Field
-                name="accessibilityTarget"
+                name="targets.accessibility"
                 label="Accessibility"
                 Input={RangeInput}
               />
               <Field
-                name="bestPracticesTarget"
+                name="targets.bestPractices"
                 label="Best practices"
                 Input={RangeInput}
               />
-              <Field name="seoTarget" label="SEO" Input={RangeInput} />
-              <Field name="pwaTarget" label="PWA" Input={RangeInput} />
+              <Field name="targets.seo" label="SEO" Input={RangeInput} />
+              <Field name="targets.pwa" label="PWA" Input={RangeInput} />
             </FormGrid>
-
-            <Spacer h="1.6rem" />
-            <ButtonBar
-              left={
-                <Button
-                  type="submit"
-                  intent="primary"
-                  disabled={use("isSubmitting")}
-                >
-                  Update settings
-                </Button>
-              }
-            />
           </form>
         </Container>
       </AppLayout>

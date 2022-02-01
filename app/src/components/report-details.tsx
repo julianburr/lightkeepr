@@ -23,24 +23,26 @@ type GroupedAudits = {
   passed: Audit[];
 };
 
-export function ReportDetails() {
-  const router = useRouter();
+type ReportDetailsProps = {
+  reportId: string;
+  categoryId?: string;
+};
 
-  const { data } = useSuspense(
-    () => api.get(`/api/reports/${router.query.reportId}`),
-    { key: `report/${router.query.reportId}` }
-  );
+export function ReportDetails({ reportId, categoryId }: ReportDetailsProps) {
+  const { data } = useSuspense(() => api.get(`/api/reports/${reportId}`), {
+    key: `report/${reportId}`,
+  });
 
-  if (!router.query.category) {
-    return <ReportSummary reportId={router.query.reportId!} />;
+  if (!categoryId) {
+    return <ReportSummary reportId={reportId!} />;
   }
 
   const { category, groups } = useMemo(() => {
-    if (!router.query.category) {
+    if (!categoryId) {
       return {};
     }
 
-    const category = data.report.categories[router.query.category];
+    const category = data.report.categories[categoryId];
     if (!category) {
       return {};
     }
@@ -102,7 +104,7 @@ export function ReportDetails() {
     );
 
     return { category, groups };
-  }, [data, router.query.category]);
+  }, [data, categoryId]);
 
   if (!groups || !category) {
     return (

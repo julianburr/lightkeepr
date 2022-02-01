@@ -1,6 +1,8 @@
 import "src/utils/firebase";
 
+import { useMemo, useState } from "react";
 import Link from "next/link";
+import styled from "styled-components";
 import { useRouter } from "next/router";
 import {
   collection,
@@ -16,71 +18,65 @@ import { AppLayout } from "src/layouts/app";
 import { Auth } from "src/components/auth";
 import { List } from "src/components/list";
 import { Spacer } from "src/components/spacer";
-import { Heading, P } from "src/components/text";
+import { GroupHeading, Heading, P, Small } from "src/components/text";
 import { CodePreview } from "src/components/code-preview";
 import { HelpBox } from "src/components/help-box";
 import { Suspense } from "src/components/suspense";
+import { Loader } from "src/components/loader";
+import { Hint } from "src/components/hint";
+import { ButtonBar } from "src/components/button-bar";
+import { Button } from "src/components/button";
 
 import { RunListItem } from "src/list-items/run";
+import { PageListItem } from "src/list-items/page";
+import { ActionMenu } from "src/components/action-menu";
+import { useRunFilters } from "src/hooks/use-run-filters";
 
 const db = getFirestore();
 
-const CLI_CODE = (token: string) => `
-# Set API token
-export LIGHTKEEPR_TOKEN=${token}
-
-# Start run and store returned ID in env
-export LIGHTKEEPR_RUN_ID=$(npx lightkeepr start)
-
-# Run lighthouse reports
-npx lightkeepr report --url=https://www.julianburr.de/til
-npx lightkeepr report --url=https://www.julianburr.de/around-the-world
-
-# Finish run
-npx lightkeepr stop
-`;
-
-const NODE_CODE = (token: string) => `
-const lightkeepr = require('@lightkeepr/node');
-
-// Start run with API token
-const run = await lightkeepr.start({ token: '${token}' });
-
-// Run lighthouse reports
-await lightkeepr.report({ url: 'https://www.julianburr.de/til', runId: run.id });
-await lightkeepr.report({ url: 'https://www.julianburr.de/around-the-world', runId: run.id });
-
-// Finish run
-await lightkeepr.stop();
-`;
-
-const CYPRESS_CODE_SUPPORT = () => `
-import '@lightkeepr/cypress';
-`;
-
-const CYPRESS_CODE_TEST = () => `
-// Trigger a report
-cy.lightkeepr();
-`;
-
-const CYPRESS_CODE_RUN = (token: string) => `
-# Run Cypress through lightkeepr instead of directly through the Cypress CLI
-LIGHTKEEPR_TOKEN=${token} npx lightkeepr exec -- cypress run 
+const Container = styled.div`
+  width: 100%;
+  max-width: 60rem;
 `;
 
 function RunsList() {
   const router = useRouter();
+  const { projectId } = router.query;
 
-  const projectRef = doc(db, "projects", router.query.projectId!);
+  const projectRef = doc(db, "projects", projectId!);
   const project = useDocument(projectRef);
 
-  const runs = useCollection(
+  const runs: any[] = useCollection(
     query(
       collection(db, "runs"),
       where("project", "==", projectRef),
       orderBy("startedAt", "desc")
     ),
     { key: `${router.query.projectId}/runs` }
+  );
+
+  const { filters, filterItems } = useRunFilters({
+    runs,
+    gitMain: project.gitMain,
+  });
+
+  const [runsLimit, setRunsLimit] = useState(5);
+  const filteredRuns = useMemo(
+    () =>
+      runs
+        .filter((run: any) => {
+          if (filters.status.length && !filters.status.includes(run.status)) {
+            return false;
+          }
+
+          if (filters.branch.length && !filters.branch.includes(run.branch)) {
+            return false;
+          }
+
+          return true;
+        })
+        .slice(0, runsLimit),
+    [runs, runsLimit, filters]
   );
 
   if (!runs?.length) {
@@ -104,12 +100,29 @@ function RunsList() {
             {
               title: "CLI",
               language: "bash",
-              code: CLI_CODE(project.apiToken),
+              code:
+                `# Set API token\n` +
+                `export LIGHTKEEPR_TOKEN=${project.apiToken}\n\n` +
+                `# Start run and store returned ID in env\n` +
+                `export LIGHTKEEPR_RUN_ID=$(npx lightkeepr start)\n\n` +
+                `# Run lighthouse reports\n` +
+                `npx lightkeepr report --url=https://www.julianburr.de/til\n` +
+                `npx lightkeepr report --url=https://www.julianburr.de/around-the-world\n\n` +
+                `# Finish run\n` +
+                `npx lightkeepr stop`,
             },
             {
               title: "Node",
               language: "javascript",
-              code: NODE_CODE(project.apiToken),
+              code:
+                `const lightkeepr = require('@lightkeepr/node');\n\n` +
+                `// Start run with API token\n` +
+                `const run = await lightkeepr.start({ token: '${project.apiToken}' });\n\n` +
+                `// Run lighthouse reports\n` +
+                `await run.report({ url: 'https://www.julianburr.de/til' });\n` +
+                `await run.report({ url: 'https://www.julianburr.de/around-the-world' });\n\n` +
+                `// Finish run\n` +
+                `await run.stop();`,
               showLineNumbers: true,
             },
             {
@@ -117,17 +130,19 @@ function RunsList() {
               files: [
                 {
                   language: "javascript",
-                  code: CYPRESS_CODE_SUPPORT(),
+                  code: `import '@lightkeepr/cypress';`,
                   title: "cypress/support/index.js",
                 },
                 {
                   language: "javascript",
-                  code: CYPRESS_CODE_TEST(),
+                  code: `// Trigger a report\n` + `cy.lightkeepr();`,
                   title: "In your test file",
                 },
                 {
                   language: "bash",
-                  code: CYPRESS_CODE_RUN(project.apiToken),
+                  code:
+                    `# Run Cypress through lightkeepr instead of directly through the Cypress CLI\n` +
+                    `LIGHTKEEPR_TOKEN=${project.apiToken} npx lightkeepr exec -- cypress run`,
                 },
               ],
             },
@@ -139,31 +154,107 @@ function RunsList() {
 
   return (
     <>
-      <Heading level={2}>Suggested improvements</Heading>
-      <Spacer h=".6rem" />
-      <P>Suggestions are not implemented yet.</P>
+      {runs?.[0] && !runs[0].commitMessage && (
+        <>
+          <Spacer h=".8rem" />
+          <Hint>
+            It looks like you don't have a commit message defined on the latest
+            run. To make it easier to distinguish your runs, adding a title like
+            a commit message can help. Learn more how do to that in the
+            documentation.
+          </Hint>
+          <Spacer h="2.4rem" />
+        </>
+      )}
+
+      <ButtonBar
+        left={<Heading level={2}>Runs</Heading>}
+        right={
+          <ActionMenu items={filterItems}>
+            {(props) => (
+              <Button
+                intent={
+                  filters.status.length || filters.branch.length
+                    ? "primary"
+                    : "secondary"
+                }
+                {...props}
+              >
+                Filter
+              </Button>
+            )}
+          </ActionMenu>
+        }
+      />
+      <Spacer h=".8rem" />
+      <List
+        items={filteredRuns}
+        Item={RunListItem}
+        loadMore={
+          runsLimit < runs.length
+            ? () => setRunsLimit((limit) => limit + 10)
+            : undefined
+        }
+      />
+
+      {!!project.pages?.length || !!project.userFlows?.length ? (
+        <>
+          <Spacer h="3.2rem" />
+
+          <Heading level={2}>Pages &amp; user flows</Heading>
+          <Container>
+            <Small grey>
+              Below you can find the different unique pages and user flows found
+              in all runs and their last status. Click on an item to get to its
+              latest instance.
+            </Small>
+          </Container>
+
+          {!!project.pages?.length && (
+            <>
+              <Spacer h="1.6rem" />
+              <GroupHeading>Pages</GroupHeading>
+              <Spacer h=".2rem" />
+              <List items={project.pages || []} Item={PageListItem} />
+            </>
+          )}
+
+          {!!project.userFlows?.length && (
+            <>
+              <Spacer h="1.6rem" />
+              <GroupHeading>User flows</GroupHeading>
+              <Spacer h=".2rem" />
+              <List items={project.userFlows || []} Item={PageListItem} />
+            </>
+          )}
+        </>
+      ) : null}
+    </>
+  );
+}
+
+export function Details() {
+  const router = useRouter();
+
+  const projectRef = doc(db, "projects", router.query.projectId!);
+  const project = useDocument(projectRef);
+
+  return (
+    <>
+      <Heading level={1}>{project.name}</Heading>
       <Spacer h="1.8rem" />
 
-      <Heading level={2}>Runs</Heading>
-      <Spacer h="1.2rem" />
-      <List items={runs} Item={RunListItem} />
+      <RunsList />
     </>
   );
 }
 
 export default function ProjectDetails() {
-  const router = useRouter();
-
-  const project = useDocument(doc(db, "projects", router.query.projectId!));
-
   return (
     <Auth>
       <AppLayout>
-        <Heading level={1}>{project.name}</Heading>
-        <Spacer h="1.8rem" />
-
-        <Suspense fallback={null}>
-          <RunsList />
+        <Suspense fallback={<Loader />}>
+          <Details />
         </Suspense>
       </AppLayout>
     </Auth>

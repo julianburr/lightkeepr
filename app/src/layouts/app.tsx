@@ -192,7 +192,7 @@ export function AppLayout({ children }: AppLayoutProps) {
       />
 
       <Content>
-        <Suspense fallback={<Loader message="Load content..." />}>
+        <Suspense fallback={<Loader />}>
           <AppSidebar />
           <Suspense fallback={<Loader />}>
             <Main>{children}</Main>

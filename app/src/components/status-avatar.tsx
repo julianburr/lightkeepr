@@ -1,10 +1,11 @@
-import { Avatar } from "./avatar";
+import styled, { keyframes } from "styled-components";
+
+import { Avatar } from "src/components/avatar";
 
 import CheckSvg from "src/assets/icons/check.svg";
 import AlertSvg from "src/assets/icons/alert-circle.svg";
 import MinusSvg from "src/assets/icons/minus.svg";
 import LoaderSvg from "src/assets/icons/loader.svg";
-import styled, { keyframes } from "styled-components";
 
 const spin = keyframes`
   0% { transform: rotate(0deg); }

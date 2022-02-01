@@ -11,7 +11,8 @@ type CreateReportArgs = {
   token: string;
   apiUrl: string;
   runId: string;
-  name: string;
+  url: string;
+  name?: string;
   type?: string;
   reportData: any;
 };
@@ -20,7 +21,8 @@ export async function createReport({
   token,
   apiUrl,
   runId,
-  name,
+  url,
+  name = url,
   type,
   reportData,
 }: CreateReportArgs) {
@@ -34,6 +36,7 @@ export async function createReport({
 
   // Basic data
   formData.append("runId", runId);
+  formData.append("url", url);
   formData.append("name", name);
   if (type) formData.append("type", type);
 
