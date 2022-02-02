@@ -19,10 +19,10 @@ export default function App({ Component, pageProps }: any) {
   // because a lot of pages use suspense directly, should probably refactor
   // to make `useSuspense`/`useDocument`/`useCollection`/etc SSR-safe
   const shouldRenderProviders =
-    router.asPath === "/app" ||
-    router.asPath?.startsWith("/app/") ||
-    router.asPath?.startsWith("/setup") ||
-    router.asPath?.startsWith("/auth");
+    router.route === "/app" ||
+    router.route?.startsWith("/app/") ||
+    router.route?.startsWith("/setup") ||
+    router.route?.startsWith("/auth");
 
   return (
     <>

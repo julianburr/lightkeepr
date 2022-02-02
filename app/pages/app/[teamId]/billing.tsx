@@ -16,6 +16,7 @@ import { Heading, P, Small } from "src/components/text";
 import { Value } from "src/components/value";
 import { env } from "src/env";
 import { useAuthUser } from "src/hooks/use-auth-user";
+import { useConfirmationDialog } from "src/hooks/use-dialog";
 import { useToast } from "src/hooks/use-toast";
 import { AppLayout } from "src/layouts/app";
 import { InvoiceListItem } from "src/list-items/invoice";
@@ -45,6 +46,7 @@ function PlanDetails({ uuid, refresh }: SectionProps) {
   const authUser = useAuthUser();
 
   const toast = useToast();
+  const confirmationDialog = useConfirmationDialog();
 
   const customerId = authUser?.team?.stripeCustomerId;
   const details = useSuspense(
@@ -66,6 +68,7 @@ function PlanDetails({ uuid, refresh }: SectionProps) {
                   {
                     teamId: authUser?.team?.id,
                     priceId: env.stripe.priceId.premium.monthly,
+                    redirectUrl: `/app/${authUser?.team?.id}/billing`,
                   }
                 )
                 .then(({ data }) => data);
@@ -83,23 +86,6 @@ function PlanDetails({ uuid, refresh }: SectionProps) {
 
   const subscription = details.subscriptions[0];
   const item = subscription.items?.data?.[0];
-
-  if (subscription.status !== "active") {
-    return (
-      <>
-        <P>Free — $0 / month</P>
-        {["owner", "billing"].includes(authUser.teamRole!) && (
-          <Button
-            onClick={async () => {
-              // TODO
-            }}
-          >
-            Upgrade to premium plan
-          </Button>
-        )}
-      </>
-    );
-  }
 
   return (
     <>
@@ -129,12 +115,24 @@ function PlanDetails({ uuid, refresh }: SectionProps) {
           </>
         ) : (
           <Button
-            onClick={async () => {
-              await api.post(
-                `/api/stripe/customers/${customerId}/subscriptions/${subscription.id}/cancel`
-              );
-              toast.show({ message: "Subscription successfully cancelled" });
-              refresh();
+            onClick={() => {
+              confirmationDialog.open({
+                message:
+                  "Are you sure you want to cancel your current subscription? You will still " +
+                  "have access to premium features until your current subscription periond " +
+                  "expires.",
+                confirmLabel: "Cancel subscription",
+                intent: "danger",
+                onConfirm: async () => {
+                  await api.post(
+                    `/api/stripe/customers/${customerId}/subscriptions/${subscription.id}/cancel`
+                  );
+                  toast.show({
+                    message: "Subscription successfully cancelled",
+                  });
+                  refresh();
+                },
+              });
             }}
           >
             Cancel subscription

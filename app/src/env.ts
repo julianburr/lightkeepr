@@ -15,7 +15,6 @@ export const env = {
     priceId: {
       premium: {
         monthly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PREMIUM_MONTHLY,
-        yearly: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PREMIUM_YEARLY,
       },
     },
   },

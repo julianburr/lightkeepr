@@ -15,7 +15,9 @@ export default createHandler({
       return res.status(400).json({ message: "Plan not defined" });
     }
 
-    const url = `${req.headers.origin}/app/${req.body.teamId}/billing`;
+    const url = req.body.redirectUrl
+      ? `${req.headers.origin}${req.body.redirectUrl}`
+      : `${req.headers.origin}/app/${req.body.teamId}`;
 
     const session = await stripeClient.checkout.sessions.create({
       mode: "subscription",

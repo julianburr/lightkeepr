@@ -283,12 +283,16 @@ function Content() {
   const next =
     currentIndex >= reports.length - 1 ? undefined : reports[currentIndex + 1];
 
-  console.log({ report });
+  const approvedBy = useDocument(
+    report?.approvedBy?.id
+      ? doc(db, "users", report?.approvedBy?.id)
+      : undefined
+  );
 
   const statusMessage =
     report.status === "passed"
       ? report.statusReasons?.includes?.("manual")
-        ? `manually approved by ${report?.approvedBy.id}`
+        ? `manually approved by ${approvedBy?.name} (${approvedBy?.email})`
         : null
       : report.statusReasons
           ?.map?.((reason: string) => {

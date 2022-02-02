@@ -21,19 +21,32 @@ function create(baseUrl?: string) {
     const baseUrl = _baseUrl || window?.location?.origin;
     const url = new URL(path.startsWith("http") ? path : `${baseUrl}${path}`);
     url.search = new URLSearchParams(args).toString();
+
     const response = await fetch(url.toString(), _getOptions(options));
     const data = await response.json();
+
+    if (response.status >= 400) {
+      throw new Error(data.message);
+    }
+
     return { response, data };
   }
 
   async function post(path: string, args: any = {}, options: any = {}) {
     const baseUrl = _baseUrl || window?.location?.origin;
     const url = path.startsWith("http") ? path : `${baseUrl}${path}`;
-    const response = await fetch(
-      url,
-      _getOptions({ method: "POST", body: JSON.stringify(args), ...options })
-    );
+
+    const opts = _getOptions({
+      method: "POST",
+      body: JSON.stringify(args),
+      ...options,
+    });
+    const response = await fetch(url, opts);
     const data = await response.json();
+
+    if (response.status >= 400) {
+      throw new Error(data.message);
+    }
     return { response, data };
   }
 
