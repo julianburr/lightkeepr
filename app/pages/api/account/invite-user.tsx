@@ -72,6 +72,7 @@ export default createHandler({
         { validationLevel: "soft" }
       );
 
+      // TODO: check if it's possible to use queue workers with vercel somehow
       // Send via sendgrid
       sgMail.setApiKey(env.sendgrid.apiKey);
       const response = await sgMail.send({

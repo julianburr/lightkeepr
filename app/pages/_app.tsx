@@ -35,7 +35,7 @@ export default function App({ Component, pageProps }: any) {
         <meta name="robots" content="all" />
 
         {/* Basics */}
-        <title>Lighkeepr</title>
+        <title>Lightkeepr</title>
         <meta
           name="description"
           content="Lighthouse performance scores in the cloud"

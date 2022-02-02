@@ -104,26 +104,35 @@ export function ToastProvider(props: PropsWithChildren<Record<never, any>>) {
   );
 }
 
+type ShowToastArgs = {
+  message: ReactNode;
+  icon?: ReactNode;
+  intent?: ToastItem["intent"];
+};
+
 let uuid = 0;
 
 export function useToast() {
   const { setToasts } = useContext(ToastContext);
 
-  const show = useCallback(({ message, icon, intent = "default" }) => {
-    const instanceUuid = `toast--${++uuid}`;
+  const show = useCallback(
+    ({ message, icon, intent = "default" }: ShowToastArgs) => {
+      const instanceUuid = `toast--${++uuid}`;
 
-    // Create timer to remove toast after specific amount of time
-    const timer = createTimer(() => {
-      setToasts?.((toasts) => toasts.filter((t) => t.uuid !== instanceUuid));
-    }, 6000);
+      // Create timer to remove toast after specific amount of time
+      const timer = createTimer(() => {
+        setToasts?.((toasts) => toasts.filter((t) => t.uuid !== instanceUuid));
+      }, 6000);
 
-    // Add toast
-    const toast = { uuid: instanceUuid, message, icon, intent, timer };
-    setToasts?.((toasts) => toasts.concat(toast));
-    timer.start();
+      // Add toast
+      const toast = { uuid: instanceUuid, message, icon, intent, timer };
+      setToasts?.((toasts) => toasts.concat(toast));
+      timer.start();
 
-    return toast;
-  }, []);
+      return toast;
+    },
+    []
+  );
 
   return { show };
 }

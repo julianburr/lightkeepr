@@ -30,6 +30,7 @@ type User = {
   id: string;
   email: string;
   name: string;
+  subscriptions?: any[];
 };
 
 type Team = {

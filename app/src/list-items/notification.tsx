@@ -1,5 +1,7 @@
 import "src/utils/firebase";
 
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 import { deleteDoc, doc, getFirestore, updateDoc } from "firebase/firestore";
 import { useCallback } from "react";
 import styled from "styled-components";
@@ -12,9 +14,11 @@ import { P, Small } from "src/components/text";
 import { Tooltip } from "src/components/tooltip";
 import { useConfirmationDialog } from "src/dialogs/confirm";
 import { useToast } from "src/hooks/use-toast";
+import { getNotificationIcon } from "src/utils/notifications";
 
 import LinkSvg from "src/assets/icons/link.svg";
-import ZapSvg from "src/assets/icons/zap.svg";
+
+dayjs.extend(relativeTime);
 
 const db = getFirestore();
 
@@ -89,7 +93,7 @@ export function NotificationListItem({ data }: any) {
       intent: "danger",
       onConfirm: async () => {
         await deleteDoc(notificationRef);
-        toast.show({ messsage: "Notification deleted successfully" });
+        toast.show({ message: "Notification deleted successfully" });
       },
     });
   }, [data.id]);
@@ -110,11 +114,14 @@ export function NotificationListItem({ data }: any) {
             </Tooltip>
           }
         >
-          <ZapSvg />
+          {getNotificationIcon(data.type)}
         </Avatar>
         <Content>
           <P>{data.title}</P>
-          <Small grey>{data.description}</Small>
+          <Small grey>
+            {dayjs.unix(data.createdAt?.seconds).fromNow()} —&nbsp;
+            {data.description}
+          </Small>
         </Content>
         <WrapActionMenu>
           <Tooltip content="Go to resource">
@@ -140,8 +147,13 @@ export function NotificationListItem({ data }: any) {
                 onClick: () => markAsSeen(!data.seen),
               },
               {
-                label: "Delete notification",
-                onClick: deleteNotification,
+                items: [
+                  {
+                    label: "Delete notification",
+                    onClick: deleteNotification,
+                    intent: "danger",
+                  },
+                ],
               },
             ]}
           />

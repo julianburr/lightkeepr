@@ -1,5 +1,7 @@
 import "src/utils/firebase";
 
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 import {
   collection,
   doc,
@@ -23,9 +25,11 @@ import { Spacer } from "src/components/spacer";
 import { Suspense } from "src/components/suspense";
 import { P } from "src/components/text";
 import { useAuthUser } from "src/hooks/use-auth-user";
+import { getNotificationIcon } from "src/utils/notifications";
 
 import BellSvg from "src/assets/icons/bell.svg";
-import ZapSvg from "src/assets/icons/zap.svg";
+
+dayjs.extend(relativeTime);
 
 const db = getFirestore();
 
@@ -73,9 +77,14 @@ function Content({ setVisible, element }: any) {
   const unread = useMemo(
     () =>
       notifications.map((notification: any) => ({
-        icon: <ZapSvg />,
+        icon: getNotificationIcon(notification.type),
         label: notification.title,
-        description: notification.description,
+        description: (
+          <>
+            {dayjs.unix(notification.createdAt?.seconds).fromNow()} —&nbsp;
+            {notification.description}
+          </>
+        ),
         href: {
           pathname: notification.href,
           query: {
