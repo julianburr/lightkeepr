@@ -49,6 +49,8 @@ const Status = styled.div`
 export function RegressionListItem({ data }: any) {
   const router = useRouter();
 
+  console.log({ data });
+
   if (data.type === "trend") {
     return (
       <ListItem>
@@ -71,7 +73,7 @@ export function RegressionListItem({ data }: any) {
               {
                 label: "Compare reports",
                 href:
-                  `/${router.query.teamId}/compare/` +
+                  `/app/${router.query.teamId}/compare/` +
                   `${data.prevItem.report?.id}..${data.item.report?.id}`,
               },
             ]}
@@ -110,12 +112,12 @@ export function RegressionListItem({ data }: any) {
           items={[
             {
               label: "Go to report of regression",
-              href: `/${router.query.teamId}/reports/${data.item.report?.id}`,
+              href: `/app/${router.query.teamId}/reports/${data.item.report?.id}`,
             },
             {
               label: "Compare reports",
               href:
-                `/${router.query.teamId}/compare/` +
+                `/app/${router.query.teamId}/compare/` +
                 `${data.prevItem.report?.id}..${data.item.report?.id}`,
             },
           ]}

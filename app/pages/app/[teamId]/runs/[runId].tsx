@@ -22,7 +22,7 @@ import { Loader } from "src/components/loader";
 import { Spacer } from "src/components/spacer";
 import { Suspense } from "src/components/suspense";
 import { Heading } from "src/components/text";
-import { useConfirmationDialog } from "src/hooks/use-dialog";
+import { useConfirmationDialog } from "src/dialogs/confirm";
 import { useToast } from "src/hooks/use-toast";
 import { AppLayout } from "src/layouts/app";
 import { ReportListItem } from "src/list-items/report";

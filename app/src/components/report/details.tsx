@@ -5,11 +5,12 @@ import { useSuspense } from "src/@packages/suspense";
 import { Accordion } from "src/components/accordion";
 import { List } from "src/components/list";
 import { Markdown } from "src/components/markdown";
-import { ReportSummary } from "src/components/report-summary";
 import { Spacer } from "src/components/spacer";
 import { Heading, P } from "src/components/text";
-import { ReportAuditListItem } from "src/list-items/report-audit";
+import { ReportAuditListItem } from "src/list-items/report/audit";
 import { api } from "src/utils/api-client";
+
+import { ReportOverview } from "./overview";
 
 type Audit = any;
 
@@ -32,7 +33,7 @@ export function ReportDetails({ reportId, categoryId }: ReportDetailsProps) {
   });
 
   if (!categoryId) {
-    return <ReportSummary reportId={reportId!} />;
+    return <ReportOverview reportId={reportId!} />;
   }
 
   const { category, groups } = useMemo(() => {

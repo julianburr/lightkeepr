@@ -19,8 +19,8 @@ import { FormGrid } from "src/components/form-grid";
 import { PasswordInput } from "src/components/password-input";
 import { Spacer } from "src/components/spacer";
 import { EmailInput } from "src/components/text-input";
+import { useErrorDialog } from "src/dialogs/error";
 import { useAuthUser } from "src/hooks/use-auth-user";
-import { useErrorDialog } from "src/hooks/use-dialog";
 import { AuthLayout } from "src/layouts/auth";
 import { api } from "src/utils/api-client";
 

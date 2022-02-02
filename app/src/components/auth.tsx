@@ -28,7 +28,6 @@ export function Auth({ children }: AuthProps) {
           vid: router.query.vid,
         })
         .then((res) => {
-          console.log({ res });
           authUser.setAuthUser(res.data);
           router.replace(router.pathname);
           toast.show({ message: "Email address has been verified" });
@@ -44,8 +43,9 @@ export function Auth({ children }: AuthProps) {
     }
   );
 
-  console.log({ authUser });
-
+  // Keep track of last team the user visited in local storage,
+  // so if a user opens `/app` without team id we can redirect to
+  // that team
   const [lastTeamId, setLastTeamId] = usePersistedState(
     "@lightkeepr/lastTeamId",
     authUser.teams?.[0]?.id

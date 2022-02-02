@@ -1,4 +1,3 @@
-import { ComponentProps } from "react";
 import {
   ComponentType,
   Dispatch,
@@ -9,8 +8,6 @@ import {
   SetStateAction,
   PropsWithChildren,
 } from "react";
-
-import { ConfirmationDialog, ErrorDialog } from "src/components/dialog";
 
 export const DialogMetaContext = createContext<{
   id?: string;
@@ -61,33 +58,4 @@ export function useDialog(Dialog: ComponentType<any>) {
   );
 
   return { open, close, isOpen: dialogs.find((d) => d.id === instanceUuid) };
-}
-
-export function useErrorDialog() {
-  const dialog = useDialog(ErrorDialog);
-
-  const open = useCallback(
-    (e: Error | Partial<ComponentProps<typeof ErrorDialog>>) => {
-      return dialog.open({
-        message: e.message,
-        stack: "stack" in e ? e.stack : undefined,
-      });
-    },
-    []
-  );
-
-  return { ...dialog, open };
-}
-
-export function useConfirmationDialog() {
-  const dialog = useDialog(ConfirmationDialog);
-
-  const open = useCallback(
-    (args: Partial<ComponentProps<typeof ConfirmationDialog>>) => {
-      return dialog.open(args);
-    },
-    []
-  );
-
-  return { ...dialog, open };
 }

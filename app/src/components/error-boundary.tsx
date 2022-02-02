@@ -45,11 +45,11 @@ export const ErrorMessage = styled.div`
 `;
 
 function DefaultError({ error }: any) {
-  if ([401, 404].includes(error.code)) {
+  if ([400, 401, 404].includes(error.code)) {
     return (
       <Container>
         <Jellyfish />
-        <Heading level={1}>{error.code}</Heading>
+        <Heading level={1}>{error.code === 400 ? "Oops!" : error.code}</Heading>
         <P>{error.message}</P>
       </Container>
     );
@@ -58,7 +58,7 @@ function DefaultError({ error }: any) {
   return (
     <Container>
       <Jellyfish />
-      <Heading level={1}>Ooops!</Heading>
+      <Heading level={1}>Oops!</Heading>
       <P>
         Something went wrong. Please try again. If the error persist, consider
         creating an error report with reproduction steps.

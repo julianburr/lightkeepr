@@ -1,11 +1,11 @@
 import "src/utils/node/firebase";
 
 import sgMail from "@sendgrid/mail";
-import { InviteUserEmail } from "emails/invite-user";
 import { getFirestore } from "firebase-admin/firestore";
 import { render } from "mjml-react";
 import { NextApiRequest, NextApiResponse } from "next";
 
+import { InviteUserEmail } from "src/emails/invite-user";
 import { env } from "src/env";
 import { createHandler } from "src/utils/node/api";
 

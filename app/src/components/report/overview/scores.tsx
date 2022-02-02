@@ -19,13 +19,13 @@ const Content = styled.div`
   max-width: 60rem;
 `;
 
-type ScoresSummaryProps = {
+type ScoresOverviewProps = {
   report: any;
   pastReports: any[];
   data?: any;
 };
 
-export function ScoresSummary({ pastReports }: ScoresSummaryProps) {
+export function ScoresOverview({ pastReports }: ScoresOverviewProps) {
   const items = useMemo(
     () =>
       pastReports

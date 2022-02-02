@@ -1,9 +1,9 @@
-import { ReportAuditDialog } from "dialogs/report-audit";
 import styled from "styled-components";
 
 import { ListItem } from "src/components/list";
 import { Markdown } from "src/components/markdown";
 import { Span, P } from "src/components/text";
+import { ReportAuditDialog } from "src/dialogs/report/audit";
 import { useDialog } from "src/hooks/use-dialog";
 import { formatBytes, formatMs } from "src/utils/format";
 

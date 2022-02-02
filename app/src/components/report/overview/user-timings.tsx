@@ -17,13 +17,13 @@ const Content = styled.div`
   max-width: 60rem;
 `;
 
-type UserTimingsSummaryProps = {
+type UserTimingsOverviewProps = {
   report: any;
   pastReports: any[];
   data?: any;
 };
 
-export function UserTimingsSummary({ pastReports }: UserTimingsSummaryProps) {
+export function UserTimingsOverview({ pastReports }: UserTimingsOverviewProps) {
   const items = useMemo(
     () =>
       pastReports

@@ -18,6 +18,7 @@ export function useSidebarLinkState({
     projectId: router.query.projectId,
     runId: router.query.runId,
     reportId: router.query.reportId,
+    reportIds: router.query.reportIds,
   });
 
   useLayoutEffect(() => {
@@ -30,6 +31,7 @@ export function useSidebarLinkState({
         projectId: router.query.projectId,
         runId: router.query.runId,
         reportId: router.query.reportId,
+        reportIds: router.query.reportIds,
       });
       menuRef.current?.removeEventListener?.(
         "transitionend",
@@ -48,6 +50,7 @@ export function useSidebarLinkState({
   const projectId = isMobile ? mobileState.projectId : router.query.projectId;
   const runId = isMobile ? mobileState.runId : router.query.runId;
   const reportId = isMobile ? mobileState.reportId : router.query.reportId;
+  const reportIds = isMobile ? mobileState.reportIds : router.query.reportIds;
 
   const getLinkProps = useCallback(
     (state = {}) => {
@@ -69,5 +72,5 @@ export function useSidebarLinkState({
     [isMobile, router.query.teamId]
   );
 
-  return { projectId, runId, reportId, getLinkProps };
+  return { projectId, runId, reportId, reportIds, getLinkProps };
 }

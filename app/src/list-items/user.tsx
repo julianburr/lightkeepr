@@ -11,8 +11,9 @@ import { Avatar } from "src/components/avatar";
 import { ListItem } from "src/components/list";
 import { Spacer } from "src/components/spacer";
 import { P, Small } from "src/components/text";
+import { useConfirmationDialog } from "src/dialogs/confirm";
+import { useErrorDialog } from "src/dialogs/error";
 import { useAuthUser } from "src/hooks/use-auth-user";
-import { useConfirmationDialog, useErrorDialog } from "src/hooks/use-dialog";
 import { useToast } from "src/hooks/use-toast";
 
 const db = getFirestore();
