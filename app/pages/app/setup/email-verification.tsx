@@ -1,7 +1,5 @@
 import "src/utils/firebase";
 
-import { useRouter } from "next/router";
-
 import { Auth } from "src/components/auth";
 import { Button } from "src/components/button";
 import { ButtonBar } from "src/components/button-bar";
@@ -12,29 +10,7 @@ import { SetupLayout } from "src/layouts/setup";
 import { api } from "src/utils/api-client";
 
 export default function EmailVerificationSetup() {
-  const router = useRouter();
   const authUser = useAuthUser();
-
-  // Verify email address if `vid` query is in current url
-  if (authUser.uid && router.query.vid) {
-    const promise = api.post("/api/account/verify-email", {
-      userUid: authUser.uid,
-      email: authUser.email,
-      vid: router.query.vid,
-    });
-
-    promise
-      .then((res) => {
-        authUser.setAuthUser(res.data);
-        router.replace(router.pathname);
-      })
-      .catch((e) => {
-        console.error(e);
-        router.replace(router.pathname);
-      });
-
-    throw promise;
-  }
 
   return (
     <Auth>
@@ -44,8 +20,8 @@ export default function EmailVerificationSetup() {
 
         <P>
           We've sent you a verification email to your email address{" "}
-          <b>{authUser.email}</b>. You need to confirm your email address before
-          you can continue.
+          {authUser.email}. You need to confirm your email address before you
+          can continue.
         </P>
 
         <Spacer h="1.2rem" />
@@ -58,6 +34,7 @@ export default function EmailVerificationSetup() {
                 api.post("/api/account/verify-email/send", {
                   email: authUser.email,
                   userUid: authUser.uid,
+                  redirectUrl: `/app/setup/email-verification`,
                 })
               }
             >

@@ -40,12 +40,12 @@ export default createHandler({
 
     // Put together email html
     const title = "Please verify your email address";
+    const url = req.body.redirectUrl
+      ? `${req.headers.origin}${req.body.redirectUrl}`
+      : `${req.headers.origin}/app`;
 
     const { html } = render(
-      <VerifyEmail
-        title={title}
-        verifyUrl={`${req.headers.origin}/app/setup/email-verification?vid=${hash}`}
-      />,
+      <VerifyEmail title={title} verifyUrl={`${url}?vid=${hash}`} />,
       { validationLevel: "soft" }
     );
 

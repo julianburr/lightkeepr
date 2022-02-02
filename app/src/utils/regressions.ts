@@ -36,7 +36,6 @@ export function getRegressions(items: Item[] = []) {
           i.value >= filteredItems[index - 1].value - regression * 0.1 &&
           idx > index
       );
-      console.log({ recovered });
       if (recovered === -1) {
         regressions.push({
           type: "immediate",

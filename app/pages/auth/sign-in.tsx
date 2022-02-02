@@ -95,9 +95,14 @@ export default function SignIn({ isSignUp }: SigninProps) {
   });
 
   if (authUser.uid) {
-    router.replace("/app");
+    router.replace({
+      pathname: "/app",
+      query: router.query.plan ? { plan: router.query.plan } : {},
+    });
     return null;
   }
+
+  const email = use("values").email;
 
   return (
     <AuthLayout>
@@ -189,9 +194,10 @@ export default function SignIn({ isSignUp }: SigninProps) {
         <p>
           Don't have an account yet? No problem, click here to{" "}
           <Link
-            href={`/auth/sign-up${
-              use("values")?.email ? `?email=${use("values")?.email}` : ""
-            }`}
+            href={{
+              pathname: `/auth/sign-up`,
+              query: email ? { email } : {},
+            }}
           >
             <a>sign up</a>
           </Link>

@@ -16,11 +16,14 @@ import { Button } from "src/components/button";
 import { ButtonBar } from "src/components/button-bar";
 import { Field } from "src/components/field";
 import { FormGrid } from "src/components/form-grid";
+import { PlanSelectInput } from "src/components/plan-select-input";
 import { Spacer } from "src/components/spacer";
 import { EmailInput, TextInput } from "src/components/text-input";
+import { env } from "src/env";
 import { useAuthUser } from "src/hooks/use-auth-user";
 import { AppLayout } from "src/layouts/app";
 import { api } from "src/utils/api-client";
+import { stripeClient } from "src/utils/stripe";
 
 const db = getFirestore();
 
@@ -34,13 +37,17 @@ export default function NewTeam() {
   const authUser = useAuthUser();
 
   const { form, use } = useForm({
-    defaultValues: { name: "", billingEmail: authUser.user?.id },
+    defaultValues: {
+      name: "",
+      billingEmail: authUser.user?.email,
+      plan: "free",
+    },
     onSubmit: async (values) => {
       const userRef = doc(db, "users", authUser.user!.id);
       const team = await addDoc(collection(db, "teams"), {
         name: values.name,
         billingEmail: values.billingEmail,
-        plan: "free",
+        plan: values.plan,
         createdAt: new Date(),
         createdBy: userRef,
         users: [authUser.uid],
@@ -59,7 +66,24 @@ export default function NewTeam() {
         stripeCustomerId: stripeCustomer.data?.id,
       });
 
-      router.push(`/app/${team.id}`);
+      if (values.plan === "premium") {
+        const session: any = await api
+          .post(
+            `/api/stripe/customers/${stripeCustomer.data?.id}` +
+              `/subscriptions/session`,
+            {
+              teamId: team.id,
+              priceId: env.stripe.priceId.premium.monthly,
+              redirectUrl: `/app/${team.id}`,
+            }
+          )
+          .then(({ data }) => data);
+
+        const stripe = await stripeClient();
+        await stripe.redirectToCheckout({ sessionId: session?.id });
+      } else {
+        router.push(`/app/${team.id}`);
+      }
     },
   });
 
@@ -77,6 +101,12 @@ export default function NewTeam() {
                 name="billingEmail"
                 label="Billing email"
                 Input={EmailInput}
+                required
+              />
+              <Field
+                name="plan"
+                label="Plan"
+                Input={PlanSelectInput}
                 required
               />
               <ButtonBar
