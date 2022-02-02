@@ -1,4 +1,5 @@
-import { SetStateAction, ReactNode, Dispatch } from "react";
+import Link from "next/link";
+import { SetStateAction, ReactNode, Dispatch, ComponentProps } from "react";
 import styled from "styled-components";
 
 import { CoreButton } from "src/components/button";
@@ -17,7 +18,7 @@ const Container = styled(CoreButton)<{ intent?: string }>`
     flex-direction: row;
     align-items: center;
     justify-content: flex-start;
-    line-height: 1.1;
+    line-height: 1.2;
     background: transparent;
     transition: background 0.2s;
     align-self: inherit;
@@ -46,12 +47,12 @@ const Container = styled(CoreButton)<{ intent?: string }>`
 const Inner = styled.div`
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: flex-start;
 `;
 
 const WrapIcon = styled.div`
-  height: 1.1em;
-  width: 1.1em;
+  height: 1.2em;
+  width: 1.2em;
   margin: 0 0.6rem 0 0;
   display: flex;
   flex-direction: row;
@@ -71,10 +72,7 @@ const WrapSelectable = styled(WrapIcon)``;
 const WrapText = styled.div`
   display: flex;
   flex-direction: column;
-
-  ${Small} {
-    margin: 0.2rem 0 0;
-  }
+  gap: 0.3rem;
 `;
 
 export type MenuItemObj = {
@@ -82,7 +80,7 @@ export type MenuItemObj = {
   icon?: ReactNode;
   label: ReactNode;
   onClick?: (e: any) => void | Promise<void>;
-  href?: string;
+  href?: ComponentProps<typeof Link>["href"];
   description?: ReactNode;
   selectable?: boolean;
   selected?: boolean;

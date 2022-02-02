@@ -1,4 +1,4 @@
-import { Ref } from "react";
+import { ReactNode, Ref } from "react";
 import { ComponentProps, forwardRef } from "react";
 import styled from "styled-components";
 
@@ -26,6 +26,7 @@ const Container = styled(({ as: As = "div", color, background, ...props }) => (
   align-items: center;
   justify-content: center;
   font-family: "Playfair Display";
+  position: relative;
   background: ${(props) =>
     props.background || "var(--sol--container-ghost-hover-background)"};
   color: ${(props) =>
@@ -37,19 +38,27 @@ const Container = styled(({ as: As = "div", color, background, ...props }) => (
   }
 `;
 
+const WrapBadge = styled.span`
+  position: absolute;
+  top: -0.4rem;
+  right: -0.4rem;
+`;
+
 type AvatarProps = ComponentProps<typeof Container> & {
   background: string;
   color: string;
   name?: string;
+  badge?: ReactNode;
 };
 
 export const Avatar = forwardRef(function Avatar(
-  { children, name, ...props }: AvatarProps,
+  { children, name, badge, ...props }: AvatarProps,
   ref: Ref<any>
 ) {
   return (
     <Container ref={ref} {...props}>
       {name ? initials(name) : children}
+      {badge && <WrapBadge>{badge}</WrapBadge>}
     </Container>
   );
 });

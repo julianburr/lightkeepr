@@ -89,7 +89,7 @@ const FileName = styled.span`
 `;
 
 const Pre = styled.pre`
-  font-family: "Source Code Pro", Consolas, Monaco, "Andale Mono", "Ubuntu Mono";
+  font-family: var(--sol--typography-family-mono);
   background: var(--sol--palette-sand-200);
 
   &:last-child {

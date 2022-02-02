@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ComponentType, PropsWithChildren } from "react";
+import { ComponentProps } from "react";
 import styled from "styled-components";
 
 import { Button } from "src/components/button";
@@ -119,7 +120,7 @@ export function List({
 }
 
 type ListItemProps = PropsWithChildren<{
-  href?: string;
+  href?: ComponentProps<typeof Link>["href"];
   onClick?: (e: any) => void | Promise<void>;
   disabled?: boolean;
 }>;

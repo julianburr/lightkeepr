@@ -3,7 +3,7 @@ import "src/utils/firebase";
 import { getAuth } from "firebase/auth";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useState } from "react";
 import styled from "styled-components";
 
 import { AccountActionMenu } from "src/action-menus/account";
@@ -15,9 +15,9 @@ import { Suspense } from "src/components/suspense";
 import { Tooltip } from "src/components/tooltip";
 import { TopBar } from "src/components/top-bar";
 import { useAuthUser } from "src/hooks/use-auth-user";
+import { NotificationsButton } from "src/popouts/notifications";
 import { AppSidebar } from "src/sidebars/app";
 
-import BellSvg from "src/assets/icons/bell.svg";
 import GridSvg from "src/assets/icons/grid.svg";
 import LifeBuoySvg from "src/assets/icons/life-buoy.svg";
 import MenuSvg from "src/assets/icons/menu.svg";
@@ -80,6 +80,8 @@ export function AppLayout({ children }: AppLayoutProps) {
   const router = useRouter();
   const authUser = useAuthUser();
 
+  const [count, setCount] = useState(0);
+
   return (
     <Container>
       <TopBar
@@ -98,12 +100,17 @@ export function AppLayout({ children }: AppLayoutProps) {
               <Tooltip content="Search (cmd+k)">
                 {(props) => <Button {...props} icon={<SearchSvg />} />}
               </Tooltip>
-              <Tooltip content="Notifications">
-                {(props) => <Button {...props} icon={<BellSvg />} />}
-              </Tooltip>
+
+              <NotificationsButton />
+
               <Tooltip content="Documentation">
                 {(props) => (
-                  <Button {...props} href="/docs" icon={<LifeBuoySvg />} />
+                  <Button
+                    {...props}
+                    href="/docs"
+                    target="_blank"
+                    icon={<LifeBuoySvg />}
+                  />
                 )}
               </Tooltip>
 

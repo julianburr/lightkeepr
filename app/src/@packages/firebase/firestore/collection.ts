@@ -72,7 +72,7 @@ export function useCollection(query: any, options: UseCollectionOptions) {
 
   if (options?.suspense === false) {
     return {
-      data: cacheItem?.item,
+      data: cacheItem?.data,
       loading: cacheItem?.data === undefined && cacheItem?.promise,
     };
   }

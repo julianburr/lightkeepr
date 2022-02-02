@@ -56,6 +56,7 @@ export function BaseSidebar({ getLinkProps }: BaseSidebarProps) {
       label: "Documentation",
       icon: <LifeBuoySvg />,
       href: `/docs`,
+      target: "_blank",
     },
 
     // Team menu items

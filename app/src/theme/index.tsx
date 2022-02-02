@@ -33,7 +33,7 @@ export const GlobalStyles = createGlobalStyle`
   body {
     margin: 0;
     padding: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-family: var(--sol--typography-family-default);
     font-weight: 400;
     font-size: 1.4rem;
     line-height: 1.4;
@@ -72,7 +72,7 @@ export const GlobalStyles = createGlobalStyle`
   h1, h2, h3, h4 {
     line-height: 1.05;
     margin: 0;
-    font-family: "Playfair Display";
+    font-family: var(--sol--typography-family-heading);
 
     svg {
       display: inline-flex;
