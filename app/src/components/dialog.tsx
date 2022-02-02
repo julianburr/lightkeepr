@@ -8,17 +8,12 @@ import {
 } from "react";
 import { Ref } from "react";
 import { useState } from "react";
-import { ComponentProps } from "react";
 import { createPortal } from "react-dom";
 import styled from "styled-components";
 
 import { DialogMetaContext } from "src/hooks/use-dialog";
 
 import CrossSvg from "src/assets/icons/x.svg";
-
-import { Button } from "./button";
-import { ButtonBar } from "./button-bar";
-import { P } from "./text";
 
 const Backdrop = styled.div`
   position: fixed;
@@ -57,6 +52,14 @@ const Container = styled.div<{ width?: string; intent?: "error" | "warning" }>`
     background: ${(props) =>
       `var(--sol--container-${props.intent}-background)`};
     z-index: 20;
+  }
+
+  h2 {
+    font-size: 1.3em;
+  }
+
+  h3 {
+    font-size: 1.1em;
   }
 `;
 
@@ -264,87 +267,5 @@ export function Dialog({
         window.document.body
       )}
     </>
-  );
-}
-
-type ErrorDialogProps = {
-  message: ReactNode;
-  stack?: any;
-  onClose?: () => void;
-};
-
-export function ErrorDialog({ message, stack, onClose }: ErrorDialogProps) {
-  return (
-    <Dialog
-      intent="error"
-      width="38rem"
-      actions={
-        <ButtonBar
-          right={
-            <Button intent="ghost" onClick={onClose}>
-              Got it
-            </Button>
-          }
-        />
-      }
-    >
-      <P>{message}</P>
-    </Dialog>
-  );
-}
-
-type ConfirmationDialogProps = {
-  message: ReactNode;
-  cancelLabel?: ReactNode;
-  confirmLabel?: ReactNode;
-  intent?: ComponentProps<typeof Button>["intent"];
-  onConfirm?: () => any;
-  onResponse?: (response: boolean) => any;
-  onClose?: () => void;
-};
-
-export function ConfirmationDialog({
-  message,
-  cancelLabel = "Cancel",
-  confirmLabel = "Confirm",
-  intent = "primary",
-  onConfirm,
-  onResponse,
-  onClose,
-}: ConfirmationDialogProps) {
-  return (
-    <Dialog
-      width="38rem"
-      actions={
-        <ButtonBar
-          right={
-            <>
-              <Button
-                intent="ghost"
-                onClick={async () => {
-                  await onResponse?.(false);
-                  await onClose?.();
-                }}
-              >
-                {cancelLabel}
-              </Button>
-              <Button
-                intent={intent}
-                autoFocus
-                onClick={async () => {
-                  await onResponse?.(true);
-                  await onConfirm?.();
-                  await onClose?.();
-                }}
-              >
-                {confirmLabel}
-              </Button>
-            </>
-          }
-        />
-      }
-    >
-      <P>{message}</P>
-    </Dialog>
   );
 }

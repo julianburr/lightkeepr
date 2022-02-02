@@ -5,13 +5,13 @@ import { Spacer } from "src/components/spacer";
 import { GroupHeading, P } from "src/components/text";
 import { OpportunityListItem } from "src/list-items/opportunity";
 
-type OpportunitiesSummaryProps = {
+type OpportunitiesOverviewProps = {
   report: any;
   pastReports: any[];
   data?: any;
 };
 
-export function OpportunitiesSummary({ data }: OpportunitiesSummaryProps) {
+export function OpportunitiesOverview({ data }: OpportunitiesOverviewProps) {
   // Performance
   const performance = useMemo(
     () =>

@@ -3,10 +3,10 @@ import "src/utils/node/firebase";
 import { createHash } from "crypto";
 
 import sgMail from "@sendgrid/mail";
-import { VerifyEmail } from "emails/verify";
 import { getAuth } from "firebase-admin/auth";
 import { render } from "mjml-react";
 
+import { VerifyEmail } from "src/emails/verify";
 import { env } from "src/env";
 import { createHandler } from "src/utils/node/api";
 

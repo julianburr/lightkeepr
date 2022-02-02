@@ -19,17 +19,17 @@ const Content = styled.div`
 
 // TODO: make configurable
 const audits = AUDITS.filter(
-  (audit) => audit.category === "network" && audit.default
+  (audit) => audit.category === "performance" && audit.default
 );
 
-type NetworkSummaryProps = {
+type PerformanceOverviewProps = {
   report: any;
   pastReports: any[];
   data?: any;
 };
 
-export function NetworkSummary({ pastReports, data }: NetworkSummaryProps) {
-  const items = useMemo<{ [key: string]: any[] }>(
+export function PerformanceOverview({ pastReports }: PerformanceOverviewProps) {
+  const items = useMemo(
     () =>
       pastReports
         ?.slice?.()
@@ -45,8 +45,8 @@ export function NetworkSummary({ pastReports, data }: NetworkSummaryProps) {
                 date: report.createdAt
                   ? dayjs.unix(report.createdAt.seconds)
                   : null,
-                audit,
                 report,
+                audit,
               });
             });
             return all;
@@ -64,11 +64,10 @@ export function NetworkSummary({ pastReports, data }: NetworkSummaryProps) {
   return (
     <>
       <Content>
-        <h3>Network metrices</h3>
+        <h3>Performance metrices</h3>
         <Small grey>
-          These metrices show relevant information about network requests and
-          network traffic. High amount of network requests how long network
-          loading times can cause reduction in user experience.
+          These are more granular performance specific metrices, showing
+          specific timings that impact the users experience.
         </Small>
       </Content>
 

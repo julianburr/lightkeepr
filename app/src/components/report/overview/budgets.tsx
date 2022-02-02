@@ -3,13 +3,13 @@ import { Spacer } from "src/components/spacer";
 import { GroupHeading } from "src/components/text";
 import { BudgetListItem } from "src/list-items/budget";
 
-type BudgetsSummaryProps = {
+type BudgetsOverviewProps = {
   report: any;
   pastReports: any[];
   data?: any;
 };
 
-export function BudgetsSummary({ data }: BudgetsSummaryProps) {
+export function BudgetsOverview({ data }: BudgetsOverviewProps) {
   const audits = data.report.audits;
 
   const performanceBudgets = audits?.["performance-budget"]?.details?.items;

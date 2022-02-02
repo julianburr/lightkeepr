@@ -16,6 +16,7 @@ import { TeamSelectInput } from "src/selects/team";
 import ArrowLeftSvg from "src/assets/icons/arrow-left.svg";
 
 import { BaseSidebar } from "./base";
+import { CompareSidebar } from "./compare";
 import { ProjectSidebar } from "./project";
 import { ReportSidebar } from "./report";
 import { RunSidebar } from "./run";
@@ -83,11 +84,16 @@ function Fallback({ active, isMobile, menuRef }: ContentProps) {
 }
 
 function Content({ active, isMobile, menuRef }: ContentProps) {
-  const { projectId, runId, reportId, getLinkProps } = useSidebarLinkState({
-    active,
-    isMobile,
-    menuRef,
-  });
+  const { projectId, runId, reportId, reportIds, getLinkProps } =
+    useSidebarLinkState({
+      active,
+      isMobile,
+      menuRef,
+    });
+
+  if (reportIds) {
+    return <CompareSidebar reportIds={reportIds} getLinkProps={getLinkProps} />;
+  }
 
   if (reportId) {
     return <ReportSidebar reportId={reportId} getLinkProps={getLinkProps} />;

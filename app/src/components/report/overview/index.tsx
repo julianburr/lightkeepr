@@ -15,22 +15,23 @@ import { useSuspense } from "src/@packages/suspense";
 import { Loader } from "src/components/loader";
 import { Spacer } from "src/components/spacer";
 import { Suspense } from "src/components/suspense";
+import { Heading } from "src/components/text";
 import { api } from "src/utils/api-client";
 
-import { BudgetsSummary } from "./budgets";
-import { NetworkSummary } from "./network";
-import { OpportunitiesSummary } from "./opportunities";
-import { PerformanceSummary } from "./performance";
-import { ScoresSummary } from "./scores";
-import { UserTimingsSummary } from "./user-timings";
+import { BudgetsOverview } from "./budgets";
+import { NetworkOverview } from "./network";
+import { OpportunitiesOverview } from "./opportunities";
+import { PerformanceOverview } from "./performance";
+import { ScoresOverview } from "./scores";
+import { UserTimingsOverview } from "./user-timings";
 
 const db = getFirestore();
 
-type ReportSummaryProps = {
+type ReportOverviewProps = {
   reportId: string;
 };
 
-function Summary({ reportId }: ReportSummaryProps) {
+function Content({ reportId }: ReportOverviewProps) {
   const report = useDocument(doc(db, "reports", reportId!));
 
   const projectRef = doc(db, "projects", report.project.id);
@@ -63,8 +64,8 @@ function Summary({ reportId }: ReportSummaryProps) {
         !!data.report.audits?.["performance-budget"]?.details?.items
           ?.length && (
           <>
-            <h2>Budgets</h2>
-            <BudgetsSummary
+            <Heading level={2}>Budgets</Heading>
+            <BudgetsOverview
               report={report}
               pastReports={pastReports}
               data={data}
@@ -74,8 +75,8 @@ function Summary({ reportId }: ReportSummaryProps) {
           </>
         )}
 
-      <h2>Opportunities</h2>
-      <OpportunitiesSummary
+      <Heading level={2}>Opportunities</Heading>
+      <OpportunitiesOverview
         report={report}
         pastReports={pastReports}
         data={data}
@@ -83,22 +84,22 @@ function Summary({ reportId }: ReportSummaryProps) {
 
       <Spacer h="3.2rem" />
 
-      <h2>Trends &amp; regressions</h2>
+      <Heading level={2}>Trends &amp; regressions</Heading>
       <Spacer h="2.4rem" />
-      <ScoresSummary report={report} pastReports={pastReports} data={data} />
+      <ScoresOverview report={report} pastReports={pastReports} data={data} />
 
       <Spacer h="3.2rem" />
-      <PerformanceSummary
+      <PerformanceOverview
         report={report}
         pastReports={pastReports}
         data={data}
       />
 
       <Spacer h="3.2rem" />
-      <NetworkSummary report={report} pastReports={pastReports} data={data} />
+      <NetworkOverview report={report} pastReports={pastReports} data={data} />
 
       <Spacer h="3.2rem" />
-      <UserTimingsSummary
+      <UserTimingsOverview
         report={report}
         pastReports={pastReports}
         data={data}
@@ -107,12 +108,10 @@ function Summary({ reportId }: ReportSummaryProps) {
   );
 }
 
-export function ReportSummary({ reportId }: ReportSummaryProps) {
+export function ReportOverview({ reportId }: ReportOverviewProps) {
   return (
-    <>
-      <Suspense fallback={<Loader message="Loading past reports..." />}>
-        <Summary reportId={reportId} />
-      </Suspense>
-    </>
+    <Suspense fallback={<Loader message="Loading past reports..." />}>
+      <Content reportId={reportId} />
+    </Suspense>
   );
 }
