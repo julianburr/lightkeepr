@@ -9,10 +9,10 @@ import { Highlight } from "src/components/homepage/highlight";
 import { Section, SectionContent } from "src/components/homepage/section";
 import { WebsiteLayout } from "src/layouts/website";
 
-import ChatSvg from "src/assets/icons/website/bubble-chat.svg";
+import BubbleSvg from "src/assets/icons/website/bubble-chat.svg";
 import BulbSvg from "src/assets/icons/website/bulb.svg";
 import CompareSvg from "src/assets/icons/website/divide.svg";
-import ReadSvg from "src/assets/icons/website/read.svg";
+import ExtensionSvg from "src/assets/icons/website/extension.svg";
 import UsersSvg from "src/assets/icons/website/rocket.svg";
 import BellSvg from "src/assets/icons/website/snooze.svg";
 
@@ -119,7 +119,7 @@ const Feature = styled.div`
   background: var(--sol--palette-sand-50);
   text-align: left;
   border-radius: 0.8rem;
-  padding: 2.8rem 2.4rem;
+  padding: 2.8rem 2.4rem 3.2rem;
 
   @media (min-width: 800px) {
     padding: 3.6rem 3.2rem;
@@ -205,23 +205,21 @@ export default function HomePage() {
   return (
     <WebsiteLayout>
       <Head>
-        <title>
-          Lightkeepr — Keeping track & taking advantage of Lighthouse reports
-          made easy
-        </title>
+        <title>Lightkeepr — Get the most value out of Lighthouse</title>
       </Head>
 
-      <Hero />
+      <Hero>Get the most value out of Lighthouse</Hero>
 
       <Section>
         <SectionContent>
           <h2>
-            <Highlight>Easy &amp; quick</Highlight> to get started
+            Easily <Highlight>consume</Highlight> and{" "}
+            <Highlight>analyse</Highlight> your Lighthouse reports
           </h2>
           <p>
-            Simply create a free Lightkeepr account and you're ready to go. You
-            can send reports from your existing workflows, no additional setup
-            needed.
+            Keep track of your scores over time. The intuitive UI helps you to
+            quickly see potential opportunities for improvements and work
+            together with your team to action them.
           </p>
         </SectionContent>
         <Screenshots />
@@ -229,76 +227,14 @@ export default function HomePage() {
 
       <Section>
         <SectionContent>
-          <h2>More than just performance</h2>
-          <p>
-            Lighthouse has become synonoumous with performance monitoring. But
-            it's actually so much more. Keep track of{" "}
-            <Highlight>accessibility</Highlight>,{" "}
-            <Highlight>best practices</Highlight> in the web industrie,{" "}
-            <Highlight>search engine optimisation</Highlight> and{" "}
-            <Highlight>PWA</Highlight> optimisations. And get quick optimisation
-            suggestions relevant to your reports.
-          </p>
-        </SectionContent>
-        <Scores>
-          <Score
-            onClick={() => setAuditCategory("performance")}
-            className={classNames({ active: auditCategory === "performance" })}
-          >
-            Performance
-          </Score>
-          <Score
-            onClick={() => setAuditCategory("accessibility")}
-            className={classNames({
-              active: auditCategory === "accessibility",
-            })}
-          >
-            Accessibility
-          </Score>
-          <Score
-            onClick={() => setAuditCategory("best-practices")}
-            className={classNames({
-              active: auditCategory === "best-practices",
-            })}
-          >
-            Best practices
-          </Score>
-          <Score
-            onClick={() => setAuditCategory("seo")}
-            className={classNames({ active: auditCategory === "seo" })}
-          >
-            SEO
-          </Score>
-          <Score
-            onClick={() => setAuditCategory("pwa")}
-            className={classNames({ active: auditCategory === "pwa" })}
-          >
-            PWA
-          </Score>
-        </Scores>
-
-        <Audits>
-          {auditCategory &&
-            auditExamples[auditCategory] &&
-            auditExamples[auditCategory]?.map?.((label) => (
-              <Audit key={label} rotate={random(-2, 2)}>
-                {label}
-              </Audit>
-            ))}
-        </Audits>
-      </Section>
-
-      <Section>
-        <SectionContent>
           <h2>
-            From <Highlight>developers</Highlight> for developers
+            <Highlight>Quick &amp; easy</Highlight> to get started
           </h2>
           <p>
-            Lightkeepr was created from developers for developers. It's meant to
-            fix the problems encountered when having to do all of this manually.
-            Our helper libraries will make it easy for you to get the reports
-            coming in. You're working with Node, Cypress, or prefer CLI tools?
-            No problem! Lightkeepr got you covered.
+            Lighthouse is made from developers for developers. Simply create a
+            free account, set up your project, and you're ready to start sending
+            reports. Our CLI tools and helper libraries make integration into
+            your existing workflows a breeze.
           </p>
         </SectionContent>
         <CodeExamples>
@@ -360,72 +296,121 @@ export default function HomePage() {
 
       <Section>
         <SectionContent>
-          <h2>
-            <Highlight>Automate</Highlight> your Lighthouse reports
-          </h2>
+          <h2>More than just performance</h2>
           <p>
-            Manually collecting, analysing and comparing Lighthouse reports is
-            painful and impossible at scale. Automate the process with
-            Lightkeepr and consume the information through its intuitive UI.
+            Lighthouse has become synonymous with performance auditing, but it's
+            actually so much more. Get insights into your sites
+            <Highlight>accessibility</Highlight>, current{" "}
+            <Highlight>best practices</Highlight> in the web industry,{" "}
+            <Highlight>search engine optimisation</Highlight> and{" "}
+            <Highlight>progressive web app</Highlight> setup and improvements.
           </p>
         </SectionContent>
+        <Scores>
+          <Score
+            onClick={() => setAuditCategory("performance")}
+            className={classNames({ active: auditCategory === "performance" })}
+          >
+            Performance
+          </Score>
+          <Score
+            onClick={() => setAuditCategory("accessibility")}
+            className={classNames({
+              active: auditCategory === "accessibility",
+            })}
+          >
+            Accessibility
+          </Score>
+          <Score
+            onClick={() => setAuditCategory("best-practices")}
+            className={classNames({
+              active: auditCategory === "best-practices",
+            })}
+          >
+            Best practices
+          </Score>
+          <Score
+            onClick={() => setAuditCategory("seo")}
+            className={classNames({ active: auditCategory === "seo" })}
+          >
+            SEO
+          </Score>
+          <Score
+            onClick={() => setAuditCategory("pwa")}
+            className={classNames({ active: auditCategory === "pwa" })}
+          >
+            PWA
+          </Score>
+        </Scores>
+
+        <Audits>
+          {auditCategory &&
+            auditExamples[auditCategory] &&
+            auditExamples[auditCategory]?.map?.((label) => (
+              <Audit key={label} rotate={random(-2, 2)}>
+                {label}
+              </Audit>
+            ))}
+        </Audits>
       </Section>
 
       <Section id="features">
         <SectionContent>
-          <h2>Some other features...</h2>
+          <h2>Some more features...</h2>
         </SectionContent>
         <Features>
           <Feature>
             <UsersSvg />
             <h3>Teams &amp; projects</h3>
             <p>
-              Lightkeepr let's you manage your projects with ease. Invite all
-              the team members to view and analyse the Lighthouse reports.
+              Keep things organised by setting up teams and projects, invite
+              your team members and help them easily find the information they
+              need.
             </p>
           </Feature>
           <Feature>
-            <ChatSvg />
-            <h3>Collaborate &amp; integrate</h3>
+            <CompareSvg />
+            <h3>View &amp; compare</h3>
             <p>
-              Add comments to specific audits and integrate with your favorite
-              tools like Slack or JIRA to make the process as painless as
-              seemless.
-            </p>
-          </Feature>
-          <Feature>
-            <BellSvg />
-            <h3>You define what matters</h3>
-            <p>
-              Stay up-to-date with relevant configurable notifications. Want to
-              know when scores go down? When reports fail the set up budgets? No
-              problem with Lightkeepr.
+              Not only keep track of your scores over time, but also easily
+              compare reports to see what audits changed that might have caused
+              changes. Finding and fixing regressions was never easier.
             </p>
           </Feature>
           <Feature>
             <BulbSvg />
             <h3>Smart summaries</h3>
             <p>
-              Besides the whole content of the Lighthouse reports, Lightkeepr
-              also tries to give you a relevant summary with optimisation
-              suggestions.
+              Beyond the reports themselves, Lightkeepr will try to pull out the
+              biggest opportunities and most relevant metrices to give you smart
+              and more importantly actionable summaries.
             </p>
           </Feature>
           <Feature>
-            <CompareSvg />
-            <h3>Compare reports</h3>
+            <BubbleSvg />
+            <h3>Collaborate</h3>
             <p>
-              Easily compare reports to previous ones and quickly find
-              differences in the audits and potential causes for regressions.
+              Work together, add comments to reports, specific audits or changes
+              in your score history to make it easier for the team to figure out
+              what the right next steps are.
             </p>
           </Feature>
           <Feature>
-            <ReadSvg />
-            <h3>Be in control</h3>
+            <ExtensionSvg />
+            <h3>Integrate</h3>
             <p>
-              Lightkeepr makes it an ease to review failed reports, manually
-              check why they failed and approve them if the changes are
-              expected.
+              Lightkeepr is meant to fit into your workflow. With integrations
+              for popular tools like Slack, Jira, etc., making it part of your
+              usual processes and tools becomes easy.
+            </p>
+          </Feature>
+          <Feature>
+            <BellSvg />
+            <h3>Stay up-to-date</h3>
+            <p>
+              Lightkeepr lets you define what you care about. Easily set up
+              notifications the way it makes sense for your specific role and
+              use case and stay on top of what's going on.
             </p>
           </Feature>
         </Features>

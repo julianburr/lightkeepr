@@ -1,3 +1,4 @@
+import { PropsWithChildren } from "react";
 import styled from "styled-components";
 
 import LighthouseSvg from "src/assets/illustrations/lighthouse.svg";
@@ -79,8 +80,11 @@ const Content = styled.div`
   flex-direction: column;
   align-items: flex-start;
 
-  @media (min-width: 1050px) {
+  @media (min-width: 800px) {
     align-items: flex-end;
+  }
+
+  @media (min-width: 1050px) {
     padding: 14rem 2.4rem 37rem;
   }
 `;
@@ -92,21 +96,21 @@ const Heading = styled.h1`
   margin: 0;
   padding: 0;
   width: 100%;
-  max-width: 55rem;
+  max-width: 36rem;
 
   @media (min-width: 800px) {
     font-size: 5.2rem;
-    max-width: 62rem;
+    max-width: 50rem;
+    text-align: right;
   }
 
   @media (min-width: 1050px) {
     font-size: 6.2rem;
-    max-width: 72rem;
-    text-align: right;
+    max-width: 59rem;
   }
 `;
 
-export function Hero() {
+export function Hero({ children }: PropsWithChildren<Record<never, any>>) {
   return (
     <Container>
       <Ocean />
@@ -116,9 +120,7 @@ export function Hero() {
       <Lighthouse />
 
       <Content>
-        <Heading>
-          Keeping track &amp; taking advantage of Lighthouse reports made easy
-        </Heading>
+        <Heading>{children}</Heading>
       </Content>
     </Container>
   );
