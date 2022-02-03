@@ -354,6 +354,20 @@ export default function HomePage() {
         </Audits>
       </Section>
 
+      <Section>
+        <SectionContent>
+          <h2>
+            Detect changes and <Highlight>manually review</Highlight> any
+            regressions
+          </h2>
+          <p>
+            Lightkeepr automatically detects regressions and checks performance
+            budgets if defined. You can also set project specific targets. When
+            reports fail, easily review and manually approve them.
+          </p>
+        </SectionContent>
+      </Section>
+
       <Section id="features">
         <SectionContent>
           <h2>Some more features...</h2>
