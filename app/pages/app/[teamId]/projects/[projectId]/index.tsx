@@ -23,6 +23,7 @@ import { HelpBox } from "src/components/help-box";
 import { Hint } from "src/components/hint";
 import { List } from "src/components/list";
 import { Loader } from "src/components/loader";
+import { ProjectActions } from "src/components/project/actions";
 import { Spacer } from "src/components/spacer";
 import { Suspense } from "src/components/suspense";
 import { GroupHeading, Heading, P, Small } from "src/components/text";
@@ -81,7 +82,10 @@ function Content() {
   if (!runs?.length) {
     return (
       <>
-        <Heading level={1}>{project.name}</Heading>
+        <ButtonBar
+          left={<Heading level={1}>{project.name}</Heading>}
+          right={<ProjectActions data={project} />}
+        />
         <Spacer h="1.8rem" />
         <HelpBox>
           <Heading level={2}>Get started</Heading>
@@ -157,7 +161,10 @@ function Content() {
 
   return (
     <>
-      <Heading level={1}>{project.name}</Heading>
+      <ButtonBar
+        left={<Heading level={1}>{project.name}</Heading>}
+        right={<ProjectActions data={project} />}
+      />
       <Spacer h="1.8rem" />
 
       {runs?.[0] && !runs[0].commitMessage && (

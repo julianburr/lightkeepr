@@ -244,6 +244,7 @@ export default createHandler({
       statusReasons.push("budget");
     }
 
+    const now = Timestamp.fromDate(new Date());
     const reportName = fields.name || fields.url || null;
 
     const ref = await db.collection("reports").add({
@@ -254,7 +255,7 @@ export default createHandler({
       url: fields.url || null,
       name: reportName,
       type: fields.type || null,
-      createdAt: Timestamp.fromDate(new Date()),
+      createdAt: now,
       meta,
       summary,
       audits,
@@ -272,7 +273,10 @@ export default createHandler({
       failedBudgets,
       failedTargets,
     });
-    const report = await ref.get();
+
+    const report: any = await ref
+      .get()
+      .then((snap) => ({ id: snap.id, ...snap.data() }));
 
     // Update project to have list of unique report names cheaply available
     if (!project.pages?.includes(reportName)) {
@@ -285,6 +289,35 @@ export default createHandler({
     const options = { destination: `${report.id}.brotli` };
     await bucket.upload(files.file.filepath, options);
 
-    return res.status(200).json({ id: report.id, ...report.data() });
+    if (status === "failed") {
+      // TODO: check if it's possible to use queue workers with vercel somehow
+      // Notify all users that subscribed to this project
+      const usersSnap = await db
+        .collection("users")
+        .where("subscriptions", "array-contains", projectRef)
+        .get();
+
+      const description =
+        `The report "${report.name}" failed in the ` +
+        `project "${project.name}"`;
+
+      usersSnap.forEach((u) => {
+        db.collection("notifications").add({
+          title: `Report failed`,
+          description,
+          href: `/app/${project.team.id}/reports/${report.id}`,
+          seen: false,
+          createdAt: now,
+          user: db.collection("users").doc(u.id),
+          team: teamRef,
+          type: "failed-report",
+          meta: {
+            report: db.collection("reports").doc(report.id),
+          },
+        });
+      });
+    }
+
+    return res.status(200).json(report);
   },
 });

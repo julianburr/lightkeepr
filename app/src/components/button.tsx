@@ -103,6 +103,7 @@ const Container = styled(_CoreButton)`
   font-family: "Playfair Display";
   font-size: 1em;
   border-radius: var(--sol--border-radius-s);
+  position: relative;
 
   padding: ${({ icon, size }) =>
     icon
@@ -147,13 +148,21 @@ const Container = styled(_CoreButton)`
   }
 `;
 
+const WrapBadge = styled.span`
+  position: absolute;
+  top: -0.4rem;
+  right: -0.4rem;
+`;
+
 type ButtonProps = ComponentProps<typeof CoreButton> &
   Omit<ContainerProps, "icon"> & {
     icon?: ReactNode;
+    badge?: ReactNode;
+    target?: string;
   };
 
 export const Button = forwardRef(function Button(
-  { children, icon, intent = "secondary", ...props }: ButtonProps,
+  { children, icon, intent = "secondary", badge, ...props }: ButtonProps,
   ref: Ref<any>
 ) {
   return (
@@ -168,6 +177,7 @@ export const Button = forwardRef(function Button(
       >
         {icon}
         {children && <span>{children}</span>}
+        {badge && <WrapBadge>{badge}</WrapBadge>}
       </Container>
     </>
   );

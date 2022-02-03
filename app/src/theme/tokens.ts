@@ -57,6 +57,14 @@ const typography = {
     "3xl": "3.2rem",
   },
 
+  family: {
+    default:
+      `-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, ` +
+      `"Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"`,
+    heading: `"Playfair Display"`,
+    mono: `"Source Code Pro", Consolas, Monaco, "Andale Mono", "Ubuntu Mono"`,
+  },
+
   color: {
     default: color.black,
     grey: palette.grey[500],

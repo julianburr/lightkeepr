@@ -128,7 +128,9 @@ export function Popout({
     ignoreFocus.current = true;
   }, []);
 
-  const handleClick = useCallback(() => {
+  const handleClick = useCallback((e) => {
+    e.preventDefault();
+    e.stopPropagation();
     handleToggle();
   }, []);
 

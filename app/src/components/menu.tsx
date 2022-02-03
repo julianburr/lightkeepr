@@ -81,10 +81,17 @@ const CoreMenuItem = styled((props) => <CoreButton {...props} />)`
 type MenuItemProps = PropsWithChildren<{
   onClick?: (e: any) => void;
   href?: string;
+  target?: string;
   isBacklink?: boolean;
 }>;
 
-function MenuItem({ onClick, href, children, isBacklink }: MenuItemProps) {
+function MenuItem({
+  onClick,
+  href,
+  target,
+  children,
+  isBacklink,
+}: MenuItemProps) {
   const router = useRouter();
 
   if (onClick) {
@@ -101,6 +108,7 @@ function MenuItem({ onClick, href, children, isBacklink }: MenuItemProps) {
   return (
     <CoreMenuItem
       href={href}
+      target={target}
       className={classnames({
         backlink: isBacklink,
         active: href === router.asPath,
@@ -117,6 +125,7 @@ type Item = {
   icon?: ReactNode;
   onClick?: (e: any) => void | Promise<void>;
   href?: string;
+  target?: string;
   mobile?: boolean;
   isBacklink?: boolean;
 };
@@ -160,6 +169,7 @@ export function Menu({ items }: MenuProps) {
               <MenuItem
                 onClick={item.onClick}
                 href={item.href}
+                target={item.target}
                 isBacklink={item.isBacklink}
               >
                 {item.icon}
