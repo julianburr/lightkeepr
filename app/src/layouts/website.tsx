@@ -21,6 +21,13 @@ const Container = styled.div`
   flex-direction: column;
   font-size: 1.6rem;
   font-family: Lato;
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    line-height: 1.2;
+  }
 `;
 
 const StyledTopBar = styled(TopBar)`
