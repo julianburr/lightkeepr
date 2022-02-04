@@ -44,6 +44,7 @@ function Controlled({ Input, name, ...props }: any) {
 
 type FieldProps = {
   id?: string;
+  form?: string;
   name: string;
   label?: ReactNode;
   description?: ReactNode;
@@ -58,6 +59,7 @@ let uuid = 0;
 
 export function Field({
   id = `field--${++uuid}`,
+  form,
   name,
   label,
   description,
@@ -66,7 +68,7 @@ export function Field({
   required,
   showError = true,
 }: FieldProps) {
-  const [fieldProps, { error }] = useControlled(name);
+  const [fieldProps, { error }] = useControlled(name, { formId: form });
 
   return (
     <Container>

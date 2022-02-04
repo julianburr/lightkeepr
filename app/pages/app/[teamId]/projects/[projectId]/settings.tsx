@@ -23,8 +23,8 @@ import { useConfirmationDialog } from "src/dialogs/confirm";
 import { useAuthUser } from "src/hooks/use-auth-user";
 import { useAutoSaveForm } from "src/hooks/use-auto-save-form";
 import { AppLayout } from "src/layouts/app";
-import { generateApiToken } from "src/utils/api-token";
 import { removeUndefined } from "src/utils/format";
+import { generateApiToken } from "src/utils/token";
 
 import RefreshSvg from "src/assets/icons/refresh-cw.svg";
 

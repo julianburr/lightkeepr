@@ -54,7 +54,7 @@ export default createHandler({
     sgMail.setApiKey(env.sendgrid.apiKey);
     const response = await sgMail.send({
       to: req.body.email,
-      from: "Lightkeepr <lightkeepr@julianburr.de>",
+      from: "Lightkeepr <hello@lightkeepr.io>",
       subject: title,
       html,
     });

@@ -23,8 +23,11 @@ function create(baseUrl?: string) {
     url.search = new URLSearchParams(args).toString();
 
     const response = await fetch(url.toString(), _getOptions(options));
-    const data = await response.json();
+    if (response.status === 204) {
+      return { response };
+    }
 
+    const data = await response.json();
     if (response.status >= 400) {
       throw new Error(data.message);
     }
@@ -42,8 +45,11 @@ function create(baseUrl?: string) {
       ...options,
     });
     const response = await fetch(url, opts);
-    const data = await response.json();
+    if (response.status === 204) {
+      return { response };
+    }
 
+    const data = await response.json();
     if (response.status >= 400) {
       throw new Error(data.message);
     }

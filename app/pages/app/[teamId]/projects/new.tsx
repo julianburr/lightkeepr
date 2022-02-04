@@ -14,7 +14,7 @@ import { Spacer } from "src/components/spacer";
 import { TextInput } from "src/components/text-input";
 import { useAuthUser } from "src/hooks/use-auth-user";
 import { AppLayout } from "src/layouts/app";
-import { generateApiToken } from "src/utils/api-token";
+import { generateApiToken } from "src/utils/token";
 
 const db = getFirestore();
 
