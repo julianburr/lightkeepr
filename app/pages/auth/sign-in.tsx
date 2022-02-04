@@ -18,6 +18,7 @@ import { Field } from "src/components/field";
 import { FormGrid } from "src/components/form-grid";
 import { PasswordInput } from "src/components/password-input";
 import { Spacer } from "src/components/spacer";
+import { P } from "src/components/text";
 import { EmailInput } from "src/components/text-input";
 import { useErrorDialog } from "src/dialogs/error";
 import { useAuthUser } from "src/hooks/use-auth-user";
@@ -43,7 +44,16 @@ export default function SignIn({ isSignUp }: SigninProps) {
 
   const [useEmail, setUseEmail] = useState(!!router.query.email);
   const { form, use } = useForm({
-    defaultValues: { email: router.query.email, password: "" },
+    defaultValues: {
+      email: router.query.email,
+      password: "",
+      repeatPassword: "",
+    },
+    validate: (values) => {
+      if (isSignUp && values.password !== values.repeatPassword) {
+        return { repeatPassword: "Passwords need to match" };
+      }
+    },
     onSubmit: async (values) => {
       try {
         if (isSignUp) {
@@ -170,6 +180,10 @@ export default function SignIn({ isSignUp }: SigninProps) {
               </Button>
             </FormGrid>
           </form>
+
+          <P>
+            <Link href="/auth/forgot-password">Forgot password?</Link>
+          </P>
         </>
       ) : (
         <Button
