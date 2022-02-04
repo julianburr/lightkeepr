@@ -6,12 +6,13 @@ import { Storage } from "@google-cloud/storage";
 import createCompress from "compress-brotli";
 import { getFirestore, Timestamp } from "firebase-admin/firestore";
 import formidable from "formidable";
-import credentials from "google-service-account.json";
 import { NextApiRequest } from "next";
 
 import { env } from "src/env";
 import { AUDITS } from "src/utils/audits";
 import { createHandler } from "src/utils/node/api";
+
+import credentials from "src/google-service-account.json";
 
 const storage = new Storage({
   projectId: credentials.project_id,

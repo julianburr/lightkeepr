@@ -1,10 +1,12 @@
 import { cert, initializeApp } from "firebase-admin/app";
-import credentials from "google-service-account.json";
+
+import { env } from "src/env";
+
+import credentials from "src/google-service-account.json";
 
 initializeApp({
-  credential: cert({
-    projectId: credentials.project_id,
-    clientEmail: credentials.client_email,
-    privateKey: credentials.private_key,
-  }),
+  // eslint-disable-next-line
+  // @ts-ignore
+  credential: cert(credentials),
+  databaseURL: env.firebase.databaseUrl,
 });

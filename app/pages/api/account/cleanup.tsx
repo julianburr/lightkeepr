@@ -2,11 +2,12 @@ import "src/utils/node/firebase";
 
 import { Storage } from "@google-cloud/storage";
 import { getFirestore } from "firebase-admin/firestore";
-import credentials from "google-service-account.json";
 import { NextApiRequest, NextApiResponse } from "next";
 
 import { env } from "src/env";
 import { createHandler } from "src/utils/node/api";
+
+import credentials from "src/google-service-account.json";
 
 const db = getFirestore();
 
