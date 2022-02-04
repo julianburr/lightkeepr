@@ -43,7 +43,10 @@ export function SEO() {
       <meta name="twitter:card" content="summary" />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
-      <meta name="twitter:image" content={previewPng.src} />
+      <meta
+        name="twitter:image"
+        content={`https://www.lightkeepr.io${previewPng.src}`}
+      />
       <meta name="twitter:creator" content="@jburr90" />
     </>
   );
