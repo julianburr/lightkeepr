@@ -37,7 +37,7 @@ jobs:
       - name: Create Google Service Account File
         working-directory: ./app
         run: |-
-          echo ${{ secrets.APP_GOOGLE_SERVICE_ACCOUNT_CONTENT }} | base64 -d > google-service-account.json
+          echo ${{ secrets.APP_GOOGLE_SERVICE_ACCOUNT_CONTENT }} | base64 -d > ./src/google-service-account.json
 
       - name: Create .env
         uses: SpicyPizza/create-envfile@v1.2
