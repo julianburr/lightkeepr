@@ -344,6 +344,7 @@ export function WebsiteLayout({ children }: WebsiteLayoutProps) {
               icon={<MenuSvg />}
               size="large"
               intent="ghost"
+              aria-label="Menu"
               onClick={() => {
                 const event = new CustomEvent("toggleMobileMenu");
                 window.document.body.dispatchEvent(event);

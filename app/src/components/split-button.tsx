@@ -39,6 +39,7 @@ export function SplitButton({ items, placement, ...props }: ActionButtonProps) {
             intent={props.intent}
             size={props.size}
             icon={<MoreSvg />}
+            aria-label="More"
           />
         )}
       </ActionMenu>

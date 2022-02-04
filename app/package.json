@@ -51,7 +51,8 @@
     "styled-reset": "^4.3.4",
     "twemoji": "^13.1.0",
     "url-loader": "^4.1.1",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "wicg-inert": "^3.1.1"
   },
   "devDependencies": {
     "@sentry/nextjs": "^6.17.2",

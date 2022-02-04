@@ -10,7 +10,9 @@ const Container = styled.div<{ maxWidth?: string }>`
   max-width: ${(props) => props.maxWidth || "28rem"};
 `;
 
-const DefaultButton = (props: any) => <ActionButton {...props} />;
+const DefaultButton = (props: any) => (
+  <ActionButton aria-label="Actions" {...props} />
+);
 
 type ActionMenuProps = Omit<
   ComponentProps<typeof Popout>,
