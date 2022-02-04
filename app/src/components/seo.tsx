@@ -3,7 +3,7 @@ import { tokens } from "src/theme/tokens";
 
 const title = `Lightkeepr — Get the most value out of Lighthouse`;
 const description =
-  `Lighthouse as a service. Easily view and compare your lighthouse reports, ` +
+  `Easily view and compare your lighthouse reports, ` +
   `detect regressions and get actionable suggestions.`;
 
 const keywords = [
