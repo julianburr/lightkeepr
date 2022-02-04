@@ -266,7 +266,7 @@ export default createHandler({
       previousMainReport: previousMainReport?.id
         ? db.collection("reports").doc(previousMainReport.id)
         : null,
-      targets: project.targets,
+      targets: project.targets || null,
       status,
       statusReasons,
       regressions,
