@@ -5,9 +5,9 @@ on:
     branches:
       - main
       - fix/main-accounts-setup
-    paths:
-      - app/**
-      - docs/**
+    # paths:
+    #   - app/**
+    #   - docs/**
 
 jobs:
   deploy_app:
