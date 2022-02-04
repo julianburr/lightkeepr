@@ -1,0 +1,18 @@
+name: "Cron Daily"
+
+on:
+  schedule:
+    - cron: "* 8 * * *"
+  workflow_dispatch:
+
+jobs:
+  run_cron:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Trigger cleanup
+        uses: fjogeleit/http-request-action@master
+        with:
+          url: "https://www.lightkeepr.io/api/account/cleanup"
+          method: "POST"

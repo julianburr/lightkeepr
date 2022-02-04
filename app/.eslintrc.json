@@ -21,6 +21,11 @@
             "pattern": "**/*.svg",
             "group": "internal",
             "position": "after"
+          },
+          {
+            "pattern": "**/*.json",
+            "group": "internal",
+            "position": "after"
           }
         ],
         "newlines-between": "always",
