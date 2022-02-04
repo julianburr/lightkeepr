@@ -3,6 +3,11 @@ const { withSentryConfig } = require("@sentry/nextjs");
 const config = {
   reactStrictMode: true,
 
+  i18n: {
+    locales: ["en"],
+    defaultLocale: "en",
+  },
+
   // Fixes issue with Sentry in production
   // https://github.com/vercel/next.js/issues/30601#issuecomment-961323914
   outputFileTracing: false,

@@ -157,6 +157,7 @@ export function AppLayout({ children }: AppLayoutProps) {
                   <Button
                     {...props}
                     intent="primary"
+                    aria-label="Account menu"
                     icon={
                       <>
                         {authUser?.user?.name
@@ -180,6 +181,7 @@ export function AppLayout({ children }: AppLayoutProps) {
                 icon={<SearchSvg />}
                 size="large"
                 intent="ghost"
+                aria-label="Search"
                 onClick={() => {
                   alert("search");
                 }}
@@ -188,6 +190,7 @@ export function AppLayout({ children }: AppLayoutProps) {
                 icon={<MenuSvg />}
                 size="large"
                 intent="ghost"
+                aria-label="Menu"
                 onClick={() => {
                   const event = new CustomEvent("toggleMobileMenu");
                   window.document.body.dispatchEvent(event);

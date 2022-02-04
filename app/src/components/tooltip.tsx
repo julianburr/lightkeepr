@@ -73,8 +73,9 @@ type ChildrenProps = {
   onMouseLeave: (e: any) => void;
   onFocus: (e: any) => void;
   onBlur: (e: any) => void;
-  "aria-describedby": string;
   tabIndex: 0;
+  "aria-describedby"?: string;
+  "aria-label"?: string;
   _: {
     update: UpdateFn | null;
   };
@@ -201,8 +202,10 @@ export function Tooltip({
         onMouseLeave: handleHide,
         onFocus: handleShow,
         onBlur: handleHide,
-        "aria-describedby": `tooltip-${instanceUuid}`,
         tabIndex: 0,
+        ...(visible
+          ? { "aria-describedby": `tooltip-${instanceUuid}` }
+          : { "aria-label": content?.toString() }),
         _: { update },
       })}
 

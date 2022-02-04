@@ -197,12 +197,16 @@ export function AppPreview() {
         actions={
           <>
             <Buttons data-tablet>
-              <Button icon={<SearchSvg />} />
-              <Button icon={<BellSvg />} badge={<Badge count={3} />} />
-              <Button icon={<LifeBuoySvg />} />
+              <Button icon={<SearchSvg />} aria-label="Search" />
+              <Button
+                icon={<BellSvg />}
+                badge={<Badge count={3} />}
+                aria-label="Notifications"
+              />
+              <Button icon={<LifeBuoySvg />} aria-label="Documentation" />
               <Spacer w="1.2rem" />
 
-              <Button icon={<GridSvg />} />
+              <Button icon={<GridSvg />} aria-label="App switcher" />
               <Spacer w="1.2rem" />
 
               <Button intent="primary" icon={<>JB</>} />
@@ -210,7 +214,7 @@ export function AppPreview() {
 
             <Buttons data-mobile>
               <Button
-                icon={<SearchSvg />}
+                icon={<SearchSvg aria-label="Search" />}
                 size="large"
                 intent="ghost"
                 onClick={() => {
@@ -218,7 +222,7 @@ export function AppPreview() {
                 }}
               />
               <Button
-                icon={<MenuSvg />}
+                icon={<MenuSvg aria-label="Menu" />}
                 badge={<Badge count={3} />}
                 size="large"
                 intent="ghost"
@@ -243,8 +247,8 @@ export function AppPreview() {
             <Actions>
               <SplitButton items={[]}>Approve</SplitButton>
               <Spacer w=".8rem" />
-              <Button icon={<ChevronLeftSvg />} />
-              <Button icon={<ChevronRightSvg />} />
+              <Button icon={<ChevronLeftSvg />} aria-label="Previous report" />
+              <Button icon={<ChevronRightSvg />} aria-label="Next report" />
             </Actions>
           </WrapTitle>
 

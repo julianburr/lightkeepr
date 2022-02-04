@@ -40,6 +40,7 @@ export function CopyButton({ text, ...props }: CopyButtonProps) {
       <TextArea
         ref={inputRef as Ref<HTMLTextAreaElement>}
         tabIndex={-1}
+        aria-hidden
         data-rcf-exclude
       />
       <Tooltip content="Copy to clipboard">
