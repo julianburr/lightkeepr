@@ -3,7 +3,7 @@ import "src/utils/firebase";
 import { getAuth } from "firebase/auth";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { PropsWithChildren, useState } from "react";
+import { PropsWithChildren } from "react";
 import styled from "styled-components";
 
 import { AccountActionMenu } from "src/action-menus/account";
@@ -80,8 +80,6 @@ type AppLayoutProps = PropsWithChildren<Record<never, any>>;
 export function AppLayout({ children }: AppLayoutProps) {
   const router = useRouter();
   const authUser = useAuthUser();
-
-  const [count, setCount] = useState(0);
 
   return (
     <Container>

@@ -1,12 +1,13 @@
 import classNames from "classnames";
 import Head from "next/head";
-import { useState } from "react";
+import { lazy, useState } from "react";
 import styled from "styled-components";
 
 import { CodePreview } from "src/components/code-preview";
 import { Hero } from "src/components/homepage/hero";
 import { Highlight } from "src/components/homepage/highlight";
 import { Section, SectionContent } from "src/components/homepage/section";
+import { Suspense } from "src/components/suspense";
 import { WebsiteLayout } from "src/layouts/website";
 
 import BubbleSvg from "src/assets/icons/website/bubble-chat.svg";
@@ -16,12 +17,11 @@ import ExtensionSvg from "src/assets/icons/website/extension.svg";
 import UsersSvg from "src/assets/icons/website/rocket.svg";
 import BellSvg from "src/assets/icons/website/snooze.svg";
 
-const Screenshots = styled.div`
-  width: 90%;
-  padding: 50% 0 0;
-  background: var(--sol--palette-sand-500);
-  margin: 3.6rem auto 0;
-`;
+const AppPreview = lazy(() =>
+  import("src/components/app-preview").then(({ AppPreview }) => ({
+    default: AppPreview,
+  }))
+);
 
 const Scores = styled.div`
   display: flex;
@@ -144,6 +144,76 @@ const Feature = styled.div`
   }
 `;
 
+const Screenshots = styled.div`
+  width: 100%;
+  max-width: 89rem;
+  height: 60rem;
+  margin: 3.6rem auto 0;
+  position: relative;
+`;
+
+const AppContainer = styled.div`
+  width: calc(100% / 0.7);
+  height: calc(100% / 0.7);
+  background: #fff;
+  transform: scale(0.7);
+  transform-origin: 0 0;
+  box-shadow: 0.4rem 0 1.6rem rgba(0, 0, 0, 0.1);
+  border-radius: 1.2rem;
+  position: absolute;
+  inset: 0;
+  text-align: left;
+  overflow: hidden;
+  pointer-events: none;
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    margin: 0;
+  }
+
+  &:nth-child(1) {
+    transform: rotate(-1deg) scale(0.7);
+    opacity: 0.6;
+    top: -0.6rem;
+    box-shadow: 0.4rem 0 1.6rem rgba(0, 0, 0, 0.1);
+  }
+
+  &:nth-child(2) {
+    transform: rotate(1deg) scale(0.7);
+    opacity: 0.8;
+    top: 0.3rem;
+    box-shadow: 0.4rem 0 1.6rem rgba(0, 0, 0, 0.1);
+  }
+
+  @media (min-width: 800px) {
+    &:nth-child(1) {
+      transform: rotate(-0.8deg) scale(0.7);
+      top: -0.4rem;
+    }
+
+    &:nth-child(2) {
+      transform: rotate(0.8deg) scale(0.7);
+    }
+  }
+
+  @media (min-width: 1050px) {
+    width: 124rem;
+    transform: scale(calc(89 / 124));
+    height: calc(60rem / calc(89 / 124));
+
+    &:nth-child(1) {
+      top: -0.4rem;
+      transform: rotate(-0.8deg) scale(calc(89 / 124));
+    }
+
+    &:nth-child(2) {
+      transform: rotate(0.8deg) scale(calc(89 / 124));
+    }
+  }
+`;
+
 const auditExamples = {
   performance: [
     "First contentful paint",
@@ -222,7 +292,15 @@ export default function HomePage() {
             together with your team to action them.
           </p>
         </SectionContent>
-        <Screenshots />
+        <Screenshots>
+          <AppContainer />
+          <AppContainer />
+          <AppContainer>
+            <Suspense fallback={null}>
+              <AppPreview />
+            </Suspense>
+          </AppContainer>
+        </Screenshots>
       </Section>
 
       <Section>
