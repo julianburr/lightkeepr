@@ -36,11 +36,6 @@ export default function App({ Component, pageProps }: any) {
 
         {/* Basics */}
         <title>Lightkeepr</title>
-        <meta
-          name="description"
-          content="Lighthouse performance scores in the cloud"
-        />
-        <meta name="keywords" content="performance, lighthouse, web vitals" />
         <link rel="icon" href={favicon.src} type="image/png" />
 
         {/* Add Google Font incl DNS prefetch for perf improvements */}

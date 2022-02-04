@@ -166,11 +166,13 @@ const reportData = {
 };
 
 const pastReports = Array.from(new Array(30)).map((_, index) => ({
+  commit: "catz",
+  commitMessage: "Cats are awesome",
   summary: {
-    performance: index === 4 ? 0.2 : 0.9 + Math.random() * 0.09,
+    performance: 0.9 + Math.random() * 0.09,
     accessibility: 0.9 + Math.random() * 0.09,
     "best-practices":
-      index > 10 ? 0.75 + Math.random() * 0.09 : 0.9 + Math.random() * 0.09,
+      index < 4 ? 0.7 + Math.random() * 0.09 : 0.9 + Math.random() * 0.09,
     seo: 0.88 + Math.random() * 0.09,
     pwa: 0.6 + Math.random() * 0.05,
   },

@@ -7,6 +7,7 @@ import { CodePreview } from "src/components/code-preview";
 import { Hero } from "src/components/homepage/hero";
 import { Highlight } from "src/components/homepage/highlight";
 import { Section, SectionContent } from "src/components/homepage/section";
+import { SEO } from "src/components/seo";
 import { Suspense } from "src/components/suspense";
 import { WebsiteLayout } from "src/layouts/website";
 
@@ -275,7 +276,7 @@ export default function HomePage() {
   return (
     <WebsiteLayout>
       <Head>
-        <title>Lightkeepr — Get the most value out of Lighthouse</title>
+        <SEO />
       </Head>
 
       <Hero>Get the most value out of Lighthouse</Hero>
