@@ -29,15 +29,16 @@ export default function AccountSettings() {
   const authUser = useAuthUser();
   const updatePasswordDialog = useDialog(UpdatePasswordDialog);
 
-  const userId = authUser.user?.id;
-  const userRef = doc(db, "users", userId!);
+  const userRef = authUser.user?.id
+    ? doc(db, "users", authUser.user.id)
+    : undefined;
 
-  const user = useDocument(userRef);
+  const user = useDocument(userRef, { fetch: !!userRef });
 
   const { form } = useAutoSaveForm({
     id: "accountSettings",
-    defaultValues: { email: user.email, name: user.name },
-    onSubmit: (values) => updateDoc(userRef, { name: values.name }),
+    defaultValues: { email: user?.email, name: user?.name },
+    onSubmit: (values) => updateDoc(userRef!, { name: values.name }),
   });
 
   return (
@@ -57,7 +58,7 @@ export default function AccountSettings() {
                 name="email"
                 label="Email"
                 Input={ReadonlyInput}
-                inputProps={{ value: user.email }}
+                inputProps={{ value: user?.email }}
               />
               <Field
                 form="accountSettings"
@@ -69,15 +70,19 @@ export default function AccountSettings() {
             </FormGrid>
           </form>
 
-          <Spacer h="3.2rem" />
-          <Heading level={2}>Update password</Heading>
-          <Small grey>
-            Click the button below and enter a new password. Your old password
-            will be invalid after you updated it.
-          </Small>
-          <Button onClick={() => updatePasswordDialog.open()}>
-            Update password
-          </Button>
+          {authUser.providerData?.[0]?.providerId === "password" && (
+            <>
+              <Spacer h="3.2rem" />
+              <Heading level={2}>Update password</Heading>
+              <Small grey>
+                Click the button below and enter a new password. Your old
+                password will be invalid after you updated it.
+              </Small>
+              <Button onClick={() => updatePasswordDialog.open()}>
+                Update password
+              </Button>
+            </>
+          )}
         </Container>
       </AppLayout>
     </Auth>
