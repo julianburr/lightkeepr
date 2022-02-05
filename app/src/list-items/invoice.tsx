@@ -8,7 +8,7 @@ import { ListItem } from "src/components/list";
 import { P, Small } from "src/components/text";
 import { Tooltip } from "src/components/tooltip";
 
-import PaperclipSvg from "src/assets/icons/paperclip.svg";
+import PaperclipSvg from "src/assets/icons/outline/paper-clip.svg";
 
 const Content = styled.div`
   display: flex;

@@ -27,7 +27,7 @@ import { P } from "src/components/text";
 import { useAuthUser } from "src/hooks/use-auth-user";
 import { getNotificationIcon } from "src/utils/notifications";
 
-import BellSvg from "src/assets/icons/bell.svg";
+import BellSvg from "src/assets/icons/outline/bell.svg";
 
 dayjs.extend(relativeTime);
 

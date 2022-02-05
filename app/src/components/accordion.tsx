@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 import { Heading } from "src/components/text";
 
-import ChevronDownSvg from "src/assets/icons/chevron-down.svg";
+import ChevronDownSvg from "src/assets/icons/outline/chevron-down.svg";
 
 const Container = styled.div`
   width: 100%;

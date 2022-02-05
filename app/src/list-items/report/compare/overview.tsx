@@ -5,8 +5,8 @@ import { ListItem } from "src/components/list";
 import { P, Small } from "src/components/text";
 import { formatBytes, formatMs } from "src/utils/format";
 
-import TrendingDown from "src/assets/icons/trending-down.svg";
-import TrendingUp from "src/assets/icons/trending-up.svg";
+import TrendingDown from "src/assets/icons/outline/trending-down.svg";
+import TrendingUp from "src/assets/icons/outline/trending-up.svg";
 
 const Container = styled.div`
   margin: -0.4rem;

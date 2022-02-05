@@ -1,7 +1,7 @@
 import { PropsWithChildren } from "react";
 import styled from "styled-components";
 
-import BulbSvg from "src/assets/icons/bulb.svg";
+import BulbSvg from "src/assets/icons/outline/light-bulb.svg";
 
 const Container = styled.div`
   display: flex;

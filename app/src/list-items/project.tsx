@@ -8,7 +8,7 @@ import { ListItem } from "src/components/list";
 import { StatusAvatar } from "src/components/status-avatar";
 import { P, Small } from "src/components/text";
 
-import PlusSvg from "src/assets/icons/plus.svg";
+import PlusSvg from "src/assets/icons/outline/plus.svg";
 
 dayjs.extend(relativeTime);
 

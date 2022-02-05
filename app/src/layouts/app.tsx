@@ -18,10 +18,10 @@ import { useAuthUser } from "src/hooks/use-auth-user";
 import { NotificationsButton } from "src/popouts/notifications";
 import { AppSidebar } from "src/sidebars/app";
 
-import GridSvg from "src/assets/icons/grid.svg";
-import LifeBuoySvg from "src/assets/icons/life-buoy.svg";
-import MenuSvg from "src/assets/icons/menu.svg";
-import SearchSvg from "src/assets/icons/search.svg";
+import MenuSvg from "src/assets/icons/outline/menu.svg";
+import SearchSvg from "src/assets/icons/outline/search.svg";
+import LifeBuoySvg from "src/assets/icons/outline/support.svg";
+import GridSvg from "src/assets/icons/outline/view-grid.svg";
 import LogoSvg from "src/assets/logo.svg";
 
 const auth = getAuth();

@@ -16,7 +16,7 @@ import { useConfirmationDialog } from "src/dialogs/confirm";
 import { useToast } from "src/hooks/use-toast";
 import { getNotificationIcon } from "src/utils/notifications";
 
-import LinkSvg from "src/assets/icons/link.svg";
+import LinkSvg from "src/assets/icons/outline/link.svg";
 
 dayjs.extend(relativeTime);
 

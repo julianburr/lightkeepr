@@ -7,8 +7,8 @@ import "prismjs/components/prism-bash";
 import "prismjs/components/prism-yaml";
 import "prismjs/plugins/line-numbers/prism-line-numbers";
 
-import FileSvg from "src/assets/icons/file.svg";
-import TerminalSvg from "src/assets/icons/terminal.svg";
+import FileSvg from "src/assets/icons/outline/document-text.svg";
+import TerminalSvg from "src/assets/icons/outline/terminal.svg";
 
 import { CopyButton } from "./copy-button";
 

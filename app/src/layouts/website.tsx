@@ -1,16 +1,15 @@
 import Link from "next/link";
-import { PropsWithChildren, useEffect, Ref } from "react";
+import { PropsWithChildren } from "react";
 import styled, { keyframes } from "styled-components";
 
+import { ActionMenu } from "src/components/action-menu";
 import { Button } from "src/components/button";
-import { Spacer } from "src/components/spacer";
 import { Tooltip } from "src/components/tooltip";
 import { TopBar } from "src/components/top-bar";
-import { useSidebarState } from "src/hooks/use-sidebar-state";
 
-import GithubSvg from "src/assets/icons/github.svg";
-import MenuSvg from "src/assets/icons/menu.svg";
-import TwitterSvg from "src/assets/icons/twitter.svg";
+import GithubSvg from "src/assets/icons/outline/github.svg";
+import MenuSvg from "src/assets/icons/outline/menu.svg";
+import TwitterSvg from "src/assets/icons/outline/twitter.svg";
 import DuckSvg from "src/assets/illustrations/rubber-duck.svg";
 import WavesSvg from "src/assets/illustrations/waves.svg";
 import LogoSvg from "src/assets/logo.svg";
@@ -283,32 +282,6 @@ const MobileMenu = styled.menu`
 type WebsiteLayoutProps = PropsWithChildren<Record<never, any>>;
 
 export function WebsiteLayout({ children }: WebsiteLayoutProps) {
-  const { menuRef, backdropRef, active, setActive } = useSidebarState();
-
-  useEffect(() => {
-    if (!active) {
-      return;
-    }
-
-    const links = menuRef.current?.getElementsByTagName("a");
-    if (!links?.length) {
-      return;
-    }
-
-    function handleClick() {
-      setActive(false);
-    }
-
-    for (let i = 0; i < links.length; i++) {
-      links[i].addEventListener("click", handleClick);
-    }
-    return () => {
-      for (let i = 0; i < links.length; i++) {
-        links[i].removeEventListener("click", handleClick);
-      }
-    };
-  }, [active]);
-
   return (
     <Container>
       <StyledTopBar
@@ -339,44 +312,28 @@ export function WebsiteLayout({ children }: WebsiteLayoutProps) {
               </Link>
             </Menu>
 
-            <MobileButton
-              data-mobile
-              icon={<MenuSvg />}
-              size="large"
-              intent="ghost"
-              aria-label="Menu"
-              onClick={() => {
-                const event = new CustomEvent("toggleMobileMenu");
-                window.document.body.dispatchEvent(event);
-              }}
-            />
+            <ActionMenu
+              items={[
+                { label: "Home", href: "/" },
+                { label: "Features", href: "/#features" },
+                { label: "Documentation", href: "/docs" },
+                { label: "Sign in", href: "/auth/sign-in" },
+              ]}
+            >
+              {(props) => (
+                <MobileButton
+                  data-mobile
+                  icon={<MenuSvg />}
+                  size="large"
+                  intent="ghost"
+                  aria-label="Menu"
+                  {...props}
+                />
+              )}
+            </ActionMenu>
           </>
         }
       />
-
-      <MobileSidebar
-        ref={backdropRef as Ref<HTMLDivElement>}
-        data-active={active}
-      >
-        <MobileMenu ref={menuRef as Ref<HTMLMenuElement>}>
-          <Link href="/">
-            <a>Home</a>
-          </Link>
-          <Link href="/#features">
-            <a>Features</a>
-          </Link>
-          <Link href="/pricing">
-            <a>Pricing</a>
-          </Link>
-          <Link href="/documentation">
-            <a>Documentation</a>
-          </Link>
-          <Spacer h="2.4rem" />
-          <Link href="/auth/sign-in">
-            <a>Sign in</a>
-          </Link>
-        </MobileMenu>
-      </MobileSidebar>
 
       <Content>{children}</Content>
 

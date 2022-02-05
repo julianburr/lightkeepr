@@ -17,8 +17,8 @@ import { Meta } from "src/components/meta";
 import { Spacer } from "src/components/spacer";
 import { formatMs } from "src/utils/format";
 
-import ArrowLeftSvg from "src/assets/icons/arrow-left.svg";
-import LoaderSvg from "src/assets/icons/loader.svg";
+import ArrowLeftSvg from "src/assets/icons/outline/arrow-left.svg";
+import LoaderSvg from "src/assets/icons/outline/loader.svg";
 
 const db = getFirestore();
 

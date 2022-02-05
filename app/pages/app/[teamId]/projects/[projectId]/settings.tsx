@@ -26,7 +26,7 @@ import { AppLayout } from "src/layouts/app";
 import { removeUndefined } from "src/utils/format";
 import { generateApiToken } from "src/utils/token";
 
-import RefreshSvg from "src/assets/icons/refresh-cw.svg";
+import RefreshSvg from "src/assets/icons/outline/refresh.svg";
 
 const db = getFirestore();
 

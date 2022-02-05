@@ -4,8 +4,8 @@ import { ListItem } from "src/components/list";
 import { Span, P } from "src/components/text";
 import { formatBytes, formatMs } from "src/utils/format";
 
-import AlertSvg from "src/assets/icons/alert-circle.svg";
-import CheckSvg from "src/assets/icons/check.svg";
+import CheckSvg from "src/assets/icons/outline/check.svg";
+import AlertSvg from "src/assets/icons/outline/exclamation-circle.svg";
 
 const Container = styled.div`
   display: flex;

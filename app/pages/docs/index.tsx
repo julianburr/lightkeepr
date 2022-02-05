@@ -5,8 +5,8 @@ import styled from "styled-components";
 import { P } from "src/components/text";
 import { DocsLayout } from "src/layouts/docs";
 
-import PotionSvg from "src/assets/icons/website/potion.svg";
-import RocketSvg from "src/assets/icons/website/rocket.svg";
+import FeaturesSvg from "src/assets/icons/outline/beaker.svg";
+import CodeSvg from "src/assets/icons/outline/terminal.svg";
 import DiverSvg from "src/assets/illustrations/diving-helmet.svg";
 import FishSvg from "src/assets/illustrations/fish.svg";
 
@@ -149,7 +149,7 @@ export default function DocsHomepage() {
         </Link>
         <Link href="/docs/features" passHref>
           <Small>
-            <RocketSvg />
+            <FeaturesSvg />
             <h2>Features</h2>
             <P>
               Find help with any of the main features of the Lightkeepr app. How
@@ -159,7 +159,7 @@ export default function DocsHomepage() {
         </Link>
         <Link href="/docs/packages" passHref>
           <Small>
-            <PotionSvg />
+            <CodeSvg />
             <h2>Packages</h2>
             <P>
               Lightkeepr provides a bunch of helper packages to make sending

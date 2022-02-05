@@ -8,7 +8,7 @@ import { StatusAvatar } from "src/components/status-avatar";
 import { P, Small } from "src/components/text";
 import { Tooltip } from "src/components/tooltip";
 
-import BranchSvg from "src/assets/icons/git-branch.svg";
+import BranchSvg from "src/assets/icons/outline/git-branch.svg";
 
 dayjs.extend(relativeTime);
 

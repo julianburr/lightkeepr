@@ -14,7 +14,7 @@ import styled from "styled-components";
 
 import { interactive } from "src/@packages/sol/tokens";
 
-import MoreSvg from "src/assets/icons/more-vertical.svg";
+import MoreSvg from "src/assets/icons/outline/dots-vertical.svg";
 
 type AnchorTagProps = PropsWithChildren<LinkProps>;
 

@@ -13,12 +13,12 @@ import { SEO } from "src/components/seo";
 import { Suspense } from "src/components/suspense";
 import { WebsiteLayout } from "src/layouts/website";
 
-import BubbleSvg from "src/assets/icons/website/bubble-chat.svg";
-import BulbSvg from "src/assets/icons/website/bulb.svg";
-import CompareSvg from "src/assets/icons/website/divide.svg";
-import ExtensionSvg from "src/assets/icons/website/extension.svg";
-import UsersSvg from "src/assets/icons/website/rocket.svg";
-import BellSvg from "src/assets/icons/website/snooze.svg";
+import BellSvg from "src/assets/icons/outline/bell.svg";
+import UsersSvg from "src/assets/icons/outline/briefcase.svg";
+import BubbleSvg from "src/assets/icons/outline/chat-alt-2.svg";
+import CompareSvg from "src/assets/icons/outline/compare.svg";
+import BulbSvg from "src/assets/icons/outline/light-bulb.svg";
+import ExtensionSvg from "src/assets/icons/outline/puzzle.svg";
 
 const AppPreview = lazy(() =>
   import("src/components/app-preview").then(({ AppPreview }) => ({
@@ -139,7 +139,6 @@ const Feature = styled.div`
   svg {
     height: 3.2rem;
     width: auto;
-    color: var(--sol--palette-sand-400);
 
     @media (min-width: 800px) {
       height: 4rem;

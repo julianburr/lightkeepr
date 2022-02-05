@@ -6,8 +6,8 @@ import { Span, P } from "src/components/text";
 import { ReportCompareAuditDialog } from "src/dialogs/report/compare/audit";
 import { useDialog } from "src/hooks/use-dialog";
 
-import TrendingDown from "src/assets/icons/trending-down.svg";
-import TrendingUp from "src/assets/icons/trending-up.svg";
+import TrendingDown from "src/assets/icons/outline/trending-down.svg";
+import TrendingUp from "src/assets/icons/outline/trending-up.svg";
 
 const Container = styled.div`
   display: flex;

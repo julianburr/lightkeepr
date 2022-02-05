@@ -11,14 +11,14 @@ import { SplitButton } from "src/components/split-button";
 import { Heading, Small } from "src/components/text";
 import { TopBar } from "src/components/top-bar";
 
-import ArrowLeftSvg from "src/assets/icons/arrow-left.svg";
-import BellSvg from "src/assets/icons/bell.svg";
-import ChevronLeftSvg from "src/assets/icons/chevron-left.svg";
-import ChevronRightSvg from "src/assets/icons/chevron-right.svg";
-import GridSvg from "src/assets/icons/grid.svg";
-import LifeBuoySvg from "src/assets/icons/life-buoy.svg";
-import MenuSvg from "src/assets/icons/menu.svg";
-import SearchSvg from "src/assets/icons/search.svg";
+import ArrowLeftSvg from "src/assets/icons/outline/arrow-left.svg";
+import BellSvg from "src/assets/icons/outline/bell.svg";
+import ChevronLeftSvg from "src/assets/icons/outline/chevron-left.svg";
+import ChevronRightSvg from "src/assets/icons/outline/chevron-right.svg";
+import MenuSvg from "src/assets/icons/outline/menu.svg";
+import SearchSvg from "src/assets/icons/outline/search.svg";
+import LifeBuoySvg from "src/assets/icons/outline/support.svg";
+import GridSvg from "src/assets/icons/outline/view-grid.svg";
 import LogoSvg from "src/assets/logo.svg";
 
 import { NetworkOverview } from "./report/overview/network";

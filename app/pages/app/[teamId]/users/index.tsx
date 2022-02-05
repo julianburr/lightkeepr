@@ -16,7 +16,7 @@ import { AppLayout } from "src/layouts/app";
 import { InviteListItem } from "src/list-items/invite";
 import { UserListItem } from "src/list-items/user";
 
-import PlusSvg from "src/assets/icons/plus.svg";
+import PlusSvg from "src/assets/icons/outline/plus.svg";
 
 const db = getFirestore();
 

@@ -23,6 +23,11 @@
             "position": "after"
           },
           {
+            "pattern": "**/*.png",
+            "group": "internal",
+            "position": "after"
+          },
+          {
             "pattern": "**/*.json",
             "group": "internal",
             "position": "after"

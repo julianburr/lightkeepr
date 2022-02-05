@@ -13,7 +13,7 @@ import styled from "styled-components";
 
 import { DialogMetaContext } from "src/hooks/use-dialog";
 
-import CrossSvg from "src/assets/icons/x.svg";
+import CrossSvg from "src/assets/icons/outline/x.svg";
 
 const Backdrop = styled.div`
   position: fixed;

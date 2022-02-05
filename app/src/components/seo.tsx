@@ -1,5 +1,6 @@
-import previewPng from "src/assets/preview.png";
 import { tokens } from "src/theme/tokens";
+
+import previewPng from "src/assets/social/preview.png";
 
 const title = `Lightkeepr — Get the most value out of Lighthouse`;
 const description =

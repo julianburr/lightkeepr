@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { ActionMenu } from "src/components/action-menu";
 import { Button } from "src/components/button";
 
-import MoreSvg from "src/assets/icons/more-vertical.svg";
+import MoreSvg from "src/assets/icons/outline/dots-vertical.svg";
 
 const Container = styled.div`
   display: flex;

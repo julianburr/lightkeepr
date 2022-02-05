@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { CoreButton } from "src/components/button";
 import { P, Small } from "src/components/text";
 
-import CheckSvg from "src/assets/icons/check.svg";
+import CheckSvg from "src/assets/icons/outline/check.svg";
 
 const Container = styled(CoreButton)<{ intent?: string }>`
   && {

@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { Button } from "src/components/button";
 import { useToast } from "src/hooks/use-toast";
 
-import ClipboardSvg from "src/assets/icons/clipboard.svg";
+import ClipboardSvg from "src/assets/icons/outline/clipboard.svg";
 
 import { Tooltip } from "./tooltip";
 

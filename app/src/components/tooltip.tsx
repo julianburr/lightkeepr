@@ -45,7 +45,7 @@ const Arrow = styled.div`
     position: absolute;
     width: 0.6rem;
     height: 0.6rem;
-    background: #222;
+    background: #000;
   }
 
   [data-popper-placement^="top"] > & {
