@@ -1,7 +1,6 @@
 import "wicg-inert";
 
 import classNames from "classnames";
-import Head from "next/head";
 import { lazy, useState, Ref, useRef, useEffect } from "react";
 import styled from "styled-components";
 
@@ -9,7 +8,6 @@ import { CodePreview } from "src/components/code-preview";
 import { Hero } from "src/components/homepage/hero";
 import { Highlight } from "src/components/homepage/highlight";
 import { Section, SectionContent } from "src/components/homepage/section";
-import { SEO } from "src/components/seo";
 import { Suspense } from "src/components/suspense";
 import { WebsiteLayout } from "src/layouts/website";
 
@@ -287,11 +285,7 @@ export default function HomePage() {
 
   return (
     <WebsiteLayout>
-      <Head>
-        <SEO />
-      </Head>
-
-      <Hero>Get the most value out of Lighthouse</Hero>
+      <Hero>Getting the most value out of your Lighthouse reports</Hero>
 
       <div>
         <Section>

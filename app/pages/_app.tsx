@@ -36,7 +36,6 @@ export default function App({ Component, pageProps }: any) {
         <meta name="robots" content="all" />
 
         {/* Basics */}
-        <title>Lightkeepr</title>
         <link rel="icon" href={favicon.src} type="image/png" />
 
         {/* Add Google Font incl DNS prefetch for perf improvements */}

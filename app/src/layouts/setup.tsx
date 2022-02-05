@@ -1,6 +1,7 @@
 import "src/utils/firebase";
 
 import { getAuth } from "firebase/auth";
+import Head from "next/head";
 import { PropsWithChildren } from "react";
 import styled from "styled-components";
 
@@ -46,18 +47,23 @@ type SetupLayoutProps = PropsWithChildren<Record<never, any>>;
 
 export function SetupLayout({ children }: SetupLayoutProps) {
   return (
-    <Container>
-      <TopBar
-        logo={
-          <Logo>
-            <LogoSvg />
-          </Logo>
-        }
-        actions={<Button onClick={() => auth.signOut()}>Logout</Button>}
-      />
-      <Suspense fallback={null}>
-        <Content>{children}</Content>
-      </Suspense>
-    </Container>
+    <>
+      <Head>
+        <title>Lightkeepr</title>
+      </Head>
+      <Container>
+        <TopBar
+          logo={
+            <Logo>
+              <LogoSvg />
+            </Logo>
+          }
+          actions={<Button onClick={() => auth.signOut()}>Logout</Button>}
+        />
+        <Suspense fallback={null}>
+          <Content>{children}</Content>
+        </Suspense>
+      </Container>
+    </>
   );
 }

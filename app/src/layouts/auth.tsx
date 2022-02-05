@@ -1,3 +1,4 @@
+import Head from "next/head";
 import { PropsWithChildren } from "react";
 import styled from "styled-components";
 
@@ -59,13 +60,18 @@ type AuthLayoutProps = PropsWithChildren<Record<never, any>>;
 
 export function AuthLayout({ children }: AuthLayoutProps) {
   return (
-    <Container>
-      <Logo>
-        <LogoSvg />
-        <Title>lightkeepr</Title>
-      </Logo>
+    <>
+      <Head>
+        <title>Lightkeepr</title>
+      </Head>
+      <Container>
+        <Logo>
+          <LogoSvg />
+          <Title>lightkeepr</Title>
+        </Logo>
 
-      <Content>{children}</Content>
-    </Container>
+        <Content>{children}</Content>
+      </Container>
+    </>
   );
 }
