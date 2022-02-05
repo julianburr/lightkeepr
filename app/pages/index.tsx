@@ -16,7 +16,7 @@ import { WebsiteLayout } from "src/layouts/website";
 import BellSvg from "src/assets/icons/outline/bell.svg";
 import UsersSvg from "src/assets/icons/outline/briefcase.svg";
 import BubbleSvg from "src/assets/icons/outline/chat-alt-2.svg";
-import CompareSvg from "src/assets/icons/outline/compare.svg";
+import CompareSvg from "src/assets/icons/outline/eye.svg";
 import BulbSvg from "src/assets/icons/outline/light-bulb.svg";
 import ExtensionSvg from "src/assets/icons/outline/puzzle.svg";
 
