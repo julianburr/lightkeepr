@@ -119,12 +119,13 @@ export default function PricingPage() {
               <ul>
                 <Feature>Unlimited projects</Feature>
                 <Feature>Unlimited team members</Feature>
-                <Feature>Opportunity highlighting</Feature>
                 <Feature>Support for user flows</Feature>
                 <Feature>Automatic budget and regression checks</Feature>
                 <Feature>Manual approval flow for failed reports</Feature>
-                <Feature>Report comparison functionality</Feature>
-                <Feature>Daily or weekly email report</Feature>
+                <Feature>
+                  Report comparison functionality with opportunity summaries
+                </Feature>
+                <Feature>Email reports</Feature>
                 <Feature>Last 100 Lighthouse reports retained</Feature>
               </ul>
             </Description>
@@ -141,9 +142,8 @@ export default function PricingPage() {
               </Price>
               <ul>
                 <Feature>Project integrations (Slack, Jira, etc.)</Feature>
-                <Feature>Audit commenting functionality</Feature>
+                <Feature>Comments</Feature>
                 <Feature>Webhooks</Feature>
-                <Feature>No code manual and scheduled reports</Feature>
                 <Feature>Last 2000 Lighthouse reports retained</Feature>
               </ul>
             </Description>
