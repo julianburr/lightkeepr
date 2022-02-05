@@ -2,10 +2,10 @@ import { tokens } from "src/theme/tokens";
 
 import previewPng from "src/assets/social/preview.png";
 
-const title = `Lightkeepr — Get the most value out of Lighthouse`;
+const title = `Lightkeepr — Getting the most value out of your Lighthouse reports`;
 const description =
-  `Easily view and compare your lighthouse reports, ` +
-  `detect regressions and get actionable suggestions.`;
+  `Easily view and compare your lighthouse reports, detect ` +
+  `regressions and get actionable suggestions for improvements.`;
 
 const keywords = [
   "devtools",
@@ -36,8 +36,8 @@ export function SEO() {
       <meta property="og:description" content={description} />
       <meta property="og:url" content="https://www.lightkeepr.io" />
       <meta property="og:image" content={previewPng.src} />
-      <meta property="og:image:width" content={previewPng.width.toString()} />
-      <meta property="og:image:height" content={previewPng.height.toString()} />
+      <meta property="og:image:width" content={`${previewPng.width}`} />
+      <meta property="og:image:height" content={`${previewPng.height}`} />
       <meta property="og:locale" content="en" />
 
       {/* Twitter */}

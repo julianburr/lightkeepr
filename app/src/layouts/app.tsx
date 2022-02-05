@@ -1,6 +1,7 @@
 import "src/utils/firebase";
 
 import { getAuth } from "firebase/auth";
+import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { PropsWithChildren } from "react";
@@ -82,137 +83,142 @@ export function AppLayout({ children }: AppLayoutProps) {
   const authUser = useAuthUser();
 
   return (
-    <Container>
-      <TopBar
-        logo={
-          <Logo>
-            <Link href={`/app/${router.query.teamId}`}>
-              <a>
-                <LogoSvg />
-              </a>
-            </Link>
-          </Logo>
-        }
-        actions={
-          <>
-            <Buttons data-tablet>
-              <Tooltip content="Search (cmd+k)">
-                {(props) => <Button {...props} icon={<SearchSvg />} />}
-              </Tooltip>
+    <>
+      <Head>
+        <title>Lightkeepr</title>
+      </Head>
+      <Container>
+        <TopBar
+          logo={
+            <Logo>
+              <Link href={`/app/${router.query.teamId}`}>
+                <a>
+                  <LogoSvg />
+                </a>
+              </Link>
+            </Logo>
+          }
+          actions={
+            <>
+              <Buttons data-tablet>
+                <Tooltip content="Search (cmd+k)">
+                  {(props) => <Button {...props} icon={<SearchSvg />} />}
+                </Tooltip>
 
-              <NotificationsButton />
+                <NotificationsButton />
 
-              <Tooltip content="Documentation">
-                {(props) => (
-                  <Button
-                    {...props}
-                    href="/docs"
-                    target="_blank"
-                    icon={<LifeBuoySvg />}
-                  />
-                )}
-              </Tooltip>
+                <Tooltip content="Documentation">
+                  {(props) => (
+                    <Button
+                      {...props}
+                      href="/docs"
+                      target="_blank"
+                      icon={<LifeBuoySvg />}
+                    />
+                  )}
+                </Tooltip>
 
-              <Spacer w="1.2rem" />
+                <Spacer w="1.2rem" />
 
-              <Tooltip content="App switcher">
-                {(props) => <Button {...props} icon={<GridSvg />} />}
-              </Tooltip>
+                <Tooltip content="App switcher">
+                  {(props) => <Button {...props} icon={<GridSvg />} />}
+                </Tooltip>
 
-              <Spacer w="1.2rem" />
+                <Spacer w="1.2rem" />
 
-              <AccountActionMenu
-                items={[
-                  {
-                    label: "Teams",
-                    items:
-                      authUser?.teams?.map?.((team: any) => {
-                        return {
-                          selectable: true,
-                          selected: team.id === router.query.teamId,
-                          label: team.name || "n/a",
-                          href: `/app/${team.id}`,
-                        };
-                      }) || [],
-                  },
-                  {
-                    items: [
-                      {
-                        label: "Create a new team",
-                        href: `/app/${router.query.teamId}/account/teams/new`,
-                      },
-                      {
-                        label: "Profile settings",
-                        href: `/app/${router.query.teamId}/account/settings`,
-                      },
-                      {
-                        label: "Sign out",
-                        onClick: () => auth.signOut(),
-                      },
-                    ],
-                  },
-                ]}
-              >
-                {(props) => (
-                  <Button
-                    {...props}
-                    intent="primary"
-                    aria-label="Account menu"
-                    icon={
-                      <>
-                        {authUser?.user?.name
-                          ?.split?.(" ")
-                          .filter(Boolean)
-                          .reduce((all, w, index, names) => {
-                            if (index === 0 || index === names.length - 1) {
-                              all += w[0];
-                            }
-                            return all;
-                          }, "")}
-                      </>
-                    }
-                  />
-                )}
-              </AccountActionMenu>
-            </Buttons>
+                <AccountActionMenu
+                  items={[
+                    {
+                      label: "Teams",
+                      items:
+                        authUser?.teams?.map?.((team: any) => {
+                          return {
+                            selectable: true,
+                            selected: team.id === router.query.teamId,
+                            label: team.name || "n/a",
+                            href: `/app/${team.id}`,
+                          };
+                        }) || [],
+                    },
+                    {
+                      items: [
+                        {
+                          label: "Create a new team",
+                          href: `/app/${router.query.teamId}/account/teams/new`,
+                        },
+                        {
+                          label: "Profile settings",
+                          href: `/app/${router.query.teamId}/account/settings`,
+                        },
+                        {
+                          label: "Sign out",
+                          onClick: () => auth.signOut(),
+                        },
+                      ],
+                    },
+                  ]}
+                >
+                  {(props) => (
+                    <Button
+                      {...props}
+                      intent="primary"
+                      aria-label="Account menu"
+                      icon={
+                        <>
+                          {authUser?.user?.name
+                            ?.split?.(" ")
+                            .filter(Boolean)
+                            .reduce((all, w, index, names) => {
+                              if (index === 0 || index === names.length - 1) {
+                                all += w[0];
+                              }
+                              return all;
+                            }, "")}
+                        </>
+                      }
+                    />
+                  )}
+                </AccountActionMenu>
+              </Buttons>
 
-            <Buttons data-mobile>
-              <Button
-                icon={<SearchSvg />}
-                size="large"
-                intent="ghost"
-                aria-label="Search"
-                onClick={() => {
-                  alert("search");
-                }}
-              />
-              <Button
-                icon={<MenuSvg />}
-                size="large"
-                intent="ghost"
-                aria-label="Menu"
-                onClick={() => {
-                  const event = new CustomEvent("toggleMobileMenu");
-                  window.document.body.dispatchEvent(event);
-                }}
-              />
-            </Buttons>
-          </>
-        }
-      />
+              <Buttons data-mobile>
+                <Button
+                  icon={<SearchSvg />}
+                  size="large"
+                  intent="ghost"
+                  aria-label="Search"
+                  onClick={() => {
+                    alert("search");
+                  }}
+                />
+                <Button
+                  icon={<MenuSvg />}
+                  size="large"
+                  intent="ghost"
+                  aria-label="Menu"
+                  onClick={() => {
+                    const event = new CustomEvent("toggleMobileMenu");
+                    window.document.body.dispatchEvent(event);
+                  }}
+                />
+              </Buttons>
+            </>
+          }
+        />
 
-      <Content>
-        <ErrorBoundary>
-          <Suspense fallback={<Loader />}>
-            <AppSidebar />
-            <ErrorBoundary>
-              <Suspense fallback={<Loader />}>
-                <Main>{children}</Main>
-              </Suspense>
-            </ErrorBoundary>
-          </Suspense>
-        </ErrorBoundary>
-      </Content>
-    </Container>
+        <Content>
+          <ErrorBoundary>
+            <Suspense fallback={<Loader />}>
+              <AppSidebar />
+              <ErrorBoundary>
+                <Suspense fallback={<Loader />}>
+                  <Main>{children}</Main>
+                </Suspense>
+              </ErrorBoundary>
+            </Suspense>
+          </ErrorBoundary>
+        </Content>
+      </Container>
+    </>
   );
 }

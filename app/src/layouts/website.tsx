@@ -1,9 +1,11 @@
+import Head from "next/head";
 import Link from "next/link";
 import { PropsWithChildren } from "react";
 import styled, { keyframes } from "styled-components";
 
 import { ActionMenu } from "src/components/action-menu";
 import { Button } from "src/components/button";
+import { SEO } from "src/components/seo";
 import { Tooltip } from "src/components/tooltip";
 import { TopBar } from "src/components/top-bar";
 
@@ -283,97 +285,102 @@ type WebsiteLayoutProps = PropsWithChildren<Record<never, any>>;
 
 export function WebsiteLayout({ children }: WebsiteLayoutProps) {
   return (
-    <Container>
-      <StyledTopBar
-        logo={
-          <Logo>
-            <Link href="/">
-              <a>
-                <LogoSvg />
-                <span>lightkeepr</span>
-              </a>
-            </Link>
-          </Logo>
-        }
-        actions={
-          <>
-            <Menu data-tablet>
-              <Link href="/#features">
-                <a>Features</a>
-              </Link>
-              <Link href="/pricing">
-                <a>Pricing</a>
-              </Link>
-              <Link href="/docs">
-                <a>Documentation</a>
-              </Link>
-              <Link href="/auth/sign-in">
-                <a>Sign in</a>
-              </Link>
-            </Menu>
-
-            <ActionMenu
-              items={[
-                { label: "Home", href: "/" },
-                { label: "Features", href: "/#features" },
-                { label: "Documentation", href: "/docs" },
-                { label: "Sign in", href: "/auth/sign-in" },
-              ]}
-            >
-              {(props) => (
-                <MobileButton
-                  data-mobile
-                  icon={<MenuSvg />}
-                  size="large"
-                  intent="ghost"
-                  aria-label="Menu"
-                  {...props}
-                />
-              )}
-            </ActionMenu>
-          </>
-        }
-      />
-
-      <Content>{children}</Content>
-
-      <Footer>
-        <FooterInner>
-          <Copyright>
-            <FooterLogo>lightkeepr</FooterLogo> &copy; 2022
-          </Copyright>
-          <Social>
-            <Tooltip content="@jburr90 on Twitter">
-              {(props) => (
-                <a
-                  {...props}
-                  href="https://twitter.com/jburr90"
-                  target="_blank"
-                  rel="noreferrer noopener"
-                >
-                  <TwitterSvg />
+    <>
+      <Head>
+        <SEO />
+      </Head>
+      <Container>
+        <StyledTopBar
+          logo={
+            <Logo>
+              <Link href="/">
+                <a>
+                  <LogoSvg />
+                  <span>lightkeepr</span>
                 </a>
-              )}
-            </Tooltip>
-            <Tooltip content={"View on Github"}>
-              {(props) => (
-                <a
-                  {...props}
-                  href="https://github.com/julianburr/lightkeepr"
-                  target="_blank"
-                  rel="noreferrer noopener"
-                >
-                  <GithubSvg />
-                </a>
-              )}
-            </Tooltip>
-          </Social>
-        </FooterInner>
+              </Link>
+            </Logo>
+          }
+          actions={
+            <>
+              <Menu data-tablet>
+                <Link href="/#features">
+                  <a>Features</a>
+                </Link>
+                <Link href="/pricing">
+                  <a>Pricing</a>
+                </Link>
+                <Link href="/docs">
+                  <a>Documentation</a>
+                </Link>
+                <Link href="/auth/sign-in">
+                  <a>Sign in</a>
+                </Link>
+              </Menu>
 
-        <Waves />
-        <Duck />
-        <Water />
-      </Footer>
-    </Container>
+              <ActionMenu
+                items={[
+                  { label: "Home", href: "/" },
+                  { label: "Features", href: "/#features" },
+                  { label: "Documentation", href: "/docs" },
+                  { label: "Sign in", href: "/auth/sign-in" },
+                ]}
+              >
+                {(props) => (
+                  <MobileButton
+                    data-mobile
+                    icon={<MenuSvg />}
+                    size="large"
+                    intent="ghost"
+                    aria-label="Menu"
+                    {...props}
+                  />
+                )}
+              </ActionMenu>
+            </>
+          }
+        />
+
+        <Content>{children}</Content>
+
+        <Footer>
+          <FooterInner>
+            <Copyright>
+              <FooterLogo>lightkeepr</FooterLogo> &copy; 2022
+            </Copyright>
+            <Social>
+              <Tooltip content="@jburr90 on Twitter">
+                {(props) => (
+                  <a
+                    {...props}
+                    href="https://twitter.com/jburr90"
+                    target="_blank"
+                    rel="noreferrer noopener"
+                  >
+                    <TwitterSvg />
+                  </a>
+                )}
+              </Tooltip>
+              <Tooltip content={"View on Github"}>
+                {(props) => (
+                  <a
+                    {...props}
+                    href="https://github.com/julianburr/lightkeepr"
+                    target="_blank"
+                    rel="noreferrer noopener"
+                  >
+                    <GithubSvg />
+                  </a>
+                )}
+              </Tooltip>
+            </Social>
+          </FooterInner>
+
+          <Waves />
+          <Duck />
+          <Water />
+        </Footer>
+      </Container>
+    </>
   );
 }
