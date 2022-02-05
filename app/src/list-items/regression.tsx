@@ -6,8 +6,8 @@ import { Button } from "src/components/button";
 import { ListItem } from "src/components/list";
 import { Span, P } from "src/components/text";
 
-import MoreSvg from "src/assets/icons/more-vertical.svg";
-import TrendingDownSvg from "src/assets/icons/trending-down.svg";
+import MoreSvg from "src/assets/icons/outline/dots-vertical.svg";
+import TrendingDownSvg from "src/assets/icons/outline/trending-down.svg";
 
 const Container = styled.div`
   display: flex;

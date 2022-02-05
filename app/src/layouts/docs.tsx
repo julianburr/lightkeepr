@@ -18,12 +18,12 @@ import { DialogProvider } from "src/hooks/use-dialog";
 import { ToastProvider } from "src/hooks/use-toast";
 import { DocsSidebar } from "src/sidebars/docs";
 
-import ExternalLinkSvg from "src/assets/icons/external-link.svg";
-import GridSvg from "src/assets/icons/grid.svg";
-import LoginSvg from "src/assets/icons/log-in.svg";
-import MenuSvg from "src/assets/icons/menu.svg";
-import SearchSvg from "src/assets/icons/search.svg";
-import UserSvg from "src/assets/icons/user.svg";
+import ExternalLinkSvg from "src/assets/icons/outline/external-link.svg";
+import LoginSvg from "src/assets/icons/outline/login.svg";
+import MenuSvg from "src/assets/icons/outline/menu.svg";
+import SearchSvg from "src/assets/icons/outline/search.svg";
+import UserSvg from "src/assets/icons/outline/user.svg";
+import GridSvg from "src/assets/icons/outline/view-grid.svg";
 import LogoSvg from "src/assets/logo.svg";
 
 const auth = getAuth();

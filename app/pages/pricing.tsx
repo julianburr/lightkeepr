@@ -6,7 +6,7 @@ import { Button } from "src/components/button";
 import { Section, SectionContent } from "src/components/homepage/section";
 import { WebsiteLayout } from "src/layouts/website";
 
-import CheckSvg from "src/assets/icons/check.svg";
+import CheckSvg from "src/assets/icons/outline/check.svg";
 
 const PriceGrid = styled.div`
   width: 100%;

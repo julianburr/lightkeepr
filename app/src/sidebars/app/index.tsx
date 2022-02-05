@@ -13,7 +13,7 @@ import { useAuthUser } from "src/hooks/use-auth-user";
 import { useSidebarLinkState } from "src/hooks/use-sidebar-link-state";
 import { TeamSelectInput } from "src/selects/team";
 
-import ArrowLeftSvg from "src/assets/icons/arrow-left.svg";
+import ArrowLeftSvg from "src/assets/icons/outline/arrow-left.svg";
 
 import { BaseSidebar } from "./base";
 import { CompareSidebar } from "./compare";

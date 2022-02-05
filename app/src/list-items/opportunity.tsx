@@ -7,7 +7,7 @@ import { ReportAuditDialog } from "src/dialogs/report/audit";
 import { useDialog } from "src/hooks/use-dialog";
 import { formatBytes, formatMs } from "src/utils/format";
 
-import AlertSvg from "src/assets/icons/alert-circle.svg";
+import AlertSvg from "src/assets/icons/outline/exclamation-circle.svg";
 
 const Container = styled.div`
   display: flex;

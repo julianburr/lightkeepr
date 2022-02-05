@@ -14,9 +14,9 @@ import { useRouter } from "next/router";
 import { useCollection } from "src/@packages/firebase";
 import { Menu } from "src/components/menu";
 
-import BellSvg from "src/assets/icons/bell.svg";
-import GridSvg from "src/assets/icons/grid.svg";
-import LifeBuoySvg from "src/assets/icons/life-buoy.svg";
+import BellSvg from "src/assets/icons/outline/bell.svg";
+import LifeBuoySvg from "src/assets/icons/outline/support.svg";
+import GridSvg from "src/assets/icons/outline/view-grid.svg";
 
 const auth = getAuth();
 const db = getFirestore();

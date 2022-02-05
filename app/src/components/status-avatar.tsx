@@ -2,12 +2,12 @@ import styled, { keyframes } from "styled-components";
 
 import { Avatar } from "src/components/avatar";
 
-import AlertSvg from "src/assets/icons/alert-circle.svg";
-import CheckCircleSvg from "src/assets/icons/check-circle.svg";
-import CheckSvg from "src/assets/icons/check.svg";
-import LoaderSvg from "src/assets/icons/loader.svg";
-import MinusSvg from "src/assets/icons/minus.svg";
-import XSvg from "src/assets/icons/x.svg";
+import CheckCircleSvg from "src/assets/icons/outline/check-circle.svg";
+import CheckSvg from "src/assets/icons/outline/check.svg";
+import AlertSvg from "src/assets/icons/outline/exclamation-circle.svg";
+import LoaderSvg from "src/assets/icons/outline/loader.svg";
+import MinusSvg from "src/assets/icons/outline/minus.svg";
+import XSvg from "src/assets/icons/outline/x.svg";
 
 const spin = keyframes`
   0% { transform: rotate(0deg); }

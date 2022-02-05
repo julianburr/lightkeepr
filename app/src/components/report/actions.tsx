@@ -23,8 +23,8 @@ import { useConfirmationDialog } from "src/dialogs/confirm";
 import { useAuthUser } from "src/hooks/use-auth-user";
 import { useToast } from "src/hooks/use-toast";
 
-import ChevronLeftSvg from "src/assets/icons/chevron-left.svg";
-import ChevronRightSvg from "src/assets/icons/chevron-right.svg";
+import ChevronLeftSvg from "src/assets/icons/outline/chevron-left.svg";
+import ChevronRightSvg from "src/assets/icons/outline/chevron-right.svg";
 
 const db = getFirestore();
 

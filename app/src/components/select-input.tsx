@@ -1,7 +1,7 @@
 import { Ref, ReactNode, useCallback, useRef, useMemo } from "react";
 import styled from "styled-components";
 
-import ChevronDownSvg from "src/assets/icons/chevron-down.svg";
+import ChevronDownSvg from "src/assets/icons/outline/chevron-down.svg";
 
 import { Popout } from "./popout";
 import { PopoutMenu } from "./popout-menu";

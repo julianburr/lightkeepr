@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 
-export function useSidebarState() {
+export function useSidebarState(id?: string) {
   const menuRef = useRef<HTMLMenuElement>();
   const backdropRef = useRef<HTMLDivElement>();
+
+  const eventName = id ? `toggleMobileMenu:${id}` : "toggleMobileMenu";
 
   // Active state and toggling behaviour based on events
   const [active, setActive] = useState(false);
@@ -20,10 +22,10 @@ export function useSidebarState() {
     const body = window.document.body;
     const backdrop = backdropRef.current;
 
-    body.addEventListener("toggleMobileMenu", handleToggle);
+    body.addEventListener(eventName, handleToggle);
     backdrop?.addEventListener?.("click", handleBackdropClick);
     return () => {
-      body.removeEventListener("toggleMobileMenu", handleToggle);
+      body.removeEventListener(eventName, handleToggle);
       backdrop?.removeEventListener?.("click", handleBackdropClick);
     };
   }, []);

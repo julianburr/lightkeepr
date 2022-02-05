@@ -5,8 +5,8 @@ import styled from "styled-components";
 
 import { CATEGORIES } from "src/utils/audits";
 
-import TrendingDownSvg from "src/assets/icons/trending-down.svg";
-import TrendingUpSvg from "src/assets/icons/trending-up.svg";
+import TrendingDownSvg from "src/assets/icons/outline/trending-down.svg";
+import TrendingUpSvg from "src/assets/icons/outline/trending-up.svg";
 
 const Container = styled.div`
   width: 100%;

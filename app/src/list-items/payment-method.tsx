@@ -6,15 +6,15 @@ import { Avatar } from "src/components/avatar";
 import { ListItem } from "src/components/list";
 import { P, Small } from "src/components/text";
 
-import AmexSvg from "src/assets/cc/amex.svg";
-import BitcoinSvg from "src/assets/cc/bitcoin.svg";
-import DiscoverSvg from "src/assets/cc/discover.svg";
-import JcbSvg from "src/assets/cc/jcb.svg";
-import MaestroSvg from "src/assets/cc/maestro.svg";
-import MastercardSvg from "src/assets/cc/mastercard.svg";
-import PaypalSvg from "src/assets/cc/paypal.svg";
-import VisaSvg from "src/assets/cc/visa.svg";
-import GenericSvg from "src/assets/icons/credit-card.svg";
+import AmexSvg from "src/assets/icons/cc-provider-logos/amex.svg";
+import BitcoinSvg from "src/assets/icons/cc-provider-logos/bitcoin.svg";
+import DiscoverSvg from "src/assets/icons/cc-provider-logos/discover.svg";
+import JcbSvg from "src/assets/icons/cc-provider-logos/jcb.svg";
+import MaestroSvg from "src/assets/icons/cc-provider-logos/maestro.svg";
+import MastercardSvg from "src/assets/icons/cc-provider-logos/mastercard.svg";
+import PaypalSvg from "src/assets/icons/cc-provider-logos/paypal.svg";
+import VisaSvg from "src/assets/icons/cc-provider-logos/visa.svg";
+import GenericSvg from "src/assets/icons/outline/credit-card.svg";
 
 const CC = {
   jcb: JcbSvg,

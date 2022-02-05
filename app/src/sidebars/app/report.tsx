@@ -10,7 +10,7 @@ import { Meta } from "src/components/meta";
 import { Spacer } from "src/components/spacer";
 import { Suspense } from "src/components/suspense";
 
-import ArrowLeftSvg from "src/assets/icons/arrow-left.svg";
+import ArrowLeftSvg from "src/assets/icons/outline/arrow-left.svg";
 
 const db = getFirestore();
 

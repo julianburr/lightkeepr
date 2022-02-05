@@ -1,7 +1,7 @@
 import { ReactNode, Ref, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
-import CheckSvg from "src/assets/icons/check.svg";
+import CheckSvg from "src/assets/icons/outline/check.svg";
 
 const Container = styled.div`
   input {

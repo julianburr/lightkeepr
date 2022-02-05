@@ -1,8 +1,8 @@
 import { ComponentProps, forwardRef, useState, Ref } from "react";
 import styled from "styled-components";
 
-import EyeOffSvg from "src/assets/icons/eye-off.svg";
-import EyeSvg from "src/assets/icons/eye.svg";
+import EyeOffSvg from "src/assets/icons/outline/eye-off.svg";
+import EyeSvg from "src/assets/icons/outline/eye.svg";
 
 import { Input } from "./text-input";
 

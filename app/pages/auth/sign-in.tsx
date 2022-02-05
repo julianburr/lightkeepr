@@ -25,8 +25,8 @@ import { useAuthUser } from "src/hooks/use-auth-user";
 import { AuthLayout } from "src/layouts/auth";
 import { api } from "src/utils/api-client";
 
-import GithubSvg from "src/assets/auth/github.svg";
-import GoogleSvg from "src/assets/auth/google.svg";
+import GithubSvg from "src/assets/icons/auth-provider-logos/github.svg";
+import GoogleSvg from "src/assets/icons/auth-provider-logos/google.svg";
 
 const auth = getAuth();
 const googleProvider = new GoogleAuthProvider();

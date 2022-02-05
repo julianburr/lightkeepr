@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import { useDocument } from "src/@packages/firebase";
 import { Menu } from "src/components/menu";
 
-import ArrowLeftSvg from "src/assets/icons/arrow-left.svg";
+import ArrowLeftSvg from "src/assets/icons/outline/arrow-left.svg";
 
 const db = getFirestore();
 
