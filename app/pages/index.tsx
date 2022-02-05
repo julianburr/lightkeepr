@@ -167,7 +167,11 @@ const AppContainer = styled.div`
   inset: 0;
   text-align: left;
   overflow: hidden;
-  pointer-events: none;
+
+  &,
+  & * {
+    pointer-events: none !important;
+  }
 
   h1,
   h2,
