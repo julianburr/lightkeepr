@@ -83,13 +83,17 @@ export function BaseSidebar({ getLinkProps }: BaseSidebarProps) {
     },
 
     // Projects list
-    {
-      label: "Projects",
-      items: projects.map((project: any) => ({
-        label: project.name,
-        ...getLinkProps({ projectId: project.id }),
-      })),
-    },
+    ...(projects.length
+      ? [
+          {
+            label: "Projects",
+            items: projects.map((project: any) => ({
+              label: project.name,
+              ...getLinkProps({ projectId: project.id }),
+            })),
+          },
+        ]
+      : []),
 
     // Profile menu items
     {

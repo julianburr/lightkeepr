@@ -50,8 +50,8 @@ export const GlobalStyles = createGlobalStyle`
     }
   }
 
-  b {
-    font-weight: 800;
+  b, strong {
+    font-weight: 700;
   }
 
   h1 {

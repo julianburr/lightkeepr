@@ -2,12 +2,12 @@ import * as fs from "fs";
 import * as path from "path";
 
 import glob from "glob";
-import { MDXRemote } from "next-mdx-remote";
 import Head from "next/head";
 import { useRef, Ref, useEffect } from "react";
 import styled from "styled-components";
 import twemoji from "twemoji";
 
+import { Markdown } from "src/components/markdown";
 import { DocsLayout } from "src/layouts/docs";
 import { parseMdx } from "src/utils/node/mdx";
 
@@ -21,12 +21,18 @@ const Container = styled.main`
     line-height: 1.1;
   }
 
+  h1 {
+    margin: 0 0 2rem 0;
+  }
+
   h2 {
-    margin: 3.2rem 0 0;
+    margin: 3.8rem 0 1.6rem;
+    font-size: 1.6em;
   }
 
   h3 {
-    margin: 2.4rem 0 -0.8rem;
+    margin: 2.4rem 0 0.6rem;
+    font-size: 1.2em;
   }
 
   h2,
@@ -54,12 +60,30 @@ const Container = styled.main`
 
   ul li {
     margin: 1.2rem 0;
+    padding: 0 0 0 3.2rem;
+    position: relative;
+
+    &:before {
+      content: " ";
+      position: absolute;
+      top: 0.7em;
+      left: 0.8rem;
+      width: 1.2rem;
+      height: 0.15rem;
+      background: currentColor;
+    }
+  }
+
+  .emoji {
+    height: 1.2em;
+    width: auto;
+    margin: -0.2rem 0.2rem 0;
+    vertical-align: middle;
+    display: inline-block;
   }
 `;
 
-const components = {};
-
-export default function DocsHomePage({ meta, source }: any) {
+export default function DocsHomePage({ meta, markdown }: any) {
   const contentRef = useRef<HTMLDivElement>();
   useEffect(() => {
     if (contentRef.current) {
@@ -76,14 +100,14 @@ export default function DocsHomePage({ meta, source }: any) {
         <title>
           Lightkeepr Docs —
           {meta.category
-            ? ` ${meta.category} — ${meta.title}`
+            ? ` ${meta.category}: ${meta.title}`
             : ` ${meta.title}`}
         </title>
       </Head>
 
       <Container ref={contentRef as Ref<HTMLDivElement>}>
         <h1>{meta.title}</h1>
-        <MDXRemote {...source} components={components} />
+        <Markdown>{markdown}</Markdown>
       </Container>
     </DocsLayout>
   );
@@ -104,9 +128,8 @@ export async function getStaticProps({ params }: any) {
   }
 
   const fileContent = fs.readFileSync(filePath, "utf-8");
-  const { meta, source } = await parseMdx(fileContent);
-
-  return { props: { meta, source } };
+  const { meta, markdown } = await parseMdx(fileContent);
+  return { props: { meta, markdown } };
 }
 
 export async function getStaticPaths() {
@@ -114,7 +137,7 @@ export async function getStaticPaths() {
 
   const docs = glob
     .sync("**/*.md", { cwd: docsDir })
-    .filter((path) => path !== "__menu.md" && !path.endsWith("/__menu.md"));
+    .filter((path) => path !== "README.md");
   const paths = docs.map((path) => ({
     params: {
       slug: path

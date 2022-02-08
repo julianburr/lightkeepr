@@ -33,7 +33,7 @@ type ExtraProps = {
   ellipsis?: boolean;
 };
 
-const Any: ComponentType<any> = styled(
+export const Text: ComponentType<any> = styled(
   ({ as: Component, grey, ellipsis, ...props }) => <Component {...props} />
 )`
   opacity: ${(props) => (props.grey ? ".6" : 1)};
@@ -48,7 +48,7 @@ const Any: ComponentType<any> = styled(
 `;
 
 export const P = (props: HTMLProps<HTMLParagraphElement> & ExtraProps) => (
-  <Any as="p" {...props} />
+  <Text as="p" {...props} />
 );
 
 export const Small = styled(P)`
@@ -60,15 +60,15 @@ export const Tiny = styled(P)`
 `;
 
 export const Bold = (props: HTMLProps<HTMLSpanElement> & ExtraProps) => (
-  <Any as="b" {...props} />
+  <Text as="b" {...props} />
 );
 
 export const Semibold = styled(Bold)``;
 
 export const Underline = (props: HTMLProps<HTMLSpanElement> & ExtraProps) => (
-  <Any as="u" {...props} />
+  <Text as="u" {...props} />
 );
 
 export const Span = (props: HTMLProps<HTMLSpanElement> & ExtraProps) => (
-  <Any as="span" {...props} />
+  <Text as="span" {...props} />
 );

@@ -1,48 +1,33 @@
 import * as path from "path";
 
 import matter from "gray-matter";
-import { serialize } from "next-mdx-remote/serialize";
 import getReadingTime from "reading-time";
-import autolinkHeadings from "rehype-autolink-headings";
-import externalLinks from "rehype-external-links";
-import slug from "rehype-slug";
-import copyLinkedFiles from "remark-copy-linked-files";
-import smartypants from "remark-smartypants";
+import remarkCopyLinkedFiles from "remark-copy-linked-files";
+import remarkParse from "remark-parse";
+import remarkSmartypants from "remark-smartypants";
+import remarkStringify from "remark-stringify";
+import { unified } from "unified";
 
 export async function parseMdx(mdxString: string) {
   const { data, content } = matter(mdxString);
   const readingTime = getReadingTime(mdxString);
 
-  const source = await serialize(content, {
-    mdxOptions: {
-      remarkPlugins: [
-        smartypants,
-        [
-          copyLinkedFiles,
-          {
-            destinationDir: path.resolve(process.cwd(), "./public"),
-          },
-        ],
-      ],
-      rehypePlugins: [
-        slug,
-        autolinkHeadings,
-        [
-          externalLinks,
-          {
-            target: "_blank",
-            rel: ["nofollow", "noreferrer"],
-          },
-        ],
-      ],
-    },
-  });
+  const parsed = await unified()
+    .use(remarkParse)
+    .use(remarkSmartypants)
+    .use(remarkCopyLinkedFiles, {
+      destinationDir: path.resolve(process.cwd(), "./public"),
+    })
+    .use(remarkStringify)
+    .process(content);
+
+  const markdown = parsed.toString();
 
   return {
     meta: {
       ...data,
       readingTime,
     },
-    source,
+    markdown,
   };
 }
