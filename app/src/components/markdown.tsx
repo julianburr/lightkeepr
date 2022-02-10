@@ -16,7 +16,6 @@ const components = {
   h3: (props: any) => <Heading level={3} {...props} />,
   h4: (props: any) => <Heading level={4} {...props} />,
   code: (props: any) => {
-    console.log({ props });
     if (props.inline) {
       return <code {...props} />;
     }
