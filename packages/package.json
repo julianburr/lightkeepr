@@ -9,22 +9,20 @@
     "typecheck": "tsc -p ."
   },
   "dependencies": {
-    "@parcel/config-default": "^2.2.1",
-    "@parcel/core": "^2.2.1",
-    "@parcel/packager-ts": "^2.2.1",
-    "@parcel/transformer-typescript-types": "^2.2.1",
-    "@types/node": "^17.0.1",
-    "@typescript-eslint/eslint-plugin": "^5.10.0",
-    "eslint": "^8.7.0",
+    "@parcel/config-default": "^2.3.0",
+    "@parcel/core": "^2.3.0",
+    "@parcel/packager-ts": "^2.3.0",
+    "@parcel/transformer-typescript-types": "^2.3.0",
+    "@types/node": "^17.0.16",
+    "@typescript-eslint/eslint-plugin": "^5.11.0",
+    "esbuild": "^0.14.21",
+    "eslint": "^8.8.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
     "glob": "^7.2.0",
-    "parcel": "^2.2.1",
+    "parcel": "^2.3.0",
     "prettier": "^2.5.1",
-    "typescript": "^4.5.4",
+    "typescript": "^4.5.5",
     "yargs": "^17.3.1"
-  },
-  "devDependencies": {
-    "esbuild": "^0.14.13"
   }
 }
