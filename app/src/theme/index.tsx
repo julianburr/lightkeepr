@@ -50,8 +50,8 @@ export const GlobalStyles = createGlobalStyle`
     }
   }
 
-  b {
-    font-weight: 800;
+  b, strong {
+    font-weight: 700;
   }
 
   h1 {
@@ -87,7 +87,9 @@ export const GlobalStyles = createGlobalStyle`
     margin: .8rem 0;
   }
 
-  p code {
+  p code, 
+  span code,
+  li code {
     font-family: "Source Code Pro", Consolas, Monaco, "Andale Mono", "Ubuntu Mono";
     display: inline-block;
     vertical-align: center;

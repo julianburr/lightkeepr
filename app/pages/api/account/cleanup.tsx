@@ -108,7 +108,6 @@ export default createHandler({
         let newSubscriptions = user.subscriptions;
         for (const subscription of user.subscriptions || []) {
           const [collection, id] = subscription._path.segments;
-          console.log({ path: subscription._path, collection, id });
           if (cache[collection] && !cache[collection][id]) {
             newSubscriptions = newSubscriptions.filter(
               (s: any) => s !== subscription

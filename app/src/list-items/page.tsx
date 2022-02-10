@@ -48,7 +48,7 @@ const Device = styled.span`
     height: 1em;
     width: auto;
     vertical-align: middle;
-    margin: -0.3rem 0 0;
+    margin: -0.1rem 0 0;
   }
 `;
 

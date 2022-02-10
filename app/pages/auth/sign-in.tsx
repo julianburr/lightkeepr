@@ -181,9 +181,11 @@ export default function SignIn({ isSignUp }: SigninProps) {
             </FormGrid>
           </form>
 
-          <P>
-            <Link href="/auth/forgot-password">Forgot password?</Link>
-          </P>
+          {!isSignUp && (
+            <P>
+              <Link href="/auth/forgot-password">Forgot password?</Link>
+            </P>
+          )}
         </>
       ) : (
         <Button

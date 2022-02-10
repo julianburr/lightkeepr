@@ -1,7 +1,6 @@
 import "src/utils/firebase";
 
 import { getAuth } from "firebase/auth";
-import Head from "next/head";
 import Link from "next/link";
 import { PropsWithChildren } from "react";
 import styled from "styled-components";
@@ -101,6 +100,20 @@ const Buttons = styled.div`
   gap: 0.6rem;
 `;
 
+const Soon = styled.span`
+  font-size: 1rem;
+  padding: 0.2rem 0.4rem;
+  background: var(--sol--palette-sand-100);
+  font-family: "Playfair Display";
+  vertical-align: middle;
+  margin: -0.2rem 0 0 0.4rem;
+  display: inline-flex;
+
+  &:before {
+    content: "soon";
+  }
+`;
+
 type DocsLayoutProps = PropsWithChildren<Record<never, any>>;
 
 function TopBarActions() {
@@ -159,9 +172,6 @@ function TopBarActions() {
 export function DocsLayout({ children }: DocsLayoutProps) {
   return (
     <>
-      <Head>
-        <title>Lightkeepr</title>
-      </Head>
       <Container>
         <TopBar
           logo={
@@ -248,6 +258,10 @@ export function DocsLayout({ children }: DocsLayoutProps) {
                 label: "Getting started",
                 href: "/docs/getting-started",
               },
+              {
+                label: "FAQs",
+                href: "/docs/faqs",
+              },
 
               {
                 label: "Features",
@@ -272,57 +286,89 @@ export function DocsLayout({ children }: DocsLayoutProps) {
                     label: "Compare reports",
                     href: "/docs/features/compare-reports",
                   },
+                  {
+                    label: (
+                      <>
+                        Comments
+                        <Soon />
+                      </>
+                    ),
+                    href: "/docs/features/comments",
+                  },
                 ],
               },
+
               {
-                label: "CLI",
+                label: "Integrations",
                 items: [
                   {
-                    label: "Getting started",
-                    href: "/docs/cli/getting-started",
+                    label: (
+                      <>
+                        Webhooks
+                        <Soon />
+                      </>
+                    ),
+                    href: "/docs/integrations/webhooks",
                   },
                   {
-                    label: "Options",
-                    href: "/docs/cli/options",
+                    label: (
+                      <>
+                        Slack
+                        <Soon />
+                      </>
+                    ),
+                    href: "/docs/integrations/slack",
+                  },
+                  {
+                    label: (
+                      <>
+                        Jira
+                        <Soon />
+                      </>
+                    ),
+                    href: "/docs/integrations/jira",
+                  },
+                  {
+                    label: (
+                      <>
+                        Zapier
+                        <Soon />
+                      </>
+                    ),
+                    href: "/docs/integrations/zapier",
                   },
                 ],
               },
+
               {
-                label: "Node",
+                label: "Packages",
                 items: [
                   {
-                    label: "Getting started",
-                    href: "/docs/node/getting-started",
+                    label: "@lightkeepr/cli",
+                    href: "/docs/packages/cli",
                   },
                   {
-                    label: "Options",
-                    href: "/docs/node/options",
+                    label: "@lightkeepr/node",
+                    href: "/docs/packages/node",
+                  },
+                  {
+                    label: (
+                      <>
+                        @lightkeepr/cypress
+                        <Soon />
+                      </>
+                    ),
+                    href: "/docs/packages/cypress",
                   },
                 ],
               },
-              {
-                label: "Cypress",
-                items: [
-                  {
-                    label: "Getting started",
-                    href: "/docs/cypress/getting-started",
-                  },
-                  {
-                    label: "Options",
-                    href: "/docs/cypress/options",
-                  },
-                ],
-              },
+
               {
                 label: "Contribute",
                 items: [
                   {
                     label: "Contribution guide",
                     href: "/docs/contribute/guide",
-                  },
-                  {
-                    label: "Contribute to the docs",
-                    href: "/docs/contribute/contribute-to-docs",
                   },
                   {
                     label: "Report an issue",
@@ -332,6 +378,7 @@ export function DocsLayout({ children }: DocsLayoutProps) {
                     label: "Github repo",
                     href: "https://github.com/julianburr/lightkeepr",
                     icon: <ExternalLinkSvg />,
+                    target: "_blank",
                   },
                 ],
               },

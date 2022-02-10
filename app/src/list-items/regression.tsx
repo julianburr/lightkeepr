@@ -49,8 +49,6 @@ const Status = styled.div`
 export function RegressionListItem({ data }: any) {
   const router = useRouter();
 
-  console.log({ data });
-
   if (data.type === "trend") {
     return (
       <ListItem>
