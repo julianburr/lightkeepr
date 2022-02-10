@@ -115,15 +115,14 @@ export default function DocsHomePage({ meta, markdown }: any) {
 
 export async function getStaticProps({ params }: any) {
   const docsDir = path.resolve(process.cwd(), "../docs");
+  const packagesDir = path.resolve(process.cwd(), "../packages");
 
-  const relPath = params.slug.join("/");
-  const filePath = fs.existsSync(path.resolve(docsDir, `${relPath}.md`))
-    ? path.resolve(docsDir, `${relPath}.md`)
-    : fs.existsSync(path.resolve(docsDir, `${relPath}/index.md`))
-    ? path.resolve(docsDir, `${relPath}/index.md`)
-    : null;
+  const filePath =
+    params.slug?.[0] === "packages"
+      ? path.resolve(packagesDir, `./${params.slug[1]}/README.md`)
+      : path.resolve(docsDir, `./${params.slug.join("/")}.md`);
 
-  if (!filePath) {
+  if (!fs.existsSync(filePath)) {
     return { props: {} };
   }
 
@@ -134,14 +133,22 @@ export async function getStaticProps({ params }: any) {
 
 export async function getStaticPaths() {
   const docsDir = path.resolve(process.cwd(), "../docs");
-
   const docs = glob
     .sync("**/*.md", { cwd: docsDir })
+    .filter((path) => !path.includes("node_modules"))
     .filter((path) => path !== "README.md");
-  const paths = docs.map((path) => ({
+
+  const packagesDir = path.resolve(process.cwd(), "../packages");
+  const packages = glob
+    .sync("**/README.md", { cwd: packagesDir })
+    .filter((path) => !path.includes("node_modules"))
+    .map((path) => `packages/${path}`);
+
+  const paths = [...docs, ...packages].map((path) => ({
     params: {
       slug: path
         .replace(/^index\.md$/, "")
+        .replace(/\/README\.md$/, "")
         .replace(/\.md$/, "")
         .split("/"),
     },
