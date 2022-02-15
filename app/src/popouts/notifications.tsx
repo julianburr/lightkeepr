@@ -117,22 +117,27 @@ export function NotificationsButton() {
   const authUser = useAuthUser();
   const router = useRouter();
 
-  const notifications =
-    authUser.user?.notifications?.[authUser!.team!.id] || [];
+  const teamId = authUser!.team!.id;
+  const notifications = authUser.user?.notifications || {};
 
   const unread = useMemo(
-    () => notifications.filter((notification) => !notification.seenAt),
+    () =>
+      notifications?.[teamId]?.filter?.((notification) => !notification.seenAt),
     [notifications]
   );
 
   useEffect(() => {
     if (router.query.nid) {
       updateDoc(doc(db, "users", authUser.uid!), {
-        notifications: notifications.map((notification) => {
-          return notification.id === router.query.nid
-            ? { ...notification, seenAt: new Date() }
-            : notification;
-        }),
+        notifications: {
+          ...notifications,
+          [teamId]:
+            notifications[teamId]?.map?.((notification) => {
+              return notification.id === router.query.nid
+                ? { ...notification, seenAt: new Date() }
+                : notification;
+            }) || [],
+        },
       });
     }
   }, [router.query.nid]);

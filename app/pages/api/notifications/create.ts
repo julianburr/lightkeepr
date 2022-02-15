@@ -51,7 +51,7 @@ export default createHandler({
           `The report "${data.name}" failed in the ` +
           `project "${projectSnap.data?.()?.name}"`;
 
-        notification.href = `/app/${teamId}/report/${data.id}`;
+        notification.href = `/app/${teamId}/reports/${data.id}`;
         notification.references.push(projectRef);
 
         break;
