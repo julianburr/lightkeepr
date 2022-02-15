@@ -3,7 +3,7 @@ import "src/utils/firebase";
 import classNames from "classnames";
 import dayjs from "dayjs";
 import { deleteDoc, doc, getFirestore, updateDoc } from "firebase/firestore";
-import { SetStateAction, useCallback, useMemo } from "react";
+import { SetStateAction, useCallback, useMemo, useState } from "react";
 import { Dispatch } from "react";
 import styled from "styled-components";
 
@@ -20,6 +20,7 @@ import { useAuthUser } from "src/hooks/use-auth-user";
 import CheckSvg from "src/assets/icons/outline/check.svg";
 import DotsSvg from "src/assets/icons/outline/dots-vertical.svg";
 
+import { RichTextInput } from "./rich-text-input";
 import { Tooltip } from "./tooltip";
 
 const db = getFirestore();
@@ -98,7 +99,7 @@ const Actions = styled.div`
     right: 0;
     left: 0;
     top: 0.3rem;
-    bottom: -0.6rem;
+    bottom: 0.2rem;
     background: var(--sol--palette-sand-50);
     background: linear-gradient(
       90deg,
@@ -138,9 +139,10 @@ export function Comment({
     (user: any) => user.id === comment.createdBy?.id
   );
 
+  const [edit, setEdit] = useState(false);
+
   const resolveComment = useCallback(
     (e) => {
-      e.preventDefault();
       e.stopPropagation();
       if (comment.id) {
         if (thread) {
@@ -157,7 +159,6 @@ export function Comment({
 
   const unresolveComment = useCallback(
     (e) => {
-      e.preventDefault();
       e.stopPropagation();
       if (comment.id) {
         return updateDoc(doc(db, "comments", comment.id), {
@@ -195,6 +196,29 @@ export function Comment({
     [comment.id, thread, index, threadComment]
   );
 
+  const updateComment = useCallback(
+    (value) => {
+      const updatedComment = {
+        content: value,
+        lastUpdatedBy: doc(db, "users", authUser.uid!),
+        lastUpdatedAt: new Date(),
+      };
+      if (comment.id) {
+        updateDoc(doc(db, "comments", comment.id), updatedComment);
+      } else if (thread) {
+        updateDoc(doc(db, "comments", threadComment.id), {
+          thread: threadComment.thread.map((c: any, i: number) => {
+            if (i + 1 === index) {
+              return { ...c, ...updatedComment };
+            }
+          }),
+        });
+      }
+      setEdit(false);
+    },
+    [comment.id, thread, index, threadComment]
+  );
+
   const actions = useMemo(() => {
     let actions: any[] = [];
 
@@ -208,6 +232,15 @@ export function Comment({
     if (comment.createdBy?.id === authUser.uid) {
       actions = actions.concat([
         {
+          label: edit ? "Cancel edit" : "Edit",
+          onClick: (e: any) => {
+            e.stopPropagation();
+            setEdit(!edit);
+          },
+        },
+      ]);
+      actions = actions.concat([
+        {
           label: "Delete",
           intent: "danger",
           onClick: deleteComment,
@@ -216,11 +249,11 @@ export function Comment({
     }
 
     return actions;
-  }, [comment]);
+  }, [comment, edit]);
 
   return (
     <Container
-      onClick={comment.id ? () => setThread(comment.id) : undefined}
+      onClick={comment.id && !edit ? () => setThread(comment.id) : undefined}
       tabIndex={0}
       className={classNames({ resolved: !!comment.resolvedAt })}
     >
@@ -228,9 +261,26 @@ export function Comment({
       <Content>
         <Title>
           <Small>{createdBy?.name}</Small>
-          <Small grey>
-            — {dayjs.unix(comment.createdAt?.seconds).fromNow()}
-          </Small>
+          {comment.createdAt?.seconds !== comment.lastUpdatedAt?.seconds ? (
+            <Tooltip
+              content={`Last edited ${dayjs
+                .unix(comment.lastUpdatedAt?.seconds)
+                .fromNow()}`}
+            >
+              {(props) => (
+                <span {...props}>
+                  <Small grey>
+                    — {dayjs.unix(comment.createdAt?.seconds).fromNow()}{" "}
+                    (edited)
+                  </Small>
+                </span>
+              )}
+            </Tooltip>
+          ) : (
+            <Small grey>
+              — {dayjs.unix(comment.createdAt?.seconds).fromNow()}
+            </Small>
+          )}
         </Title>
 
         <Actions>
@@ -270,7 +320,14 @@ export function Comment({
           />
         </Actions>
 
-        <Markdown>{comment.content}</Markdown>
+        {edit ? (
+          <>
+            <Spacer h=".2rem" />
+            <RichTextInput value={comment.content} onEnter={updateComment} />
+          </>
+        ) : (
+          <Markdown>{comment.content}</Markdown>
+        )}
 
         {!thread && comment.thread?.length > 0 && (
           <>

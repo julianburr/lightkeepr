@@ -31,6 +31,8 @@ const Container = styled.div`
   max-height: 15rem;
   padding: 0.6rem 0.8rem;
   line-height: 1.4;
+  background: var(--sol--color-white);
+  cursor: text;
 
   .DraftEditor-root {
     position: relative;
