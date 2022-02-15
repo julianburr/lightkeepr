@@ -1,12 +1,13 @@
 import { ComponentProps } from "react";
+import Linkify from "react-linkify";
 import ReactMarkdown from "react-markdown";
 import externalLinks from "rehype-external-links";
 
+import { CodePreview } from "src/components/code-preview";
 import { Heading } from "src/components/mdx/heading";
 import { Hr } from "src/components/mdx/hr";
 import { Image } from "src/components/mdx/image";
-
-import { CodePreview } from "./code-preview";
+import { Mention } from "src/components/mention";
 
 const components = {
   img: Image,
@@ -30,6 +31,23 @@ const components = {
       />
     );
   },
+  a: (props: any) => {
+    if (props.href?.startsWith("#mention_")) {
+      return <Mention>{props.children}</Mention>;
+    }
+    return <a {...props} />;
+  },
+  p: (props: any) => (
+    <Linkify
+      componentDecorator={(href, text) => (
+        <a href={href} target="_blank" rel="nofollow noreferrer">
+          {text}
+        </a>
+      )}
+    >
+      <p {...props} />
+    </Linkify>
+  ),
 };
 
 export function Markdown(props: ComponentProps<typeof ReactMarkdown>) {

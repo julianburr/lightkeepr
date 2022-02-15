@@ -14,7 +14,7 @@ export function useSidebarState(id?: string) {
     }
 
     function handleBackdropClick(e: any) {
-      if (menuRef.current && !menuRef.current.contains(e.target)) {
+      if (backdropRef.current && backdropRef.current === e.target) {
         setActive(false);
       }
     }

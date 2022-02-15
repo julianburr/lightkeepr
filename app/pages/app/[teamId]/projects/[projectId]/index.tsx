@@ -1,16 +1,18 @@
 import "src/utils/firebase";
 
 import {
+  addDoc,
   collection,
   doc,
   getFirestore,
   orderBy,
   query,
+  updateDoc,
   where,
 } from "firebase/firestore";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import styled from "styled-components";
 
 import { useCollection, useDocument } from "src/@packages/firebase";
@@ -27,10 +29,12 @@ import { ProjectActions } from "src/components/project/actions";
 import { Spacer } from "src/components/spacer";
 import { Suspense } from "src/components/suspense";
 import { GroupHeading, Heading, P, Small } from "src/components/text";
+import { useAuthUser } from "src/hooks/use-auth-user";
 import { useRunFilters } from "src/hooks/use-run-filters";
 import { AppLayout } from "src/layouts/app";
 import { PageListItem } from "src/list-items/page";
 import { RunListItem } from "src/list-items/run";
+import { CommentsPopout } from "src/popouts/comments";
 
 const db = getFirestore();
 
@@ -40,6 +44,7 @@ const Container = styled.div`
 `;
 
 function Content() {
+  const authUser = useAuthUser();
   const router = useRouter();
   const { projectId } = router.query;
 
@@ -79,12 +84,62 @@ function Content() {
     [runs, runsLimit, filters]
   );
 
+  const allComments: any[] = useCollection(
+    query(
+      collection(db, "comments"),
+      where("project", "==", projectRef),
+      where("resolvedAt", "==", null),
+      orderBy("createdAt", "asc")
+    ),
+    { key: `${project.id}/comments` }
+  );
+
+  const [comments, relatedComments] = useMemo(
+    () =>
+      allComments.reduce(
+        (all, comment: any) => {
+          if (comment.run) {
+            all[1].push(comment);
+          } else {
+            all[0].push(comment);
+          }
+          return all;
+        },
+        [[], []]
+      ),
+    [allComments]
+  );
+
+  const addComment = useCallback(
+    ({ id, ...comment }: any) => {
+      if (id) {
+        updateDoc(doc(db, "comments", id), comment);
+      } else {
+        addDoc(collection(db, "comments"), {
+          ...comment,
+          type: "project",
+          project: projectRef,
+        });
+      }
+    },
+    [projectRef]
+  );
+
   if (!runs?.length) {
     return (
       <>
         <ButtonBar
           left={<Heading level={1}>{project.name}</Heading>}
-          right={<ProjectActions data={project} />}
+          right={
+            <>
+              <CommentsPopout
+                comments={comments}
+                relatedComments={relatedComments}
+                onComment={addComment}
+              />
+              <ProjectActions data={project} />
+            </>
+          }
         />
         <Spacer h="1.8rem" />
         <HelpBox>
@@ -163,7 +218,16 @@ function Content() {
     <>
       <ButtonBar
         left={<Heading level={1}>{project.name}</Heading>}
-        right={<ProjectActions data={project} />}
+        right={
+          <>
+            <CommentsPopout
+              comments={comments}
+              relatedComments={relatedComments}
+              onComment={addComment}
+            />
+            <ProjectActions data={project} />
+          </>
+        }
       />
       <Spacer h="1.8rem" />
 

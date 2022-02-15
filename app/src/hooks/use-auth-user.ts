@@ -39,6 +39,8 @@ type Team = {
   billingEmail?: string;
   stripeCustomerId?: string;
   apiKey?: string;
+  users?: any[];
+  userRoles?: any;
 };
 
 type TeamRole = "owner" | "billing" | "member";

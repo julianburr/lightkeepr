@@ -25,6 +25,7 @@ const Container = styled(({ as: As = "div", color, background, ...props }) => (
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
   font-family: "Playfair Display";
   position: relative;
   background: ${(props) =>

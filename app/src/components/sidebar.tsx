@@ -72,7 +72,7 @@ const TopContainer = styled.div`
   flex-direction: column;
   gap: 0.8rem;
   padding: 1.6rem 2.4rem;
-  background: #f5f4f1;
+  background: var(--sol--palette-sand-100);
   position: sticky;
   top: 0;
   z-index: 20;
