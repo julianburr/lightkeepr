@@ -130,7 +130,7 @@ export function Sidebar({ top, children }: SidebarProps) {
 
   return (
     <Container ref={backdropRef as Ref<HTMLDivElement>} data-active={active}>
-      <Menu ref={menuRef as Ref<HTMLMenuElement>}>
+      <Menu ref={menuRef as Ref<HTMLMenuElement>} tabIndex={0}>
         {top && (
           <TopContainer ref={topContainerRef as Ref<HTMLDivElement>}>
             {top}

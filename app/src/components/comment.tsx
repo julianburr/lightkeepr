@@ -1,21 +1,12 @@
 import "src/utils/firebase";
 
+import classNames from "classnames";
 import dayjs from "dayjs";
-import {
-  collection,
-  deleteDoc,
-  doc,
-  documentId,
-  getFirestore,
-  query,
-  updateDoc,
-  where,
-} from "firebase/firestore";
+import { deleteDoc, doc, getFirestore, updateDoc } from "firebase/firestore";
 import { SetStateAction, useCallback, useMemo } from "react";
 import { Dispatch } from "react";
 import styled from "styled-components";
 
-import { useCollection } from "src/@packages/firebase";
 import { ActionMenu } from "src/components/action-menu";
 import { Avatar } from "src/components/avatar";
 import { Button } from "src/components/button";
@@ -53,6 +44,16 @@ const Container = styled.div`
   &:focus-within {
     background: var(--sol--palette-sand-50);
   }
+
+  &.resolved {
+    opacity: 0.5;
+    transition: opacity 0.2s;
+
+    &:hover,
+    &:focus-within {
+      opacity: 1;
+    }
+  }
 `;
 
 const Content = styled.div`
@@ -60,6 +61,10 @@ const Content = styled.div`
   flex-direction: column;
   gap: 0.2rem;
   flex: 1;
+
+  .resolved & {
+    text-decoration: line-through;
+  }
 `;
 
 const Title = styled.div`
@@ -74,7 +79,7 @@ const Title = styled.div`
 
 const Actions = styled.div`
   position: absolute;
-  top: -0.3rem;
+  top: 0.4rem;
   right: 0.4rem;
   opacity: 0;
   transition: opacity 0.2s;
@@ -115,6 +120,7 @@ type CommentProps = {
   thread?: string;
   threadComment?: any;
   setThread: Dispatch<SetStateAction<string | undefined>>;
+  users?: any[];
 };
 
 export function Comment({
@@ -123,19 +129,12 @@ export function Comment({
   thread,
   threadComment,
   setThread,
+  users,
 }: CommentProps) {
+  const authUser = useAuthUser();
   const confirmationDialog = useConfirmationDialog();
 
-  const authUser = useAuthUser();
-  const users = useCollection(
-    query(
-      collection(db, "users"),
-      where(documentId(), "in", authUser.team?.users || [])
-    ),
-    { key: `${authUser?.team?.id}/users` }
-  );
-
-  const createdBy = users.find?.(
+  const createdBy = users?.find?.(
     (user: any) => user.id === comment.createdBy?.id
   );
 
@@ -162,8 +161,8 @@ export function Comment({
       e.stopPropagation();
       if (comment.id) {
         return updateDoc(doc(db, "comments", comment.id), {
-          resolvedAt: new Date(),
-          resolvedBy: doc(db, "users", authUser.uid!),
+          resolvedAt: null,
+          resolvedBy: null,
         });
       }
     },
@@ -223,6 +222,7 @@ export function Comment({
     <Container
       onClick={comment.id ? () => setThread(comment.id) : undefined}
       tabIndex={0}
+      className={classNames({ resolved: !!comment.resolvedAt })}
     >
       <Avatar name={createdBy?.name} />
       <Content>

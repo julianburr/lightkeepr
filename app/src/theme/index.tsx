@@ -47,7 +47,8 @@ export const GlobalStyles = createGlobalStyle`
     overflow: hidden;
   }
 
-  body.noscroll-comments {
+  body.noscroll-comments, 
+  body.noscroll-dialog {
     overflow:hidden;
   }
 

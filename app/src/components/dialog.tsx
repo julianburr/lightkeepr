@@ -181,9 +181,9 @@ export function Dialog({
 
   // Disable body scroll
   useEffect(() => {
-    window.document.body.style.overflow = "hidden";
+    window.document.body.classList.add("noscroll-dialog");
     return () => {
-      window.document.body.style.overflow = "auto";
+      window.document.body.classList.remove("noscroll-dialog");
     };
   }, []);
 

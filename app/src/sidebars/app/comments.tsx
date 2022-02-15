@@ -4,13 +4,28 @@ import {
   addDoc,
   collection,
   doc,
+  documentId,
   getFirestore,
+  query,
   updateDoc,
+  where,
 } from "firebase/firestore";
 import { createFocusTrap } from "focus-trap";
-import { useCallback, useMemo, useState, useRef, Ref, useEffect } from "react";
+import {
+  useCallback,
+  useMemo,
+  useState,
+  useRef,
+  Ref,
+  useEffect,
+  Dispatch,
+  SetStateAction,
+} from "react";
+import { RefObject } from "react";
 import styled from "styled-components";
 
+import { useCollection } from "src/@packages/firebase";
+import { CheckboxInput } from "src/components/checkbox-input";
 import { Comment } from "src/components/comment";
 import { Loader } from "src/components/loader";
 import { Menu } from "src/components/menu";
@@ -65,6 +80,20 @@ const Inner = styled.menu`
 
 const WrapHeading = styled.div`
   padding: 0 2.4rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
+  && label {
+    font-size: 1.2rem;
+    min-height: 0;
+    padding: 0;
+
+    span:last-child {
+      margin: 0.1rem 0 0;
+    }
+  }
 `;
 
 const WrapComments = styled.div`
@@ -85,19 +114,36 @@ const Emtpty = styled.div`
   padding: 0 2.4rem;
 `;
 
-type CommentsSidebarProps = {
+type ContentProps = {
   comments?: any[];
   relatedComments?: any[];
   mapComment?: (comment: any) => any;
+  showResolved?: boolean;
+  setShowResolved?: Dispatch<SetStateAction<boolean>>;
+  active: boolean;
+  backdropRef: RefObject<HTMLDivElement | undefined>;
+  menuRef: RefObject<HTMLMenuElement | undefined>;
+  loading?: boolean;
 };
 
-export function CommentsSidebar({
+function Content({
   comments,
   relatedComments,
   mapComment,
-}: CommentsSidebarProps) {
+  showResolved,
+  setShowResolved,
+  active,
+  backdropRef,
+  loading,
+}: ContentProps) {
   const authUser = useAuthUser();
-  const { active, backdropRef, menuRef } = useSidebarState("comments");
+  const users = useCollection(
+    query(
+      collection(db, "users"),
+      where(documentId(), "in", authUser.team?.users || [])
+    ),
+    { key: `${authUser?.team?.id}/users` }
+  );
 
   // Trap focus within the sidebar
   useEffect(() => {
@@ -172,101 +218,133 @@ export function CommentsSidebar({
     [thread, threadComment]
   );
 
-  return (
-    <Container data-active={active} ref={backdropRef as any}>
-      <Inner ref={menuRef as any}>
-        <Suspense fallback={<Loader />}>
-          {!comments?.length && !relatedComments?.length && (
-            <Emtpty>
-              <P>No comments found!</P>
-            </Emtpty>
-          )}
+  if (loading) {
+    return <Loader />;
+  }
 
-          {thread ? (
+  return (
+    <>
+      {!comments?.length && !relatedComments?.length && (
+        <Emtpty>
+          <P>No comments found!</P>
+        </Emtpty>
+      )}
+
+      {thread ? (
+        <>
+          <WrapHeading>
+            <Menu
+              items={[
+                {
+                  isBacklink: true,
+                  icon: <ArrowLeftSvg />,
+                  label: "Back to comments",
+                  onClick: () => setThread(undefined),
+                },
+              ]}
+            />
+          </WrapHeading>
+          <Spacer h="1.6rem" />
+
+          <WrapHeading>
+            <GroupHeading>Thread</GroupHeading>
+          </WrapHeading>
+          <Spacer h=".3rem" />
+          <WrapComments>
+            {threadComments?.map?.((item: any, index) => (
+              <Comment
+                key={`thread--${index}`}
+                comment={item}
+                index={index}
+                thread={thread}
+                threadComment={threadComment}
+                setThread={setThread}
+                users={users}
+              />
+            ))}
+          </WrapComments>
+        </>
+      ) : (
+        <>
+          {!!comments?.length && (
             <>
               <WrapHeading>
-                <Menu
-                  items={[
-                    {
-                      isBacklink: true,
-                      icon: <ArrowLeftSvg />,
-                      label: "Back to comments",
-                      onClick: () => setThread(undefined),
-                    },
-                  ]}
+                <GroupHeading>Main comments</GroupHeading>
+                <CheckboxInput
+                  name="showResolved"
+                  label="Show resolved"
+                  value={showResolved}
+                  onChange={setShowResolved}
                 />
-              </WrapHeading>
-              <Spacer h="1.6rem" />
-
-              <WrapHeading>
-                <GroupHeading>Thread</GroupHeading>
               </WrapHeading>
               <Spacer h=".3rem" />
               <WrapComments>
-                {threadComments?.map?.((item: any, index) => (
+                {comments.map((item: any) => (
                   <Comment
-                    key={`thread--${index}`}
+                    key={item?.id}
                     comment={item}
-                    index={index}
                     thread={thread}
-                    threadComment={threadComment}
                     setThread={setThread}
+                    users={users}
                   />
                 ))}
               </WrapComments>
             </>
-          ) : (
-            <>
-              {!!comments?.length && (
-                <>
-                  <WrapHeading>
-                    <GroupHeading>Main comments</GroupHeading>
-                  </WrapHeading>
-                  <Spacer h=".3rem" />
-                  <WrapComments>
-                    {comments.map((item: any) => (
-                      <Comment
-                        key={item?.id}
-                        comment={item}
-                        thread={thread}
-                        setThread={setThread}
-                      />
-                    ))}
-                  </WrapComments>
-                </>
-              )}
-
-              {!!relatedComments?.length && (
-                <>
-                  {!!comments?.length && <Spacer h="1.6rem" />}
-                  <WrapHeading>
-                    <GroupHeading>Related comments</GroupHeading>
-                  </WrapHeading>
-                  <Spacer h=".3rem" />
-                  <WrapComments>
-                    {relatedComments.map((item: any) => (
-                      <Comment
-                        key={item?.id}
-                        comment={item}
-                        thread={thread}
-                        setThread={setThread}
-                      />
-                    ))}
-                  </WrapComments>
-                </>
-              )}
-            </>
           )}
 
-          <Spacer h=".8rem" />
-          <Suspense fallback={null}>
-            <WrapInput key={submitCount} ref={inputRef as Ref<HTMLDivElement>}>
-              <RichTextInput
-                placeholder="Comment or mention others with @"
-                onEnter={handleEnter}
-              />
-            </WrapInput>
-          </Suspense>
+          {!!relatedComments?.length && (
+            <>
+              {!!comments?.length && <Spacer h="1.6rem" />}
+              <WrapHeading>
+                <GroupHeading>Related comments</GroupHeading>
+              </WrapHeading>
+              <Spacer h=".3rem" />
+              <WrapComments>
+                {relatedComments.map((item: any) => (
+                  <Comment
+                    key={item?.id}
+                    comment={item}
+                    thread={thread}
+                    setThread={setThread}
+                    users={users}
+                  />
+                ))}
+              </WrapComments>
+            </>
+          )}
+        </>
+      )}
+
+      <Spacer h=".8rem" />
+      <Suspense fallback={null}>
+        <WrapInput key={submitCount} ref={inputRef as Ref<HTMLDivElement>}>
+          <RichTextInput
+            placeholder="Comment or mention others with @"
+            onEnter={handleEnter}
+          />
+        </WrapInput>
+      </Suspense>
+    </>
+  );
+}
+
+type CommentsSidebarProps = Omit<
+  ContentProps,
+  "active" | "backdropRef" | "menuRef"
+>;
+
+export function CommentsSidebar(props: CommentsSidebarProps) {
+  const { active, backdropRef, menuRef } = useSidebarState("comments");
+  return (
+    <Container data-active={active} ref={backdropRef as any}>
+      <Inner ref={menuRef as any} tabIndex={0}>
+        <Suspense fallback={<Loader />}>
+          <Content
+            {...props}
+            active={active}
+            backdropRef={backdropRef}
+            menuRef={menuRef}
+          />
         </Suspense>
       </Inner>
     </Container>

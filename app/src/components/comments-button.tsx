@@ -42,72 +42,81 @@ type Comment = {
   audit?: any;
 };
 
-type ContentProps = {
+type CommentsButtonProps = {
   id: string;
   filters: QueryConstraint[];
   relatedFilters?: QueryConstraint[];
   mapComment?: (comment: Comment) => Comment | Promise<Comment>;
 };
 
-function Content({ id, filters, relatedFilters, mapComment }: ContentProps) {
+export function CommentsButton({
+  id,
+  filters,
+  relatedFilters,
+  mapComment,
+}: CommentsButtonProps) {
   const [showResolved, setShowResolved] = usePersistedState(
     "@lightkeepr/comments/showResolved",
     false
   );
 
-  const comments = useCollection(
+  // Load main comments based on given filters, we don't want to use
+  // suspense here, because we want to show the loading state within
+  // the sidebar instead
+  const { data: comments, loading: commentsLoading } = useCollection(
     query(
       collection(db, "comments"),
       ...filters,
       ...(showResolved ? [] : [where("resolvedAt", "==", null)]),
       orderBy("createdAt", "asc")
     ),
-    { key: `${id}/comments` }
+    {
+      key: showResolved ? `${id}/comments/all` : `${id}/comments/unresolved`,
+      suspense: false,
+    }
   );
 
-  const relatedComments = useCollection(
+  // Load any additional related comments, which can be useful e.g. to see all
+  // unresolved comments in a project
+  const { data: relatedComments, loading: relatedLoading } = useCollection(
     query(
       collection(db, "comments"),
       ...(relatedFilters || []),
       ...(showResolved ? [] : [where("resolvedAt", "==", null)]),
       orderBy("createdAt", "asc")
     ),
-    { key: `${id}/relatedComments`, fetch: !!relatedFilters }
+    {
+      key: showResolved
+        ? `${id}/relatedComments/all`
+        : `${id}/relatedComments/unresolved`,
+      fetch: !!relatedFilters,
+      suspense: false,
+    }
   );
 
   return (
     <>
       <Button
         icon={<CommentSvg />}
-        badge={<Badge intent="primary" count={comments.length} />}
+        badge={
+          <Badge
+            intent="primary"
+            count={comments?.filter?.((c: any) => !c.resolvedAt)?.length}
+          />
+        }
         onClick={() => {
           const event = new CustomEvent("toggleMobileMenu:comments");
           window.document.body.dispatchEvent(event);
         }}
       />
-      <CommentsSidebar
-        comments={comments}
-        relatedComments={relatedComments || []}
-        mapComment={mapComment}
-      />
-    </>
-  );
-}
-
-export function CommentsButton({
-  id,
-  filters,
-  relatedFilters,
-  mapComment,
-}: ContentProps) {
-  return (
-    <>
-      <Suspense fallback={<Button icon={<CommentSvg />} />}>
-        <Content
-          id={id}
-          filters={filters}
-          relatedFilters={relatedFilters}
+      <Suspense fallback={null}>
+        <CommentsSidebar
+          comments={comments || []}
+          relatedComments={relatedComments || []}
           mapComment={mapComment}
+          showResolved={showResolved}
+          setShowResolved={setShowResolved}
+          loading={commentsLoading || relatedLoading}
         />
       </Suspense>
     </>
