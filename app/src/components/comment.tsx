@@ -150,8 +150,10 @@ export function Comment({
   const containerRef = useRef<HTMLDivElement>();
   const [edit, setEdit] = useState(false);
   useEffect(() => {
-    function handleKeyDown(e) {
+    function handleKeyDown(e: any) {
       if (e.key === "Escape") {
+        e.preventDefault();
+        e.stopPropagation();
         setEdit(false);
       }
     }
