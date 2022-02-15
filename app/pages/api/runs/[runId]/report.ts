@@ -7,6 +7,8 @@ import createCompress from "compress-brotli";
 import { getFirestore, Timestamp } from "firebase-admin/firestore";
 import formidable from "formidable";
 import { NextApiRequest } from "next";
+import url from "next-absolute-url";
+import fetch from "node-fetch";
 
 import { env } from "src/env";
 import { AUDITS } from "src/utils/audits";
@@ -292,30 +294,17 @@ export default createHandler({
 
     if (status === "failed") {
       // TODO: check if it's possible to use queue workers with vercel somehow
-      // Notify all users that subscribed to this project
-      const usersSnap = await db
-        .collection("users")
-        .where("subscriptions", "array-contains", projectRef)
-        .get();
-
-      const description =
-        `The report "${report.name}" failed in the ` +
-        `project "${project.name}"`;
-
-      usersSnap.forEach((u) => {
-        db.collection("notifications").add({
-          title: `Report failed`,
-          description,
-          href: `/app/${project.team.id}/reports/${report.id}`,
-          seen: false,
-          createdAt: now,
-          user: db.collection("users").doc(u.id),
-          team: teamRef,
-          type: "failed-report",
-          meta: {
-            report: db.collection("reports").doc(report.id),
-          },
-        });
+      // Notify all users that subscribed to this project if the report failed
+      const { origin } = url(req);
+      const x = await fetch(`${origin}/api/notifications/create`, {
+        method: "POST",
+        body: JSON.stringify({
+          type: "report-failed",
+          ref: db.collection("reports").doc(report.id).path,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
     }
 

@@ -2,7 +2,7 @@ import "src/utils/firebase";
 
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { deleteDoc, doc, getFirestore, updateDoc } from "firebase/firestore";
+import { doc, getFirestore, updateDoc } from "firebase/firestore";
 import { useCallback } from "react";
 import styled from "styled-components";
 
@@ -13,6 +13,7 @@ import { ListItem } from "src/components/list";
 import { P, Small } from "src/components/text";
 import { Tooltip } from "src/components/tooltip";
 import { useConfirmationDialog } from "src/dialogs/confirm";
+import { useAuthUser } from "src/hooks/use-auth-user";
 import { useToast } from "src/hooks/use-toast";
 import { getNotificationIcon } from "src/utils/notifications";
 
@@ -74,16 +75,30 @@ const WrapActionMenu = styled.div`
 `;
 
 export function NotificationListItem({ data }: any) {
+  const authUser = useAuthUser();
+
+  const userRef = doc(db, "users", authUser.uid!);
+  const teamId = authUser?.team?.id;
+  const notifications = authUser.user?.notifications;
+
   const toast = useToast();
   const confirmationDialog = useConfirmationDialog();
 
-  const notificationRef = doc(db, "notifications", data.id);
-
   const markAsSeen = useCallback(
     async (value) => {
-      await updateDoc(notificationRef, { seen: value });
+      const seenAt = value ? new Date() : null;
+      await updateDoc(userRef, {
+        notifications: {
+          ...notifications,
+          [teamId!]: (notifications?.[teamId!] || []).map((notification) =>
+            notification.id === data.id
+              ? { ...notification, seenAt }
+              : notification
+          ),
+        },
+      });
     },
-    [data.id]
+    [data.id, notifications]
   );
 
   const deleteNotification = useCallback(() => {
@@ -92,11 +107,18 @@ export function NotificationListItem({ data }: any) {
       confirmLabel: "Delete",
       intent: "danger",
       onConfirm: async () => {
-        await deleteDoc(notificationRef);
+        await updateDoc(userRef, {
+          notifications: {
+            ...notifications,
+            [teamId!]: (notifications?.[teamId!] || []).filter(
+              (notification) => notification.id !== data.id
+            ),
+          },
+        });
         toast.show({ message: "Notification deleted successfully" });
       },
     });
-  }, [data.id]);
+  }, [data.id, notifications]);
 
   return (
     <ListItem>
@@ -107,7 +129,7 @@ export function NotificationListItem({ data }: any) {
               {(props) => (
                 <UnseenBadge
                   {...props}
-                  seen={data.seen}
+                  seen={!!data.seenAt}
                   onClick={() => markAsSeen(true)}
                 />
               )}
@@ -124,27 +146,29 @@ export function NotificationListItem({ data }: any) {
           </Small>
         </Content>
         <WrapActionMenu>
-          <Tooltip content="Go to resource">
-            {(props) => (
-              <Button
-                intent="ghost"
-                icon={<LinkSvg />}
-                {...props}
-                href={{
-                  pathname: data.href,
-                  query: {
-                    nid: data.id,
-                  },
-                }}
-              />
-            )}
-          </Tooltip>
+          {data.href && (
+            <Tooltip content="Go to resource">
+              {(props) => (
+                <Button
+                  intent="ghost"
+                  icon={<LinkSvg />}
+                  {...props}
+                  href={{
+                    pathname: data.href,
+                    query: {
+                      nid: data.id,
+                    },
+                  }}
+                />
+              )}
+            </Tooltip>
+          )}
           <ActionMenu
             placement="bottom-end"
             items={[
               {
-                label: data.seen ? "Mark as unseen" : "Mark as seen",
-                onClick: () => markAsSeen(!data.seen),
+                label: data.seenAt ? "Mark as unseen" : "Mark as seen",
+                onClick: () => markAsSeen(!data.seenAt),
               },
               {
                 items: [

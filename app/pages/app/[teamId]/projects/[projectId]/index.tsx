@@ -81,8 +81,7 @@ function Content() {
     [runs, runsLimit, filters]
   );
 
-  // Setup for comments, we only define filters and mapping here, so that the actual
-  // fetching and updating can be handled in a central spot :/
+  // Setup for comments
   const commentsFilters = useMemo(
     () => [where("project", "==", projectRef), where("run", "==", null)],
     [projectRef]
@@ -91,11 +90,8 @@ function Content() {
   const relatedCommentsFilters = useMemo(
     () => [
       where("project", "==", projectRef),
-      where(
-        "run",
-        "in",
-        runs.map((r) => doc(db, "runs", r.id))
-      ),
+      where("run", "!=", null),
+      orderBy("run", "desc"),
     ],
     [projectRef]
   );

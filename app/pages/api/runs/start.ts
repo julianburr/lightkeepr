@@ -11,7 +11,7 @@ export default createHandler({
     const [, token] = req.headers?.authorization?.match?.(/Bearer (.+)/) || [];
 
     if (!token) {
-      return res.status(4401).json({ message: "No bearer token provided" });
+      return res.status(401).json({ message: "No bearer token provided" });
     }
 
     const projectsSnap = await db

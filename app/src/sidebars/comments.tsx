@@ -35,6 +35,7 @@ import { Suspense } from "src/components/suspense";
 import { GroupHeading, P } from "src/components/text";
 import { useAuthUser } from "src/hooks/use-auth-user";
 import { useSidebarState } from "src/hooks/use-sidebar-state";
+import { api } from "src/utils/api-client";
 
 import ArrowLeftSvg from "src/assets/icons/outline/arrow-left.svg";
 
@@ -183,6 +184,7 @@ function Content({
         lastUpdatedBy: userRef,
         resolvedAt: null,
         resolvedBy: null,
+        team: doc(db, "teams", authUser!.team!.id),
         project: null,
         run: null,
         report: null,
@@ -192,32 +194,44 @@ function Content({
       };
 
       const mapped = mapComment?.(comment) || comment;
+
       const subscriptions = authUser?.user?.subscriptions || [];
 
       if (thread) {
-        updateDoc(doc(db, "comments", threadComment.id), {
+        // Update main thread comment
+        const commentRef = doc(db, "comments", threadComment.id);
+        updateDoc(commentRef, {
           thread: [...(threadComment.thread || []), mapped],
-        }).then(() => {
-          const commentRef = doc(db, "comments", threadComment.id);
+        }).then(async () => {
+          // Send notifications to everyone subscribed to thread comment
+          // or to the base record
+          await api.post("/api/notifications/create", {
+            type: "comment-reply",
+            ref: commentRef,
+            userId: authUser.uid,
+          });
 
           // Add user subscription to thread comment
-          updateDoc(doc(db, "users", authUser.uid!), {
+          await updateDoc(doc(db, "users", authUser.uid!), {
             subscriptions: subscriptions.concat(commentRef),
           });
-
-          // TODO: Send notifications to everyone subscribed to thread comment
-          // or the base record
         });
       } else {
-        addDoc(collection(db, "comments"), mapped).then((added) => {
+        // Add new comment
+        addDoc(collection(db, "comments"), mapped).then(async (added) => {
           const commentRef = doc(db, "comments", added.id);
 
-          // Add user subscription to comment
-          updateDoc(doc(db, "users", authUser.uid!), {
-            subscriptions: subscriptions.concat(commentRef),
+          //  Send notifications to everyone subscribed to the base record
+          await api.post("/api/notifications/create", {
+            type: "comment",
+            ref: commentRef?.path,
+            userId: authUser.uid,
           });
 
-          // TODO: Send notifications to everyone subscribed to the base record
+          // Add user subscription to comment
+          await updateDoc(doc(db, "users", authUser.uid!), {
+            subscriptions: subscriptions.concat(commentRef),
+          });
         });
       }
 

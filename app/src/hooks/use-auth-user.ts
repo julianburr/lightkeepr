@@ -26,11 +26,26 @@ type FirebaseUser = {
   providerData?: ProviderData[];
 };
 
+type Notification = {
+  id: string;
+  type: string;
+  title: string;
+  description: string;
+  href?: string;
+  record?: any;
+  references?: any[];
+  seenAt?: any;
+  createdAt: any;
+};
+
 type User = {
   id: string;
   email: string;
   name: string;
   subscriptions?: any[];
+  notifications?: {
+    [teamId: string]: Notification[];
+  };
 };
 
 type Team = {

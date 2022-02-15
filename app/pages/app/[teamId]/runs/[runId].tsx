@@ -58,11 +58,8 @@ function Content() {
   const relatedCommentsFilters = useMemo(
     () => [
       where("run", "==", runRef),
-      where(
-        "report",
-        "in",
-        reports.map((r: any) => doc(db, "reports", r.id))
-      ),
+      where("report", "!=", null),
+      orderBy("report", "asc"),
     ],
     [runRef]
   );

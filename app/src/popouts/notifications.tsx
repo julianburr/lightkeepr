@@ -2,21 +2,12 @@ import "src/utils/firebase";
 
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import {
-  collection,
-  doc,
-  getFirestore,
-  orderBy,
-  query,
-  updateDoc,
-  where,
-} from "firebase/firestore";
+import { doc, getFirestore, updateDoc } from "firebase/firestore";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
 import { useEffect } from "react";
 import styled from "styled-components";
 
-import { useCollection } from "src/@packages/firebase";
 import { Badge } from "src/components/badge";
 import { Button } from "src/components/button";
 import { Popout } from "src/components/popout";
@@ -61,38 +52,27 @@ function Content({ setVisible, element }: any) {
   const authUser = useAuthUser();
   const router = useRouter();
 
-  const userRef = doc(db, "users", authUser.user!.id);
-  const teamRef = doc(db, "teams", authUser.team!.id);
-  const notifications = useCollection(
-    query(
-      collection(db, "notifications"),
-      where("user", "==", userRef),
-      where("team", "==", teamRef),
-      where("seen", "==", false),
-      orderBy("createdAt", "desc")
-    ),
-    { key: `${authUser.user!.id}/unseenNotifications` }
-  );
+  const notifications =
+    authUser.user?.notifications?.[authUser!.team!.id] || [];
 
   const unread = useMemo(
     () =>
-      notifications.map((notification: any) => ({
-        icon: getNotificationIcon(notification.type),
-        label: notification.title,
-        description: (
-          <>
-            {dayjs.unix(notification.createdAt?.seconds).fromNow()} —&nbsp;
-            {notification.description}
-          </>
-        ),
-        href: {
-          pathname: notification.href,
-          query: {
-            nid: notification.id,
-          },
-        },
-      })),
-    []
+      notifications
+        .filter((notification) => !notification.seenAt)
+        .map((notification) => ({
+          icon: getNotificationIcon(notification.type),
+          label: notification.title,
+          description: (
+            <>
+              {dayjs.unix(notification.createdAt?.seconds).fromNow()} —&nbsp;
+              {notification.description}
+            </>
+          ),
+          href: notification.href
+            ? `${notification.href}?nid=${notification.id}`
+            : `#`,
+        })),
+    [notifications]
   );
 
   if (!unread.length) {
@@ -134,29 +114,25 @@ function PopoutContent(props: any) {
 }
 
 export function NotificationsButton() {
-  const router = useRouter();
   const authUser = useAuthUser();
+  const router = useRouter();
 
-  const userRef = doc(db, "users", authUser.user!.id);
-  const teamRef = doc(db, "teams", authUser.team!.id);
-  const { data: notifications } = useCollection(
-    query(
-      collection(db, "notifications"),
-      where("user", "==", userRef),
-      where("team", "==", teamRef),
-      where("seen", "==", false),
-      orderBy("createdAt", "desc")
-    ),
-    {
-      key: `${authUser.user!.id}/unseenNotifications`,
-      suspense: false,
-    }
+  const notifications =
+    authUser.user?.notifications?.[authUser!.team!.id] || [];
+
+  const unread = useMemo(
+    () => notifications.filter((notification) => !notification.seenAt),
+    [notifications]
   );
 
   useEffect(() => {
     if (router.query.nid) {
-      updateDoc(doc(db, "notifications", router.query.nid), {
-        seen: true,
+      updateDoc(doc(db, "users", authUser.uid!), {
+        notifications: notifications.map((notification) => {
+          return notification.id === router.query.nid
+            ? { ...notification, seenAt: new Date() }
+            : notification;
+        }),
       });
     }
   }, [router.query.nid]);
@@ -166,7 +142,7 @@ export function NotificationsButton() {
       {(props) => (
         <Button
           icon={<BellSvg />}
-          badge={<Badge count={notifications?.length} />}
+          badge={<Badge count={unread?.length} />}
           {...props}
         />
       )}

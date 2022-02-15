@@ -63,8 +63,19 @@ export function ReportActions({ data }: any) {
 
   // Setup for comments
   const commentsFilters = useMemo(
-    () => [where("report", "==", reportRef), where("report", "==", null)],
+    () => [where("report", "==", reportRef), where("audit", "==", null)],
     [reportRef]
+  );
+
+  const relatedCommentsFilters = useMemo(
+    () => [
+      where("report", "!=", reportRef),
+      where("audit", "==", null),
+      where("team", "==", doc(db, "teams", data.team.id)),
+      where("reportName", "==", data.name),
+      orderBy("report", "asc"),
+    ],
+    [reportRef, data.team.id, data.name]
   );
 
   const mapComment = useCallback(
@@ -75,6 +86,7 @@ export function ReportActions({ data }: any) {
       project: doc(db, "projects", data.project.id),
       run: doc(db, "runs", data.run.id),
       report: reportRef,
+      reportName: data.name,
     }),
     [reportRef]
   );
@@ -144,6 +156,7 @@ export function ReportActions({ data }: any) {
       <CommentsButton
         id={`report/${data.id}`}
         filters={commentsFilters}
+        relatedFilters={relatedCommentsFilters}
         mapComment={mapComment}
       />
 
