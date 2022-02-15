@@ -41,7 +41,8 @@ const WrapHeading = styled.div`
 function Content() {
   const router = useRouter();
 
-  const report = useDocument(doc(db, "reports", router.query.reportId!));
+  const reportRef = doc(db, "reports", router.query.reportId!);
+  const report = useDocument(reportRef);
 
   return (
     <>

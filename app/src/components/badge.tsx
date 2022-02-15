@@ -5,13 +5,29 @@ const Container = styled.span`
   display: flex;
   width: 2rem;
   height: 2rem;
+  position: relative;
 `;
 
-const Value = styled.span<{ visible: boolean }>`
+const Value = styled.span<{
+  visible: boolean;
+  intent: "danger" | "warning" | "primary" | "secondary" | "tertiary";
+}>`
   position: absolute;
   inset: 0;
-  background: var(--sol--palette-red-500);
-  color: var(--sol--color-white);
+  background: ${(props) =>
+    props.intent === "danger"
+      ? `var(--sol--palette-red-500)`
+      : props.intent === "warning"
+      ? `var(--sol--palette-yellow-500)`
+      : props.intent === "primary"
+      ? `var(--sol--color-brand-500)`
+      : props.intent === "tertiary"
+      ? `var(--sol--color-black)`
+      : `var(--sol--palette-sand-300)`};
+  color: ${(props) =>
+    props.intent === "secondary"
+      ? `var(--sol--colo-black)`
+      : `var(--sol--color-white)`};
   border-radius: 50%;
   font-size: 0.8rem;
   line-height: 1;
@@ -28,9 +44,10 @@ const Value = styled.span<{ visible: boolean }>`
 
 type BadgeProps = {
   count?: number;
+  intent?: "danger" | "warning" | "primary" | "secondary" | "tertiary";
 };
 
-export function Badge({ count }: BadgeProps) {
+export function Badge({ count, intent = "danger" }: BadgeProps) {
   // HACK: to avoid `0` showing during the transition out, we use a separate local
   // state to keep track of the visible count that only goes down to `1`
   const [value, setValue] = useState(count || 1);
@@ -42,7 +59,9 @@ export function Badge({ count }: BadgeProps) {
 
   return (
     <Container>
-      <Value visible={!!count}>{value}</Value>
+      <Value visible={!!count} intent={intent}>
+        {value}
+      </Value>
     </Container>
   );
 }

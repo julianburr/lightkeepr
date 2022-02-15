@@ -20,6 +20,7 @@ const Container = styled.menu`
     width: 100%;
     display: flex;
     flex-direction: column;
+    gap: 0.2rem;
   }
 
   @media (min-width: 800px) {
@@ -36,8 +37,8 @@ const Li = styled.li`
   margin: 0;
   width: 100%;
 
-  &.heading {
-    margin: 2.4rem 0 0;
+  &.heading h3 {
+    margin: 2.4rem 0 0.3rem;
   }
 `;
 
@@ -52,7 +53,7 @@ const CoreMenuItem = styled((props) => <CoreButton {...props} />)`
   align-items: center;
   transition: background 0.2s;
   padding: var(--sol--spacing-s);
-  margin: 0.2rem calc(var(--sol--spacing-s) * -1) 0;
+  margin: 0 calc(var(--sol--spacing-s) * -1);
   border-radius: var(--sol--border-radius-s);
 
   ${interactive("lighter")}
@@ -74,8 +75,19 @@ const CoreMenuItem = styled((props) => <CoreButton {...props} />)`
 
   @media (min-width: 800px) {
     padding: 0.6rem;
-    margin: 0.2rem -0.6rem 0;
+    margin: 0 -0.6rem;
   }
+`;
+
+const Label = styled.span`
+  flex: 1;
+`;
+
+const WrapBadge = styled.span`
+  display: flex;
+  flex-shrink: 0;
+  padding-left: var(--sol--spacing-xs);
+  flex: 0;
 `;
 
 type MenuItemProps = PropsWithChildren<{
@@ -122,6 +134,7 @@ function MenuItem({
 type Item = {
   key?: string;
   label: ReactNode;
+  badge?: ReactNode;
   icon?: ReactNode;
   onClick?: (e: any) => void | Promise<void>;
   href?: string;
@@ -133,6 +146,7 @@ type Item = {
 type ItemGroup = {
   key?: string;
   label: ReactNode;
+  badge?: ReactNode;
   icon?: ReactNode;
   items: Item[] | ItemGroup[];
   mobile?: boolean;
@@ -173,7 +187,8 @@ export function Menu({ items }: MenuProps) {
                 isBacklink={item.isBacklink}
               >
                 {item.icon}
-                <span>{item.label}</span>
+                <Label>{item.label}</Label>
+                {item.badge && <WrapBadge>{item.badge}</WrapBadge>}
               </MenuItem>
             </Li>
           );

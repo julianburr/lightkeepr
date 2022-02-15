@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 import { ListItem } from "src/components/list";
 import { Markdown } from "src/components/markdown";
-import { Span, P } from "src/components/text";
+import { Span } from "src/components/text";
 import { ReportAuditDialog } from "src/dialogs/report/audit";
 import { useDialog } from "src/hooks/use-dialog";
 import { formatBytes, formatMs } from "src/utils/format";
@@ -59,25 +59,23 @@ export function OpportunityListItem({ data }: any) {
           <AlertSvg />
         </Status>
         <Content>
-          <P>
-            <Markdown>{data.title}</Markdown>
+          <Markdown>{data.title}</Markdown>
 
-            {data.type === "performance" && data.details?.overallSavingsMs && (
-              <Span grey>
-                {" "}
-                —&nbsp;Potential savings of{" "}
-                {formatMs(data.details?.overallSavingsMs)}
-              </Span>
-            )}
+          {data.type === "performance" && data.details?.overallSavingsMs && (
+            <Span grey>
+              {" "}
+              —&nbsp;Potential savings of{" "}
+              {formatMs(data.details?.overallSavingsMs)}
+            </Span>
+          )}
 
-            {data.type === "network" && data.details?.overallSavingsBytes && (
-              <Span grey>
-                {" "}
-                —&nbsp;Potential savings of{" "}
-                {formatBytes(data.details?.overallSavingsBytes)}
-              </Span>
-            )}
-          </P>
+          {data.type === "network" && data.details?.overallSavingsBytes && (
+            <Span grey>
+              {" "}
+              —&nbsp;Potential savings of{" "}
+              {formatBytes(data.details?.overallSavingsBytes)}
+            </Span>
+          )}
         </Content>
       </Container>
     </ListItem>

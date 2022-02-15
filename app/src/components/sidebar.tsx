@@ -1,3 +1,4 @@
+import { createFocusTrap } from "focus-trap";
 import { useRef, ReactNode, useEffect, RefObject, Ref, useState } from "react";
 import styled from "styled-components";
 
@@ -72,7 +73,7 @@ const TopContainer = styled.div`
   flex-direction: column;
   gap: 0.8rem;
   padding: 1.6rem 2.4rem;
-  background: #f5f4f1;
+  background: var(--sol--palette-sand-100);
   position: sticky;
   top: 0;
   z-index: 20;
@@ -116,9 +117,20 @@ export function Sidebar({ top, children }: SidebarProps) {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  // Trap focus within the sidebar
+  useEffect(() => {
+    if (backdropRef.current && active && isMobile) {
+      const trap = createFocusTrap(backdropRef.current);
+      trap.activate();
+      return () => {
+        trap.deactivate();
+      };
+    }
+  }, [active, isMobile]);
+
   return (
     <Container ref={backdropRef as Ref<HTMLDivElement>} data-active={active}>
-      <Menu ref={menuRef as Ref<HTMLMenuElement>}>
+      <Menu ref={menuRef as Ref<HTMLMenuElement>} tabIndex={0}>
         {top && (
           <TopContainer ref={topContainerRef as Ref<HTMLDivElement>}>
             {top}

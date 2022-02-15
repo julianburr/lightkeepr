@@ -48,6 +48,7 @@ const Inner = styled.div`
   display: flex;
   flex-direction: row;
   align-items: flex-start;
+  flex: 1;
 `;
 
 const WrapIcon = styled.div`
@@ -73,12 +74,33 @@ const WrapText = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
+  flex: 1;
+`;
+
+const Label = styled.span`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+
+  p {
+    display: flex;
+    flex: 1;
+  }
+`;
+
+const Badge = styled.span`
+  display: flex;
+  justify-self: flex-end;
+  padding-left: var(--sol--spacing-xs);
 `;
 
 export type MenuItemObj = {
   key?: string;
   icon?: ReactNode;
   label: ReactNode;
+  badge?: ReactNode;
   onClick?: (e: any) => void | Promise<void>;
   href?: ComponentProps<typeof Link>["href"];
   description?: ReactNode;
@@ -123,7 +145,10 @@ export function MenuItem({ item, setVisible, element }: MenuItemProps) {
             <WrapSelectable>{item.selected && <CheckSvg />}</WrapSelectable>
           )}
           <WrapText>
-            <P>{item.label}</P>
+            <Label>
+              <P>{item.label}</P>
+              {item.badge && <Badge>{item.badge}</Badge>}
+            </Label>
             {item.description && <Small grey>{item.description}</Small>}
           </WrapText>
         </Inner>

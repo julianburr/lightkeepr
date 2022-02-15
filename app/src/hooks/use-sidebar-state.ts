@@ -14,7 +14,13 @@ export function useSidebarState(id?: string) {
     }
 
     function handleBackdropClick(e: any) {
-      if (menuRef.current && !menuRef.current.contains(e.target)) {
+      if (backdropRef.current && backdropRef.current === e.target) {
+        setActive(false);
+      }
+    }
+
+    function handleKeyDown(e: any) {
+      if (e.key === "Escape") {
         setActive(false);
       }
     }
@@ -23,12 +29,23 @@ export function useSidebarState(id?: string) {
     const backdrop = backdropRef.current;
 
     body.addEventListener(eventName, handleToggle);
+    body.addEventListener("keydown", handleKeyDown);
     backdrop?.addEventListener?.("click", handleBackdropClick);
     return () => {
       body.removeEventListener(eventName, handleToggle);
+      body.removeEventListener("keydown", handleKeyDown);
       backdrop?.removeEventListener?.("click", handleBackdropClick);
     };
   }, []);
+
+  useEffect(() => {
+    const className = id ? `noscroll-${id}` : `noscroll`;
+    if (active) {
+      window.document.body?.classList?.add?.(className);
+    } else {
+      window.document.body?.classList?.remove?.(className);
+    }
+  }, [active]);
 
   // Handle swipe actions to close the menu
   useEffect(() => {

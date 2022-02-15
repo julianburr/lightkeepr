@@ -10,7 +10,7 @@ import {
 } from "firebase/firestore";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import styled from "styled-components";
 
 import { useCollection, useDocument } from "src/@packages/firebase";
@@ -19,6 +19,7 @@ import { Auth } from "src/components/auth";
 import { Button } from "src/components/button";
 import { ButtonBar } from "src/components/button-bar";
 import { CodePreview } from "src/components/code-preview";
+import { CommentsButton } from "src/components/comments-button";
 import { HelpBox } from "src/components/help-box";
 import { Hint } from "src/components/hint";
 import { List } from "src/components/list";
@@ -46,6 +47,7 @@ function Content() {
   const projectRef = doc(db, "projects", projectId!);
   const project = useDocument(projectRef);
 
+  // Fetch and paginate runs
   const runs: any[] = useCollection(
     query(
       collection(db, "runs"),
@@ -79,12 +81,47 @@ function Content() {
     [runs, runsLimit, filters]
   );
 
+  // Setup for comments
+  const commentsFilters = useMemo(
+    () => [where("project", "==", projectRef), where("run", "==", null)],
+    [projectRef]
+  );
+
+  const relatedCommentsFilters = useMemo(
+    () => [
+      where("project", "==", projectRef),
+      where("run", "!=", null),
+      orderBy("run", "desc"),
+    ],
+    [projectRef]
+  );
+
+  const mapComment = useCallback(
+    (comment) => ({
+      ...comment,
+      type: "project",
+      record: projectRef,
+      project: projectRef,
+    }),
+    [projectRef]
+  );
+
   if (!runs?.length) {
     return (
       <>
         <ButtonBar
           left={<Heading level={1}>{project.name}</Heading>}
-          right={<ProjectActions data={project} />}
+          right={
+            <>
+              <CommentsButton
+                id={`project/${project.id}`}
+                filters={commentsFilters}
+                relatedFilters={relatedCommentsFilters}
+                mapComment={mapComment}
+              />
+              <ProjectActions data={project} />
+            </>
+          }
         />
         <Spacer h="1.8rem" />
         <HelpBox>
@@ -163,7 +200,17 @@ function Content() {
     <>
       <ButtonBar
         left={<Heading level={1}>{project.name}</Heading>}
-        right={<ProjectActions data={project} />}
+        right={
+          <>
+            <CommentsButton
+              id={`project/${project.id}`}
+              filters={commentsFilters}
+              relatedFilters={relatedCommentsFilters}
+              mapComment={mapComment}
+            />
+            <ProjectActions data={project} />
+          </>
+        }
       />
       <Spacer h="1.8rem" />
 

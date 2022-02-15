@@ -138,7 +138,7 @@ export function AppSidebar() {
             <WrapName>
               <P>{authUser?.user?.name}</P>
               <Spacer h=".3rem" />
-              <Small grey>{authUser?.user?.id}</Small>
+              <Small grey>{authUser?.user?.email}</Small>
             </WrapName>
           </WrapProfile>
 

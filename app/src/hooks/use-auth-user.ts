@@ -26,11 +26,26 @@ type FirebaseUser = {
   providerData?: ProviderData[];
 };
 
+type Notification = {
+  id: string;
+  type: string;
+  title: string;
+  description: string;
+  href?: string;
+  record?: any;
+  references?: any[];
+  seenAt?: any;
+  createdAt: any;
+};
+
 type User = {
   id: string;
   email: string;
   name: string;
   subscriptions?: any[];
+  notifications?: {
+    [teamId: string]: Notification[];
+  };
 };
 
 type Team = {
@@ -39,6 +54,8 @@ type Team = {
   billingEmail?: string;
   stripeCustomerId?: string;
   apiKey?: string;
+  users?: any[];
+  userRoles?: any;
 };
 
 type TeamRole = "owner" | "billing" | "member";
@@ -121,5 +138,5 @@ export function useAuthUser(): UseAuthUserResponse {
 
       pendingInvites,
     };
-  }, [user, teams, invites]);
+  }, [user, teams, invites, router.query.teamId]);
 }
