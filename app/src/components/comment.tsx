@@ -3,8 +3,16 @@ import "src/utils/firebase";
 import classNames from "classnames";
 import dayjs from "dayjs";
 import { deleteDoc, doc, getFirestore, updateDoc } from "firebase/firestore";
-import { SetStateAction, useCallback, useMemo, useState } from "react";
-import { Dispatch } from "react";
+import {
+  Ref,
+  SetStateAction,
+  useCallback,
+  useMemo,
+  useState,
+  Dispatch,
+  useRef,
+  useEffect,
+} from "react";
 import styled from "styled-components";
 
 import { ActionMenu } from "src/components/action-menu";
@@ -139,7 +147,20 @@ export function Comment({
     (user: any) => user.id === comment.createdBy?.id
   );
 
+  const containerRef = useRef<HTMLDivElement>();
   const [edit, setEdit] = useState(false);
+  useEffect(() => {
+    function handleKeyDown(e) {
+      if (e.key === "Escape") {
+        setEdit(false);
+      }
+    }
+    const ref = containerRef.current;
+    if (edit && ref) {
+      ref.addEventListener("keydown", handleKeyDown);
+      return () => ref.removeEventListener("keydown", handleKeyDown);
+    }
+  }, [edit]);
 
   const resolveComment = useCallback(
     (e) => {
@@ -253,6 +274,7 @@ export function Comment({
 
   return (
     <Container
+      ref={containerRef as Ref<HTMLDivElement>}
       onClick={comment.id && !edit ? () => setThread(comment.id) : undefined}
       tabIndex={0}
       className={classNames({ resolved: !!comment.resolvedAt })}
