@@ -19,16 +19,33 @@ export function useSidebarState(id?: string) {
       }
     }
 
+    function handleKeyDown(e: any) {
+      if (e.key === "Escape") {
+        setActive(false);
+      }
+    }
+
     const body = window.document.body;
     const backdrop = backdropRef.current;
 
     body.addEventListener(eventName, handleToggle);
+    body.addEventListener("keydown", handleKeyDown);
     backdrop?.addEventListener?.("click", handleBackdropClick);
     return () => {
       body.removeEventListener(eventName, handleToggle);
+      body.removeEventListener("keydown", handleKeyDown);
       backdrop?.removeEventListener?.("click", handleBackdropClick);
     };
   }, []);
+
+  useEffect(() => {
+    const className = id ? `noscroll-${id}` : `noscroll`;
+    if (active) {
+      window.document.body?.classList?.add?.(className);
+    } else {
+      window.document.body?.classList?.remove?.(className);
+    }
+  }, [active]);
 
   // Handle swipe actions to close the menu
   useEffect(() => {

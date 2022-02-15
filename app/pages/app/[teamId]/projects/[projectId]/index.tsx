@@ -1,13 +1,11 @@
 import "src/utils/firebase";
 
 import {
-  addDoc,
   collection,
   doc,
   getFirestore,
   orderBy,
   query,
-  updateDoc,
   where,
 } from "firebase/firestore";
 import Link from "next/link";
@@ -21,6 +19,7 @@ import { Auth } from "src/components/auth";
 import { Button } from "src/components/button";
 import { ButtonBar } from "src/components/button-bar";
 import { CodePreview } from "src/components/code-preview";
+import { CommentsButton } from "src/components/comments-button";
 import { HelpBox } from "src/components/help-box";
 import { Hint } from "src/components/hint";
 import { List } from "src/components/list";
@@ -29,12 +28,10 @@ import { ProjectActions } from "src/components/project/actions";
 import { Spacer } from "src/components/spacer";
 import { Suspense } from "src/components/suspense";
 import { GroupHeading, Heading, P, Small } from "src/components/text";
-import { useAuthUser } from "src/hooks/use-auth-user";
 import { useRunFilters } from "src/hooks/use-run-filters";
 import { AppLayout } from "src/layouts/app";
 import { PageListItem } from "src/list-items/page";
 import { RunListItem } from "src/list-items/run";
-import { CommentsPopout } from "src/popouts/comments";
 
 const db = getFirestore();
 
@@ -44,13 +41,13 @@ const Container = styled.div`
 `;
 
 function Content() {
-  const authUser = useAuthUser();
   const router = useRouter();
   const { projectId } = router.query;
 
   const projectRef = doc(db, "projects", projectId!);
   const project = useDocument(projectRef);
 
+  // Fetch and paginate runs
   const runs: any[] = useCollection(
     query(
       collection(db, "runs"),
@@ -84,44 +81,31 @@ function Content() {
     [runs, runsLimit, filters]
   );
 
-  const allComments: any[] = useCollection(
-    query(
-      collection(db, "comments"),
+  // Setup for comments, we only define filters and mapping here, so that the actual
+  // fetching and updating can be handled in a central spot :/
+  const commentsFilters = useMemo(
+    () => [where("project", "==", projectRef), where("run", "==", null)],
+    [projectRef]
+  );
+
+  const relatedCommentsFilters = useMemo(
+    () => [
       where("project", "==", projectRef),
-      where("resolvedAt", "==", null),
-      orderBy("createdAt", "asc")
-    ),
-    { key: `${project.id}/comments` }
-  );
-
-  const [comments, relatedComments] = useMemo(
-    () =>
-      allComments.reduce(
-        (all, comment: any) => {
-          if (comment.run) {
-            all[1].push(comment);
-          } else {
-            all[0].push(comment);
-          }
-          return all;
-        },
-        [[], []]
+      where(
+        "run",
+        "in",
+        runs.map((r) => doc(db, "runs", r.id))
       ),
-    [allComments]
+    ],
+    [projectRef]
   );
 
-  const addComment = useCallback(
-    ({ id, ...comment }: any) => {
-      if (id) {
-        updateDoc(doc(db, "comments", id), comment);
-      } else {
-        addDoc(collection(db, "comments"), {
-          ...comment,
-          type: "project",
-          project: projectRef,
-        });
-      }
-    },
+  const mapComment = useCallback(
+    (comment) => ({
+      ...comment,
+      type: "project",
+      project: projectRef,
+    }),
     [projectRef]
   );
 
@@ -132,10 +116,11 @@ function Content() {
           left={<Heading level={1}>{project.name}</Heading>}
           right={
             <>
-              <CommentsPopout
-                comments={comments}
-                relatedComments={relatedComments}
-                onComment={addComment}
+              <CommentsButton
+                id={`project/${project.id}`}
+                filters={commentsFilters}
+                relatedFilters={relatedCommentsFilters}
+                mapComment={mapComment}
               />
               <ProjectActions data={project} />
             </>
@@ -220,10 +205,11 @@ function Content() {
         left={<Heading level={1}>{project.name}</Heading>}
         right={
           <>
-            <CommentsPopout
-              comments={comments}
-              relatedComments={relatedComments}
-              onComment={addComment}
+            <CommentsButton
+              id={`project/${project.id}`}
+              filters={commentsFilters}
+              relatedFilters={relatedCommentsFilters}
+              mapComment={mapComment}
             />
             <ProjectActions data={project} />
           </>

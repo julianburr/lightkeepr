@@ -1,3 +1,4 @@
+import { createFocusTrap } from "focus-trap";
 import { useRef, ReactNode, useEffect, RefObject, Ref, useState } from "react";
 import styled from "styled-components";
 
@@ -115,6 +116,17 @@ export function Sidebar({ top, children }: SidebarProps) {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  // Trap focus within the sidebar
+  useEffect(() => {
+    if (backdropRef.current && active && isMobile) {
+      const trap = createFocusTrap(backdropRef.current);
+      trap.activate();
+      return () => {
+        trap.deactivate();
+      };
+    }
+  }, [active, isMobile]);
 
   return (
     <Container ref={backdropRef as Ref<HTMLDivElement>} data-active={active}>

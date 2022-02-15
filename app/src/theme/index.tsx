@@ -41,12 +41,23 @@ export const GlobalStyles = createGlobalStyle`
     color: var(--sol--typography-color-default);
     overflow-wrap: anywhere;
     height: 100%;
+  }
 
+  body.noscroll {
+    overflow: hidden;
+  }
+
+  body.noscroll-comments {
+    overflow:hidden;
   }
 
   @media (min-width: 800px) {
     body {
       font-size: 1.5rem;
+    }
+
+    body.noscroll {
+      overflow: auto;
     }
   }
 

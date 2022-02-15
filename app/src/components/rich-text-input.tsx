@@ -38,10 +38,15 @@ const Container = styled.div`
 
   .public-DraftEditorPlaceholder-root {
     position: absolute;
-    top: 0;
-    left: 0;
+    inset: 0;
     pointer-events: none;
     color: var(--sol--palette-grey-200);
+  }
+
+  .public-DraftEditorPlaceholder-inner {
+    white-space: nowrap !important;
+    text-overflow: ellipsis;
+    overflow: hidden;
   }
 
   .mentionSuggestions {

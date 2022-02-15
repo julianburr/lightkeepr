@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useState } from "react";
 
-export function usePersistedState(key: string, defaultValue: any) {
+export function usePersistedState(key: string, defaultValue?: any) {
   const fromStorage = window.localStorage.getItem(key);
   const [state, setState] = useState(
     fromStorage ? JSON.parse(fromStorage)?.value : defaultValue

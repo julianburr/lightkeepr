@@ -5,9 +5,9 @@ import {
   useContext,
   useEffect,
   useRef,
+  Ref,
+  useState,
 } from "react";
-import { Ref } from "react";
-import { useState } from "react";
 import { createPortal } from "react-dom";
 import styled from "styled-components";
 

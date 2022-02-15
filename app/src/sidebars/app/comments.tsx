@@ -1,7 +1,14 @@
 import "src/utils/firebase";
 
-import { doc, getFirestore } from "firebase/firestore";
-import { useCallback, useMemo, useState } from "react";
+import {
+  addDoc,
+  collection,
+  doc,
+  getFirestore,
+  updateDoc,
+} from "firebase/firestore";
+import { createFocusTrap } from "focus-trap";
+import { useCallback, useMemo, useState, useRef, Ref, useEffect } from "react";
 import styled from "styled-components";
 
 import { Comment } from "src/components/comment";
@@ -48,7 +55,7 @@ const Inner = styled.menu`
   box-shadow: 0 0 0 rgba(0, 0, 0, 0);
   transition: transform 0.2s, box-shadow 0.2s;
   overflow: auto;
-  padding: 2.4rem 0;
+  padding: 2.4rem 0 0;
 
   [data-active="true"] > & {
     box-shadow: 0 0 1.8rem rgba(0, 0, 0, 0.1);
@@ -69,6 +76,9 @@ const WrapComments = styled.div`
 
 const WrapInput = styled.div`
   padding: 1.6rem 2.4rem 2.4rem;
+  background: #fff;
+  position: sticky;
+  bottom: 0;
 `;
 
 const Emtpty = styled.div`
@@ -78,19 +88,32 @@ const Emtpty = styled.div`
 type CommentsSidebarProps = {
   comments?: any[];
   relatedComments?: any[];
-  onComment?: (comment: any) => any;
+  mapComment?: (comment: any) => any;
 };
 
 export function CommentsSidebar({
   comments,
   relatedComments,
-  onComment,
+  mapComment,
 }: CommentsSidebarProps) {
   const authUser = useAuthUser();
   const { active, backdropRef, menuRef } = useSidebarState("comments");
 
+  // Trap focus within the sidebar
+  useEffect(() => {
+    if (backdropRef.current && active) {
+      const trap = createFocusTrap(backdropRef.current);
+      trap.activate();
+      return () => {
+        trap.deactivate();
+      };
+    }
+  }, [active]);
+
   const [submitCount, setSubmitCount] = useState(0);
   const [thread, setThread] = useState<string>();
+
+  const inputRef = useRef<HTMLDivElement>();
 
   const threadComments = useMemo(() => {
     if (thread) {
@@ -103,7 +126,7 @@ export function CommentsSidebar({
   const threadComment = threadComments?.[0];
 
   const handleEnter = useCallback(
-    (value) => {
+    async (value) => {
       const now = new Date();
       const userRef = doc(db, "users", authUser.uid!);
       const comment = {
@@ -123,14 +146,28 @@ export function CommentsSidebar({
       };
 
       if (thread) {
-        onComment?.({
-          ...threadComment,
-          thread: [...(threadComment.thread || []), comment],
+        updateDoc(doc(db, "comments", threadComment.id), {
+          thread: [
+            ...(threadComment.thread || []),
+            mapComment?.(comment) || comment,
+          ],
         });
+        // TODO: Send notifications to everyone subscribed to thread comment
+        // TODO: Add user subscription to thread comment
       } else {
-        onComment?.(comment);
+        addDoc(collection(db, "comments"), mapComment?.(comment) || comment);
+        // TODO: Add user subscription to comment
       }
+
+      // HACK: the submit count is used as key on the input, which will reset
+      // it. After resetting, we want to re-focus the input so the user can keep
+      // typing to add another comment
       setSubmitCount((count) => count + 1);
+      (
+        inputRef?.current?.querySelector?.(
+          '[role="combobox"]'
+        ) as HTMLDivElement
+      )?.focus?.();
     },
     [thread, threadComment]
   );
@@ -223,7 +260,7 @@ export function CommentsSidebar({
 
           <Spacer h=".8rem" />
           <Suspense fallback={null}>
-            <WrapInput key={submitCount}>
+            <WrapInput key={submitCount} ref={inputRef as Ref<HTMLDivElement>}>
               <RichTextInput
                 placeholder="Comment or mention others with @"
                 onEnter={handleEnter}

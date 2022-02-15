@@ -33,7 +33,7 @@ import { Tooltip } from "./tooltip";
 
 const db = getFirestore();
 
-const Container = styled.button`
+const Container = styled.div`
   display: flex;
   flex-direction: row;
   gap: 0.8rem;
@@ -43,12 +43,14 @@ const Container = styled.button`
   position: relative;
   background: transparent;
   text-align: left;
+  cursor: pointer;
 
   p {
     margin: 0;
   }
 
-  &:hover {
+  &:hover,
+  &:focus-within {
     background: var(--sol--palette-sand-50);
   }
 `;
@@ -78,7 +80,8 @@ const Actions = styled.div`
   transition: opacity 0.2s;
   z-index: 1;
 
-  ${Container}:hover & {
+  ${Container}:hover &,
+  ${Container}:focus-within & {
     opacity: 1;
     z-index: 100;
   }
@@ -217,7 +220,10 @@ export function Comment({
   }, [comment]);
 
   return (
-    <Container onClick={comment.id ? () => setThread(comment.id) : undefined}>
+    <Container
+      onClick={comment.id ? () => setThread(comment.id) : undefined}
+      tabIndex={0}
+    >
       <Avatar name={createdBy?.name} />
       <Content>
         <Title>
