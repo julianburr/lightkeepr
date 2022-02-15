@@ -10,9 +10,12 @@ import {
   where,
 } from "firebase/firestore";
 import { useRouter } from "next/router";
+import { useMemo } from "react";
 
 import { useCollection } from "src/@packages/firebase";
+import { Badge } from "src/components/badge";
 import { Menu } from "src/components/menu";
+import { useAuthUser } from "src/hooks/use-auth-user";
 
 import BellSvg from "src/assets/icons/outline/bell.svg";
 import LifeBuoySvg from "src/assets/icons/outline/support.svg";
@@ -26,6 +29,7 @@ type BaseSidebarProps = {
 };
 
 export function BaseSidebar({ getLinkProps }: BaseSidebarProps) {
+  const authUser = useAuthUser();
   const router = useRouter();
 
   const teamRef = doc(db, "teams", router.query.teamId!);
@@ -36,6 +40,14 @@ export function BaseSidebar({ getLinkProps }: BaseSidebarProps) {
       orderBy("name", "asc")
     ),
     { key: `${router.query.teamId}/projects` }
+  );
+
+  const unseen = useMemo(
+    () =>
+      authUser.user?.notifications?.[authUser!.team!.id]?.filter(
+        (notification) => !notification.seenAt
+      ),
+    [authUser.user?.notifications, authUser.team?.id]
   );
 
   const items = [
@@ -49,6 +61,7 @@ export function BaseSidebar({ getLinkProps }: BaseSidebarProps) {
       mobile: true,
       label: "Notifications",
       icon: <BellSvg />,
+      badge: <Badge count={unseen?.length} />,
       href: `/app/${router.query.teamId}/account/notifications`,
     },
     {

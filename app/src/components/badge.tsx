@@ -5,6 +5,7 @@ const Container = styled.span`
   display: flex;
   width: 2rem;
   height: 2rem;
+  position: relative;
 `;
 
 const Value = styled.span<{

@@ -4,10 +4,11 @@ import { getAuth } from "firebase/auth";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useMemo } from "react";
 import styled from "styled-components";
 
 import { AccountActionMenu } from "src/action-menus/account";
+import { Badge } from "src/components/badge";
 import { Button } from "src/components/button";
 import { ErrorBoundary } from "src/components/error-boundary";
 import { Loader } from "src/components/loader";
@@ -82,6 +83,19 @@ export function AppLayout({ children }: AppLayoutProps) {
   const router = useRouter();
   const authUser = useAuthUser();
 
+  const notifications = authUser.user?.notifications || {};
+  const unseen = useMemo(
+    () =>
+      Object.keys(notifications).reduce<any>((all, teamId: string) => {
+        all[teamId] =
+          notifications[teamId]?.filter?.(
+            (notification) => !notification.seenAt
+          ) || [];
+        return all;
+      }, {}),
+    [notifications]
+  );
+
   return (
     <>
       <Head>
@@ -136,6 +150,7 @@ export function AppLayout({ children }: AppLayoutProps) {
                             selectable: true,
                             selected: team.id === router.query.teamId,
                             label: team.name || "n/a",
+                            badge: <Badge count={unseen?.[team.id]?.length} />,
                             href: `/app/${team.id}`,
                           };
                         }) || [],
@@ -193,6 +208,7 @@ export function AppLayout({ children }: AppLayoutProps) {
                 />
                 <Button
                   icon={<MenuSvg />}
+                  badge={<Badge count={unseen?.[authUser.team!.id]?.length} />}
                   size="large"
                   intent="ghost"
                   aria-label="Menu"

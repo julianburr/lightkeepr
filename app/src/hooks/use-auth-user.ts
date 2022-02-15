@@ -138,5 +138,5 @@ export function useAuthUser(): UseAuthUserResponse {
 
       pendingInvites,
     };
-  }, [user, teams, invites]);
+  }, [user, teams, invites, router.query.teamId]);
 }

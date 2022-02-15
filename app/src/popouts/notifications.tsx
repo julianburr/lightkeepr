@@ -123,7 +123,7 @@ export function NotificationsButton() {
   const unread = useMemo(
     () =>
       notifications?.[teamId]?.filter?.((notification) => !notification.seenAt),
-    [notifications]
+    [notifications, teamId]
   );
 
   useEffect(() => {

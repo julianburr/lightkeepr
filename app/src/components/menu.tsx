@@ -79,6 +79,17 @@ const CoreMenuItem = styled((props) => <CoreButton {...props} />)`
   }
 `;
 
+const Label = styled.span`
+  flex: 1;
+`;
+
+const WrapBadge = styled.span`
+  display: flex;
+  flex-shrink: 0;
+  padding-left: var(--sol--spacing-xs);
+  flex: 0;
+`;
+
 type MenuItemProps = PropsWithChildren<{
   onClick?: (e: any) => void;
   href?: string;
@@ -123,6 +134,7 @@ function MenuItem({
 type Item = {
   key?: string;
   label: ReactNode;
+  badge?: ReactNode;
   icon?: ReactNode;
   onClick?: (e: any) => void | Promise<void>;
   href?: string;
@@ -134,6 +146,7 @@ type Item = {
 type ItemGroup = {
   key?: string;
   label: ReactNode;
+  badge?: ReactNode;
   icon?: ReactNode;
   items: Item[] | ItemGroup[];
   mobile?: boolean;
@@ -174,7 +187,8 @@ export function Menu({ items }: MenuProps) {
                 isBacklink={item.isBacklink}
               >
                 {item.icon}
-                <span>{item.label}</span>
+                <Label>{item.label}</Label>
+                {item.badge && <WrapBadge>{item.badge}</WrapBadge>}
               </MenuItem>
             </Li>
           );
