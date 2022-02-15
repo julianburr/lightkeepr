@@ -14,7 +14,7 @@ import { Badge } from "src/components/badge";
 import { Button } from "src/components/button";
 import { Suspense } from "src/components/suspense";
 import { usePersistedState } from "src/hooks/use-persisted-state";
-import { CommentsSidebar } from "src/sidebars/app/comments";
+import { CommentsSidebar } from "src/sidebars/comments";
 
 import CommentSvg from "src/assets/icons/outline/annotation.svg";
 

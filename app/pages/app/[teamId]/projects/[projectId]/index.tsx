@@ -104,6 +104,7 @@ function Content() {
     (comment) => ({
       ...comment,
       type: "project",
+      record: projectRef,
       project: projectRef,
     }),
     [projectRef]

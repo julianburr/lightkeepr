@@ -11,7 +11,7 @@ import {
   where,
 } from "firebase/firestore";
 import { useRouter } from "next/router";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import styled from "styled-components";
 
 import { useCollection, useDocument } from "src/@packages/firebase";
@@ -25,6 +25,8 @@ import { useToast } from "src/hooks/use-toast";
 
 import ChevronLeftSvg from "src/assets/icons/outline/chevron-left.svg";
 import ChevronRightSvg from "src/assets/icons/outline/chevron-right.svg";
+
+import { CommentsButton } from "../comments-button";
 
 const db = getFirestore();
 
@@ -59,6 +61,25 @@ export function ReportActions({ data }: any) {
   const projectRef = doc(db, "projects", run.project.id);
   const project = useDocument(projectRef);
 
+  // Setup for comments
+  const commentsFilters = useMemo(
+    () => [where("report", "==", reportRef), where("report", "==", null)],
+    [reportRef]
+  );
+
+  const mapComment = useCallback(
+    (comment) => ({
+      ...comment,
+      type: "run",
+      record: reportRef,
+      project: doc(db, "projects", data.project.id),
+      run: doc(db, "runs", data.run.id),
+      report: reportRef,
+    }),
+    [reportRef]
+  );
+
+  // Put together actions
   const currentIndex = reports.findIndex((r: any) => r.id === data.id);
   const prev = currentIndex === 0 ? undefined : reports[currentIndex - 1];
   const next =
@@ -120,6 +141,12 @@ export function ReportActions({ data }: any) {
 
   return (
     <Container>
+      <CommentsButton
+        id={`report/${data.id}`}
+        filters={commentsFilters}
+        mapComment={mapComment}
+      />
+
       <SplitButton
         onClick={approveReport}
         disabled={data.status !== "failed"}

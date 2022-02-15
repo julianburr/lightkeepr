@@ -191,18 +191,34 @@ function Content({
         reactions: [],
       };
 
+      const mapped = mapComment?.(comment) || comment;
+      const subscriptions = authUser?.user?.subscriptions || [];
+
       if (thread) {
         updateDoc(doc(db, "comments", threadComment.id), {
-          thread: [
-            ...(threadComment.thread || []),
-            mapComment?.(comment) || comment,
-          ],
+          thread: [...(threadComment.thread || []), mapped],
+        }).then(() => {
+          const commentRef = doc(db, "comments", threadComment.id);
+
+          // Add user subscription to thread comment
+          updateDoc(doc(db, "users", authUser.uid!), {
+            subscriptions: subscriptions.concat(commentRef),
+          });
+
+          // TODO: Send notifications to everyone subscribed to thread comment
+          // or the base record
         });
-        // TODO: Send notifications to everyone subscribed to thread comment
-        // TODO: Add user subscription to thread comment
       } else {
-        addDoc(collection(db, "comments"), mapComment?.(comment) || comment);
-        // TODO: Add user subscription to comment
+        addDoc(collection(db, "comments"), mapped).then((added) => {
+          const commentRef = doc(db, "comments", added.id);
+
+          // Add user subscription to comment
+          updateDoc(doc(db, "users", authUser.uid!), {
+            subscriptions: subscriptions.concat(commentRef),
+          });
+
+          // TODO: Send notifications to everyone subscribed to the base record
+        });
       }
 
       // HACK: the submit count is used as key on the input, which will reset
