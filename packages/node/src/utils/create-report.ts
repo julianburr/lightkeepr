@@ -36,8 +36,8 @@ export async function createReport({
 
   // Basic data
   formData.append("runId", runId);
-  formData.append("url", url);
   formData.append("name", name);
+  if (url) formData.append("url", url);
   if (type) formData.append("type", type);
 
   // Compressed report json file

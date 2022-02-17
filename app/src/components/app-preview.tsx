@@ -154,9 +154,11 @@ const report = {
     pwa: 0.6,
   },
 
-  status: "failed",
-  statusReasons: ["target"],
-  failedTargets: ["pwa"],
+  status: {
+    value: "failed",
+    reasons: ["target"],
+    failedTargets: ["pwa"],
+  },
 };
 
 const reportData = {
@@ -265,28 +267,32 @@ export function AppPreview() {
           <ScoresOverview
             report={report}
             pastReports={pastReports}
-            data={reportData}
+            reportData={reportData}
+            stepIndex={0}
           />
 
           <Spacer h="3.2rem" />
           <PerformanceOverview
             report={report}
             pastReports={pastReports}
-            data={reportData}
+            reportData={reportData}
+            stepIndex={0}
           />
 
           <Spacer h="3.2rem" />
           <NetworkOverview
             report={report}
             pastReports={pastReports}
-            data={reportData}
+            reportData={reportData}
+            stepIndex={0}
           />
 
           <Spacer h="3.2rem" />
           <UserTimingsOverview
             report={report}
             pastReports={pastReports}
-            data={reportData}
+            reportData={reportData}
+            stepIndex={0}
           />
         </Main>
       </Content>

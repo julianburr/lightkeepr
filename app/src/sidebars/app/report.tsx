@@ -91,6 +91,7 @@ function ReportMeta({ reportId }: ReportSidebarProps) {
 
 export function ReportSidebar({ reportId, getLinkProps }: ReportSidebarProps) {
   const router = useRouter();
+  const { category, ...query } = router.query;
 
   const report = useDocument(doc(db, "reports", reportId));
 
@@ -108,27 +109,33 @@ export function ReportSidebar({ reportId, getLinkProps }: ReportSidebarProps) {
       items: [
         {
           label: "Overview",
-          href: `/app/${router.query.teamId}/reports/${reportId}`,
+          href: { query },
+          active: !category,
         },
         {
           label: "Performance",
-          href: `/app/${router.query.teamId}/reports/${reportId}?category=performance`,
+          href: { query: { ...query, category: "performance" } },
+          active: category === "performance",
         },
         {
           label: "Accessibility",
-          href: `/app/${router.query.teamId}/reports/${reportId}?category=accessibility`,
+          href: { query: { ...query, category: "accessibility" } },
+          active: category === "accessibility",
         },
         {
           label: "Best practices",
-          href: `/app/${router.query.teamId}/reports/${reportId}?category=best-practices`,
+          href: { query: { ...query, category: "best-practices" } },
+          active: category === "best-practices",
         },
         {
           label: "SEO",
-          href: `/app/${router.query.teamId}/reports/${reportId}?category=seo`,
+          href: { query: { ...query, category: "seo" } },
+          active: category === "seo",
         },
         {
           label: "PWA",
-          href: `/app/${router.query.teamId}/reports/${reportId}?category=pwa`,
+          href: { query: { ...query, category: "pwa" } },
+          active: category === "pwa",
         },
       ],
     },

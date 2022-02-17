@@ -22,10 +22,20 @@ const Content = styled.div`
 type ScoresOverviewProps = {
   report: any;
   pastReports: any[];
-  data?: any;
+  reportData?: any;
+  stepIndex: number;
 };
 
-export function ScoresOverview({ pastReports }: ScoresOverviewProps) {
+export function ScoresOverview({
+  report,
+  pastReports,
+  stepIndex,
+}: ScoresOverviewProps) {
+  const summary =
+    report.type === "user-flow"
+      ? report.summary?.[stepIndex]?.scores
+      : report.summary;
+
   const items = useMemo(
     () =>
       pastReports
@@ -35,9 +45,9 @@ export function ScoresOverview({ pastReports }: ScoresOverviewProps) {
           (all, report: any) => {
             CATEGORIES.map((category) => category.id).forEach((key) => {
               all[key]?.push?.({
-                value: report.summary[key]
-                  ? Math.round(report.summary[key] * 100)
-                  : report.summary[key],
+                value: summary?.[key]
+                  ? Math.round(summary?.[key] * 100)
+                  : summary?.[key],
                 date: report.createdAt
                   ? dayjs.unix(report.createdAt.seconds)
                   : null,

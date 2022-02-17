@@ -11,12 +11,10 @@ import {
 } from "firebase/firestore";
 
 import { useCollection, useDocument } from "src/@packages/firebase";
-import { useSuspense } from "src/@packages/suspense";
 import { Loader } from "src/components/loader";
 import { Spacer } from "src/components/spacer";
 import { Suspense } from "src/components/suspense";
 import { Heading } from "src/components/text";
-import { api } from "src/utils/api-client";
 
 import { BudgetsOverview } from "./budgets";
 import { NetworkOverview } from "./network";
@@ -28,18 +26,14 @@ import { UserTimingsOverview } from "./user-timings";
 const db = getFirestore();
 
 type ReportOverviewProps = {
-  reportId: string;
+  report: any;
+  reportData: any;
+  stepIndex: number;
 };
 
-function Content({ reportId }: ReportOverviewProps) {
-  const report = useDocument(doc(db, "reports", reportId!));
-
+function Content({ report, reportData, stepIndex }: ReportOverviewProps) {
   const projectRef = doc(db, "projects", report.project.id);
   const project = useDocument(projectRef);
-
-  const { data } = useSuspense(() => api.get(`/api/reports/${reportId}`), {
-    key: `report/${reportId}`,
-  });
 
   const pastReports = useCollection(
     report?.project?.id &&
@@ -60,15 +54,15 @@ function Content({ reportId }: ReportOverviewProps) {
 
   return (
     <>
-      {!!data.report.audits?.["performance-budget"]?.details?.items?.length &&
-        !!data.report.audits?.["performance-budget"]?.details?.items
-          ?.length && (
+      {!!reportData.audits?.["performance-budget"]?.details?.items?.length &&
+        !!reportData.audits?.["performance-budget"]?.details?.items?.length && (
           <>
             <Heading level={2}>Budgets</Heading>
             <BudgetsOverview
               report={report}
               pastReports={pastReports}
-              data={data}
+              reportData={reportData}
+              stepIndex={stepIndex}
             />
 
             <Spacer h="3.2rem" />
@@ -79,39 +73,51 @@ function Content({ reportId }: ReportOverviewProps) {
       <OpportunitiesOverview
         report={report}
         pastReports={pastReports}
-        data={data}
+        reportData={reportData}
       />
 
       <Spacer h="3.2rem" />
 
       <Heading level={2}>Trends &amp; regressions</Heading>
       <Spacer h="2.4rem" />
-      <ScoresOverview report={report} pastReports={pastReports} data={data} />
+      <ScoresOverview
+        report={report}
+        pastReports={pastReports}
+        reportData={reportData}
+        stepIndex={stepIndex}
+      />
 
       <Spacer h="3.2rem" />
       <PerformanceOverview
         report={report}
         pastReports={pastReports}
-        data={data}
+        reportData={reportData}
+        stepIndex={stepIndex}
       />
 
       <Spacer h="3.2rem" />
-      <NetworkOverview report={report} pastReports={pastReports} data={data} />
+      <NetworkOverview
+        report={report}
+        pastReports={pastReports}
+        reportData={reportData}
+        stepIndex={stepIndex}
+      />
 
       <Spacer h="3.2rem" />
       <UserTimingsOverview
         report={report}
         pastReports={pastReports}
-        data={data}
+        reportData={reportData}
+        stepIndex={stepIndex}
       />
     </>
   );
 }
 
-export function ReportOverview({ reportId }: ReportOverviewProps) {
+export function ReportOverview(props: ReportOverviewProps) {
   return (
     <Suspense fallback={<Loader message="Loading past reports..." />}>
-      <Content reportId={reportId} />
+      <Content {...props} />
     </Suspense>
   );
 }

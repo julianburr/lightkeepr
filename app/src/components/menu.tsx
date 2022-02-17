@@ -95,6 +95,7 @@ type MenuItemProps = PropsWithChildren<{
   href?: string;
   target?: string;
   isBacklink?: boolean;
+  active?: boolean;
 }>;
 
 function MenuItem({
@@ -103,6 +104,7 @@ function MenuItem({
   target,
   children,
   isBacklink,
+  active,
 }: MenuItemProps) {
   const router = useRouter();
 
@@ -123,7 +125,7 @@ function MenuItem({
       target={target}
       className={classnames({
         backlink: isBacklink,
-        active: href === router.asPath,
+        active: active || href === router.asPath,
       })}
     >
       {children}
@@ -141,6 +143,7 @@ type Item = {
   target?: string;
   mobile?: boolean;
   isBacklink?: boolean;
+  active?: boolean;
 };
 
 type ItemGroup = {
@@ -185,6 +188,7 @@ export function Menu({ items }: MenuProps) {
                 href={item.href}
                 target={item.target}
                 isBacklink={item.isBacklink}
+                active={item.active}
               >
                 {item.icon}
                 <Label>{item.label}</Label>

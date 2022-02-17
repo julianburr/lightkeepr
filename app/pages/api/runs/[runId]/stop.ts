@@ -45,9 +45,12 @@ export default createHandler({
     });
 
     const reportStatus = reports.map((report) => report.status);
-    const status = reportStatus.find((status) => status === "failed")
-      ? "failed"
-      : "passed";
+    const status = {
+      value: reportStatus.find((status) => status?.value === "failed")
+        ? "failed"
+        : "passed",
+      running: false,
+    };
 
     await db
       .collection("runs")

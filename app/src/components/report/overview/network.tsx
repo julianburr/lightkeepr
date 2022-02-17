@@ -25,10 +25,18 @@ const audits = AUDITS.filter(
 type NetworkOverviewProps = {
   report: any;
   pastReports: any[];
-  data?: any;
+  reportData: any;
+  stepIndex: number;
 };
 
-export function NetworkOverview({ pastReports, data }: NetworkOverviewProps) {
+export function NetworkOverview({
+  report,
+  pastReports,
+  stepIndex,
+}: NetworkOverviewProps) {
+  const reportAudits =
+    report.type === "user-flow" ? report.audits?.[stepIndex] : report.audits;
+
   const items = useMemo<{ [key: string]: any[] }>(
     () =>
       pastReports
@@ -38,10 +46,10 @@ export function NetworkOverview({ pastReports, data }: NetworkOverviewProps) {
           (all: any, report: any) => {
             audits.forEach((audit: any) => {
               all[audit.id]?.push?.({
-                value: report.audits?.[audit.id]?.score
-                  ? report.audits[audit.id].score * 100
-                  : report.audits?.[audit.id]?.score,
-                displayValue: report.audits?.[audit.id]?.displayValue,
+                value: reportAudits?.[audit.id]?.score
+                  ? reportAudits[audit.id].score * 100
+                  : reportAudits?.[audit.id]?.score,
+                displayValue: reportAudits?.[audit.id]?.displayValue,
                 date: report.createdAt
                   ? dayjs.unix(report.createdAt.seconds)
                   : null,

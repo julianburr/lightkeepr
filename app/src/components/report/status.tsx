@@ -35,14 +35,14 @@ export function ReportStatus({ data }: any) {
 
   const statusMessage =
     data.status === "passed"
-      ? data.statusReasons?.includes?.("manual")
+      ? data.status?.reasons?.includes?.("manual")
         ? `manually approved by ${approvedBy?.name} (${approvedBy?.email})`
         : null
-      : data.statusReasons
+      : data.status?.reasons
           ?.map?.((reason: string) => {
             switch (reason) {
               case "target": {
-                const categories = data.failedTargets
+                const categories = data.status?.failedTargets
                   ?.map?.(
                     (key: string) => CATEGORIES.find((c) => c.id === key)?.label
                   )
@@ -64,11 +64,15 @@ export function ReportStatus({ data }: any) {
 
   return (
     <Container>
-      <StatusAvatar status={data.status} statusReasons={data.statusReasons} />
+      <StatusAvatar status={data.status} />
       <StatusText>
         <GroupHeading>Status</GroupHeading>
         <P>
-          {data.status === "failed" ? "Failed" : "Passed"}
+          {data.status?.value === "failed"
+            ? "Failed"
+            : data?.status?.value === "passed"
+            ? "Passed"
+            : "n/a"}
           {statusMessage && <> — {statusMessage}</>}
         </P>
       </StatusText>

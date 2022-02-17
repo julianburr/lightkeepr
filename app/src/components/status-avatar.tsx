@@ -18,51 +18,66 @@ const LoaderIcon = styled(LoaderSvg)`
   animation: ${spin} 3s ease-in-out infinite;
 `;
 
-function getBackground(status: string) {
-  return status?.startsWith?.("failed")
-    ? "var(--sol--palette-red-500)"
-    : status === "passed"
-    ? "var(--sol--palette-green-500)"
-    : status === "running"
-    ? "var(--sol--color-brand-500)"
-    : undefined;
+type Status = {
+  value?: string;
+  reasons?: string[];
+};
+
+function getBackground(status?: Status) {
+  switch (status?.value) {
+    case "failed":
+      return "var(--sol--palette-red-500)";
+    case "passed":
+      return "var(--sol--palette-green-500)";
+    case "running":
+      return "var(--sol--color-brand-500)";
+    default:
+      return "var(--sol--palette-sand-200)";
+  }
 }
 
-function getColor(status: string) {
-  return status?.startsWith?.("failed") ||
-    status === "passed" ||
-    status === "running"
-    ? "var(--sol--color-white)"
-    : "var(--sol--palette-sand-800)";
+function getColor(status?: Status) {
+  switch (status?.value) {
+    case "failed":
+    case "passed":
+    case "running":
+      return "var(--sol--color-white)";
+    default:
+      return "var(--sol--palette-sand-800)";
+  }
 }
 
-function getIcon(status: string, statusReasons?: string[]) {
-  return status?.startsWith?.("failed") ? (
-    <AlertSvg />
-  ) : status === "passed" ? (
-    statusReasons?.includes?.("manual") ? (
-      <CheckCircleSvg />
-    ) : (
-      <CheckSvg />
-    )
-  ) : status === "running" ? (
-    <LoaderIcon />
-  ) : status === "cancelled" ? (
-    <XSvg />
-  ) : (
-    <MinusSvg />
-  );
+function getIcon(status?: Status) {
+  switch (status?.value) {
+    case "failed":
+      return <AlertSvg />;
+
+    case "cancelled":
+      return <XSvg />;
+
+    case "running":
+      return <LoaderIcon />;
+
+    case "passed":
+      return status?.reasons?.includes?.("manual") ? (
+        <CheckCircleSvg />
+      ) : (
+        <CheckSvg />
+      );
+
+    default:
+      return <MinusSvg />;
+  }
 }
 
 type StatusAvatarProps = {
-  status: string;
-  statusReasons?: string[];
+  status?: Status;
 };
 
-export function StatusAvatar({ status, statusReasons }: StatusAvatarProps) {
+export function StatusAvatar({ status }: StatusAvatarProps) {
   return (
     <Avatar background={getBackground(status)} color={getColor(status)}>
-      {getIcon(status, statusReasons)}
+      {getIcon(status)}
     </Avatar>
   );
 }

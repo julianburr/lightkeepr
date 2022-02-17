@@ -1,14 +1,12 @@
 import { Fragment } from "react";
 import { useMemo } from "react";
 
-import { useSuspense } from "src/@packages/suspense";
 import { Accordion } from "src/components/accordion";
 import { List } from "src/components/list";
 import { Markdown } from "src/components/markdown";
 import { Spacer } from "src/components/spacer";
 import { Heading, P } from "src/components/text";
 import { ReportAuditListItem } from "src/list-items/report/audit";
-import { api } from "src/utils/api-client";
 
 import { ReportOverview } from "./overview";
 
@@ -23,32 +21,31 @@ type GroupedAudits = {
 };
 
 type ReportDetailsProps = {
-  reportId: string;
+  report: any;
   categoryId?: string;
+  reportData: any;
+  stepIndex: number;
 };
 
-export function ReportDetails({ reportId, categoryId }: ReportDetailsProps) {
-  const { data } = useSuspense(() => api.get(`/api/reports/${reportId}`), {
-    key: `report/${reportId}`,
-  });
-
-  if (!categoryId) {
-    return <ReportOverview reportId={reportId!} />;
-  }
-
+export function ReportDetails({
+  report,
+  categoryId,
+  reportData,
+  stepIndex,
+}: ReportDetailsProps) {
   const { category, groups } = useMemo(() => {
     if (!categoryId) {
       return {};
     }
 
-    const category = data.report.categories[categoryId];
+    const category = reportData.categories[categoryId];
     if (!category) {
       return {};
     }
 
     const groups: GroupedAudits = category.auditRefs.reduce(
       (all: GroupedAudits, ref: any) => {
-        const audit = data.report.audits[ref.id];
+        const audit = reportData.audits[ref.id];
         if (ref.group === "hidden") {
           return all;
         } else if (audit.scoreDisplayMode === "manual") {
@@ -56,28 +53,28 @@ export function ReportDetails({ reportId, categoryId }: ReportDetailsProps) {
             audit,
             ref,
             type: "manual",
-            report: data.report,
+            report: reportData,
           });
         } else if (audit.scoreDisplayMode === "notApplicable") {
           all.notApplicable.push({
             audit,
             ref,
             type: "notApplicable",
-            report: data.report,
+            report: reportData,
           });
         } else if (audit.scoreDisplayMode === "informative") {
           all.informative.push({
             audit,
             ref,
             type: "informative",
-            report: data.report,
+            report: reportData,
           });
         } else if (audit.score >= 0.9) {
           all.passed.push({
             audit,
             ref,
             type: "passed",
-            report: data.report,
+            report: reportData,
           });
         } else {
           const groupKey = ref.group || "__";
@@ -88,7 +85,7 @@ export function ReportDetails({ reportId, categoryId }: ReportDetailsProps) {
             audit,
             ref,
             type: "improvement",
-            report: data.report,
+            report: reportData,
           });
         }
         return all;
@@ -103,13 +100,27 @@ export function ReportDetails({ reportId, categoryId }: ReportDetailsProps) {
     );
 
     return { category, groups };
-  }, [data, categoryId]);
+  }, [reportData, categoryId]);
+
+  if (!categoryId) {
+    return (
+      <ReportOverview
+        report={report}
+        reportData={reportData}
+        stepIndex={stepIndex}
+      />
+    );
+  }
 
   if (!groups || !category) {
     return (
       <>
         <Heading level={2}>n/a</Heading>
-        <P>This category has been excluded from the report.</P>
+        <P>
+          This category has not been included in this report. This could happen
+          because it has actively been excluded, or because the report type does
+          generally not include it.
+        </P>
       </>
     );
   }
@@ -124,17 +135,17 @@ export function ReportDetails({ reportId, categoryId }: ReportDetailsProps) {
         (groupKey) =>
           groups.others[groupKey]?.length > 0 && (
             <Fragment key={groupKey}>
-              {data.report.categoryGroups[groupKey]?.title && (
+              {reportData.categoryGroups[groupKey]?.title && (
                 <>
                   <Heading level={3}>
-                    {data.report.categoryGroups[groupKey].title}
+                    {reportData.categoryGroups[groupKey].title}
                   </Heading>
                   <Spacer h=".2rem" />
                 </>
               )}
-              {data.report.categoryGroups[groupKey]?.description && (
+              {reportData.categoryGroups[groupKey]?.description && (
                 <Markdown>
-                  {data.report.categoryGroups[groupKey].description}
+                  {reportData.categoryGroups[groupKey].description}
                 </Markdown>
               )}
               <List

@@ -66,10 +66,7 @@ export function CompareReportListItem({ data }: ReportListItemProps) {
     <ListItem href={`/app/${router.query.teamId}/reports/${data.id}`}>
       <Content>
         <Top>
-          <StatusAvatar
-            status={data.status}
-            statusReasons={data.statusReasons}
-          />
+          <StatusAvatar status={data.status} />
           <Title>
             <P>
               <span>{data.name || data.url || "n/a"}</span>

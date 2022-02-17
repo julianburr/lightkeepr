@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import styled from "styled-components";
 
 import { useDocument } from "src/@packages/firebase";
+import { useSuspense } from "src/@packages/suspense";
 import { Auth } from "src/components/auth";
 import { Loader } from "src/components/loader";
 import { ReportActions } from "src/components/report/actions";
@@ -13,8 +14,9 @@ import { ReportScores } from "src/components/report/scores";
 import { ReportStatus } from "src/components/report/status";
 import { Spacer } from "src/components/spacer";
 import { Suspense } from "src/components/suspense";
-import { Heading, Small } from "src/components/text";
+import { Heading, P } from "src/components/text";
 import { AppLayout } from "src/layouts/app";
+import { api } from "src/utils/api-client";
 
 const db = getFirestore();
 
@@ -41,19 +43,44 @@ const WrapHeading = styled.div`
 function Content() {
   const router = useRouter();
 
-  const reportRef = doc(db, "reports", router.query.reportId!);
+  const categoryId = router.query.category;
+
+  const reportId = router.query.reportId;
+  const reportRef = doc(db, "reports", reportId!);
   const report = useDocument(reportRef);
+
+  const { data } = useSuspense(() => api.get(`/api/reports/${reportId}`), {
+    key: `report/${reportId}`,
+  });
+
+  const stepIndex = router.query.step?.[0] ? parseInt(router.query.step[0]) : 0;
+  const reportData =
+    report.type === "user-flow"
+      ? data?.report?.steps?.[stepIndex]?.lhr
+      : data?.report;
+
+  const step = report.summary?.[stepIndex];
+  const gatherMode =
+    step?.meta?.gatherMode === "snapshot" ? "Snapshot" : "Navigation";
+
+  const title = report.type === "user-flow" ? step?.name : report.name;
+
+  const subTitle =
+    report.type === "user-flow"
+      ? `${gatherMode} — ${report.name} ` +
+        `(${stepIndex + 1} of ${data?.report?.steps?.length})`
+      : report.url && report.url !== report.name
+      ? report.url
+      : null;
 
   return (
     <>
       <WrapTitle>
         <WrapHeading>
-          <Heading level={1}>{report.name}</Heading>
-          {report.url && report.url !== report.name && (
-            <Small grey>{report.url}</Small>
-          )}
+          <Heading level={1}>{title}</Heading>
+          {subTitle && <P grey>{subTitle}</P>}
         </WrapHeading>
-        <ReportActions data={report} />
+        <ReportActions stepIndex={stepIndex} data={report} />
       </WrapTitle>
 
       <Spacer h="1.2rem" />
@@ -61,13 +88,22 @@ function Content() {
 
       <Spacer h="1.2rem" />
 
-      <ReportScores scores={report.summary} />
+      <ReportScores
+        scores={
+          report.type === "user-flow"
+            ? report.summary?.[stepIndex]?.scores
+            : report.summary
+        }
+      />
       <Spacer h="1.6rem" />
 
       <Suspense fallback={<Loader />}>
         <ReportDetails
-          reportId={router.query.reportId!}
-          categoryId={router.query.category}
+          key={`${report.id}--${stepIndex}`}
+          report={report}
+          categoryId={categoryId}
+          reportData={reportData}
+          stepIndex={stepIndex}
         />
       </Suspense>
     </>

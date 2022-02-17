@@ -44,7 +44,7 @@ export default createHandler({
       commit: req.body.commit || null,
       commitMessage: req.body.commitMessage || null,
       repo: req.body.repo || null,
-      status: "running",
+      status: { value: "running" },
     });
     const run = await ref.get();
 
@@ -55,7 +55,7 @@ export default createHandler({
       .update({
         lastRunAt: now,
         lastRun: db.collection("runs").doc(run.id),
-        status: "running",
+        status: { value: "running" },
       });
 
     return res.status(200).json({ id: run.id, ...run.data() });
