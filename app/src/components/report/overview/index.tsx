@@ -62,6 +62,7 @@ function Content({ report, reportData, stepIndex }: ReportOverviewProps) {
               report={report}
               pastReports={pastReports}
               reportData={reportData}
+              stepIndex={stepIndex}
             />
 
             <Spacer h="3.2rem" />
@@ -91,6 +92,7 @@ function Content({ report, reportData, stepIndex }: ReportOverviewProps) {
         report={report}
         pastReports={pastReports}
         reportData={reportData}
+        stepIndex={stepIndex}
       />
 
       <Spacer h="3.2rem" />
@@ -98,6 +100,7 @@ function Content({ report, reportData, stepIndex }: ReportOverviewProps) {
         report={report}
         pastReports={pastReports}
         reportData={reportData}
+        stepIndex={stepIndex}
       />
 
       <Spacer h="3.2rem" />
@@ -105,6 +108,7 @@ function Content({ report, reportData, stepIndex }: ReportOverviewProps) {
         report={report}
         pastReports={pastReports}
         reportData={reportData}
+        stepIndex={stepIndex}
       />
     </>
   );

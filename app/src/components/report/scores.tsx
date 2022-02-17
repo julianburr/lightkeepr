@@ -36,12 +36,14 @@ const Label = styled.label`
   color: rgba(0, 0, 0, 0.6);
 `;
 
+type ScoreValue = number | null | { passed: number; total: number };
+
 type ScoreObj = {
-  performance?: number;
-  accessibility?: number;
-  ["best-practices"]?: number;
-  seo?: number;
-  pwa?: number;
+  performance?: ScoreValue;
+  accessibility?: ScoreValue;
+  ["best-practices"]?: ScoreValue;
+  seo?: ScoreValue;
+  pwa?: ScoreValue;
 };
 
 type ReportScoresProps = {
@@ -59,14 +61,7 @@ export function ReportScores({ scores }: ReportScoresProps) {
           const { category, ...q } = router.query;
 
           const scoreValue = compare?.[item.id as keyof ScoreObj];
-          const hasRun = !!scoreValue || scoreValue === 0;
-          const score = hasRun ? Math.round(scoreValue * 100) : 0;
-
           const baseScoreValue = base?.[item.id as keyof ScoreObj];
-          const baseHasRun = !!baseScoreValue || baseScoreValue === 0;
-          const baseScore = baseHasRun ? Math.round(baseScoreValue * 100) : 0;
-
-          const diff = hasRun && baseHasRun ? score - baseScore : undefined;
 
           return (
             <Link
@@ -81,9 +76,8 @@ export function ReportScores({ scores }: ReportScoresProps) {
               <a>
                 <Label>{item.label}</Label>
                 <Score
-                  value={score}
-                  diff={diff}
-                  hasRun={hasRun}
+                  value={scoreValue}
+                  baseValue={baseScoreValue}
                   active={router.query.category === item.id}
                 />
               </a>
@@ -101,9 +95,6 @@ export function ReportScores({ scores }: ReportScoresProps) {
 
         const scoreValue = scores?.[item.id as keyof ScoreObj];
 
-        const hasRun = !!scoreValue || scoreValue === 0;
-        const score = hasRun ? Math.round(scoreValue * 100) : 0;
-
         return (
           <Link
             key={item.id}
@@ -117,8 +108,7 @@ export function ReportScores({ scores }: ReportScoresProps) {
             <a>
               <Label>{item.label}</Label>
               <Score
-                value={score}
-                hasRun={hasRun}
+                value={scoreValue}
                 active={router.query.category === item.id}
               />
             </a>

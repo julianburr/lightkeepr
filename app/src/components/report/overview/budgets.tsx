@@ -7,10 +7,18 @@ type BudgetsOverviewProps = {
   report: any;
   pastReports: any[];
   reportData?: any;
+  stepIndex: number;
 };
 
-export function BudgetsOverview({ reportData }: BudgetsOverviewProps) {
-  const audits = reportData.audits;
+export function BudgetsOverview({
+  report,
+  reportData,
+  stepIndex,
+}: BudgetsOverviewProps) {
+  const audits =
+    report.type === "user-flow"
+      ? reportData.audits?.[stepIndex]
+      : reportData.audits;
 
   const performanceBudgets = audits?.["performance-budget"]?.details?.items;
   const timingBudgets = audits?.["timing-budget"]?.details?.items;

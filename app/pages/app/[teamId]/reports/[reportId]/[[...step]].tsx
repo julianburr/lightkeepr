@@ -43,7 +43,7 @@ const WrapHeading = styled.div`
 function Content() {
   const router = useRouter();
 
-  const categoryId = router.query.categoryId;
+  const categoryId = router.query.category;
 
   const reportId = router.query.reportId;
   const reportRef = doc(db, "reports", reportId!);
@@ -67,7 +67,8 @@ function Content() {
 
   const subTitle =
     report.type === "user-flow"
-      ? `${gatherMode} — ${report.name}`
+      ? `${gatherMode} — ${report.name} ` +
+        `(${stepIndex + 1} of ${data?.report?.steps?.length})`
       : report.url && report.url !== report.name
       ? report.url
       : null;
@@ -87,7 +88,13 @@ function Content() {
 
       <Spacer h="1.2rem" />
 
-      <ReportScores scores={report.summary} />
+      <ReportScores
+        scores={
+          report.type === "user-flow"
+            ? report.summary?.[stepIndex]?.scores
+            : report.summary
+        }
+      />
       <Spacer h="1.6rem" />
 
       <Suspense fallback={<Loader />}>

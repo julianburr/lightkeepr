@@ -274,6 +274,7 @@ export function AppPreview() {
             report={report}
             pastReports={pastReports}
             reportData={reportData}
+            stepIndex={0}
           />
 
           <Spacer h="3.2rem" />
@@ -281,6 +282,7 @@ export function AppPreview() {
             report={report}
             pastReports={pastReports}
             reportData={reportData}
+            stepIndex={0}
           />
 
           <Spacer h="3.2rem" />
@@ -288,6 +290,7 @@ export function AppPreview() {
             report={report}
             pastReports={pastReports}
             reportData={reportData}
+            stepIndex={0}
           />
         </Main>
       </Content>

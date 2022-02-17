@@ -73,7 +73,11 @@ export function ReportCompareDetails({
     return (
       <>
         <Heading level={2}>n/a</Heading>
-        <P>This category has been excluded from the report.</P>
+        <P>
+          This category has not been included in this report. This could happen
+          because it has actively been excluded, or because the report type does
+          generally not include it.
+        </P>
       </>
     );
   }

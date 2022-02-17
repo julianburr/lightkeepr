@@ -184,11 +184,12 @@ const ScoreItem = styled.div<{
 `;
 
 const Value = styled.span`
-  font-size: 3.6rem;
-  margin-top: -0.8rem;
+  font-size: 2.4rem;
+  margin-top: -0.2rem;
 
   @media (min-width: 800px) {
-    font-size: 4.2rem;
+    margin-top: 0;
+    font-size: 3.2rem;
   }
 `;
 
@@ -219,18 +220,58 @@ const Diff = styled.span`
   }
 `;
 
+type ScoreValue = number | null | { passed: number; total: number };
+
 type ScoreProps = {
-  value: number;
-  diff?: any;
+  value?: ScoreValue;
+  baseValue?: ScoreValue;
   active?: boolean;
-  hasRun?: boolean;
 };
 
-export function Score({ value, diff, active, hasRun }: ScoreProps) {
+export function Score({ value, baseValue, active }: ScoreProps) {
+  // Check if the value is a snapshot object
+  const isSnapshot =
+    typeof value !== "number" && value !== null && value !== undefined;
+  const isBaseSnapshot =
+    typeof baseValue !== "number" &&
+    baseValue !== null &&
+    baseValue !== undefined;
+
+  // Check if the value represents a valid report value, otherwise assume
+  // the value shows that this category has not been run
+  const hasRun = isSnapshot ? !!value.total : !!value || value === 0;
+  const hasBaseRun = !!baseValue || baseValue === 0;
+
+  // Get percentage based off value
+  const pctValue = hasRun
+    ? isSnapshot
+      ? Math.round((value.passed / value.total) * 100)
+      : Math.round((value as number) * 100)
+    : 0;
+  const basePctValue = hasBaseRun
+    ? isBaseSnapshot
+      ? Math.round((baseValue.passed / baseValue.total) * 100)
+      : Math.round(baseValue * 100)
+    : 0;
+
+  // Get proper score and diff labels
+  const label = hasRun
+    ? isSnapshot
+      ? `${value.passed}/${value.total}`
+      : `${pctValue}`
+    : "n/a";
+
+  const diff =
+    hasRun && hasBaseRun
+      ? isSnapshot
+        ? (value as any).passed - (baseValue as any).passed
+        : pctValue - basePctValue
+      : undefined;
+
   return (
     <ScoreItem
       hasRun={hasRun}
-      value={value}
+      value={pctValue}
       className={classNames({ active })}
       data-result={
         diff
@@ -238,15 +279,15 @@ export function Score({ value, diff, active, hasRun }: ScoreProps) {
             ? "failed"
             : "passed"
           : hasRun
-          ? value < 50
+          ? (pctValue as number) < 50
             ? "failed"
-            : value < 90
+            : (pctValue as number) < 90
             ? "warning"
             : "passed"
           : undefined
       }
     >
-      <Value>{hasRun ? value : "n/a"}</Value>
+      <Value>{label}</Value>
       <Diff>
         {diff ? (
           diff > 0 ? (

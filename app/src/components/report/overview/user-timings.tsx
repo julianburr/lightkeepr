@@ -21,16 +21,24 @@ type UserTimingsOverviewProps = {
   report: any;
   pastReports: any[];
   reportData?: any;
+  stepIndex: number;
 };
 
-export function UserTimingsOverview({ pastReports }: UserTimingsOverviewProps) {
+export function UserTimingsOverview({
+  report,
+  pastReports,
+  stepIndex,
+}: UserTimingsOverviewProps) {
+  const reportAudits =
+    report.type === "user-flow" ? report.audits?.[stepIndex] : report.audits;
+
   const items = useMemo(
     () =>
       pastReports
         ?.slice?.()
         ?.reverse?.()
         ?.reduce?.((all: any, report: any) => {
-          report?.audits?.["user-timings"]?.details?.items
+          reportAudits?.["user-timings"]?.details?.items
             ?.filter?.((timing: any) => timing.timingType === "Measure")
             ?.forEach?.((timing: any) => {
               if (!all[timing.name]) {

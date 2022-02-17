@@ -33,16 +33,6 @@ export function ReportDetails({
   reportData,
   stepIndex,
 }: ReportDetailsProps) {
-  if (!categoryId) {
-    return (
-      <ReportOverview
-        report={report}
-        reportData={reportData}
-        stepIndex={stepIndex}
-      />
-    );
-  }
-
   const { category, groups } = useMemo(() => {
     if (!categoryId) {
       return {};
@@ -112,11 +102,25 @@ export function ReportDetails({
     return { category, groups };
   }, [reportData, categoryId]);
 
+  if (!categoryId) {
+    return (
+      <ReportOverview
+        report={report}
+        reportData={reportData}
+        stepIndex={stepIndex}
+      />
+    );
+  }
+
   if (!groups || !category) {
     return (
       <>
         <Heading level={2}>n/a</Heading>
-        <P>This category has been excluded from the report.</P>
+        <P>
+          This category has not been included in this report. This could happen
+          because it has actively been excluded, or because the report type does
+          generally not include it.
+        </P>
       </>
     );
   }

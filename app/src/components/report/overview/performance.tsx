@@ -26,9 +26,17 @@ type PerformanceOverviewProps = {
   report: any;
   pastReports: any[];
   reportData?: any;
+  stepIndex: number;
 };
 
-export function PerformanceOverview({ pastReports }: PerformanceOverviewProps) {
+export function PerformanceOverview({
+  report,
+  pastReports,
+  stepIndex,
+}: PerformanceOverviewProps) {
+  const reportAudits =
+    report.type === "user-flow" ? report.audits?.[stepIndex] : report.audits;
+
   const items = useMemo(
     () =>
       pastReports
@@ -38,10 +46,10 @@ export function PerformanceOverview({ pastReports }: PerformanceOverviewProps) {
           (all: any, report: any) => {
             audits.forEach((audit: any) => {
               all[audit.id]?.push?.({
-                value: report.audits?.[audit.id]?.score
-                  ? report.audits[audit.id].score * 100
-                  : report.audits?.[audit.id]?.score,
-                displayValue: report.audits?.[audit.id]?.displayValue,
+                value: reportAudits?.[audit.id]?.score
+                  ? reportAudits[audit.id].score * 100
+                  : reportAudits?.[audit.id]?.score,
+                displayValue: reportAudits?.[audit.id]?.displayValue,
                 date: report.createdAt
                   ? dayjs.unix(report.createdAt.seconds)
                   : null,

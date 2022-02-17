@@ -91,13 +91,11 @@ function getSummary(reportData: any) {
 }
 
 function getFlowSummary(reportData: any) {
-  const x = reportData?.steps?.map?.((step: any) => ({
+  return reportData?.steps?.map?.((step: any) => ({
     name: step.name,
     meta: getMeta(step.lhr),
     scores: getSummary(step.lhr),
   }));
-  console.log(x);
-  return x;
 }
 
 function getAudits(reportData: any) {
@@ -177,7 +175,6 @@ export default createHandler({
       fields.type === "user-flow"
         ? getFlowSummary(reportData)
         : getSummary(reportData);
-    console.log({ summary });
 
     // Store some audits for easier access for summaries and reporting
     const audits =

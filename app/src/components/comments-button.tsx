@@ -18,6 +18,8 @@ import { CommentsSidebar } from "src/sidebars/comments";
 
 import CommentSvg from "src/assets/icons/outline/annotation.svg";
 
+import { Tooltip } from "./tooltip";
+
 const db = getFirestore();
 
 type Reaction = {
@@ -96,19 +98,24 @@ export function CommentsButton({
 
   return (
     <>
-      <Button
-        icon={<CommentSvg />}
-        badge={
-          <Badge
-            intent="primary"
-            count={comments?.filter?.((c: any) => !c.resolvedAt)?.length}
+      <Tooltip content="Comments">
+        {(props) => (
+          <Button
+            {...props}
+            icon={<CommentSvg />}
+            badge={
+              <Badge
+                intent="primary"
+                count={comments?.filter?.((c: any) => !c.resolvedAt)?.length}
+              />
+            }
+            onClick={() => {
+              const event = new CustomEvent("toggleMobileMenu:comments");
+              window.document.body.dispatchEvent(event);
+            }}
           />
-        }
-        onClick={() => {
-          const event = new CustomEvent("toggleMobileMenu:comments");
-          window.document.body.dispatchEvent(event);
-        }}
-      />
+        )}
+      </Tooltip>
       <Suspense fallback={null}>
         <CommentsSidebar
           comments={comments || []}
