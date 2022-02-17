@@ -113,6 +113,102 @@ function getFlowAudits(reportData: any) {
   return reportData?.steps?.map?.((step: any) => getAudits(step?.lhr));
 }
 
+function getStatus({
+  reportData,
+  project,
+  previousBranchReport,
+  previousMainReport,
+  summary,
+}: any) {
+  // Determine status based on project setttings and lighthouse budgets
+  let value = "passed";
+  const reason = [];
+
+  // Any primary score regression
+  let regressions: string[] = [];
+
+  if (project.failOnRegression) {
+    if (previousBranchReport) {
+      regressions = Object.keys(summary).filter(
+        (category) =>
+          previousBranchReport.summary[category] &&
+          (summary[category] || summary[category] === 0) &&
+          previousBranchReport.summary[category] - summary[category] >
+            REGRESSION_THRESHOLD
+      );
+      if (regressions?.length) {
+        value = "failed";
+        reason.push("regression:branch");
+      }
+    }
+
+    if (previousMainReport) {
+      regressions = Object.keys(summary).filter(
+        (category) =>
+          previousMainReport.summary[category] &&
+          (summary[category] || summary[category] === 0) &&
+          previousMainReport.summary[category] - summary[category] >
+            REGRESSION_THRESHOLD
+      );
+      if (regressions?.length) {
+        value = "failed";
+        reason.push("regression:main");
+      }
+    }
+  }
+
+  // Any targets not met
+  const failedTargets = Object.keys(summary).filter(
+    (category) =>
+      project.targets?.[category] &&
+      summary[category] * 100 < project.targets?.[category]
+  );
+  if (failedTargets?.length) {
+    value = "failed";
+    reason.push("target");
+  }
+
+  // Any budgets not met
+  const budgets = [
+    ...(reportData?.audits?.["performance-budget"]?.details?.items || []),
+    ...(reportData?.audits?.["timing-budget"]?.details?.items || []),
+  ];
+  const failedBudgets = budgets.filter(
+    (budget) =>
+      !!budget.sizeOverBudget || !!budget.countOverBudget || !!budget.overBudget
+  );
+  if (failedBudgets?.length) {
+    value = "failed";
+    reason.push("budget");
+  }
+
+  return { value, reason, failedTargets, budgets, failedBudgets };
+}
+
+function getFlowStatus({
+  reportData,
+  project,
+  previousBranchReport,
+  previousMainReport,
+  summary,
+}: any) {
+  const steps = summary?.map((step: any, index: number) =>
+    getStatus({
+      reportData: reportData?.steps?.[index],
+      project,
+      previousBranchReport,
+      previousMainReport,
+      summary: step,
+    })
+  );
+  return {
+    value: steps?.find((step: any) => step.value === "failed")
+      ? "failed"
+      : "passed",
+    steps,
+  };
+}
+
 export const config = {
   api: {
     bodyParser: false,
@@ -216,69 +312,17 @@ export default createHandler({
       });
     }
 
-    // Determine status based on project setttings and lighthouse budgets
-    let status = "passed";
-    const statusReasons = [];
-
-    // Any primary score regression
-    let regressions: string[] = [];
-
-    if (project.failOnRegression) {
-      if (previousBranchReport) {
-        regressions = Object.keys(summary).filter(
-          (category) =>
-            previousBranchReport.summary[category] &&
-            (summary[category] || summary[category] === 0) &&
-            previousBranchReport.summary[category] - summary[category] >
-              REGRESSION_THRESHOLD
-        );
-        if (regressions?.length) {
-          status = "failed";
-          statusReasons.push("regression:branch");
-        }
-      }
-
-      if (previousMainReport) {
-        regressions = Object.keys(summary).filter(
-          (category) =>
-            previousMainReport.summary[category] &&
-            (summary[category] || summary[category] === 0) &&
-            previousMainReport.summary[category] - summary[category] >
-              REGRESSION_THRESHOLD
-        );
-        if (regressions?.length) {
-          status = "failed";
-          statusReasons.push("regression:main");
-        }
-      }
-    }
-
-    // Any targets not met
-    const failedTargets = Object.keys(summary).filter(
-      (category) =>
-        project.targets?.[category] &&
-        summary[category] * 100 < project.targets?.[category]
-    );
-    if (failedTargets?.length) {
-      status = "failed";
-      statusReasons.push("target");
-    }
-
-    // Any budgets not met
-    const budgets = [
-      ...(reportData?.audits?.["performance-budget"]?.details?.items || []),
-      ...(reportData?.audits?.["timing-budget"]?.details?.items || []),
-    ];
-    const failedBudgets = budgets.filter(
-      (budget) =>
-        !!budget.sizeOverBudget ||
-        !!budget.countOverBudget ||
-        !!budget.overBudget
-    );
-    if (failedBudgets?.length) {
-      status = "failed";
-      statusReasons.push("budget");
-    }
+    const statusArgs = {
+      reportData,
+      project,
+      previousBranchReport,
+      previousMainReport,
+      summary,
+    };
+    const status =
+      fields.type === "user-flow"
+        ? getFlowStatus(statusArgs)
+        : getStatus(statusArgs);
 
     const now = Timestamp.fromDate(new Date());
     const reportName = fields.name || fields.url || null;
@@ -295,7 +339,6 @@ export default createHandler({
       meta,
       summary,
       audits,
-      budgets,
       previousBranchReport: previousBranchReport?.id
         ? db.collection("reports").doc(previousBranchReport.id)
         : null,
@@ -304,10 +347,6 @@ export default createHandler({
         : null,
       targets: project.targets || null,
       status,
-      statusReasons,
-      regressions,
-      failedBudgets,
-      failedTargets,
     });
 
     const report: any = await ref
@@ -325,7 +364,7 @@ export default createHandler({
     const options = { destination: `${report.id}.brotli` };
     await bucket.upload(files.file.filepath, options);
 
-    if (status === "failed") {
+    if (status.value === "failed") {
       // TODO: check if it's possible to use queue workers with vercel somehow
       // Notify all users that subscribed to this project if the report failed
       const { origin } = url(req);

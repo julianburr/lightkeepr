@@ -154,9 +154,11 @@ const report = {
     pwa: 0.6,
   },
 
-  status: "failed",
-  statusReasons: ["target"],
-  failedTargets: ["pwa"],
+  status: {
+    value: "failed",
+    reasons: ["target"],
+    failedTargets: ["pwa"],
+  },
 };
 
 const reportData = {

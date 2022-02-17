@@ -94,7 +94,7 @@ function Content() {
             <ActionMenu
               placement="bottom-end"
               items={[
-                ...(run.status === "running"
+                ...(run.status?.value === "running"
                   ? [
                       {
                         label: "Cancel run",
@@ -104,7 +104,7 @@ function Content() {
                               "Are you sure you want to cancel this run?",
                             onConfirm: async () => {
                               await updateDoc(runRef, {
-                                status: "cancelled",
+                                status: { value: "cancelled", reasons: [] },
                                 finishedAt: new Date(),
                               });
                               toast.show({

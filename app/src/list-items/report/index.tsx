@@ -76,12 +76,11 @@ const Scores = styled.div`
   }
 `;
 
-const Score = styled.span<{ snapshot?: boolean }>`
+const Score = styled.span`
   font-size: 1.2rem;
   font-family: "Playfair Display";
   width: 4.2rem;
-  height: ${(props) => (props.snapshot ? "3rem" : "4.2rem")};
-  margin: ${(props) => (props.snapshot ? ".6rem 0" : "0")};
+  height: 4.2rem;
   border-radius: 0.3rem;
   background: var(--sol--palette-sand-200);
   display: flex;
@@ -131,9 +130,10 @@ const StepIcon = styled.div<{ lastIndex?: boolean }>`
 
 const WrapAvatar = styled.div`
   position: relative;
+  z-index: 1;
 
   &:before {
-    content: "";
+    content: " ";
     position: absolute;
     top: 50%;
     bottom: -10rem;
@@ -161,16 +161,10 @@ export function ReportListItem({ data }: ReportListItemProps) {
         <Content>
           {data.type === "user-flow" ? (
             <WrapAvatar>
-              <StatusAvatar
-                status={data.status}
-                statusReasons={data.statusReasons}
-              />
+              <StatusAvatar status={data.status} />
             </WrapAvatar>
           ) : (
-            <StatusAvatar
-              status={data.status}
-              statusReasons={data.statusReasons}
-            />
+            <StatusAvatar status={data.status} />
           )}
           <Inner>
             <Title>
@@ -266,10 +260,7 @@ export function ReportListItem({ data }: ReportListItemProps) {
                       return (
                         <Tooltip content={category.label} key={category.key}>
                           {(props) => (
-                            <Score
-                              snapshot={step?.meta?.gatherMode === "snapshot"}
-                              {...props}
-                            >
+                            <Score {...props}>
                               {step?.meta?.gatherMode === "snapshot"
                                 ? score.total
                                   ? `${score.passed}/${score.total}`

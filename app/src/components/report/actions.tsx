@@ -128,8 +128,10 @@ export function ReportActions({ data, stepIndex }: ReportActionsProps) {
         "even though it originally failed.",
       onConfirm: async () => {
         await updateDoc(reportRef, {
-          status: "passed",
-          statusReasons: [...(data.statusReasons || []), "manual"],
+          status: {
+            value: "passed",
+            reasons: [...(data.status?.reasons || []), "manual"],
+          },
           approvedBy: doc(db, "users", authUser!.user!.id!),
           approvedAt: new Date(),
         });
@@ -137,19 +139,26 @@ export function ReportActions({ data, stepIndex }: ReportActionsProps) {
         // If all reports of the run are now `passed`, change the status of the run
         // as well
         const anyRemaining = reports.find(
-          (r: any) => r.id !== data.id && r.status !== "passed"
+          (r: any) => r.id !== data.id && r.status?.value !== "passed"
         );
         if (!anyRemaining) {
           await updateDoc(runRef, {
-            status: "passed",
-            statusReasons: ["manual"],
+            status: {
+              value: "passed",
+              reasons: ["manual"],
+            },
           });
 
-          if (project.lastRun?.id === run.id) {
+          if (
+            project.lastRun?.id === run.id &&
+            project.gitMain === run.branch
+          ) {
             // If this run is the latest of the current project, also update the project status
             await updateDoc(projectRef, {
-              status: "passed",
-              statusReasons: ["manual"],
+              status: {
+                value: "passed",
+                reasons: ["manual"],
+              },
             });
           }
         }
@@ -186,7 +195,7 @@ export function ReportActions({ data, stepIndex }: ReportActionsProps) {
 
       <SplitButton
         onClick={approveReport}
-        disabled={data.status !== "failed"}
+        disabled={data.status?.value !== "failed"}
         placement="bottom-end"
         items={[
           {
@@ -196,7 +205,7 @@ export function ReportActions({ data, stepIndex }: ReportActionsProps) {
           },
         ]}
       >
-        {data.status === "passed" ? "Report passed" : "Approve"}
+        {data.status?.value === "passed" ? "Report passed" : "Approve"}
       </SplitButton>
 
       <Spacer w=".8rem" />

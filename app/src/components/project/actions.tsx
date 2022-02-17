@@ -56,9 +56,9 @@ export function ProjectActions({ data }: any) {
       confirmLabel: "Delete project",
       intent: "danger",
       onConfirm: async () => {
+        router.push(`/app/${router.query.teamId}`);
         await deleteDoc(projectRef);
         toast.show({ message: "Project deleted successfully" });
-        router.push(`/app/${router.query.teamId}`);
       },
     });
   }, [data.id]);
