@@ -1,3 +1,5 @@
+import * as fs from "fs";
+import * as path from "path";
 import puppeteer from "puppeteer";
 import { startFlow } from "lighthouse/lighthouse-core/fraggle-rock/api.js";
 
@@ -27,6 +29,10 @@ export async function userFlow({
 
   flow.stop = async () => {
     await browser.close();
+    fs.writeFileSync(
+      path.resolve(process.cwd(), "./report.html"),
+      flow.generateReport()
+    );
     const flowReport = flow.getFlowResult();
     const reportData = {
       ...flowReport,

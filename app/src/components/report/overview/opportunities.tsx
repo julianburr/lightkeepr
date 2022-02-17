@@ -8,21 +8,23 @@ import { OpportunityListItem } from "src/list-items/opportunity";
 type OpportunitiesOverviewProps = {
   report: any;
   pastReports: any[];
-  data?: any;
+  reportData: any;
 };
 
-export function OpportunitiesOverview({ data }: OpportunitiesOverviewProps) {
+export function OpportunitiesOverview({
+  reportData,
+}: OpportunitiesOverviewProps) {
   // Performance
   const performance = useMemo(
     () =>
-      Object.values(data?.report?.audits)
+      Object.values(reportData?.audits)
         ?.filter?.(
           (audit: any) =>
             audit.details?.overallSavingsMs &&
             audit.details.overallSavingsMs > 0
         )
         .map((audit: any) => ({ ...audit, type: "performance" })),
-    [data]
+    [reportData]
   );
 
   const totalSavingsMs = useMemo(() => {
@@ -38,14 +40,14 @@ export function OpportunitiesOverview({ data }: OpportunitiesOverviewProps) {
   // Network
   const network = useMemo(
     () =>
-      Object.values(data?.report?.audits)
+      Object.values(reportData?.audits)
         ?.filter?.(
           (audit: any) =>
             audit.details?.overallSavingsBytes &&
             audit.details.overallSavingsBytes > 0
         )
         .map((audit: any) => ({ ...audit, type: "network" })),
-    [data]
+    [reportData]
   );
 
   const totalSavingsBytes = useMemo(() => {

@@ -20,7 +20,7 @@ const Content = styled.div`
 type UserTimingsOverviewProps = {
   report: any;
   pastReports: any[];
-  data?: any;
+  reportData?: any;
 };
 
 export function UserTimingsOverview({ pastReports }: UserTimingsOverviewProps) {

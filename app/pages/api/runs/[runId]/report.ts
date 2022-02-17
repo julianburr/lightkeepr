@@ -11,7 +11,7 @@ import url from "next-absolute-url";
 import fetch from "node-fetch";
 
 import { env } from "src/env";
-import { AUDITS } from "src/utils/audits";
+import { CATEGORIES, AUDITS } from "src/utils/audits";
 import { createHandler } from "src/utils/node/api";
 
 import credentials from "src/google-service-account.json";
@@ -57,22 +57,56 @@ function getFlowMeta(reportData: any) {
 }
 
 function getSummary(reportData: any) {
-  return {
-    performance: reportData?.categories?.performance?.score || null,
-    accessibility: reportData?.categories?.accessibility?.score || null,
-    "best-practices": reportData?.categories?.["best-practices"]?.score || null,
-    seo: reportData?.categories?.seo?.score || null,
-    pwa: reportData?.categories?.pwa?.score || null,
-  };
+  if (reportData?.gatherMode === "snapshot") {
+    return CATEGORIES.reduce((all: any, { id }) => {
+      const initial = { passed: 0, total: 0 };
+      all[id] =
+        reportData?.categories?.[id]?.auditRefs?.reduce(
+          (all: any, ref: any) => {
+            // Only count the audit if the score is not `null`
+            if (
+              reportData.audits?.[ref.id]?.score ||
+              reportData.audits?.[ref.id]?.score === 0
+            ) {
+              all.total++;
+            }
+
+            // Count the audit as passed when its score is over `.9`
+            if (reportData.audits?.[ref.id]?.score > 0.9) {
+              all.passed++;
+            }
+
+            return all;
+          },
+          initial
+        ) || initial;
+      return all;
+    }, {});
+  }
+
+  return CATEGORIES.reduce((all: any, { id }) => {
+    all[id] = reportData?.categories?.[id]?.score ?? null;
+    return all;
+  }, {});
 }
 
 function getFlowSummary(reportData: any) {
-  return reportData?.steps?.map?.((step: any) => getSummary(step?.lhr));
+  const x = reportData?.steps?.map?.((step: any) => ({
+    name: step.name,
+    meta: getMeta(step.lhr),
+    scores: getSummary(step.lhr),
+  }));
+  console.log(x);
+  return x;
 }
 
 function getAudits(reportData: any) {
   return AUDITS.reduce((all: any, audit) => {
-    all[audit.id] = reportData?.audits?.[audit.id];
+    const value = reportData?.audits?.[audit.id];
+    if (value !== undefined) {
+      // Filtering `undefined` values out, because firestore doesn't like them
+      all[audit.id] = value;
+    }
     return all;
   }, {});
 }
@@ -138,10 +172,12 @@ export default createHandler({
       fields.type === "user-flow"
         ? getFlowMeta(reportData)
         : getMeta(reportData);
+
     const summary =
       fields.type === "user-flow"
         ? getFlowSummary(reportData)
         : getSummary(reportData);
+    console.log({ summary });
 
     // Store some audits for easier access for summaries and reporting
     const audits =
@@ -296,7 +332,7 @@ export default createHandler({
       // TODO: check if it's possible to use queue workers with vercel somehow
       // Notify all users that subscribed to this project if the report failed
       const { origin } = url(req);
-      const x = await fetch(`${origin}/api/notifications/create`, {
+      await fetch(`${origin}/api/notifications/create`, {
         method: "POST",
         body: JSON.stringify({
           type: "report-failed",

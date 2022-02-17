@@ -265,28 +265,29 @@ export function AppPreview() {
           <ScoresOverview
             report={report}
             pastReports={pastReports}
-            data={reportData}
+            reportData={reportData}
+            stepIndex={0}
           />
 
           <Spacer h="3.2rem" />
           <PerformanceOverview
             report={report}
             pastReports={pastReports}
-            data={reportData}
+            reportData={reportData}
           />
 
           <Spacer h="3.2rem" />
           <NetworkOverview
             report={report}
             pastReports={pastReports}
-            data={reportData}
+            reportData={reportData}
           />
 
           <Spacer h="3.2rem" />
           <UserTimingsOverview
             report={report}
             pastReports={pastReports}
-            data={reportData}
+            reportData={reportData}
           />
         </Main>
       </Content>

@@ -6,11 +6,11 @@ import { BudgetListItem } from "src/list-items/budget";
 type BudgetsOverviewProps = {
   report: any;
   pastReports: any[];
-  data?: any;
+  reportData?: any;
 };
 
-export function BudgetsOverview({ data }: BudgetsOverviewProps) {
-  const audits = data.report.audits;
+export function BudgetsOverview({ reportData }: BudgetsOverviewProps) {
+  const audits = reportData.audits;
 
   const performanceBudgets = audits?.["performance-budget"]?.details?.items;
   const timingBudgets = audits?.["timing-budget"]?.details?.items;

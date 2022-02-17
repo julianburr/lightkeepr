@@ -37,7 +37,12 @@ const Container = styled.div`
   padding: 0.3rem 0;
 `;
 
-export function ReportActions({ data }: any) {
+type ReportActionsProps = {
+  data: any;
+  stepIndex?: number;
+};
+
+export function ReportActions({ data, stepIndex }: ReportActionsProps) {
   const router = useRouter();
   const authUser = useAuthUser();
 
@@ -91,12 +96,31 @@ export function ReportActions({ data }: any) {
     [reportRef]
   );
 
-  // Put together actions
-  const currentIndex = reports.findIndex((r: any) => r.id === data.id);
-  const prev = currentIndex === 0 ? undefined : reports[currentIndex - 1];
-  const next =
-    currentIndex >= reports.length - 1 ? undefined : reports[currentIndex + 1];
+  // Put together all reports (including individual steps for user flows)
+  // for the pagination actions
+  const pages = reports.reduce((all: any[], report: any) => {
+    if (report.type === "user-flow") {
+      report.summary?.forEach?.((_: any, index: number) => {
+        const name = report.summary?.[index]?.name;
+        const href = `/app/${authUser.team?.id}/reports/${report.id}/${index}`;
+        const isCurrent = report.id === data.id && index === stepIndex;
+        all.push({ name, href, isCurrent });
+      });
+    } else {
+      const name = report.name;
+      const href = `/app/${authUser.team?.id}/reports/${report.id}`;
+      const isCurrent = report.id === data.id;
+      all.push({ name, href, isCurrent });
+    }
+    return all;
+  }, []);
 
+  const currentIndex = pages.findIndex((p: any) => p.isCurrent);
+  const prev = currentIndex === 0 ? undefined : pages[currentIndex - 1];
+  const next =
+    currentIndex >= pages.length - 1 ? undefined : pages[currentIndex + 1];
+
+  // Put together actions
   const approveReport = useCallback(() => {
     confirmationDialog.open({
       message:
@@ -178,13 +202,9 @@ export function ReportActions({ data }: any) {
       <Spacer w=".8rem" />
 
       {prev ? (
-        <Tooltip content={`Previous report: ${prev.name || prev.url}`}>
+        <Tooltip content={`Previous report: ${prev.name}`}>
           {(props) => (
-            <Button
-              {...props}
-              icon={<ChevronLeftSvg />}
-              href={`/app/${router.query.teamId}/reports/${prev.id}`}
-            />
+            <Button {...props} icon={<ChevronLeftSvg />} href={prev.href} />
           )}
         </Tooltip>
       ) : (
@@ -192,13 +212,9 @@ export function ReportActions({ data }: any) {
       )}
 
       {next ? (
-        <Tooltip content={`Next report: ${next.name || next.url}`}>
+        <Tooltip content={`Next report: ${next.name}`}>
           {(props) => (
-            <Button
-              {...props}
-              icon={<ChevronRightSvg />}
-              href={`/app/${router.query.teamId}/reports/${next.id}`}
-            />
+            <Button {...props} icon={<ChevronRightSvg />} href={next.href} />
           )}
         </Tooltip>
       ) : (

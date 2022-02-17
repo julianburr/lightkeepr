@@ -25,7 +25,7 @@ const audits = AUDITS.filter(
 type PerformanceOverviewProps = {
   report: any;
   pastReports: any[];
-  data?: any;
+  reportData?: any;
 };
 
 export function PerformanceOverview({ pastReports }: PerformanceOverviewProps) {

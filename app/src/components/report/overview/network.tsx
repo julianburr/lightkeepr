@@ -25,10 +25,10 @@ const audits = AUDITS.filter(
 type NetworkOverviewProps = {
   report: any;
   pastReports: any[];
-  data?: any;
+  reportData: any;
 };
 
-export function NetworkOverview({ pastReports, data }: NetworkOverviewProps) {
+export function NetworkOverview({ pastReports }: NetworkOverviewProps) {
   const items = useMemo<{ [key: string]: any[] }>(
     () =>
       pastReports
