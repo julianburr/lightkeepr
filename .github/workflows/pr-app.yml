@@ -45,6 +45,7 @@ jobs:
         uses: SpicyPizza/create-envfile@v1.2
         with:
           directory: ./app
+          envkey_RELEASE_HASH: ${{ github.sha }}
           envkey_BEARER_TOKEN: ${{ secrets.BEARER_TOKEN }}
           envkey_NEXT_PUBLIC_FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
           envkey_NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
