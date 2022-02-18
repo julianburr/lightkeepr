@@ -16,3 +16,4 @@ jobs:
         with:
           url: "https://www.lightkeepr.io/api/account/cleanup"
           method: "POST"
+          timeout: 20000
