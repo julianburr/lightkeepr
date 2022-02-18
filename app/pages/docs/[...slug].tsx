@@ -97,15 +97,16 @@ export default function DocsHomePage({ meta, markdown }: any) {
     <DocsLayout>
       <Head>
         <title>
-          Lightkeepr Docs —
-          {meta.category
-            ? ` ${meta.category}: ${meta.title}`
-            : ` ${meta.title}`}
+          {meta?.title
+            ? meta?.category
+              ? `Lightkeepr Docs — ${meta.category}: ${meta.title}`
+              : `Lightkeepr Docs — ${meta?.title}`
+            : "Lightkeepr Docs"}
         </title>
       </Head>
 
       <Container ref={contentRef as Ref<HTMLDivElement>}>
-        <h1>{meta.title}</h1>
+        <h1>{meta?.title}</h1>
         <Markdown>{markdown}</Markdown>
       </Container>
     </DocsLayout>

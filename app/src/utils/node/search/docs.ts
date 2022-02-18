@@ -24,10 +24,9 @@ export async function getFiles() {
   const packages = glob
     .sync("**/README.md", { cwd: packagesDir })
     .filter((filePath) => !filePath.includes("node_modules"))
-    .map((filePath) => `packages/${filePath}`)
     .map((filePath) => ({
-      filePath,
-      slug: filePath
+      filePath: `packages/${filePath}`,
+      slug: `packages/${filePath}`
         .replace(/^index\.md$/, "")
         .replace(/\/README\.md$/, "")
         .replace(/\.md$/, "")
