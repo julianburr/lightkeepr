@@ -2,7 +2,8 @@ import "src/utils/node/firebase";
 import { getFirestore } from "firebase-admin/firestore";
 
 import { env } from "src/env";
-import { createHandler, withBearerToken } from "src/utils/node/api";
+import { createHandler } from "src/utils/node/api";
+import { withBearerToken } from "src/utils/node/api/with-bearer-token";
 import { stripeClient } from "src/utils/node/stripe";
 
 const db = getFirestore();
