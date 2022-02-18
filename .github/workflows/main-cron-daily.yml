@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - fix/cleanups
+      - fix/cleanup
 
 jobs:
   run_cron:
