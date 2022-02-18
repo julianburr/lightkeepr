@@ -21,7 +21,6 @@ import { NotificationsButton } from "src/popouts/notifications";
 import { AppSidebar } from "src/sidebars/app";
 
 import MenuSvg from "src/assets/icons/outline/menu.svg";
-import SearchSvg from "src/assets/icons/outline/search.svg";
 import LifeBuoySvg from "src/assets/icons/outline/support.svg";
 import GridSvg from "src/assets/icons/outline/view-grid.svg";
 import LogoSvg from "src/assets/logo.svg";
@@ -115,10 +114,6 @@ export function AppLayout({ children }: AppLayoutProps) {
           actions={
             <>
               <Buttons data-tablet>
-                <Tooltip content="Search (cmd+k)">
-                  {(props) => <Button {...props} icon={<SearchSvg />} />}
-                </Tooltip>
-
                 <NotificationsButton />
 
                 <Tooltip content="Documentation">
@@ -197,15 +192,6 @@ export function AppLayout({ children }: AppLayoutProps) {
               </Buttons>
 
               <Buttons data-mobile>
-                <Button
-                  icon={<SearchSvg />}
-                  size="large"
-                  intent="ghost"
-                  aria-label="Search"
-                  onClick={() => {
-                    alert("search");
-                  }}
-                />
                 <Button
                   icon={<MenuSvg />}
                   badge={<Badge count={unseen?.[authUser.team!.id]?.length} />}

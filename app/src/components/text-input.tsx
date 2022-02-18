@@ -28,12 +28,26 @@ export const TextInput = forwardRef(function TextInput(
   props: ComponentProps<typeof Input>,
   ref: Ref<any>
 ) {
-  return <Input type="text" ref={ref as any} {...props} />;
+  return (
+    <Input
+      {...props}
+      ref={ref as Ref<HTMLInputElement>}
+      type="text"
+      onChange={(e: any) => props.onChange(e.target.value)}
+    />
+  );
 });
 
 export const EmailInput = forwardRef(function EmailInput(
   props: ComponentProps<typeof Input>,
   ref: Ref<any>
 ) {
-  return <Input type="email" ref={ref as any} {...props} />;
+  return (
+    <Input
+      {...props}
+      ref={ref as Ref<HTMLInputElement>}
+      type="email"
+      onChange={(e: any) => props.onChange(e.target.value)}
+    />
+  );
 });

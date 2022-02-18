@@ -1,7 +1,5 @@
 import * as fs from "fs";
-import * as path from "path";
 
-import glob from "glob";
 import Head from "next/head";
 import { useRef, Ref, useEffect } from "react";
 import styled from "styled-components";
@@ -10,6 +8,7 @@ import twemoji from "twemoji";
 import { Markdown } from "src/components/markdown";
 import { DocsLayout } from "src/layouts/docs";
 import { parseMdx } from "src/utils/node/mdx";
+import { getFiles } from "src/utils/node/search/docs";
 
 const Container = styled.main`
   width: 100%;
@@ -114,48 +113,24 @@ export default function DocsHomePage({ meta, markdown }: any) {
 }
 
 export async function getStaticProps({ params }: any) {
-  const docsDir = path.resolve(process.cwd(), "../docs");
-  const packagesDir = path.resolve(process.cwd(), "../packages");
+  const files = await getFiles();
+  const file = files.find(
+    ({ slug }) => slug?.join("/") === params.slug?.join("/")
+  );
 
-  const filePath =
-    params.slug?.[0] === "packages"
-      ? path.resolve(packagesDir, `./${params.slug[1]}/README.md`)
-      : path.resolve(docsDir, `./${params.slug.join("/")}.md`);
-
-  if (!fs.existsSync(filePath)) {
+  if (!file || !fs.existsSync(file.absPath)) {
     return { props: {} };
   }
 
-  const fileContent = fs.readFileSync(filePath, "utf-8");
+  const fileContent = fs.readFileSync(file.absPath, "utf-8");
   const { meta, markdown } = await parseMdx(fileContent);
   return { props: { meta, markdown } };
 }
 
 export async function getStaticPaths() {
-  const docsDir = path.resolve(process.cwd(), "../docs");
-  const docs = glob
-    .sync("**/*.md", { cwd: docsDir })
-    .filter((path) => !path.includes("node_modules"))
-    .filter((path) => path !== "README.md");
-
-  const packagesDir = path.resolve(process.cwd(), "../packages");
-  const packages = glob
-    .sync("**/README.md", { cwd: packagesDir })
-    .filter((path) => !path.includes("node_modules"))
-    .map((path) => `packages/${path}`);
-
-  const paths = [...docs, ...packages].map((path) => ({
-    params: {
-      slug: path
-        .replace(/^index\.md$/, "")
-        .replace(/\/README\.md$/, "")
-        .replace(/\.md$/, "")
-        .split("/"),
-    },
-  }));
-
+  const files = await getFiles();
   return {
-    paths,
+    paths: files.map(({ slug }) => ({ params: { slug } })),
     fallback: false,
   };
 }

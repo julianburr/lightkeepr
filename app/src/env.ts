@@ -1,5 +1,6 @@
 export const env = {
   salt: process.env.SALT,
+  releaseHash: process.env.RELEASE_HASH,
   bearerToken: process.env.BEARER_TOKEN,
   firebase: {
     apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,

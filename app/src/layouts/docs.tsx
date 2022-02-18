@@ -2,13 +2,14 @@ import "src/utils/firebase";
 
 import { getAuth } from "firebase/auth";
 import Link from "next/link";
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useCallback, useState } from "react";
 import styled from "styled-components";
 
 import { FirebaseProvider } from "src/@packages/firebase";
 import { SuspenseProvider } from "src/@packages/suspense";
 import { AccountActionMenu } from "src/action-menus/account";
 import { Button } from "src/components/button";
+import { GlobalSearch, toggleGlobalSearch } from "src/components/global-search";
 import { Spacer } from "src/components/spacer";
 import { Suspense } from "src/components/suspense";
 import { Tooltip } from "src/components/tooltip";
@@ -17,6 +18,7 @@ import { useAuthUser } from "src/hooks/use-auth-user";
 import { DialogProvider } from "src/hooks/use-dialog";
 import { ToastProvider } from "src/hooks/use-toast";
 import { DocsSidebar } from "src/sidebars/docs";
+import { api } from "src/utils/api-client";
 
 import ExternalLinkSvg from "src/assets/icons/outline/external-link.svg";
 import LoginSvg from "src/assets/icons/outline/login.svg";
@@ -122,7 +124,13 @@ function TopBarActions() {
   return (
     <Buttons data-tablet>
       <Tooltip content="Search (cmd+k)">
-        {(props) => <Button {...props} icon={<SearchSvg />} />}
+        {(props) => (
+          <Button
+            {...props}
+            icon={<SearchSvg />}
+            onClick={() => toggleGlobalSearch()}
+          />
+        )}
       </Tooltip>
 
       <Tooltip content="App switcher">
@@ -171,6 +179,15 @@ function TopBarActions() {
 }
 
 export function DocsLayout({ children }: DocsLayoutProps) {
+  // Handle search and search results
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const handleSearch = useCallback((searchValue) => {
+    api
+      .post(`/api/search/docs`, { searchTerm: searchValue.trim() })
+      .then(({ data }: any) => setSearchResults(data))
+      .catch((e) => console.error(e));
+  }, []);
+
   return (
     <>
       <Container>
@@ -193,7 +210,13 @@ export function DocsLayout({ children }: DocsLayoutProps) {
                 <>
                   <Buttons data-tablet>
                     <Tooltip content="Search (cmd+k)">
-                      {(props) => <Button {...props} icon={<SearchSvg />} />}
+                      {(props) => (
+                        <Button
+                          {...props}
+                          icon={<SearchSvg />}
+                          onClick={() => toggleGlobalSearch()}
+                        />
+                      )}
                     </Tooltip>
 
                     <Tooltip content="App switcher">
@@ -243,7 +266,11 @@ export function DocsLayout({ children }: DocsLayoutProps) {
                 mobile: true,
                 label: "Search",
                 icon: <SearchSvg />,
-                onClick: () => alert("Search"),
+                onClick: () => {
+                  toggleGlobalSearch();
+                  const event = new CustomEvent("toggleMobileMenu");
+                  window.document.body.dispatchEvent(event);
+                },
               },
               {
                 mobile: true,
@@ -397,6 +424,8 @@ export function DocsLayout({ children }: DocsLayoutProps) {
           <Main>{children}</Main>
         </Content>
       </Container>
+
+      <GlobalSearch onSearch={handleSearch} results={searchResults} />
     </>
   );
 }

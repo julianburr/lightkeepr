@@ -1,9 +1,13 @@
 import Link from "next/link";
-import { ComponentType, PropsWithChildren } from "react";
-import { ComponentProps } from "react";
+import {
+  ComponentType,
+  PropsWithChildren,
+  ReactNode,
+  ComponentProps,
+} from "react";
 import styled from "styled-components";
 
-import { Button } from "src/components/button";
+import { Button, CoreButton } from "src/components/button";
 
 function getColumns(columns?: number, maxColumns?: number) {
   return Array.from(
@@ -84,6 +88,7 @@ type ListProps = {
   columns?: 1 | 2 | 3;
   gap?: string;
   loadMore?: () => void | Promise<void>;
+  emptyView?: ReactNode;
 };
 
 export function List({
@@ -93,9 +98,10 @@ export function List({
   columns = 1,
   gap,
   loadMore,
+  emptyView = <p>No items</p>,
 }: ListProps) {
   if (!items?.length) {
-    return <p>No items</p>;
+    return <>{emptyView}</>;
   }
 
   return (
@@ -125,21 +131,13 @@ type ListItemProps = PropsWithChildren<{
   disabled?: boolean;
 }>;
 
-export function ListItem({ href, onClick, children, ...props }: ListItemProps) {
-  if (href) {
+export function ListItem({ children, href, onClick, ...props }: ListItemProps) {
+  if (href || onClick) {
     return (
       <Li {...props}>
-        <Link href={href}>
-          <a>{children}</a>
-        </Link>
-      </Li>
-    );
-  }
-
-  if (onClick) {
-    return (
-      <Li {...props}>
-        <button onClick={onClick}>{children}</button>
+        <CoreButton href={href} onClick={onClick}>
+          {children}
+        </CoreButton>
       </Li>
     );
   }

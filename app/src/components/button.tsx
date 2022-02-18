@@ -46,6 +46,11 @@ export const CoreButton = forwardRef(function CoreButton(
   );
 
   if ("href" in props) {
+    if ("onClick" in props) {
+      // It's a link with both a `href` and an `onClick` prop
+      return <a ref={ref} {...props} />;
+    }
+
     // It's a link, disguised as a button
     const { href, ...rest } = props;
     return (

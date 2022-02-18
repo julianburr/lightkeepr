@@ -43,6 +43,7 @@ jobs:
         uses: SpicyPizza/create-envfile@v1.2
         with:
           directory: ./app
+          envkey_RELEASE_HASH: ${{ github.sha }}
           envkey_BEARER_TOKEN: ${{ secrets.BEARER_TOKEN }}
           envkey_SENTRY_URL: ${{ secrets.SENTRY_URL }}
           envkey_SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
