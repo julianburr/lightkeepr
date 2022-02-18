@@ -50,8 +50,6 @@ export default function TeamSetup() {
 
       // Create stripe customer
       const stripeCustomer = await api.post("/api/stripe/customers/create", {
-        email: values.billingEmail,
-        name: values.name,
         teamId: team.id,
       });
 

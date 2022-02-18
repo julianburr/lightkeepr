@@ -13,6 +13,9 @@ import { useCollection } from "src/@packages/firebase";
 import { Badge } from "src/components/badge";
 import { Button } from "src/components/button";
 import { Suspense } from "src/components/suspense";
+import { UpgradeDialog } from "src/dialogs/account/upgrade";
+import { useAuthUser } from "src/hooks/use-auth-user";
+import { useDialog } from "src/hooks/use-dialog";
 import { usePersistedState } from "src/hooks/use-persisted-state";
 import { CommentsSidebar } from "src/sidebars/comments";
 
@@ -57,6 +60,9 @@ export function CommentsButton({
   relatedFilters,
   mapComment,
 }: CommentsButtonProps) {
+  const authUser = useAuthUser();
+  const upgradeDialog = useDialog(UpgradeDialog);
+
   const [showResolved, setShowResolved] = usePersistedState(
     "@lightkeepr/comments/showResolved",
     false
@@ -110,6 +116,9 @@ export function CommentsButton({
               />
             }
             onClick={() => {
+              if (authUser.team?.plan === "free") {
+                return upgradeDialog.open();
+              }
               const event = new CustomEvent("toggleMobileMenu:comments");
               window.document.body.dispatchEvent(event);
             }}

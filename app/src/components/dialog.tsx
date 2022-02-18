@@ -13,8 +13,6 @@ import styled from "styled-components";
 
 import { DialogMetaContext } from "src/hooks/use-dialog";
 
-import CrossSvg from "src/assets/icons/outline/x.svg";
-
 const Backdrop = styled.div`
   position: fixed;
   inset: 0;
@@ -68,11 +66,11 @@ const TitleBar = styled.div<{ showShadow?: boolean }>`
   flex-direction: row;
   align-items: flex-start;
   padding: 1.8rem 3.2rem 1.4rem;
-  background: #fff;
+  background: ${(props) => (props.showShadow ? "#fff" : "transparent")};
   position: sticky;
   z-index: 10;
   top: 0;
-  transition: box-shadow 0.2s;
+  transition: box-shadow 0.2s, background 0.2s;
   box-shadow: ${(props) =>
     props.showShadow
       ? "0 0.6rem 1.2rem rgba(0, 0, 0, 0.05)"
@@ -87,23 +85,6 @@ const Title = styled.h1`
   font-size: 2.2rem;
   line-height: 1.2;
   font-family: "Playfair Display";
-`;
-
-const CloseButton = styled.button`
-  border: 0 none;
-  background: transparent;
-  width: 3.6rem;
-  height: 3.6rem;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  margin: 0.4rem -0.8rem 0 1.6rem;
-
-  svg {
-    height: 1.8rem;
-    width: auto;
-  }
 `;
 
 const Content = styled.div<{ paddingBottom?: boolean; paddingTop?: boolean }>`
@@ -241,9 +222,6 @@ export function Dialog({
                 }
               >
                 <Title>{title}</Title>
-                <CloseButton onClick={handleClose}>
-                  <CrossSvg />
-                </CloseButton>
               </TitleBar>
             )}
 

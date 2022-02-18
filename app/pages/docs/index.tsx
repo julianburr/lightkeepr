@@ -147,7 +147,7 @@ export default function DocsHomepage() {
             </P>
           </Wide>
         </Link>
-        <Link href="/docs/features" passHref>
+        <Link href="/docs/features/teams" passHref>
           <Small>
             <FeaturesSvg />
             <h2>Features</h2>
@@ -157,7 +157,7 @@ export default function DocsHomepage() {
             </P>
           </Small>
         </Link>
-        <Link href="/docs/packages" passHref>
+        <Link href="/docs/packages/cli" passHref>
           <Small>
             <CodeSvg />
             <h2>Packages</h2>

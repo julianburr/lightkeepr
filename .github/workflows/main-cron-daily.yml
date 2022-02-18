@@ -11,9 +11,18 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Trigger cleanup
+      - name: Subscriptions cleanup
         uses: fjogeleit/http-request-action@master
         with:
-          url: "https://www.lightkeepr.io/api/account/cleanup"
+          url: "https://www.lightkeepr.io/api/cleanup/subscriptions"
           method: "POST"
-          timeout: 20000
+          bearerToken: ${{ secrets.BEARER_TOKEN }}
+          timeout: 30000
+
+      - name: Records cleanup
+        uses: fjogeleit/http-request-action@master
+        with:
+          url: "https://www.lightkeepr.io/api/cleanup/records"
+          method: "POST"
+          bearerToken: ${{ secrets.BEARER_TOKEN }}
+          timeout: 30000

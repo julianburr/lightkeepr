@@ -108,6 +108,7 @@ const Soon = styled.span`
   vertical-align: middle;
   margin: -0.2rem 0 0 0.4rem;
   display: inline-flex;
+  border-radius: 0.3rem;
 
   &:before {
     content: "soon";
@@ -189,18 +190,27 @@ export function DocsLayout({ children }: DocsLayoutProps) {
           actions={
             <Suspense
               fallback={
-                <Buttons>
-                  <Tooltip content="Search (cmd+k)">
-                    {(props) => <Button {...props} icon={<SearchSvg />} />}
-                  </Tooltip>
+                <>
+                  <Buttons data-tablet>
+                    <Tooltip content="Search (cmd+k)">
+                      {(props) => <Button {...props} icon={<SearchSvg />} />}
+                    </Tooltip>
 
-                  <Tooltip content="App switcher">
-                    {(props) => <Button {...props} icon={<GridSvg />} />}
-                  </Tooltip>
+                    <Tooltip content="App switcher">
+                      {(props) => <Button {...props} icon={<GridSvg />} />}
+                    </Tooltip>
 
-                  <Spacer w="1.2rem" />
-                  <Button disabled intent={"secondary"} icon={<UserSvg />} />
-                </Buttons>
+                    <Spacer w="1.2rem" />
+                    <Button disabled intent={"secondary"} icon={<UserSvg />} />
+                  </Buttons>
+                  <Button
+                    data-mobile
+                    icon={<MenuSvg />}
+                    size="large"
+                    intent="ghost"
+                    disabled
+                  />
+                </>
               }
             >
               <SuspenseProvider>

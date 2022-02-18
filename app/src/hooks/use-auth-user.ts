@@ -52,7 +52,9 @@ type Team = {
   id: string;
   name: string;
   billingEmail?: string;
+  plan: "free" | "premium" | "custom";
   stripeCustomerId?: string;
+  stripeStatus?: string;
   apiKey?: string;
   users?: any[];
   userRoles?: any;
@@ -138,5 +140,5 @@ export function useAuthUser(): UseAuthUserResponse {
 
       pendingInvites,
     };
-  }, [user, teams, invites, router.query.teamId]);
+  }, [authUser, user, teams, invites, router.query.teamId]);
 }
