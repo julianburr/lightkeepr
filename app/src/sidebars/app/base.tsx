@@ -85,7 +85,7 @@ export function BaseSidebar({ getLinkProps }: BaseSidebarProps) {
           href: `/app/${router.query.teamId}/users`,
         },
         {
-          label: "Billing & usage",
+          label: "Subscription & billing",
           href: `/app/${router.query.teamId}/billing`,
         },
         {

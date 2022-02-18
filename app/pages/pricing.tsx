@@ -45,7 +45,7 @@ const PriceItem = styled.div`
     padding: 0;
     display: flex;
     flex-direction: column;
-    gap: 0.8rem;
+    gap: 1.2rem;
   }
 `;
 
@@ -80,6 +80,17 @@ const Price = styled.div`
 const Amount = styled.span`
   font-size: 2rem;
   margin: 0 0.4rem 0 0;
+`;
+
+const Soon = styled.span`
+  display: inline-block;
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.3rem;
+  background: var(--sol--palette-sand-200);
+  font-family: "Playfair Display";
+  vertical-align: middle;
+  font-size: 1rem;
+  margin: -0.2rem 0.3rem 0;
 `;
 
 function Feature({ children }: PropsWithChildren<Record<never, any>>) {
@@ -125,8 +136,7 @@ export default function PricingPage() {
                 <Feature>
                   Report comparison functionality with opportunity summaries
                 </Feature>
-                <Feature>Email reports</Feature>
-                <Feature>Last 100 Lighthouse reports retained</Feature>
+                <Feature>Last 300 Lighthouse reports retained</Feature>
               </ul>
             </Description>
             <Button intent="primary" href="/auth/sign-up">
@@ -141,10 +151,14 @@ export default function PricingPage() {
                 <span>/ month</span>
               </Price>
               <ul>
-                <Feature>Project integrations (Slack, Jira, etc.)</Feature>
                 <Feature>Comments</Feature>
-                <Feature>Webhooks</Feature>
-                <Feature>Last 2000 Lighthouse reports retained</Feature>
+                <Feature>
+                  Webhooks <Soon>Coming soon</Soon>
+                </Feature>
+                <Feature>
+                  Integrations (Slack, Jira, etc.) <Soon>Coming soon</Soon>
+                </Feature>
+                <Feature>Last 5000 Lighthouse reports retained</Feature>
               </ul>
             </Description>
             <Button href="/auth/sign-up?plan=premium">Choose</Button>
@@ -153,7 +167,7 @@ export default function PricingPage() {
             <Description>
               <h2>Need more?</h2>
               <p>
-                Do you need more resources or have any other special
+                Do you need more retention or have any other special
                 requirements? Get in touch and we'll figure something out.
               </p>
             </Description>

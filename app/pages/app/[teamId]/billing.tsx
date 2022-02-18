@@ -1,6 +1,7 @@
 import "src/utils/firebase";
 
 import dayjs from "dayjs";
+import { doc, getFirestore, updateDoc } from "firebase/firestore";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
@@ -23,6 +24,8 @@ import { InvoiceListItem } from "src/list-items/invoice";
 import { PaymentMethodListItem } from "src/list-items/payment-method";
 import { api } from "src/utils/api-client";
 import { stripeClient } from "src/utils/stripe";
+
+const db = getFirestore();
 
 const Container = styled.div`
   width: 100%;
@@ -51,7 +54,32 @@ function PlanDetails({ uuid, refresh }: SectionProps) {
   const customerId = authUser?.team?.stripeCustomerId;
   const details = useSuspense(
     () =>
-      api.get(`/api/stripe/customers/${customerId}`).then(({ data }) => data),
+      api.get(`/api/stripe/customers/${customerId}`).then(async ({ data }) => {
+        // Check subsrciption status && potentially update team plan
+        const subscription = data?.subscriptions?.[0];
+
+        const plan = subscription
+          ? ["incomplete_expired", "unpaid"].includes(subscription.status)
+            ? "free"
+            : subscription.status === "cancelled" &&
+              new Date(subscription.current_period_end * 1000) <= new Date()
+            ? "free"
+            : "premium"
+          : "free";
+        const stripeStatus = subscription?.status || null;
+
+        if (
+          authUser.team!.plan !== plan ||
+          authUser.team!.stripeStatus !== stripeStatus
+        ) {
+          await updateDoc(doc(db, "teams", authUser.team!.id), {
+            plan,
+            stripeStatus,
+          });
+        }
+
+        return data;
+      }),
     { key: `${customerId}/details/${uuid}` }
   );
 
@@ -217,10 +245,14 @@ export default function Billing() {
 
   const router = useRouter();
   const toast = useToast();
+
   useEffect(() => {
     if (router.query.status && router.query.sessionId) {
       switch (router.query.status) {
         case "success":
+          updateDoc(doc(db, "teams", authUser.team!.id), {
+            plan: "premium",
+          });
           // TODO: update team entry in firebase
           router.replace({
             pathname: router.pathname,
@@ -245,20 +277,15 @@ export default function Billing() {
   return (
     <Auth>
       <AppLayout>
-        <Heading level={1}>Billing &amp; usage</Heading>
-        <Spacer h="1.6rem" />
+        <Heading level={1}>Subscription &amp; billing</Heading>
+        <Spacer h="2.4rem" />
 
         <Suspense fallback={<Loader />}>
-          <section>
-            <Heading level={2}>Usage</Heading>
-            <Spacer h="2.4rem" />
-          </section>
-
           <section>
             <Heading level={2}>Current plan</Heading>
             <Spacer h=".8rem" />
             <PlanDetails uuid={`${uuid}`} refresh={refresh} />
-            <Spacer h="2.4rem" />
+            <Spacer h="3.6rem" />
           </section>
 
           {["owner", "billing"].includes(authUser.teamRole!) ? (
@@ -267,8 +294,9 @@ export default function Billing() {
                 <Heading level={2}>Billing details</Heading>
                 <Spacer h="1.2rem" />
                 <BillingDetails uuid={`${uuid}`} refresh={refresh} />
-                <Spacer h="2.4rem" />
               </section>
+
+              <Spacer h="3.6rem" />
 
               <section>
                 <Heading level={2}>Invoices</Heading>

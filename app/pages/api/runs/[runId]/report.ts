@@ -12,7 +12,7 @@ import fetch from "node-fetch";
 
 import { env } from "src/env";
 import { CATEGORIES, AUDITS } from "src/utils/audits";
-import { createHandler } from "src/utils/node/api";
+import { createHandler, withProjectToken } from "src/utils/node/api";
 
 import credentials from "src/google-service-account.json";
 
@@ -216,27 +216,11 @@ export const config = {
 };
 
 export default createHandler({
-  post: async (req, res) => {
-    const [, token] = req.headers?.authorization?.match?.(/Bearer (.+)/) || [];
+  post: withProjectToken(async (req, res, { project }) => {
     const { fields, files } = await parseRequest(req);
 
     if (!req.query.runId) {
       return res.status(400).json({ message: "No run ID provided" });
-    }
-
-    if (!token) {
-      return res.status(401).json({ message: "No bearer token provided" });
-    }
-
-    // Find project
-    const projectsSnap = await db
-      .collection("projects")
-      .where("apiToken", "==", token)
-      .limit(1)
-      .get();
-
-    if (projectsSnap.empty) {
-      return res.status(401).json({ message: "Invalid bearer token provided" });
     }
 
     const runSnap = await db.collection("runs").doc(fields.runId).get();
@@ -246,10 +230,6 @@ export default createHandler({
 
     const run: any = { id: runSnap.id, ...runSnap.data() };
 
-    let project: any;
-    projectsSnap.forEach((p) => {
-      project = { id: p.id, ...p.data() };
-    });
     const projectRef = db.collection("projects").doc(project.id);
     const teamRef = db.collection("teams").doc(project.team.id);
 
@@ -381,5 +361,5 @@ export default createHandler({
     }
 
     return res.status(200).json(report);
-  },
+  }),
 });
