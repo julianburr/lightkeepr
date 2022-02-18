@@ -4,7 +4,8 @@ import { Storage } from "@google-cloud/storage";
 import { getFirestore } from "firebase-admin/firestore";
 
 import { env } from "src/env";
-import { createHandler, withBearerToken } from "src/utils/node/api";
+import { createHandler } from "src/utils/node/api";
+import { withBearerToken } from "src/utils/node/api/with-bearer-token";
 
 import credentials from "src/google-service-account.json";
 

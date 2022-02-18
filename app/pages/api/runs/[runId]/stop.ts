@@ -2,7 +2,8 @@ import "src/utils/node/firebase";
 
 import { getFirestore, Timestamp } from "firebase-admin/firestore";
 
-import { createHandler, withProjectToken } from "src/utils/node/api";
+import { createHandler } from "src/utils/node/api";
+import { withProjectToken } from "src/utils/node/api/with-project-token";
 
 const db = getFirestore();
 

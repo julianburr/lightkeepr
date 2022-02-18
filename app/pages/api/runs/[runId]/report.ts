@@ -12,7 +12,8 @@ import fetch from "node-fetch";
 
 import { env } from "src/env";
 import { CATEGORIES, AUDITS } from "src/utils/audits";
-import { createHandler, withProjectToken } from "src/utils/node/api";
+import { createHandler } from "src/utils/node/api";
+import { withProjectToken } from "src/utils/node/api/with-project-token";
 
 import credentials from "src/google-service-account.json";
 
