@@ -24,6 +24,7 @@ const cache: any = {
   runs: {},
   reports: {},
   users: {},
+  comments: {},
 };
 
 export default createHandler({
@@ -130,7 +131,7 @@ export default createHandler({
       if (
         (comment.report?.id && !cache.reports?.[comment.report.id]) ||
         (comment.run?.id && !cache.runs?.[comment.run.id]) ||
-        (comment.project?.id && !cache.project?.[comment.project.id])
+        (comment.project?.id && !cache.projects?.[comment.project.id])
       ) {
         delete cache.comments[comment.id];
         promises.push(db.collection("comments").doc(comment.id).delete());
