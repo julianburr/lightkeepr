@@ -9,29 +9,19 @@ import { render } from "mjml-react";
 import { VerifyEmail } from "src/emails/verify";
 import { env } from "src/env";
 import { createHandler } from "src/utils/node/api";
+import { withUserToken } from "src/utils/node/api/with-user-token";
 
 const auth = getAuth();
 
 export default createHandler({
-  post: async (req, res) => {
+  post: withUserToken(async (req, res, { user }) => {
     // Bail if sendgrid is not configured properly
     if (!env.sendgrid.apiKey) {
       return res.status(500).json({ message: "Sendgrid not set up" });
     }
 
-    // Validate request
-    if (!req.body.userUid) {
-      return res.status(400).json({ message: "User not specified" });
-    }
-
     if (!req.body.email) {
       return res.status(400).json({ message: "Email not specified" });
-    }
-
-    // Fetch user from firebase and verify
-    const user = await auth.getUser(req.body.userUid);
-    if (user.email !== req.body.email) {
-      return res.status(400).json({ message: "Invalid email" });
     }
 
     // Create confirmation hash for email link
@@ -60,5 +50,5 @@ export default createHandler({
     });
 
     res.status(response[0].statusCode).json(response[0]);
-  },
+  }),
 });

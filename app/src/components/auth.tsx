@@ -2,7 +2,9 @@ import "src/utils/firebase";
 
 import { useRouter } from "next/router";
 import SignIn from "pages/auth/sign-in";
-import { PropsWithChildren, useEffect } from "react";
+import { PropsWithChildren } from "react";
+import { useRef } from "react";
+import { useEffect } from "react";
 
 import { useSuspense } from "src/@packages/suspense";
 import { useAuthUser } from "src/hooks/use-auth-user";
@@ -46,21 +48,24 @@ export function Auth({ children }: AuthProps) {
   // Keep track of last team the user visited in local storage,
   // so if a user opens `/app` without team id we can redirect to
   // that team
+  const fallbackTeamId = authUser.teams?.[0]?.id;
   const [lastTeamId, setLastTeamId] = usePersistedState(
     "@lightkeepr/lastTeamId",
-    authUser.teams?.[0]?.id
+    fallbackTeamId
   );
 
+  const isRedirecting = useRef(false);
   useEffect(() => {
     if (router.query.teamId && authUser.teams?.length) {
       const isValid = authUser.teams.find(
         (team: any) => team.id === router.query.teamId
       );
+      console.log({ isValid });
       if (!isValid) {
         // Force user back to save waters if they try to access a team
         // they are not a part of
-        setLastTeamId(authUser.teams[0].id);
-        router.replace(`/app/${authUser.teams[0].id}`);
+        setLastTeamId(fallbackTeamId);
+        router.replace(`/app/${fallbackTeamId}`);
       } else {
         setLastTeamId(router.query.teamId);
       }

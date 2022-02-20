@@ -53,7 +53,7 @@ function Content({ setVisible, element }: any) {
   const router = useRouter();
 
   const notifications =
-    authUser.user?.notifications?.[authUser!.team!.id] || [];
+    authUser.user?.notifications?.[router.query.teamId!] || [];
 
   const unread = useMemo(
     () =>
@@ -117,7 +117,7 @@ export function NotificationsButton() {
   const authUser = useAuthUser();
   const router = useRouter();
 
-  const teamId = authUser!.team!.id;
+  const teamId = router.query.teamId!;
   const notifications = authUser.user?.notifications || {};
 
   const unread = useMemo(

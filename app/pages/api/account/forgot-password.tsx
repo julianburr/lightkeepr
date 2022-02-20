@@ -4,7 +4,6 @@ import sgMail from "@sendgrid/mail";
 import { getAuth } from "firebase-admin/auth";
 import { getFirestore } from "firebase-admin/firestore";
 import { render } from "mjml-react";
-import { NextApiRequest, NextApiResponse } from "next";
 
 import { ForgotPasswordEmail } from "src/emails/forgot-password";
 import { ForgotPasswordThirdPartyEmail } from "src/emails/forgot-password-third-party";
@@ -19,7 +18,7 @@ function sleep(ms: number) {
 }
 
 export default createHandler({
-  post: async (req: NextApiRequest, res: NextApiResponse) => {
+  post: async (req, res) => {
     // Bail if sendgrid is not configured properly
     if (!env.sendgrid.apiKey) {
       return res.status(500).json({ message: "Sendgrid not set up" });

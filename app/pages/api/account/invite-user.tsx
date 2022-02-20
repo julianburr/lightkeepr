@@ -3,16 +3,16 @@ import "src/utils/node/firebase";
 import sgMail from "@sendgrid/mail";
 import { getFirestore } from "firebase-admin/firestore";
 import { render } from "mjml-react";
-import { NextApiRequest, NextApiResponse } from "next";
 
 import { InviteUserEmail } from "src/emails/invite-user";
 import { env } from "src/env";
 import { createHandler } from "src/utils/node/api";
+import { withTeamToken } from "src/utils/node/api/with-team-token";
 
 const db = getFirestore();
 
 export default createHandler({
-  post: async (req: NextApiRequest, res: NextApiResponse) => {
+  post: withTeamToken(async (req, res, { team }) => {
     try {
       // Bail if sendgrid is not configured properly
       if (!env.sendgrid.apiKey) {
@@ -22,17 +22,6 @@ export default createHandler({
       // Get team and team user data from firestore
       if (!req.body.email) {
         return res.status(400).json({ message: "No email specified" });
-      }
-
-      if (!req.body.teamId) {
-        return res.status(400).json({ message: "No team ID specified" });
-      }
-
-      const teamSnapshot = await db.doc(`teams/${req.body.teamId}`).get();
-
-      const team = teamSnapshot.data();
-      if (!team) {
-        return res.status(404).json({ message: "Team not found" });
       }
 
       if (!team.invites?.includes(req.body.email)) {
@@ -86,5 +75,5 @@ export default createHandler({
     } catch (e: any) {
       res.status(500).json({ message: e.message });
     }
-  },
+  }),
 });

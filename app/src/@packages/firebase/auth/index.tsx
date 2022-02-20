@@ -25,7 +25,7 @@ export function AuthProvider(props: AuthProviderProps) {
   );
 
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(auth, async (user) => {
       setAuthUser(user);
       resolveUserPromise?.();
     });

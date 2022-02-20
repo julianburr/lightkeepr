@@ -3,12 +3,13 @@ import "src/utils/node/firebase";
 import { getFirestore, Timestamp } from "firebase-admin/firestore";
 
 import { createHandler } from "src/utils/node/api";
+import { withTeamToken } from "src/utils/node/api/with-team-token";
 import { generateToken } from "src/utils/token";
 
 const db = getFirestore();
 
 export default createHandler({
-  post: async (req, res) => {
+  post: withTeamToken(async (req, res, { team }) => {
     if (!req?.body?.type) {
       return res.status(400).json({ message: "No type provided" });
     }
@@ -24,13 +25,19 @@ export default createHandler({
     }
 
     const data: any = { id: recordSnap.id, ...recordSnap.data?.() };
-    if (!data.team?.id) {
+    const teamId = data.team?.id;
+    if (!teamId) {
       return res
         .status(400)
         .json({ message: "Reference is missing team association" });
     }
 
-    const teamId = data.team.id;
+    if (teamId !== team.id) {
+      return res
+        .status(401)
+        .json({ message: "Team token does not match resource team" });
+    }
+
     const notification: any = {
       id: generateToken(12),
       createdAt: Timestamp.now(),
@@ -122,5 +129,5 @@ export default createHandler({
     );
 
     return res.status(200).send({ notification, userCount: users.length });
-  },
+  }),
 });

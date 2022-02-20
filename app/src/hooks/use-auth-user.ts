@@ -58,6 +58,7 @@ type Team = {
   apiKey?: string;
   users?: any[];
   userRoles?: any;
+  status: undefined | "archived";
 };
 
 type TeamRole = "owner" | "billing" | "member";
@@ -71,6 +72,7 @@ type Invite = {
 };
 
 type UseAuthUserResponse = FirebaseUser & {
+  accessToken?: string;
   user?: User;
   teams?: Team[];
   team?: Team;
@@ -84,6 +86,8 @@ export function useAuthUser(): UseAuthUserResponse {
   const authUser = useAuth();
   const router = useRouter();
 
+  console.log({ authUser });
+
   const userRef = authUser?.uid ? doc(db, "users", authUser.uid) : undefined;
   const user = useDocument(userRef, { throw: false });
 
@@ -94,9 +98,14 @@ export function useAuthUser(): UseAuthUserResponse {
         where("users", "array-contains", authUser?.uid)
       )
     : undefined;
-  const teams: any[] = useCollection(teamsQuery, {
+  const allTeams: any[] = useCollection(teamsQuery, {
     key: `${authUser?.uid}/teams`,
   });
+
+  const teams = useMemo(
+    () => allTeams.filter((team) => team.status !== "archived"),
+    [allTeams]
+  );
 
   // Get invites that include the users email address
   const inviteQuery = authUser?.email
@@ -139,6 +148,8 @@ export function useAuthUser(): UseAuthUserResponse {
       teamRole,
 
       pendingInvites,
+
+      idToken: "x",
     };
   }, [authUser, user, teams, invites, router.query.teamId]);
 }

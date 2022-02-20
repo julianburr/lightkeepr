@@ -45,7 +45,16 @@ export default createHandler({
     });
 
     /**
-     * 1. Delete projects that don't have a valid team
+     * Soft delete archived teams if the deletion date has been reached
+     */
+    Object.values(cache.teams).forEach((team: any) => {
+      if (team.status === "archived" && team.deleteAt < new Date()) {
+        delete cache.teams[team.id];
+      }
+    });
+
+    /**
+     * Delete projects that don't have a valid team
      */
     const projectsSnap = await db.collection("projects").get();
     projectsSnap.forEach((project: any) => {
@@ -62,7 +71,7 @@ export default createHandler({
     });
 
     /**
-     * 2. Delete all runs that don't have a valid project
+     * Delete all runs that don't have a valid project
      */
     const runsSnap = await db.collection("runs").get();
     runsSnap.forEach((run: any) => {
@@ -79,7 +88,7 @@ export default createHandler({
     });
 
     /**
-     * 3. Delete all reports that don't have a valid run
+     * Delete all reports that don't have a valid run
      */
     const reportsSnap = await db.collection("reports").get();
     reportsSnap.forEach((report: any) => {
@@ -96,7 +105,7 @@ export default createHandler({
     });
 
     /**
-     * 4. Clean up reports based on team plan and associated retention
+     * Clean up reports based on team plan and associated retention
      */
     const grouped = Object.values(cache.reports).reduce<{
       [teamId: string]: any[];
@@ -135,7 +144,7 @@ export default createHandler({
     });
 
     /**
-     * 5. Delete report files that don't have a valid db entry
+     * Delete report files that don't have a valid db entry
      */
     const [files] = await bucket.getFiles();
     files.forEach((file) => {
@@ -146,7 +155,7 @@ export default createHandler({
     });
 
     /**
-     * 6. Delete all subscription references that are not valid anymore
+     * Delete all subscription references that are not valid anymore
      */
     const usersSnap = await db.collection("users").get();
     usersSnap.forEach((user: any) => {
@@ -175,7 +184,7 @@ export default createHandler({
     });
 
     /**
-     * 7. Delete all comments that don't have a valid reference anymore
+     * Delete all comments that don't have a valid reference anymore
      */
     const commentsSnap = await db.collection("comments").get();
     commentsSnap.forEach((comment: any) => {
@@ -194,7 +203,7 @@ export default createHandler({
     });
 
     /**
-     * -- Await all promises
+     * Await all promises
      */
     await Promise.all(promises);
 
