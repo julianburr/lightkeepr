@@ -10,18 +10,26 @@ import { FormGrid } from "src/components/form-grid";
 import { Spacer } from "src/components/spacer";
 import { Heading, P } from "src/components/text";
 import { EmailInput } from "src/components/text-input";
+import { useApi } from "src/hooks/use-api";
 import { useToast } from "src/hooks/use-toast";
 import { AuthLayout } from "src/layouts/auth";
-import { api } from "src/utils/api-client";
+import { event } from "src/utils/ga";
 
 export default function ForgotPassword() {
   const router = useRouter();
   const toast = useToast();
 
+  const api = useApi();
+
   const { form, use, reset } = useForm({
     defaultValues: { email: router.query.email },
     onSubmit: async (values) => {
       await api.post("/api/account/forgot-password", { email: values.email });
+      event({
+        action: "signin_forgot_password",
+        params: { email: values.email },
+      });
+
       reset({ email: "" });
       toast.show({
         message: "Reset password email has been sent",

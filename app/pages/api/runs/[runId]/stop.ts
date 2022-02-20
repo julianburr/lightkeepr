@@ -4,6 +4,7 @@ import { getFirestore, Timestamp } from "firebase-admin/firestore";
 
 import { createHandler } from "src/utils/node/api";
 import { withProjectToken } from "src/utils/node/api/with-project-token";
+import { event } from "src/utils/node/ga";
 
 const db = getFirestore();
 
@@ -55,6 +56,7 @@ export default createHandler({
         status: project.gitMain === run.branch ? status : project.status,
       });
 
+    event({ uid: project.id, action: "run_stop" });
     return res.status(200).json(run);
   }),
 });

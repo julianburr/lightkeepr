@@ -7,16 +7,17 @@ import { useRef } from "react";
 import { useEffect } from "react";
 
 import { useSuspense } from "src/@packages/suspense";
+import { useApi } from "src/hooks/use-api";
 import { useAuthUser } from "src/hooks/use-auth-user";
 import { usePersistedState } from "src/hooks/use-persisted-state";
 import { useToast } from "src/hooks/use-toast";
-import { api } from "src/utils/api-client";
 
 type AuthProps = PropsWithChildren<Record<never, any>>;
 
 export function Auth({ children }: AuthProps) {
   const router = useRouter();
   const authUser = useAuthUser();
+  const api = useApi();
 
   const toast = useToast();
 
@@ -60,7 +61,6 @@ export function Auth({ children }: AuthProps) {
       const isValid = authUser.teams.find(
         (team: any) => team.id === router.query.teamId
       );
-      console.log({ isValid });
       if (!isValid) {
         // Force user back to save waters if they try to access a team
         // they are not a part of

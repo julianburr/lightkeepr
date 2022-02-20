@@ -4,7 +4,8 @@ import cache from "memory-cache";
 
 import { env } from "src/env";
 import { createHandler } from "src/utils/node/api";
-import { withTeamToken } from "src/utils/node/api/with-team-token";
+import { withUserToken } from "src/utils/node/api/with-user-token";
+import { event } from "src/utils/node/ga";
 
 import credentials from "src/google-service-account.json";
 
@@ -18,11 +19,12 @@ const storage = new Storage({
 const bucket = storage.bucket(env.firebase.storageBucket!);
 
 export default createHandler({
-  get: withTeamToken(async (req, res) => {
+  get: withUserToken(async (req, res, { user }) => {
     const { reportId } = req.query;
 
     const fromCache = cache.get(`reports/${reportId}`);
     if (fromCache) {
+      event({ uid: user.id, action: "report_read_from_cache" });
       return res.status(200).json(fromCache);
     }
 
@@ -35,6 +37,8 @@ export default createHandler({
     const data = { meta, api, report: JSON.parse(content) };
 
     cache.put(`reports/${reportId}`, data, 24 * 60 * 60 * 1000);
+
+    event({ uid: user.id, action: "report_read" });
     res.status(200).json(data);
   }),
 });

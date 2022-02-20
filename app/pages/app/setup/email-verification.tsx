@@ -5,12 +5,13 @@ import { Button } from "src/components/button";
 import { ButtonBar } from "src/components/button-bar";
 import { Spacer } from "src/components/spacer";
 import { P } from "src/components/text";
+import { useApi } from "src/hooks/use-api";
 import { useAuthUser } from "src/hooks/use-auth-user";
 import { SetupLayout } from "src/layouts/setup";
-import { api } from "src/utils/api-client";
 
 export default function EmailVerificationSetup() {
   const authUser = useAuthUser();
+  const api = useApi();
 
   return (
     <Auth>

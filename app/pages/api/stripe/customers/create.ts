@@ -1,15 +1,10 @@
-import "src/utils/node/firebase";
-
-import { getFirestore } from "firebase-admin/firestore";
-
 import { createHandler } from "src/utils/node/api";
 import { withTeamToken } from "src/utils/node/api/with-team-token";
+import { event } from "src/utils/node/ga";
 import { stripeClient } from "src/utils/node/stripe";
 
-const db = getFirestore();
-
 export default createHandler({
-  post: withTeamToken(async (req, res, { team }) => {
+  post: withTeamToken(async (_, res, { user, team }) => {
     if (team.stripeCustomerId) {
       // Check if the customer ID is valid
       let stripeCustomer;
@@ -42,6 +37,8 @@ export default createHandler({
         teamId: team.id,
       },
     });
+
+    event({ uid: user.id, action: "stripe_customer_created" });
     return res.status(200).json(customer);
   }),
 });

@@ -4,6 +4,7 @@ import { getFirestore, Timestamp } from "firebase-admin/firestore";
 
 import { createHandler } from "src/utils/node/api";
 import { withProjectToken } from "src/utils/node/api/with-project-token";
+import { event } from "src/utils/node/ga";
 
 const db = getFirestore();
 
@@ -38,6 +39,7 @@ export default createHandler({
         status: { value: "running" },
       });
 
+    event({ uid: project.id, action: "run_start" });
     return res.status(200).json({ id: run.id, ...run.data() });
   }),
 });

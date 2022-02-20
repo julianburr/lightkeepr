@@ -11,9 +11,17 @@ function create(baseUrl?: string) {
   };
 
   function _getOptions(options: any = {}) {
-    const x = deepmerge.all([_options, { headers: _headers }, options]);
-    console.log({ x });
-    return x;
+    const merged = deepmerge.all([
+      _options,
+      {
+        headers: {
+          ..._headers,
+          Authorization: _token ? `Bearer ${_token}` : undefined,
+        },
+      },
+      options,
+    ]);
+    return merged;
   }
 
   function setToken(token: string) {
@@ -57,9 +65,6 @@ function create(baseUrl?: string) {
     const opts = _getOptions({
       method: "POST",
       body: JSON.stringify(args),
-      headers: {
-        Authorization: _token ? `Bearer ${_token}` : undefined,
-      },
       ...options,
     });
     const response = await fetch(url, opts);

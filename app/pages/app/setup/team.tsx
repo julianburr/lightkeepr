@@ -19,15 +19,16 @@ import { PlanSelectInput } from "src/components/plan-select-input";
 import { Spacer } from "src/components/spacer";
 import { EmailInput, TextInput } from "src/components/text-input";
 import { env } from "src/env";
+import { useApi } from "src/hooks/use-api";
 import { useAuthUser } from "src/hooks/use-auth-user";
 import { SetupLayout } from "src/layouts/setup";
-import { api } from "src/utils/api-client";
 import { stripeClient } from "src/utils/stripe";
 
 const db = getFirestore();
 
 export default function TeamSetup() {
   const router = useRouter();
+  const api = useApi();
 
   const authUser = useAuthUser();
   const userId = authUser.user?.id;

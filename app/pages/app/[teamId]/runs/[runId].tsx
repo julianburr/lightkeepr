@@ -28,6 +28,7 @@ import { useConfirmationDialog } from "src/dialogs/confirm";
 import { useToast } from "src/hooks/use-toast";
 import { AppLayout } from "src/layouts/app";
 import { ReportListItem } from "src/list-items/report";
+import { event } from "src/utils/ga";
 
 const db = getFirestore();
 
@@ -132,6 +133,7 @@ function Content() {
                         toast.show({
                           message: "Run has been deleted successfully",
                         });
+                        event({ action: "run_delete" });
                       },
                     }),
                   intent: "danger",

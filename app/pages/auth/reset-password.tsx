@@ -20,6 +20,7 @@ import { Spacer } from "src/components/spacer";
 import { Heading, P } from "src/components/text";
 import { useToast } from "src/hooks/use-toast";
 import { AuthLayout } from "src/layouts/auth";
+import { event } from "src/utils/ga";
 
 const db = getFirestore();
 const auth = getAuth();
@@ -43,6 +44,11 @@ export default function ResetPassword() {
       await signInWithCustomToken(auth, router.query.rid!);
       try {
         await updatePassword(auth.currentUser!, values.password);
+        event({
+          action: "signin_reset_password",
+          params: { email: router.query.email },
+        });
+
         router.push("/app");
         toast.show({ message: "Your passwort has been reset successfully" });
       } catch (e) {

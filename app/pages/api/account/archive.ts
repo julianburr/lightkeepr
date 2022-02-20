@@ -4,6 +4,7 @@ import { getFirestore } from "firebase-admin/firestore";
 
 import { createHandler } from "src/utils/node/api";
 import { withTeamToken } from "src/utils/node/api/with-team-token";
+import { event } from "src/utils/node/ga";
 import { stripeClient } from "src/utils/node/stripe";
 
 const db = getFirestore();
@@ -48,6 +49,7 @@ export default createHandler({
       });
 
     // Done
+    event({ uid: user.id, action: "team_archived" });
     return res.status(204).send("");
   }),
 });
