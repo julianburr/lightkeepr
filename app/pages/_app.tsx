@@ -24,6 +24,11 @@ export default function App({ Component, pageProps }: any) {
     router.asPath?.startsWith("/setup") ||
     router.asPath?.startsWith("/auth");
 
+  console.log({
+    shouldRenderProviders,
+    isReady: router.isReady,
+  });
+
   return (
     <>
       <Head>
@@ -78,7 +83,9 @@ export default function App({ Component, pageProps }: any) {
           <Loader />
         )
       ) : (
-        <Component {...pageProps} />
+        <ErrorBoundary>
+          <Component {...pageProps} />
+        </ErrorBoundary>
       )}
     </>
   );

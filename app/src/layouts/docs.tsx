@@ -14,9 +14,11 @@ import { Spacer } from "src/components/spacer";
 import { Suspense } from "src/components/suspense";
 import { Tooltip } from "src/components/tooltip";
 import { TopBar } from "src/components/top-bar";
+import { AppSwitcherDialog } from "src/dialogs/app-switcher";
 import { useAuthUser } from "src/hooks/use-auth-user";
-import { DialogProvider } from "src/hooks/use-dialog";
+import { DialogProvider, useDialog } from "src/hooks/use-dialog";
 import { ToastProvider } from "src/hooks/use-toast";
+import { AppSwitcherPopout } from "src/popouts/app-switcher";
 import { DocsSidebar } from "src/sidebars/docs";
 import { api } from "src/utils/api-client";
 
@@ -133,9 +135,9 @@ function TopBarActions() {
         )}
       </Tooltip>
 
-      <Tooltip content="App switcher">
+      <AppSwitcherPopout>
         {(props) => <Button {...props} icon={<GridSvg />} />}
-      </Tooltip>
+      </AppSwitcherPopout>
 
       <Spacer w="1.2rem" />
       <AccountActionMenu
@@ -179,6 +181,8 @@ function TopBarActions() {
 }
 
 export function DocsLayout({ children }: DocsLayoutProps) {
+  const appSwitcherDialog = useDialog(AppSwitcherDialog);
+
   // Handle search and search results
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const handleSearch = useCallback((searchValue) => {
@@ -219,9 +223,9 @@ export function DocsLayout({ children }: DocsLayoutProps) {
                       )}
                     </Tooltip>
 
-                    <Tooltip content="App switcher">
+                    <AppSwitcherPopout>
                       {(props) => <Button {...props} icon={<GridSvg />} />}
-                    </Tooltip>
+                    </AppSwitcherPopout>
 
                     <Spacer w="1.2rem" />
                     <Button disabled intent={"secondary"} icon={<UserSvg />} />
@@ -282,7 +286,7 @@ export function DocsLayout({ children }: DocsLayoutProps) {
                 mobile: true,
                 label: "App switcher",
                 icon: <GridSvg />,
-                onClick: () => alert("Hi!"),
+                onClick: () => appSwitcherDialog.open(),
               },
 
               {

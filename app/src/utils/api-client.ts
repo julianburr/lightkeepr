@@ -2,6 +2,8 @@ import deepmerge from "deepmerge";
 
 function create(baseUrl?: string) {
   let _baseUrl = baseUrl;
+  let _token: string | undefined;
+
   const _defaultOptions = {
     headers: {
       Accept: "application/json",
@@ -11,6 +13,10 @@ function create(baseUrl?: string) {
 
   function _getOptions(options: any) {
     return deepmerge(_defaultOptions, options);
+  }
+
+  function setToken(token: string) {
+    _token = token;
   }
 
   function setBaseUrl(baseUrl: string) {
@@ -42,6 +48,9 @@ function create(baseUrl?: string) {
     const opts = _getOptions({
       method: "POST",
       body: JSON.stringify(args),
+      headers: {
+        Authorization: _token ? `Bearer ${_token}` : undefined,
+      },
       ...options,
     });
     const response = await fetch(url, opts);
@@ -66,6 +75,7 @@ function create(baseUrl?: string) {
 
   return {
     setBaseUrl,
+    setToken,
     get,
     post,
     patch,

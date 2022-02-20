@@ -82,19 +82,19 @@ export function RunSidebar({ runId, getLinkProps }: RunSidebarProps) {
     {
       label: "Status",
       value:
-        run.status === "passed" ? (
+        run.status?.value === "passed" ? (
           "Passed"
-        ) : run.status === "running" ? (
+        ) : run.status?.value === "running" ? (
           <>
             <LoaderIcon />
             <span>Running</span>
           </>
-        ) : run.status === "failed" ? (
+        ) : run.status?.value === "failed" ? (
           "Failed"
-        ) : run.status === "cancelled" ? (
+        ) : run.status?.value === "cancelled" ? (
           "Cancelled"
         ) : (
-          run.status
+          run.status?.value
         ),
     },
     {

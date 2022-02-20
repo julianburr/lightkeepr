@@ -46,8 +46,10 @@ export const CoreButton = forwardRef(function CoreButton(
   );
 
   if ("href" in props) {
-    if ("onClick" in props) {
+    if (onClick) {
       // It's a link with both a `href` and an `onClick` prop
+      // eslint-disable-next-line
+      // @ts-ignore
       return <a ref={ref} {...props} />;
     }
 

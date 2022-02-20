@@ -17,6 +17,7 @@ import { Suspense } from "src/components/suspense";
 import { Tooltip } from "src/components/tooltip";
 import { TopBar } from "src/components/top-bar";
 import { useAuthUser } from "src/hooks/use-auth-user";
+import { AppSwitcherPopout } from "src/popouts/app-switcher";
 import { NotificationsButton } from "src/popouts/notifications";
 import { AppSidebar } from "src/sidebars/app";
 
@@ -129,9 +130,9 @@ export function AppLayout({ children }: AppLayoutProps) {
 
                 <Spacer w="1.2rem" />
 
-                <Tooltip content="App switcher">
+                <AppSwitcherPopout>
                   {(props) => <Button {...props} icon={<GridSvg />} />}
-                </Tooltip>
+                </AppSwitcherPopout>
 
                 <Spacer w="1.2rem" />
 

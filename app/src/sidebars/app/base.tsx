@@ -15,7 +15,9 @@ import { useMemo } from "react";
 import { useCollection } from "src/@packages/firebase";
 import { Badge } from "src/components/badge";
 import { Menu } from "src/components/menu";
+import { AppSwitcherDialog } from "src/dialogs/app-switcher";
 import { useAuthUser } from "src/hooks/use-auth-user";
+import { useDialog } from "src/hooks/use-dialog";
 
 import BellSvg from "src/assets/icons/outline/bell.svg";
 import LifeBuoySvg from "src/assets/icons/outline/support.svg";
@@ -31,6 +33,8 @@ type BaseSidebarProps = {
 export function BaseSidebar({ getLinkProps }: BaseSidebarProps) {
   const authUser = useAuthUser();
   const router = useRouter();
+
+  const appSwitcherDialog = useDialog(AppSwitcherDialog);
 
   const teamRef = doc(db, "teams", router.query.teamId!);
   const projects = useCollection(
@@ -55,7 +59,7 @@ export function BaseSidebar({ getLinkProps }: BaseSidebarProps) {
       mobile: true,
       label: "App switcher",
       icon: <GridSvg />,
-      onClick: () => alert("Hi!"),
+      onClick: () => appSwitcherDialog.open(),
     },
     {
       mobile: true,

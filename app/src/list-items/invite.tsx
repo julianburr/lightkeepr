@@ -109,11 +109,11 @@ export function InviteListItem({ data }: UserItemProps) {
         <Title>
           <Email>{data.email}</Email>
           <Small grey>
-            {data.status === "pending"
+            {data.status?.value === "pending"
               ? "Pending"
-              : data.status === "rejected"
+              : data.status?.value === "rejected"
               ? "Rejected"
-              : data.status}
+              : data.status?.value}
           </Small>
         </Title>
       </Content>

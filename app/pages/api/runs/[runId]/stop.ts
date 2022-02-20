@@ -31,7 +31,6 @@ export default createHandler({
       value: reportStatus.find((status) => status?.value === "failed")
         ? "failed"
         : "passed",
-      running: false,
     };
 
     await db

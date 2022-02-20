@@ -111,8 +111,19 @@ const WrapInput = styled.div`
   bottom: 0;
 `;
 
-const Emtpty = styled.div`
+const WrapEmpty = styled.div`
   padding: 0 2.4rem;
+`;
+
+const Emtpty = styled.div`
+  padding: 1.6rem;
+  border-radius: var(--sol--border-radius-s);
+  background: var(--sol--palette-sand-50);
+
+  p {
+    margin: 0;
+    padding: 0;
+  }
 `;
 
 type ContentProps = {
@@ -255,9 +266,11 @@ function Content({
   return (
     <>
       {!comments?.length && !relatedComments?.length && (
-        <Emtpty>
-          <P>No comments found!</P>
-        </Emtpty>
+        <WrapEmpty>
+          <Emtpty>
+            <P grey>No comments found!</P>
+          </Emtpty>
+        </WrapEmpty>
       )}
 
       {thread ? (

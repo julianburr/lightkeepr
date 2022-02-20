@@ -218,6 +218,16 @@ const AppContainer = styled.div`
   }
 `;
 
+const Soon = styled.span`
+  display: inline-block;
+  padding: 0.2rem 0.4rem;
+  margin: -0.2rem 0.4rem 0;
+  background: var(--sol--palette-sand-100);
+  border-radius: var(--sol--border-radius-s);
+  vertical-align: middle;
+  font-size: 0.6em;
+`;
+
 const auditExamples = {
   performance: [
     "First contentful paint",
@@ -505,7 +515,9 @@ export default function HomePage() {
             </Feature>
             <Feature>
               <ExtensionSvg />
-              <h3>Integrate</h3>
+              <h3>
+                Integrate <Soon>Coming soon</Soon>
+              </h3>
               <p>
                 Lightkeepr is meant to fit into your workflow. With integrations
                 for popular tools like Slack, Jira, etc., making it part of your
