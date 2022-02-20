@@ -1,7 +1,10 @@
 name: "Package tags"
 description: "Goes through packages and adds git tags for versions that don't have tags yet"
 inputs:
-  packagesRoot:
+  github_token:
+    description: "Github token"
+    required: true
+  packages_root:
     description: "Glob to packages root folder"
     required: true
     default: "./packages"
