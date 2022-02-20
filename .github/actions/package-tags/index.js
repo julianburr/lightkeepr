@@ -25,7 +25,7 @@ async function run() {
     );
 
   const currentTags = packageJsons.map((filePath) => {
-    const absPath = path.resolve(process.cwd(), filePath);
+    const absPath = path.resolve(rootPath, filePath);
     const content = fs.readFileSync(absPath, "utf-8");
     const packageJson = JSON.parse(content);
 
