@@ -34,7 +34,7 @@ export function ReportStatus({ data }: any) {
   );
 
   const statusMessage =
-    data.status === "passed"
+    data.status?.value === "passed"
       ? data.status?.reasons?.includes?.("manual")
         ? `manually approved by ${approvedBy?.name} (${approvedBy?.email})`
         : null

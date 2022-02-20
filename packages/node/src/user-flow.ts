@@ -29,10 +29,7 @@ export async function userFlow({
 
   flow.stop = async () => {
     await browser.close();
-    fs.writeFileSync(
-      path.resolve(process.cwd(), "./report.html"),
-      flow.generateReport()
-    );
+
     const flowReport = flow.getFlowResult();
     const reportData = {
       ...flowReport,

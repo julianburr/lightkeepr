@@ -101,10 +101,11 @@ export default createHandler({
     const grouped = Object.values(cache.reports).reduce<{
       [teamId: string]: any[];
     }>((all: any, report: any) => {
-      if (all[report.team.id]) {
-        all[report.team.id] = [];
+      if (!all[report.team.id]) {
+        all[report.team.id] = [report];
+      } else {
+        all[report.team.id].push(report);
       }
-      all[report.team.id].push(report);
       return all;
     }, {});
 

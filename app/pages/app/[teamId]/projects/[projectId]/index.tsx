@@ -20,7 +20,6 @@ import { Button } from "src/components/button";
 import { ButtonBar } from "src/components/button-bar";
 import { CodePreview } from "src/components/code-preview";
 import { CommentsButton } from "src/components/comments-button";
-import { HelpBox } from "src/components/help-box";
 import { Hint } from "src/components/hint";
 import { List } from "src/components/list";
 import { Loader } from "src/components/loader";
@@ -38,6 +37,27 @@ const db = getFirestore();
 const Container = styled.div`
   width: 100%;
   max-width: 60rem;
+`;
+
+const Empty = styled.div`
+  display: flex;
+  flex-direction: column;
+  background: var(--sol--container-light-background);
+  padding: var(--sol--spacing-l);
+  border-radius: var(--sol--border-radius-s);
+  position: relative;
+  overflow: hidden;
+  margin: 0 -0.8rem;
+
+  @media (min-width: 800px) {
+    padding: var(--sol--spacing-xl);
+
+    h1,
+    h2,
+    p {
+      width: 80%;
+    }
+  }
 `;
 
 function Content() {
@@ -67,7 +87,10 @@ function Content() {
     () =>
       runs
         .filter((run: any) => {
-          if (filters.status.length && !filters.status.includes(run.status)) {
+          if (
+            filters.status.length &&
+            !filters.status.includes(run.status?.value)
+          ) {
             return false;
           }
 
@@ -124,7 +147,7 @@ function Content() {
           }
         />
         <Spacer h="1.8rem" />
-        <HelpBox>
+        <Empty>
           <Heading level={2}>Get started</Heading>
           <Spacer h=".6rem" />
           <P>
@@ -191,7 +214,7 @@ function Content() {
               },
             ]}
           />
-        </HelpBox>
+        </Empty>
       </>
     );
   }
