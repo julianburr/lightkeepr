@@ -24,14 +24,17 @@
     "reinstall": "yarn nuke && yarn",
     "release": "lerna publish from-package --conventional-commits --no-private --yes",
     "release:canary": "lerna publish --conventional-commits --no-private --no-changelog --no-git-tag-version --no-push --canary --dist-tag=experimental --preid pr --yes",
+    "release:version": "lerna version --conventional-commits --no-private --no-git-tag-version --no-push",
     "lint:staged": "lint-staged",
     "postinstall": "patch-package",
     "prepare": "husky install"
   },
   "dependencies": {
+    "@actions/core": "^1.6.0",
+    "@actions/github": "^5.0.0",
     "husky": "^7.0.4",
-    "lint-staged": "^12.2.0",
     "lerna": "^4.0.0",
+    "lint-staged": "^12.2.0",
     "patch-package": "^6.4.7",
     "postinstall-postinstall": "^2.1.0"
   }
