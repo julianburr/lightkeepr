@@ -17,12 +17,12 @@ import { Heading, P, Small } from "src/components/text";
 import { Value } from "src/components/value";
 import { useConfirmationDialog } from "src/dialogs/confirm";
 import { env } from "src/env";
+import { useApi } from "src/hooks/use-api";
 import { useAuthUser } from "src/hooks/use-auth-user";
 import { useToast } from "src/hooks/use-toast";
 import { AppLayout } from "src/layouts/app";
 import { InvoiceListItem } from "src/list-items/invoice";
 import { PaymentMethodListItem } from "src/list-items/payment-method";
-import { api } from "src/utils/api-client";
 import { stripeClient } from "src/utils/stripe";
 
 const db = getFirestore();
@@ -47,6 +47,7 @@ type SectionProps = {
 
 function PlanDetails({ uuid, refresh }: SectionProps) {
   const authUser = useAuthUser();
+  const api = useApi();
 
   const toast = useToast();
   const confirmationDialog = useConfirmationDialog();
@@ -173,6 +174,7 @@ function PlanDetails({ uuid, refresh }: SectionProps) {
 
 function BillingDetails({ uuid }: SectionProps) {
   const authUser = useAuthUser();
+  const api = useApi();
 
   const customerId = authUser?.team?.stripeCustomerId;
   const details = useSuspense(
@@ -224,6 +226,7 @@ function BillingDetails({ uuid }: SectionProps) {
 
 function InvoicesDetails({ uuid }: SectionProps) {
   const authUser = useAuthUser();
+  const api = useApi();
 
   const customerId = authUser?.team?.stripeCustomerId;
   const invoices = useSuspense(

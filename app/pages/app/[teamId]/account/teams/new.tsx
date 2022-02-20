@@ -20,9 +20,10 @@ import { PlanSelectInput } from "src/components/plan-select-input";
 import { Spacer } from "src/components/spacer";
 import { EmailInput, TextInput } from "src/components/text-input";
 import { env } from "src/env";
+import { useApi } from "src/hooks/use-api";
 import { useAuthUser } from "src/hooks/use-auth-user";
 import { AppLayout } from "src/layouts/app";
-import { api } from "src/utils/api-client";
+import { event } from "src/utils/ga";
 import { stripeClient } from "src/utils/stripe";
 
 const db = getFirestore();
@@ -35,6 +36,8 @@ const Container = styled.div`
 export default function NewTeam() {
   const router = useRouter();
   const authUser = useAuthUser();
+
+  const api = useApi();
 
   const { form, use } = useForm({
     defaultValues: {
@@ -62,6 +65,11 @@ export default function NewTeam() {
 
       await updateDoc(doc(db, "teams", team.id), {
         stripeCustomerId: stripeCustomer.data?.id,
+      });
+
+      event({
+        action: "team_created",
+        params: { team },
       });
 
       if (values.plan === "premium") {

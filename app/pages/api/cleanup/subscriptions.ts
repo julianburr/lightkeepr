@@ -5,6 +5,7 @@ import { getFirestore } from "firebase-admin/firestore";
 import { env } from "src/env";
 import { createHandler } from "src/utils/node/api";
 import { withBearerToken } from "src/utils/node/api/with-bearer-token";
+import { event } from "src/utils/node/ga";
 import { stripeClient } from "src/utils/node/stripe";
 
 const db = getFirestore();
@@ -116,6 +117,7 @@ export default createHandler({
 
     await Promise.all(promises);
 
+    event({ action: "cleanup_subscriptions" });
     return res.status(204).send("");
   }),
 });

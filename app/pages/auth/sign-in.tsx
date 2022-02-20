@@ -21,9 +21,10 @@ import { Spacer } from "src/components/spacer";
 import { P } from "src/components/text";
 import { EmailInput } from "src/components/text-input";
 import { useErrorDialog } from "src/dialogs/error";
+import { useApi } from "src/hooks/use-api";
 import { useAuthUser } from "src/hooks/use-auth-user";
 import { AuthLayout } from "src/layouts/auth";
-import { api } from "src/utils/api-client";
+import { event } from "src/utils/ga";
 
 import GithubSvg from "src/assets/icons/auth-provider-logos/github.svg";
 import GoogleSvg from "src/assets/icons/auth-provider-logos/google.svg";
@@ -39,6 +40,7 @@ type SigninProps = {
 export default function SignIn({ isSignUp }: SigninProps) {
   const router = useRouter();
   const authUser = useAuthUser();
+  const api = useApi();
 
   const errorDialog = useErrorDialog();
 
@@ -66,12 +68,20 @@ export default function SignIn({ isSignUp }: SigninProps) {
             userUid: response.user.uid,
             email: values.email,
           });
+          event({
+            action: "signup",
+            params: { email: values.email },
+          });
         } else {
           await signInWithEmailAndPassword(
             auth,
             values.email!,
             values.password
           );
+          event({
+            action: "signin",
+            params: { email: values.email },
+          });
         }
       } catch (e: any) {
         switch (e.code) {

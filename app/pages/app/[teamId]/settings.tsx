@@ -19,6 +19,7 @@ import { useAuthUser } from "src/hooks/use-auth-user";
 import { useAutoSaveForm } from "src/hooks/use-auto-save-form";
 import { useToast } from "src/hooks/use-toast";
 import { AppLayout } from "src/layouts/app";
+import { event } from "src/utils/ga";
 
 const db = getFirestore();
 
@@ -128,6 +129,7 @@ export default function TeamSettings() {
                     onConfirm: async () => {
                       await api.post("/api/account/archive");
                       toast.show({ message: "Team has been deleted" });
+                      event({ action: "team_delete" });
                     },
                   })
                 }

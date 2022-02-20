@@ -6,8 +6,8 @@ import { List } from "src/components/list";
 import { Markdown } from "src/components/markdown";
 import { Spacer } from "src/components/spacer";
 import { Heading, P } from "src/components/text";
+import { useApi } from "src/hooks/use-api";
 import { ReportCompareAuditListItem } from "src/list-items/report/compare/audit";
-import { api } from "src/utils/api-client";
 
 import { ReportCompareOverview } from "./overview";
 
@@ -20,19 +20,18 @@ export function ReportCompareDetails({
   reportIds,
   categoryId,
 }: ReportCompareDetailsProps) {
+  const api = useApi();
+
   const [baseReportId, compareReportId] = reportIds.split("..");
 
   const { data: baseData } = useSuspense(
     () => api.get(`/api/reports/${baseReportId}`),
-    {
-      key: `report/${baseReportId}`,
-    }
+    { key: `report/${baseReportId}` }
   );
+
   const { data: compareData } = useSuspense(
     () => api.get(`/api/reports/${compareReportId}`),
-    {
-      key: `report/${compareReportId}`,
-    }
+    { key: `report/${compareReportId}` }
   );
 
   if (!categoryId) {

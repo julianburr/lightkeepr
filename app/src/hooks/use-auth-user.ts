@@ -86,8 +86,6 @@ export function useAuthUser(): UseAuthUserResponse {
   const authUser = useAuth();
   const router = useRouter();
 
-  console.log({ authUser });
-
   const userRef = authUser?.uid ? doc(db, "users", authUser.uid) : undefined;
   const user = useDocument(userRef, { throw: false });
 

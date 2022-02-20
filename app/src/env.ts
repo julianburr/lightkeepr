@@ -1,7 +1,11 @@
 export const env = {
   salt: process.env.SALT,
   releaseHash: process.env.RELEASE_HASH,
+
   bearerToken: process.env.BEARER_TOKEN,
+
+  googleAnalyticsId: process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID,
+
   firebase: {
     apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
     authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
@@ -12,6 +16,7 @@ export const env = {
     measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
     databaseUrl: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL,
   },
+
   stripe: {
     secretKey: process.env.STRIPE_SECRET_KEY,
     publicKey: process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY,
@@ -21,6 +26,7 @@ export const env = {
       },
     },
   },
+
   sendgrid: {
     apiKey: process.env.SENDGRID_API_KEY,
   },

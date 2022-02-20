@@ -12,6 +12,7 @@ import { createPortal } from "react-dom";
 import styled from "styled-components";
 
 import { DialogMetaContext } from "src/hooks/use-dialog";
+import { event } from "src/utils/ga";
 
 const Backdrop = styled.div`
   position: fixed;
@@ -147,6 +148,16 @@ export function Dialog({
   const dialogMeta = useContext(DialogMetaContext);
 
   const handleClose = onClose || dialogMeta?.close;
+
+  // Add some analytics
+  useEffect(() => {
+    if (title) {
+      event({
+        action: "dialog_open",
+        params: { title },
+      });
+    }
+  }, []);
 
   // Trap focus within this dialog
   const backdropRef = useRef<HTMLDivElement>();

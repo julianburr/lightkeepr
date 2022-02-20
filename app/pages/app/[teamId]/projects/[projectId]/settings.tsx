@@ -24,6 +24,7 @@ import { useAuthUser } from "src/hooks/use-auth-user";
 import { useAutoSaveForm } from "src/hooks/use-auto-save-form";
 import { AppLayout } from "src/layouts/app";
 import { removeUndefined } from "src/utils/format";
+import { event } from "src/utils/ga";
 import { generateApiToken } from "src/utils/token";
 
 import RefreshSvg from "src/assets/icons/outline/refresh.svg";
@@ -210,6 +211,7 @@ export default function ProjectSettings() {
                     onConfirm: () => {
                       deleteDoc(projectRef);
                       router.push(`/app/${router.query.teamId}`);
+                      event({ action: "project_delete" });
                     },
                   })
                 }

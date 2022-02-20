@@ -1,5 +1,7 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
+import Script from "next/script";
+import { useEffect } from "react";
 import { Reset } from "styled-reset";
 
 import { FirebaseProvider } from "src/@packages/firebase";
@@ -10,11 +12,19 @@ import { Suspense } from "src/components/suspense";
 import { DialogProvider } from "src/hooks/use-dialog";
 import { ToastProvider } from "src/hooks/use-toast";
 import { GlobalStyles } from "src/theme";
+import { pageView } from "src/utils/ga";
 
 import favicon from "src/assets/favicon.png";
 
 export default function App({ Component, pageProps }: any) {
   const router = useRouter();
+
+  // Track page views with google analytics
+  useEffect(() => {
+    if (router.isReady && typeof window !== "undefined") {
+      pageView(window.location.pathname, router.pathname);
+    }
+  }, [router.asPath, router.isReady]);
 
   // HACK: the main app and auth flows need the provider wrapped here
   // because a lot of pages use suspense directly, should probably refactor
@@ -52,6 +62,23 @@ export default function App({ Component, pageProps }: any) {
           rel="stylesheet"
         />
       </Head>
+
+      {/* Add Google Analytics */}
+      {/* See https://nextjs.org/docs/messages/next-script-for-ga */}
+      <Script
+        src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}`}
+        strategy="afterInteractive"
+      />
+      <Script id="google-analytics" strategy="afterInteractive">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', '${process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS}', {
+            page_path: window.location.pathname,
+          });
+        `}
+      </Script>
 
       <Reset />
       <GlobalStyles />

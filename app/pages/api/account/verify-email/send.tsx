@@ -1,17 +1,13 @@
-import "src/utils/node/firebase";
-
 import { createHash } from "crypto";
 
 import sgMail from "@sendgrid/mail";
-import { getAuth } from "firebase-admin/auth";
 import { render } from "mjml-react";
 
 import { VerifyEmail } from "src/emails/verify";
 import { env } from "src/env";
 import { createHandler } from "src/utils/node/api";
 import { withUserToken } from "src/utils/node/api/with-user-token";
-
-const auth = getAuth();
+import { event } from "src/utils/node/ga";
 
 export default createHandler({
   post: withUserToken(async (req, res, { user }) => {
@@ -49,6 +45,7 @@ export default createHandler({
       html,
     });
 
+    event({ uid: user.id, action: "user_email_verification_sent" });
     res.status(response[0].statusCode).json(response[0]);
   }),
 });

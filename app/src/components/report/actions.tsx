@@ -22,6 +22,7 @@ import { Tooltip } from "src/components/tooltip";
 import { useConfirmationDialog } from "src/dialogs/confirm";
 import { useAuthUser } from "src/hooks/use-auth-user";
 import { useToast } from "src/hooks/use-toast";
+import { event } from "src/utils/ga";
 
 import ChevronLeftSvg from "src/assets/icons/outline/chevron-left.svg";
 import ChevronRightSvg from "src/assets/icons/outline/chevron-right.svg";
@@ -177,9 +178,8 @@ export function ReportActions({ data, stepIndex }: ReportActionsProps) {
       onConfirm: async () => {
         router.push(`/app/${router.query.teamId}/runs/${data.run.id}`);
         await deleteDoc(reportRef);
-        toast.show({
-          message: "Report has been deleted successfully",
-        });
+        toast.show({ message: "Report has been deleted successfully" });
+        event({ action: "report_delete" });
       },
     });
   }, [data.id]);

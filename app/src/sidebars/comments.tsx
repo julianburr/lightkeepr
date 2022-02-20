@@ -33,9 +33,9 @@ import { RichTextInput } from "src/components/rich-text-input";
 import { Spacer } from "src/components/spacer";
 import { Suspense } from "src/components/suspense";
 import { GroupHeading, P } from "src/components/text";
+import { useApi } from "src/hooks/use-api";
 import { useAuthUser } from "src/hooks/use-auth-user";
 import { useSidebarState } from "src/hooks/use-sidebar-state";
-import { api } from "src/utils/api-client";
 
 import ArrowLeftSvg from "src/assets/icons/outline/arrow-left.svg";
 
@@ -149,6 +149,8 @@ function Content({
   loading,
 }: ContentProps) {
   const authUser = useAuthUser();
+  const api = useApi();
+
   const users = useCollection(
     query(
       collection(db, "users"),

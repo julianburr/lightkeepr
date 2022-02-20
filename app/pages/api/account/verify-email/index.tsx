@@ -6,6 +6,7 @@ import { getAuth } from "firebase-admin/auth";
 
 import { createHandler } from "src/utils/node/api";
 import { withUserToken } from "src/utils/node/api/with-user-token";
+import { event } from "src/utils/node/ga";
 
 const auth = getAuth();
 
@@ -33,6 +34,7 @@ export default createHandler({
 
     // Update user to set the verified email field
     const response = await auth.updateUser(user.uid, { emailVerified: true });
+    event({ uid: user.id, action: "user_email_verified" });
     res.status(200).json(response);
   }),
 });

@@ -14,6 +14,7 @@ import { env } from "src/env";
 import { CATEGORIES, AUDITS } from "src/utils/audits";
 import { createHandler } from "src/utils/node/api";
 import { withProjectToken } from "src/utils/node/api/with-project-token";
+import { event } from "src/utils/node/ga";
 
 import credentials from "src/google-service-account.json";
 
@@ -57,7 +58,7 @@ function getFlowMeta(reportData: any) {
   return getMeta(reportData?.steps?.[0]?.lhr);
 }
 
-function getSummary(reportData: any) {
+function getSummary(reportData: any, projectId?: string) {
   if (reportData?.gatherMode === "snapshot") {
     return CATEGORIES.reduce((all: any, { id }) => {
       const initial = { passed: 0, total: 0 };
@@ -87,15 +88,21 @@ function getSummary(reportData: any) {
 
   return CATEGORIES.reduce((all: any, { id }) => {
     all[id] = reportData?.categories?.[id]?.score ?? null;
+    event({
+      uid: projectId,
+      category: "Report scores",
+      action: `score_${id}`,
+      value: reportData?.categories?.[id]?.score || 0,
+    });
     return all;
   }, {});
 }
 
-function getFlowSummary(reportData: any) {
+function getFlowSummary(reportData: any, projectId?: string) {
   return reportData?.steps?.map?.((step: any) => ({
     name: step.name,
     meta: getMeta(step.lhr),
-    scores: getSummary(step.lhr),
+    scores: getSummary(step.lhr, projectId),
   }));
 }
 
@@ -183,6 +190,12 @@ function getStatus({
     reason.push("budget");
   }
 
+  event({
+    uid: project.id,
+    category: "Report status",
+    action: `status_${value}`,
+  });
+
   return { value, reason, failedTargets, budgets, failedBudgets };
 }
 
@@ -250,8 +263,8 @@ export default createHandler({
 
     const summary =
       fields.type === "user-flow"
-        ? getFlowSummary(reportData)
-        : getSummary(reportData);
+        ? getFlowSummary(reportData, project.id)
+        : getSummary(reportData, project.id);
 
     // Store some audits for easier access for summaries and reporting
     const audits =
@@ -361,6 +374,7 @@ export default createHandler({
       });
     }
 
+    event({ uid: project.id, action: "run_report" });
     return res.status(200).json(report);
   }),
 });

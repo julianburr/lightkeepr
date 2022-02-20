@@ -6,6 +6,7 @@ import { getFirestore } from "firebase-admin/firestore";
 import { env } from "src/env";
 import { createHandler } from "src/utils/node/api";
 import { withBearerToken } from "src/utils/node/api/with-bearer-token";
+import { event } from "src/utils/node/ga";
 
 import credentials from "src/google-service-account.json";
 
@@ -208,6 +209,7 @@ export default createHandler({
     await Promise.all(promises);
 
     // DONE
+    event({ action: "cleanup_records" });
     return res.status(204).send("");
   }),
 });

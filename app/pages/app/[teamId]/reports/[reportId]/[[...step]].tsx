@@ -15,8 +15,8 @@ import { ReportStatus } from "src/components/report/status";
 import { Spacer } from "src/components/spacer";
 import { Suspense } from "src/components/suspense";
 import { Heading, P } from "src/components/text";
+import { useApi } from "src/hooks/use-api";
 import { AppLayout } from "src/layouts/app";
-import { api } from "src/utils/api-client";
 
 const db = getFirestore();
 
@@ -42,6 +42,7 @@ const WrapHeading = styled.div`
 
 function Content() {
   const router = useRouter();
+  const api = useApi();
 
   const categoryId = router.query.category;
 

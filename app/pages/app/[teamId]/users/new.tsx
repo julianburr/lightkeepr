@@ -19,10 +19,11 @@ import { Spacer } from "src/components/spacer";
 import { Heading } from "src/components/text";
 import { EmailInput } from "src/components/text-input";
 import { useErrorDialog } from "src/dialogs/error";
+import { useApi } from "src/hooks/use-api";
 import { useAuthUser } from "src/hooks/use-auth-user";
 import { useToast } from "src/hooks/use-toast";
 import { AppLayout } from "src/layouts/app";
-import { api } from "src/utils/api-client";
+import { event } from "src/utils/ga";
 
 const db = getFirestore();
 
@@ -34,6 +35,8 @@ const Container = styled.div`
 function Content() {
   const authUser = useAuthUser();
   const router = useRouter();
+
+  const api = useApi();
 
   const toast = useToast();
   const errorDialog = useErrorDialog();
@@ -79,6 +82,11 @@ function Content() {
 
         router.push(`/app/${team.id}/users`);
         toast.show({ message: `Invite sent to ${values.email}` });
+
+        event({
+          action: "user_invited",
+          params: { email: values.email },
+        });
       } catch (e: any) {
         errorDialog.open(e);
       }

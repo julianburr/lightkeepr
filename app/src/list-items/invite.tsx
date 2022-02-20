@@ -12,9 +12,9 @@ import { ListItem } from "src/components/list";
 import { Spacer } from "src/components/spacer";
 import { P, Small } from "src/components/text";
 import { useConfirmationDialog } from "src/dialogs/confirm";
+import { useApi } from "src/hooks/use-api";
 import { useAuthUser } from "src/hooks/use-auth-user";
 import { useToast } from "src/hooks/use-toast";
-import { api } from "src/utils/api-client";
 
 const db = getFirestore();
 
@@ -46,6 +46,7 @@ type UserItemProps = {
 export function InviteListItem({ data }: UserItemProps) {
   const router = useRouter();
   const authUser = useAuthUser();
+  const api = useApi();
 
   const confirmationDialog = useConfirmationDialog();
   const toast = useToast();
