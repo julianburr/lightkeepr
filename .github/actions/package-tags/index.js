@@ -6,6 +6,7 @@ const path = require("path");
 const glob = require("glob");
 
 async function run() {
+  console.log({ env: process.env });
   const { GITHUB_REF, GITHUB_SHA, GITHUB_TOKEN } = process.env;
   const octokit = github.getOctokit(GITHUB_TOKEN);
 
