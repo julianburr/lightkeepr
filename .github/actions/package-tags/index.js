@@ -15,14 +15,22 @@ async function run() {
   });
 
   const packagesRoot = core.getInput("packages_root", { required: true });
+  const rootPath = path.resolve(process.cwd(), packagesRoot);
+
   const packageJsons = glob
-    .sync("**/package.json", path.resolve(process.cwd(), packagesRoot))
+    .sync("**/package.json", { cwd: rootPath })
     .filter(
       (filePath) =>
         filePath !== "package.json" && !filePath.includes("node_modules")
     );
 
-  console.log({ packageJsons, tags, GITHUB_REF, GITHUB_SHA });
+  console.log({
+    packageJsons,
+    tags: tags.data,
+    GITHUB_REF,
+    GITHUB_SHA,
+    rootPath,
+  });
 
   //   annotatedTag = await octokit.git.createTag({
   //     ...github.context.repo,
