@@ -6,7 +6,7 @@ const path = require("path");
 const glob = require("glob");
 
 async function run() {
-  const { GITHUB_REF, GITHUB_SHA, GITHUB_TOKEN } = process.env;
+  const { GITHUB_SHA, GITHUB_TOKEN } = process.env;
   const octokit = github.getOctokit(GITHUB_TOKEN);
 
   const tags = await octokit.rest.repos.listTags({
@@ -24,37 +24,35 @@ async function run() {
         filePath !== "package.json" && !filePath.includes("node_modules")
     );
 
-  console.log({
-    packageJsons,
-    tags: tags.data,
-    GITHUB_REF,
-    GITHUB_SHA,
-    rootPath,
+  const currentTags = packageJsons.map((filePath) => {
+    const absPath = path.resolve(process.cwd(), filePath);
+    const content = fs.readFileSync(absPath, "utf-8");
+    const packageJson = JSON.parse(content);
+
+    const tagName = `${packageJson.name}@${packageJson.version}`;
+    return tagName;
   });
 
+  const missingTags = currentTags.filter(
+    (tag) => !tags.data.find((t) => t.name === tag)
+  );
+
+  console.log({ missingTags });
+  // for (const tagName of missingTags) {
   //   annotatedTag = await octokit.git.createTag({
   //     ...github.context.repo,
-  //     tag: newTag,
-  //     message: newTag,
+  //     tag: tagName,
+  //     message: tagName,
   //     object: GITHUB_SHA,
-  //     type: 'commit',
+  //     type: "commit",
+  //   });
+
+  //   await octokit.git.createRef({
+  //     ...github.context.repo,
+  //     ref: `refs/tags/${tagName}`,
+  //     sha: annotatedTag ? annotatedTag.data.sha : GITHUB_SHA,
   //   });
   // }
-
-  // core.debug(`Pushing new tag to the repo.`);
-  // await octokit.git.createRef({
-  //   ...github.context.repo,
-  //   ref: `refs/tags/${newTag}`,
-  //   sha: annotatedTag ? annotatedTag.data.sha : GITHUB_SHA,
-  // });
-
-  // packageJsons.forEach((filePath) => {
-  //   const absPath = path.resolve(process.cwd(), filePath);
-  //   const content = fs.readFileSync(absPath, "utf-8");
-  //   const packageJson = JSON.parse(content);
-
-  //   const tagName = `${packageJson.name}@${packageJson.version}`;
-  // });
 }
 
 try {
