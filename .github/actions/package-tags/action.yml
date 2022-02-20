@@ -2,7 +2,7 @@ name: "Package tags"
 description: "Goes through packages and adds git tags for versions that don't have tags yet"
 inputs:
   packages_root:
-    description: "Glob to packages root folder"
+    description: "Path to packages root folder"
     default: "./packages"
 runs:
   using: "node16"
