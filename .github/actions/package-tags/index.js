@@ -37,22 +37,21 @@ async function run() {
     (tag) => !tags.data.find((t) => t.name === tag)
   );
 
-  console.log({ missingTags });
-  // for (const tagName of missingTags) {
-  //   annotatedTag = await octokit.git.createTag({
-  //     ...github.context.repo,
-  //     tag: tagName,
-  //     message: tagName,
-  //     object: GITHUB_SHA,
-  //     type: "commit",
-  //   });
+  for (const tagName of missingTags) {
+    annotatedTag = await octokit.git.createTag({
+      ...github.context.repo,
+      tag: tagName,
+      message: tagName,
+      object: GITHUB_SHA,
+      type: "commit",
+    });
 
-  //   await octokit.git.createRef({
-  //     ...github.context.repo,
-  //     ref: `refs/tags/${tagName}`,
-  //     sha: annotatedTag ? annotatedTag.data.sha : GITHUB_SHA,
-  //   });
-  // }
+    await octokit.git.createRef({
+      ...github.context.repo,
+      ref: `refs/tags/${tagName}`,
+      sha: annotatedTag ? annotatedTag.data.sha : GITHUB_SHA,
+    });
+  }
 }
 
 try {
