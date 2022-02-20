@@ -5,17 +5,20 @@ import { useRouter } from "next/router";
 import styled from "styled-components";
 
 import { Auth } from "src/components/auth";
+import { Button } from "src/components/button";
+import { ButtonBar } from "src/components/button-bar";
 import { Field } from "src/components/field";
 import { FormGrid } from "src/components/form-grid";
 import { ReadonlyInput } from "src/components/readonly-input";
 import { Spacer } from "src/components/spacer";
-import { Heading, P } from "src/components/text";
+import { Heading, P, Small } from "src/components/text";
 import { EmailInput, TextInput } from "src/components/text-input";
+import { useConfirmationDialog } from "src/dialogs/confirm";
+import { useApi } from "src/hooks/use-api";
 import { useAuthUser } from "src/hooks/use-auth-user";
 import { useAutoSaveForm } from "src/hooks/use-auto-save-form";
 import { useToast } from "src/hooks/use-toast";
 import { AppLayout } from "src/layouts/app";
-import { api } from "src/utils/api-client";
 
 const db = getFirestore();
 
@@ -27,7 +30,11 @@ const Container = styled.div`
 export default function TeamSettings() {
   const authUser = useAuthUser();
   const router = useRouter();
+
+  const api = useApi();
+
   const toast = useToast();
+  const confirmationDialog = useConfirmationDialog();
 
   const { form } = useAutoSaveForm({
     defaultValues: {
@@ -75,12 +82,14 @@ export default function TeamSettings() {
   }
 
   return (
-    <Auth>
+    <Auth key={router.query.teamId}>
       <AppLayout>
         <Container>
           <Heading level={1}>Team settings</Heading>
-          <Spacer h="1.2rem" />
+          <Spacer h="3.2rem" />
 
+          <Heading level={2}>General settings</Heading>
+          <Spacer h="1.2rem" />
           <form ref={form}>
             <FormGrid>
               <Field name="name" label="Name" Input={TextInput} required />
@@ -91,6 +100,42 @@ export default function TeamSettings() {
               />
             </FormGrid>
           </form>
+
+          <Spacer h="3.2rem" />
+
+          <Heading level={2}>Delete team</Heading>
+          <Small grey>
+            This action will delete the team together with all its projects,
+            runs and reports. This cannot be reverted, so please make sure you
+            really want to do this.
+          </Small>
+          <Small grey>
+            If you currently have a subscription to the premium plan, this
+            subscription will be cancelled by the end of the current period when
+            deleting the team.
+          </Small>
+          <Spacer h=".6rem" />
+          <ButtonBar
+            left={
+              <Button
+                intent="danger"
+                onClick={() =>
+                  confirmationDialog.open({
+                    message:
+                      "Are you sure you want to delete this team and all its projects, runs and reports? This action cannot be reverted.",
+                    confirmLabel: "Delete team",
+                    intent: "danger",
+                    onConfirm: async () => {
+                      await api.post("/api/account/archive");
+                      toast.show({ message: "Team has been deleted" });
+                    },
+                  })
+                }
+              >
+                Delete team
+              </Button>
+            }
+          />
         </Container>
       </AppLayout>
     </Auth>

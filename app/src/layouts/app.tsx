@@ -195,7 +195,9 @@ export function AppLayout({ children }: AppLayoutProps) {
               <Buttons data-mobile>
                 <Button
                   icon={<MenuSvg />}
-                  badge={<Badge count={unseen?.[authUser.team!.id]?.length} />}
+                  badge={
+                    <Badge count={unseen?.[router.query.teamId!]?.length} />
+                  }
                   size="large"
                   intent="ghost"
                   aria-label="Menu"
@@ -212,12 +214,23 @@ export function AppLayout({ children }: AppLayoutProps) {
         <Content>
           <ErrorBoundary>
             <Suspense fallback={<Loader />}>
-              <AppSidebar />
-              <ErrorBoundary>
-                <Suspense fallback={<Loader />}>
-                  <Main>{children}</Main>
-                </Suspense>
-              </ErrorBoundary>
+              {!authUser.team ? (
+                <>
+                  {/**
+                   * NOTE: when deleting a team, we get one render where the team has been
+                   * deleted but the user hasn't been redirected yet
+                   */}
+                </>
+              ) : (
+                <>
+                  <AppSidebar />
+                  <ErrorBoundary>
+                    <Suspense fallback={<Loader />}>
+                      <Main>{children}</Main>
+                    </Suspense>
+                  </ErrorBoundary>
+                </>
+              )}
             </Suspense>
           </ErrorBoundary>
         </Content>

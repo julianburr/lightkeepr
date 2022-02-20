@@ -23,13 +23,11 @@ export function withBearerToken(handler: WithBearerTokenHandler) {
     const now = new Date();
 
     const fromCache = cache.get(`rateLimit/${token}`);
-    console.log({ fromCache });
     const cacheResetTime = fromCache?.resetTime
       ? new Date(fromCache.resetTime)
       : undefined;
 
     const expired = !cacheResetTime || cacheResetTime < now;
-    console.log({ expired });
 
     const resetTime = expired
       ? new Date(now.getTime() + EXPIRE)

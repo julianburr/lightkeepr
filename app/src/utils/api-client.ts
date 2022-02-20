@@ -3,16 +3,17 @@ import deepmerge from "deepmerge";
 function create(baseUrl?: string) {
   let _baseUrl = baseUrl;
   let _token: string | undefined;
+  let _options: any = {};
 
-  const _defaultOptions = {
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
+  const _headers: any = {
+    Accept: "application/json",
+    "Content-Type": "application/json",
   };
 
-  function _getOptions(options: any) {
-    return deepmerge(_defaultOptions, options);
+  function _getOptions(options: any = {}) {
+    const x = deepmerge.all([_options, { headers: _headers }, options]);
+    console.log({ x });
+    return x;
   }
 
   function setToken(token: string) {
@@ -21,6 +22,14 @@ function create(baseUrl?: string) {
 
   function setBaseUrl(baseUrl: string) {
     _baseUrl = baseUrl;
+  }
+
+  function setHeader(key: string, value: any) {
+    _headers[key] = value;
+  }
+
+  function setOptions(options: any) {
+    _options = options;
   }
 
   async function get(path: string, args: any = {}, options: any = {}) {
@@ -76,6 +85,8 @@ function create(baseUrl?: string) {
   return {
     setBaseUrl,
     setToken,
+    setHeader,
+    setOptions,
     get,
     post,
     patch,

@@ -1,4 +1,5 @@
 import "src/utils/node/firebase";
+
 import { getFirestore } from "firebase-admin/firestore";
 
 import { env } from "src/env";

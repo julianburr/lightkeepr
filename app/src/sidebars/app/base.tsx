@@ -48,7 +48,7 @@ export function BaseSidebar({ getLinkProps }: BaseSidebarProps) {
 
   const unseen = useMemo(
     () =>
-      authUser.user?.notifications?.[authUser!.team!.id]?.filter(
+      authUser.user?.notifications?.[router.query.teamId!]?.filter(
         (notification) => !notification.seenAt
       ),
     [authUser.user?.notifications, authUser.team?.id]

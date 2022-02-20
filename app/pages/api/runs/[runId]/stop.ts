@@ -9,8 +9,6 @@ const db = getFirestore();
 
 export default createHandler({
   post: withProjectToken(async (req, res, { project }) => {
-    const [, token] = req.headers?.authorization?.match?.(/Bearer (.+)/) || [];
-
     if (!req.query.runId) {
       return res.status(400).json({ message: "No run ID provided" });
     }

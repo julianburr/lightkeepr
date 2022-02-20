@@ -39,7 +39,6 @@ async function run() {
   for (const filePath of files) {
     try {
       const absPath = path.resolve(assetsPath, filePath);
-      console.log({ filePath, absPath });
       const content = fs.readFileSync(absPath, "utf8");
       const prefix = filePath.replace(/\//g, "--").replace(".svg", "");
       const result = await optimize(content, prefix);

@@ -1,12 +1,9 @@
 import { createHandler } from "src/utils/node/api";
+import { withTeamToken } from "src/utils/node/api/with-team-token";
 import { stripeClient } from "src/utils/node/stripe";
 
 export default createHandler({
-  post: async (req, res) => {
-    if (!req.body.teamId) {
-      return res.status(400).json({ message: "Team not defined" });
-    }
-
+  post: withTeamToken(async (req, res, { team }) => {
     if (!req.query.customerId) {
       return res.status(400).json({ message: "Customer not defined" });
     }
@@ -15,7 +12,7 @@ export default createHandler({
       return res.status(400).json({ message: "Subscription not defined" });
     }
 
-    const url = `${req.headers.origin}/app/${req.body.teamId}/billing`;
+    const url = `${req.headers.origin}/app/${team.id}/billing`;
 
     const session = await stripeClient.checkout.sessions.create({
       mode: "setup",
@@ -32,5 +29,5 @@ export default createHandler({
     });
 
     res.status(200).json(session);
-  },
+  }),
 });
