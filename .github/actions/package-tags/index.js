@@ -38,7 +38,7 @@ async function run() {
   );
 
   for (const tagName of missingTags) {
-    annotatedTag = await octokit.git.createTag({
+    annotatedTag = await octokit.rest.git.createTag({
       ...github.context.repo,
       tag: tagName,
       message: tagName,
@@ -46,7 +46,7 @@ async function run() {
       type: "commit",
     });
 
-    await octokit.git.createRef({
+    await octokit.rest.git.createRef({
       ...github.context.repo,
       ref: `refs/tags/${tagName}`,
       sha: annotatedTag ? annotatedTag.data.sha : GITHUB_SHA,
