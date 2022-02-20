@@ -6,11 +6,10 @@ const path = require("path");
 const glob = require("glob");
 
 async function run() {
-  console.log({ env: process.env });
   const { GITHUB_REF, GITHUB_SHA, GITHUB_TOKEN } = process.env;
   const octokit = github.getOctokit(GITHUB_TOKEN);
 
-  const tags = await octokit.repos.listTags({
+  const tags = await octokit.rest.repos.listTags({
     ...github.context.repo,
     per_page: 100,
   });
