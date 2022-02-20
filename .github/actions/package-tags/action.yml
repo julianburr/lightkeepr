@@ -1,0 +1,10 @@
+name: "Package tags"
+description: "Goes through packages and adds git tags for versions that don't have tags yet"
+inputs:
+  packagesRoot:
+    description: "Glob to packages root folder"
+    required: true
+    default: "./packages"
+runs:
+  using: "node16"
+  main: "index.js"

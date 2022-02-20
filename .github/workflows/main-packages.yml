@@ -5,8 +5,8 @@ on:
     branches:
       - main
       - fix/changelogs
-    paths:
-      - packages/**
+    # paths:
+    #   - packages/**
 
 jobs:
   publish_packages:
@@ -47,3 +47,6 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create package tags
+        uses: ./.github/actions/package-tags
