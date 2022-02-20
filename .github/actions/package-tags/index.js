@@ -6,12 +6,13 @@ const path = require("path");
 const glob = require("glob");
 
 async function run() {
-  const { GITHUB_REF, GITHUB_SHA } = process.env;
+  const { GITHUB_REF, GITHUB_SHA, GITHUB_TOKEN } = process.env;
+  const octokit = github.getOctokit(GITHUB_TOKEN);
 
-  const githubToken = core.getInput("github_token");
-  octokit = github.getOctokit(githubToken);
-
-  const tags = await octokit.repos.listTags({ ...context.repo, per_page: 100 });
+  const tags = await octokit.repos.listTags({
+    ...github.context.repo,
+    per_page: 100,
+  });
 
   const packagesRoot = core.getInput("packages_root", { required: true });
   const packageJsons = glob
@@ -24,7 +25,7 @@ async function run() {
   console.log({ packageJsons, tags, GITHUB_REF, GITHUB_SHA });
 
   //   annotatedTag = await octokit.git.createTag({
-  //     ...context.repo,
+  //     ...github.context.repo,
   //     tag: newTag,
   //     message: newTag,
   //     object: GITHUB_SHA,
@@ -34,7 +35,7 @@ async function run() {
 
   // core.debug(`Pushing new tag to the repo.`);
   // await octokit.git.createRef({
-  //   ...context.repo,
+  //   ...github.context.repo,
   //   ref: `refs/tags/${newTag}`,
   //   sha: annotatedTag ? annotatedTag.data.sha : GITHUB_SHA,
   // });

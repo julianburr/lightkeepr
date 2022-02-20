@@ -50,3 +50,5 @@ jobs:
 
       - name: Create package tags
         uses: ./.github/actions/package-tags
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
