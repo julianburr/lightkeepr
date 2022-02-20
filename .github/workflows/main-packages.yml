@@ -4,9 +4,8 @@ on:
   push:
     branches:
       - main
-      - fix/changelogs
-    # paths:
-    #   - packages/**
+    paths:
+      - packages/**
 
 jobs:
   publish_packages:
