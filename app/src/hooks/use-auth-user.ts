@@ -101,7 +101,7 @@ export function useAuthUser(): UseAuthUserResponse {
   });
 
   const teams = useMemo(
-    () => allTeams.filter((team) => team.status !== "archived"),
+    () => allTeams?.filter?.((team) => team.status !== "archived") || [],
     [allTeams]
   );
 
